@@ -39,31 +39,38 @@ export const AuthProvider = ({ children }) => {
     const [isloggedIn, setIsLoggedIn] = useState();
 
     useEffect(() => {
-        //console.log("yoo");
+
         (async function () {
+
             const result = await getUser();
-            console.log("Again called", result);
+
             if (result.isOk) {
+
                 setIsLoggedIn(true);
+
                 const data = {
                     email:process.env.NEXT_PUBLIC_USERNAME,
                     username:process.env.NEXT_PUBLIC_USER
                 }
+
                 setUser(data);
             }
         })();
     }, []);
 
     const login = (userData) => {
-        // setUser(userData);
+
         const validatedFields = LoginFormSchema.safeParse({
             email: userData.email,
             password: userData.password
         })
+
         const errorMessage = { message: 'Invalid login credentials.' }
-        // // If any form fields are invalid, return early
+        
         if (!validatedFields.success) {
+
             setIsLoggedIn(false);
+
             return {
                 error: true,
                 message: validatedFields.error.flatten().fieldErrors
@@ -80,16 +87,20 @@ export const AuthProvider = ({ children }) => {
             Cookies.set('authToken', userData.email, { expires: 1 }); // Expires in 1 day
 
             setIsLoggedIn(true);
+
             return {
                 error: false,
                 message: "Loggedin successfully ..!!"
             };
+
         } else {
+
             setIsLoggedIn(false);
             return {
                 error: true,
                 message: errorMessage
             };
+            
         }
     };
 
