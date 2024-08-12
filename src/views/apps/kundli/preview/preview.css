@@ -1,0 +1,68 @@
+.pdf-Div {
+  padding-left: 0rem !important;
+  padding-top: 0rem !important;
+}
+
+.Birthdetail-div {
+  background-color: var(--primary-soft-color);
+}
+
+.Name-title {
+  /* border: 2px solid black; */
+  font-weight: 800;
+  font-size: 20px;
+  color: var(--primary-color);
+}
+
+.label-container {
+  align-items: end;
+}
+
+.AstroDetails-Div {
+  /* border: 2px solid black; */
+  padding: 12px 8px;
+  display: flex;
+  /* justify-content: space-around; */
+  border-bottom: 1.5px solid var(--primary-color);
+
+  .block-detail {
+    padding: 0px 18px 0px 12px;
+    border-left: 1.5px solid var(--primary-color);
+  }
+}
+
+.ChartSVG-Div {
+  padding: 12px 8px;
+  border-bottom: 1.5px solid var(--primary-color);
+  display: flex;
+  gap: 8px;
+}
+
+.MahaDasha-Div {
+  padding: 12px 8px;
+  border-bottom: 1.5px solid var(--primary-color);
+  display: flex;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  .rowheader {
+    background-color: var(--primary-soft-color);
+  }
+
+  .highlight-row {
+    background-color: var(--primary-soft-color);
+  }
+
+  .highlight-row:hover {
+    background-color: var(--primary-soft-color);
+  }
+
+  .MuiDataGrid-row:hover {
+    background-color: transparent !important;
+  }
+
+  /* .MuiDataGrid-columnHeaders {
+    width: 100% !important;
+  } */
+}
