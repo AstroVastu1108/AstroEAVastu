@@ -22,6 +22,7 @@ import Button from '@mui/material/Button'
 
 // Hook Imports
 import { useSettings } from '@core/hooks/useSettings'
+import { useAuth } from '@/@core/contexts/authContext'
 
 // Styled component for badge content
 const BadgeContentSpan = styled('span')({
@@ -36,8 +37,10 @@ const BadgeContentSpan = styled('span')({
 const UserDropdown = () => {
   // States
   const [open, setOpen] = useState(false)
+  const { user,logout } = useAuth();
 
   // Refs
+  
   const anchorRef = useRef(null)
 
   // Hooks
@@ -62,6 +65,7 @@ const UserDropdown = () => {
 
   const handleUserLogout = async () => {
     // Redirect to login page
+    logout();
     router.push('/login')
   }
 
@@ -104,9 +108,9 @@ const UserDropdown = () => {
                     <Avatar alt='John Doe' src='/images/avatars/1.png' />
                     <div className='flex items-start flex-col'>
                       <Typography className='font-medium' color='text.primary'>
-                        John Doe
+                      {user?.username}
                       </Typography>
-                      <Typography variant='caption'>admin@vuexy.com</Typography>
+                      <Typography variant='caption'>{user?.email}</Typography>
                     </div>
                   </div>
                   <Divider className='mlb-1' />
