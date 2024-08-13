@@ -26,6 +26,7 @@ const PreviewCard = ({ kundliData, id }) => {
   const AntarDasha = kundliData?.AstroVastuReport?.DashaDetails?.AntarDasha;
   const PratyantarDasha = kundliData?.AstroVastuReport?.DashaDetails?.PratyantarDasha;
   const AstroVastuHouseScript = kundliData?.AstroVastuReport?.AstroVastuHouseScript;
+  const Symbols = kundliData?.AstroVastuReport?.Symbols;
   const columns = [
     {
       field: 'Planet', headerName: 'Planet', headerClassName: 'rowheader',
@@ -85,64 +86,72 @@ const PreviewCard = ({ kundliData, id }) => {
               </div>
             </div>
             <div className='sm:flex-row ChartSVG-Div'>
-              <div className='heading-div'></div>
-              <div className='flex flex-row'>
+              <div className='ChartSVG-Div-sub'>
+                <div className='heading-div'>❋ Birth Chart / Lagna Kundali ❋</div>
                 <img src={`data:image/svg+xml;base64,${ChartSVG?.BirthChart}`} alt="birthChart" />
               </div>
-              <div className='flex flex-row'>
+              <div className='ChartSVG-Div-sub'>
+                <div className='heading-div'>❋ House Chart / Bhav Chalit Kundali ❋</div>
                 <img src={`data:image/svg+xml;base64,${ChartSVG?.HouseChart}`} alt="birthChart" />
               </div>
             </div>
-            <div className='sm:flex-row MahaDasha-Div'>
-              <div style={{ width: '33%' }}>
-                <DataGrid
-                  rows={rowsMahaDasha}
-                  columns={columns}
-                  getRowClassName={(params) =>
-                    params.row.IsCurrent ? 'highlight-row' : ''
-                  }
-                  disableColumnSorting
-                  disableColumnMenu
-                  rowHeight={30}
-                  columnHeaderHeight={38}
-                  disableColumnResize
-                  disableRowSelectionOnClick
-                />
+            <div className='main-MahaDasha-Div'>
+              <div className='heading-div'>❋ Vimshottari Dasha / Planetary Periods of Life❋</div>
+              <div className='MahaDasha-Div'>
+                <div style={{ width: '33%' }}>
+                  <DataGrid
+                    rows={rowsMahaDasha}
+                    columns={columns}
+                    getRowClassName={(params) =>
+                      params.row.IsCurrent ? 'highlight-row' : ''
+                    }
+                    disableColumnSorting
+                    disableColumnMenu
+                    rowHeight={30}
+                    columnHeaderHeight={38}
+                    disableColumnResize
+                    disableRowSelectionOnClick
+                  />
+                </div>
+                <div style={{ width: '33%' }}>
+                  <DataGrid
+                    rows={rowsAntarDasha}
+                    columns={columns}
+                    pageSize={rowsAntarDasha.length} // Show all rows
+                    getRowClassName={(params) =>
+                      params.row.IsCurrent ? 'highlight-row' : ''
+                    }
+                    disableColumnSorting
+                    disableColumnMenu
+                    rowHeight={30}
+                    columnHeaderHeight={38}
+                    disableColumnResize
+                    disableRowSelectionOnClick
+                  />
+                </div>
+                <div style={{ width: '33%' }}>
+                  <DataGrid
+                    rows={rowsPratyantarDasha}
+                    columns={columns}
+                    getRowClassName={(params) =>
+                      params.row.IsCurrent ? 'highlight-row' : ''
+                    }
+                    disableColumnSorting
+                    disableColumnMenu
+                    rowHeight={30}
+                    columnHeaderHeight={38}
+                    disableColumnResize
+                    disableRowSelectionOnClick
+                  />
+                </div>
               </div>
-              <div style={{ width: '33%' }}>
-                <DataGrid
-                  rows={rowsAntarDasha}
-                  columns={columns}
-                  pageSize={rowsAntarDasha.length} // Show all rows
-                  getRowClassName={(params) =>
-                    params.row.IsCurrent ? 'highlight-row' : ''
-                  }
-                  disableColumnSorting
-                  disableColumnMenu
-                  rowHeight={30}
-                  columnHeaderHeight={38}
-                  disableColumnResize
-                  disableRowSelectionOnClick
-                />
-              </div>
-              <div style={{ width: '33%' }}>
-                <DataGrid
-                  rows={rowsPratyantarDasha}
-                  columns={columns}
-                  getRowClassName={(params) =>
-                    params.row.IsCurrent ? 'highlight-row' : ''
-                  }
-                  disableColumnSorting
-                  disableColumnMenu
-                  rowHeight={30}
-                  columnHeaderHeight={38}
-                  disableColumnResize
-                  disableRowSelectionOnClick
-                />
-              </div>
+
             </div>
-            <div className='sm:flex-row AstroVastuScript-Div'>
-              <House houseArr={AstroVastuHouseScript}></House>
+            <div className='main-AstroVastuScript-Div'>
+              <div className='heading-div'>❋ Astro Vastu Script ❋</div>
+              <div className='AstroVastuScript-Div'>
+                <House houseArr={AstroVastuHouseScript} Symbols={Symbols}></House>
+              </div>
             </div>
           </Grid>
         </Grid>

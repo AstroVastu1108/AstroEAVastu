@@ -31,29 +31,48 @@
   }
 }
 
+.heading-div {
+  text-align: center;
+  color: var(--primary-color);
+  font-size: 18px;
+  font-weight: 600;
+  padding-bottom: 8px;
+}
+
 .ChartSVG-Div {
   padding: 12px 8px;
   border-bottom: 1.5px solid var(--primary-color);
   display: flex;
   gap: 8px;
 
-  .heading-div {
-    color: var(--primary-color);
-    font-size: 24px;
+
+
+  .ChartSVG-Div-sub {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.main-MahaDasha-Div {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 8px;
+  border-bottom: 1.5px solid var(--primary-color);
+
+  .mui-yrdy0g-MuiDataGrid-columnHeaderRow {
+    background-color: var(--primary-soft-color) !important;
   }
 }
 
 .MahaDasha-Div {
-  padding: 12px 8px;
-  border-bottom: 1.5px solid var(--primary-color);
   display: flex;
   justify-content: space-between;
 
   gap: 12px;
 
-  .rowheader {
+  /* .rowheader {
     background-color: var(--primary-soft-color);
-  }
+  } */
 
   color: black;
 
@@ -80,11 +99,17 @@
   } */
 }
 
-.AstroVastuScript-Div {
+.main-AstroVastuScript-Div {
+  display: flex;
+  flex-direction: column;
   padding: 12px 8px;
   border-bottom: 1.5px solid var(--primary-color);
+}
+
+.AstroVastuScript-Div {
+  /* padding: 12px 8px;
+  border-bottom: 1.5px solid var(--primary-color); */
   display: flex;
-  gap: 8px;
   gap: 8px;
 
   .house-main-Div {
@@ -132,14 +157,34 @@
         justify-content: space-between;
         width: 100%;
         color: #000;
+        border-bottom: 1.5px solid var(--primary-color);
 
         .house-body-Div1 {
           padding: 8px;
           width: 25%;
-          /* background-color: pink; */
           border-right: 1.5px solid var(--primary-color);
           border-left: 1.5px solid var(--primary-color);
-          border-bottom: 1.5px solid var(--primary-color);
+          /* border-bottom: 1.5px solid var(--primary-color); */
+
+          .house-div-sub {
+            padding-bottom: 12px;
+          }
+
+          .sub-div1 {
+            color: blue;
+            /* padding-bottom: 12px; */
+          }
+
+          .sub-div2 {
+            color: green;
+            /* padding-bottom: 12px; */
+          }
+
+          .sub-div3 {
+            color: red;
+            /* padding-bottom: 12px; */
+          }
+
         }
 
         .house-body-Div2 {
@@ -161,6 +206,19 @@
             .rahi-Div1 {
               padding: 8px;
               width: 40%;
+
+              .rashi-Div1-sub1 {
+                font-weight: 600;
+              }
+
+              .rashi-Div1-sub2 {
+                color: #242424;
+              }
+
+              .rashi-Div1-sub3 {
+                color: #242424;
+                /* font-weight: 600; */
+              }
             }
 
             .rahi-Div2 {
@@ -179,6 +237,13 @@
                   width: 100%;
                   padding: 8px;
                   border-bottom: 1.5px solid var(--primary-color);
+                  display: flex;
+                  justify-content: space-between;
+
+                  .planet-Div1-sub {
+                    display: flex;
+                    gap: 4px;
+                  }
                 }
 
                 .planet-Div2 {
@@ -240,8 +305,9 @@
             }
           }
 
-          /* background-color: blue; */
-
+          .rahi-Div:last-child {
+            border-bottom: none;
+          }
         }
       }
     }
