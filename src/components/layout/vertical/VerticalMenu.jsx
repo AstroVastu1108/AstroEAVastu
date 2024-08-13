@@ -55,9 +55,9 @@ const VerticalMenu = ({ scrollMenu }) => {
         renderExpandedMenuItemIcon={{ icon: <i className='tabler-circle text-xs' /> }}
         menuSectionStyles={menuSectionStyles(verticalNavOptions, theme)}
       >
-        <MenuItem href='/home' icon={<i className='tabler-smart-home' />}>
+        {/* <MenuItem href='/home' icon={<i className='tabler-smart-home' />}>
           Home
-        </MenuItem>
+        </MenuItem> */}
         <MenuItem href='/kundli' icon={<i className='tabler-smart-home' />}>
           Kundli
         </MenuItem>
