@@ -25,7 +25,7 @@ const PreviewActions = ({ onButtonClick }) => {
             startIcon={<i className='tabler-download' />}
             onClick={onButtonClick}
           >
-            Print
+            Download
           </Button>
           {/* <div className='flex items-center gap-4'>
             <Button fullWidth color='secondary' variant='tonal' className='capitalize' onClick={onButtonClick}>
