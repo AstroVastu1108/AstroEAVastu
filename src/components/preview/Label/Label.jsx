@@ -4,7 +4,7 @@ import "./Label.css"
 const Label = ({ LabelTextArr }) => {
 
   return (
-    <div className='flex flex-col pe-2 '>
+    <div className='flex flex-col pe-2'>
       {LabelTextArr.map((e) =>
         (<span key={e} className='text-label'>{e}</span>)
       )}

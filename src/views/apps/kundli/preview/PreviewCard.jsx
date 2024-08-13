@@ -7,6 +7,7 @@ import Grid from '@mui/material/Grid'
 // Component Imports
 import Label from '@/components/preview/Label/Label'
 import Value from '@/components/preview/Value/Value'
+import House from '@/components/preview/House/House'
 
 // Style Imports
 // import tableStyles from '@core/styles/table.module.css'
@@ -24,6 +25,7 @@ const PreviewCard = ({ kundliData, id }) => {
   const MahaDasha = kundliData?.AstroVastuReport?.DashaDetails?.MahaDasha;
   const AntarDasha = kundliData?.AstroVastuReport?.DashaDetails?.AntarDasha;
   const PratyantarDasha = kundliData?.AstroVastuReport?.DashaDetails?.PratyantarDasha;
+  const AstroVastuHouseScript = kundliData?.AstroVastuReport?.AstroVastuHouseScript;
   const columns = [
     {
       field: 'Planet', headerName: 'Planet', headerClassName: 'rowheader',
@@ -83,6 +85,7 @@ const PreviewCard = ({ kundliData, id }) => {
               </div>
             </div>
             <div className='sm:flex-row ChartSVG-Div'>
+              <div className='heading-div'></div>
               <div className='flex flex-row'>
                 <img src={`data:image/svg+xml;base64,${ChartSVG?.BirthChart}`} alt="birthChart" />
               </div>
@@ -137,6 +140,9 @@ const PreviewCard = ({ kundliData, id }) => {
                   disableRowSelectionOnClick
                 />
               </div>
+            </div>
+            <div className='sm:flex-row AstroVastuScript-Div'>
+              <House houseArr={AstroVastuHouseScript}></House>
             </div>
           </Grid>
         </Grid>

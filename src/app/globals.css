@@ -7,6 +7,8 @@
   --mui-palette-primary-main: #662294;
   --mui-palette-primary-mainChannel: 120 38 148;
   --primary-soft-color: rgb(102, 34, 148, 0.2);
+  --secondary-color: rgb(255, 196, 1);
+  --secondary-soft-color: rgb(255, 196, 1, 0.5);
 
   /* built in */
   --border-radius: var(--mui-shape-borderRadius);
