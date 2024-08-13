@@ -273,7 +273,7 @@ const LoginV2 = ({ mode }) => {
     const result = login(formData);
     if (result.error) {
     } else {
-      router.push('/home')
+      router.push('/kundli')
     }
   };
 

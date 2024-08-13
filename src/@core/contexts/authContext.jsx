@@ -36,6 +36,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [kundliData, setKundliData] = useState(null);
     const [isloggedIn, setIsLoggedIn] = useState();
 
     useEffect(() => {
@@ -133,7 +134,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ isloggedIn, user, login, logout }}>
+        <AuthContext.Provider value={{kundliData,setKundliData, isloggedIn, user, login, logout }}>
             {children}
         </AuthContext.Provider>
     );

@@ -1,5 +1,6 @@
 'use client'
 import * as React from 'react'
+import axios from 'axios'
 import { useState, useEffect } from 'react'
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
@@ -15,6 +16,9 @@ import AppReactDatepicker from '../../components/datePicker/AppReactDatepicker'
 import TextField from '@mui/material/TextField'
 import Autocomplete from '@mui/material/Autocomplete'
 
+import { useRouter } from 'next/navigation'
+import { useAuth } from '@/@core/contexts/authContext'
+
 const CustomerForm = () => {
   const [userData, setUserData] = useState({
     firstName: '',
@@ -27,6 +31,7 @@ const CustomerForm = () => {
   })
   const [conutryData, setConutryData] = useState([])
   const [cityData, setCityData] = useState([])
+  const { setKundliData } = useAuth()
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -45,7 +50,7 @@ const CustomerForm = () => {
 
     fetchData()
   }, [])
-
+  const router = useRouter()
   useEffect(() => {
     const fetchCities = async () => {
       if (userData.country) {
@@ -89,18 +94,16 @@ const CustomerForm = () => {
     }
 
     try {
-      const response = await fetch('https://api.astrovastu.app/astro/astro-vastu-report', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formattedData)
-      })
+      const response = await axios.post('https://api.astrovastu.app/astro/astro-vastu-report',
+        formattedData)
 
-      if (!response.ok) {
+      if (!response) {
         const errorText = await response.text()
         throw new Error(`Failed to submit the form: ${errorText}`)
-      }
+      } 
+      console.log("?.result : ",response?.data);
+      setKundliData(response?.data?.Result)
+      router.push('/kundli/preview')
 
       console.log('Form submitted successfully')
     } catch (error) {

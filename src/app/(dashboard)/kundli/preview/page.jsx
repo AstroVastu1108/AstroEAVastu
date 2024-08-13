@@ -1,6 +1,11 @@
 // Next Imports
+'use client'
+import { useAuth } from '@/@core/contexts/authContext';
 import Preview from '@/views/apps/kundli/preview/page'
-import { redirect } from 'next/navigation'
+// import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/router';
+
+
 
 // Component Imports
 
@@ -25,8 +30,17 @@ import { redirect } from 'next/navigation'
 } */
 const PreviewPage = async ({ params }) => {
   // Vars
+  const { kundliData } = useAuth()
+  // const router = useRouter();
+  // const { data } = router.query;
+  // console.log("Data : ",data)
+  console.log("kundliData : ",kundliData)
+  // const router = useRouter();
+  // const { state } = router;  // State passed from Page1
+  // const { name, age } = state || {};
+  // console.log("Name : ",name);
   // const data = await getInvoiceData()
-  const kundliData = {
+  const kundliData1 = {
     "AstroVastuReport": {
       "BirthDetails": {
         "KundaliID": "54894EB0DF5D4BD6BD605DE2C6B0B99E",
@@ -2279,7 +2293,7 @@ const PreviewPage = async ({ params }) => {
       }
     }
   }
-
+  console.log("kundliData1 : ",kundliData1)
   // if (!filteredData) {
   //   redirect('/not-found')
   // }
