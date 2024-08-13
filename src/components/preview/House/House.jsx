@@ -8,7 +8,7 @@ function House({ houseArr, Symbols }) {
         (
           <>
 
-            <div className='house-Div'>
+            <div className='house-Div' key={index}>
               <div className="house-header">
                 <div className='house-header-Div1'>
                   <div className='house-header-text'>House-{(index + 1)}</div>
@@ -26,24 +26,24 @@ function House({ houseArr, Symbols }) {
               <div className="house-body">
                 <div className='house-body-Div1'>
                   {e?.HouseAspectsZero?.length ?
-                    <div>{e?.HouseAspectsZero?.map(houseaspect => (
-                      <div className='house-div-sub'>
+                    <div>{e?.HouseAspectsZero?.map((houseaspect,key) => (
+                      <div key={key} className='house-div-sub'>
                         <div className='sub-div1'>{houseaspect?.Aspect} ↠ {houseaspect?.Planet}</div>
                         <div>{houseaspect?.PlanetRashiShort} {houseaspect?.ScriptFull}</div>
                       </div>
                     ))} </div> : ""
                   }
                   {e?.HouseAspectsPositive?.length ?
-                    <div>{e?.HouseAspectsPositive?.map(houseaspect => (
-                      <div className='house-div-sub'>
+                    <div>{e?.HouseAspectsPositive?.map((houseaspect,key) => (
+                      <div key={key} className='house-div-sub'>
                         <div className='sub-div2'>{houseaspect?.Aspect} ↠ {houseaspect?.Planet}</div>
                         <div>{houseaspect?.PlanetRashiShort} {houseaspect?.ScriptFull}</div>
                       </div>
                     ))} </div> : ""
                   }
                   {e?.HouseAspectsNegative?.length ?
-                    <div>{e?.HouseAspectsNegative?.map(houseaspect => (
-                      <div className='house-div-sub'>
+                    <div>{e?.HouseAspectsNegative?.map((houseaspect,key) => (
+                      <div key={key} className='house-div-sub'>
                         <div className='sub-div3'>{houseaspect?.Aspect} ↠ {houseaspect?.Planet}</div>
                         <div>{houseaspect?.PlanetRashiShort} {houseaspect?.ScriptFull}</div>
                       </div>
@@ -51,19 +51,19 @@ function House({ houseArr, Symbols }) {
                   }
                 </div>
                 <div className='house-body-Div2'>
-                  {e?.RashiDetails.map(rashi =>
+                  {e?.RashiDetails.map((rashi,key) =>
                   (
                     <>
-                      <div className='rahi-Div'>
+                      <div className='rahi-Div' key={key}>
                         <div className='rahi-Div1'>
                           <div className='rashi-Div1-sub1'>{rashi?.RashiRoman}. {rashi?.Rashi} {rashi?.Degree} &gt; {rashi?.RashiLord}</div>
                           <div className='rashi-Div1-sub2'>{rashi?.RashiDescAstro}</div>
                           <div className='rashi-Div1-sub3'>{rashi?.RashiDescVastu}</div>
                         </div>
                         {rashi?.Planets?.length &&
-                          (<div className='rahi-Div2'>{rashi?.Planets.map(Planet =>
+                          (<div className='rahi-Div2'>{rashi?.Planets.map((Planet,key) =>
                           (
-                            <div className='planet-Div'>
+                            <div className='planet-Div' key={key}>
                               <div className='planet-Div1'>
                                 <div>{Planet?.Planet} &gt; {Planet?.Degree} </div>
                                 <div className='planet-Div1-sub'>
@@ -105,24 +105,24 @@ function House({ houseArr, Symbols }) {
                           {rashi?.Planets?.length ? <>
                             {rashi?.Planets.map(Planet => (<>
                               {Planet?.PlanetAspectsZero?.length ?
-                                <div>{Planet?.PlanetAspectsZero?.map(Planetaspect => (
-                                  <div className='rashi-div-sub'>
+                                <div>{Planet?.PlanetAspectsZero?.map((Planetaspect,key) => (
+                                  <div className='rashi-div-sub' key={key}>
                                     <div className='sub-div1'>{Planetaspect?.Aspect} ↠ {Planetaspect?.Planet}</div>
                                     <div>{Planetaspect?.PlanetRashiShort} {Planetaspect?.ScriptFull}</div>
                                   </div>
                                 ))} </div> : ""
                               }
                               {Planet?.PlanetAspectsPositive?.length ?
-                                <div >{Planet?.PlanetAspectsPositive?.map(Planetaspect => (
-                                  <div className='rashi-div-sub'>
+                                <div >{Planet?.PlanetAspectsPositive?.map((Planetaspect,key) => (
+                                  <div className='rashi-div-sub' key={key}>
                                     <div className='sub-div2'>{Planetaspect?.Aspect} ↠ {Planetaspect?.Planet}</div>
                                     <div>{Planetaspect?.PlanetRashiShort} {Planetaspect?.ScriptFull}</div>
                                   </div>
                                 ))} </div> : ""
                               }
                               {Planet?.PlanetAspectsNegative?.length ?
-                                <div>{Planet?.PlanetAspectsNegative?.map(Planetaspect => (
-                                  <div className='rashi-div-sub'>
+                                <div>{Planet?.PlanetAspectsNegative?.map((Planetaspect,key) => (
+                                  <div className='rashi-div-sub' key={key}>
                                     <div className='sub-div3'>{Planetaspect?.Aspect} ↠ {Planetaspect?.Planet}</div>
                                     <div>{Planetaspect?.PlanetRashiShort} {Planetaspect?.ScriptFull}</div>
                                   </div>
