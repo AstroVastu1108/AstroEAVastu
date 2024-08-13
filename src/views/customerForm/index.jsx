@@ -19,7 +19,10 @@ import Autocomplete from '@mui/material/Autocomplete'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/@core/contexts/authContext'
 
+import CircularProgress from '@mui/material/CircularProgress';
 const CustomerForm = () => {
+  
+  const [isDisable, setIsDisable] = useState(false);
   const [userData, setUserData] = useState({
     firstName: '',
     lastName: '',
@@ -94,19 +97,23 @@ const CustomerForm = () => {
     }
 
     try {
+      setIsDisable(true)
       const response = await axios.post('https://api.astrovastu.app/astro/astro-vastu-report',
         formattedData)
 
       if (!response) {
+        setIsDisable(false)
         const errorText = await response.text()
         throw new Error(`Failed to submit the form: ${errorText}`)
       } 
+      setIsDisable(false)
       console.log("?.result : ",response?.data);
       setKundliData(response?.data?.Result)
       router.push('/kundli/preview')
 
       console.log('Form submitted successfully')
     } catch (error) {
+      setIsDisable(false)
       console.error('There was an error submitting the form:', error)
     }
   }
@@ -121,7 +128,7 @@ const CustomerForm = () => {
               <FloatingTextField
                 fullWidth
                 label='First Name'
-                placeholder='John'
+                // placeholder='John'
                 value={userData?.firstName}
                 onChange={e => setUserData({ ...userData, firstName: e.target.value })}
               />
@@ -130,7 +137,7 @@ const CustomerForm = () => {
               <FloatingTextField
                 fullWidth
                 label='Middle Name'
-                placeholder='John'
+                // placeholder='John'
                 value={userData?.middleName}
                 onChange={e => setUserData({ ...userData, middleName: e.target.value })}
               />
@@ -139,7 +146,7 @@ const CustomerForm = () => {
               <FloatingTextField
                 fullWidth
                 label='Last Name'
-                placeholder='Doe'
+                // placeholder='Doe'
                 value={userData?.lastName}
                 onChange={e => setUserData({ ...userData, lastName: e.target.value })}
               />
@@ -209,9 +216,12 @@ const CustomerForm = () => {
               />
             </Grid>
           </Grid>
-          <Button variant='contained' className='mt-4' onClick={handleSubmit} type='submit'>
+          {/* <Button variant='contained' className='mt-4' onClick={handleSubmit} type='submit'>
             Submit
-          </Button>
+          </Button> */}
+          <Button fullWidth variant='contained' className='mt-4' type='submit' disabled={isDisable} onClick={handleSubmit}>
+  {isDisable ? <CircularProgress size={5} /> : 'Submit'}
+</Button>
         </form>
       </CardContent>
     </Card>
