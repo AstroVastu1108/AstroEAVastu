@@ -177,6 +177,7 @@
 // }
 
 // export default LoginV2
+
 'use client'
 
 // React Imports
@@ -211,6 +212,8 @@ import themeConfig from '@configs/themeConfig'
 import { useImageVariant } from '@core/hooks/useImageVariant'
 import { useSettings } from '@core/hooks/useSettings'
 import { useAuth } from '@/@core/contexts/authContext'
+import FloatingTextField from '@/components/common/FloatingTextField'
+import CircularProgress from '@mui/material/CircularProgress';
 
 // Styled Custom Components
 const LoginIllustration = styled('img')(({ theme }) => ({
@@ -268,11 +271,15 @@ const LoginV2 = ({ mode }) => {
 
   const { login } = useAuth();
   const [formData, setFormData] = useState([]);
+  const [isDisable, setIsDisable] = useState(false);
 
   const handleLogin = () => {
+    setIsDisable(true);
     const result = login(formData);
     if (result.error) {
+      setIsDisable(false);
     } else {
+      setIsDisable(false);
       router.push('/kundli')
     }
   };
@@ -342,9 +349,25 @@ const LoginV2 = ({ mode }) => {
             }}
             className='flex flex-col gap-5'
           >
-            <CustomTextField autoFocus fullWidth label='Email or Username' placeholder='Enter your email or username'
-              onChange={(e) => { handleInput("email", e); }} />
-            <CustomTextField
+            <FloatingTextField
+                fullWidth
+                autoFocus
+                label='Email or Username'
+                placeholder='Enter your email or username'
+                // value={userData?.middleName}
+                onChange={(e) => { handleInput("email", e); }}
+              />
+            {/* <CustomTextField autoFocus fullWidth label='Email or Username' placeholder='Enter your email or username'
+              onChange={(e) => { handleInput("email", e); }} /> */}
+              {/* <FloatingTextField
+                fullWidth
+                autoFocus
+                label='Email or Username'
+                placeholder='Enter your email or username'
+                value={userData?.middleName}
+                onChange={(e) => { handleInput("email", e); }}
+              /> */}
+            <FloatingTextField
               fullWidth
               label='Password'
               placeholder='············'
@@ -367,9 +390,13 @@ const LoginV2 = ({ mode }) => {
                 Forgot password?
               </Typography>
             </div>
-            <Button fullWidth variant='contained' type='submit' onClick={handleLogin}>
+            {/* <Button fullWidth variant='contained' type='submit' disabled={isDisable} onClick={handleLogin}>
               Login
-            </Button>
+            </Button> */}
+            <Button fullWidth variant='contained' type='submit' disabled={isDisable} onClick={handleLogin}>
+  {isDisable ? <CircularProgress size={24} /> : 'Login'}
+</Button>
+
             <div className='flex justify-center items-center flex-wrap gap-2'>
               <Typography>New on our platform?</Typography>
               <Typography component={Link} color='primary'>
