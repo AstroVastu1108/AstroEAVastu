@@ -12,7 +12,7 @@ import Button from '@mui/material/Button'
 
 // Component Imports
 
-const PreviewActions = ({ onButtonClick }) => {
+const PreviewActions = ({ value, onButtonClick }) => {
 
   return (
     <>
@@ -25,7 +25,7 @@ const PreviewActions = ({ onButtonClick }) => {
             startIcon={<i className='tabler-download' />}
             onClick={onButtonClick}
           >
-            Download
+            {value}
           </Button>
           {/* <div className='flex items-center gap-4'>
             <Button fullWidth color='secondary' variant='tonal' className='capitalize' onClick={onButtonClick}>

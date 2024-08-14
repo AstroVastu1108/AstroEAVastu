@@ -42,11 +42,11 @@ const PreviewCard = ({ kundliData, id }) => {
     },
   ];
   // Adding unique IDs
-  const rowsMahaDasha = MahaDasha.map((item, index) => ({
+  const rowsMahaDasha = MahaDasha?.map((item, index) => ({
     id: index + 1, // You can use uuidv4() for truly unique IDs if needed
     ...item
   }));
-  const rowsAntarDasha = AntarDasha.map((item, index) => ({
+  const rowsAntarDasha = AntarDasha?.map((item, index) => ({
     id: index + 1, // You can use uuidv4() for truly unique IDs if needed
     ...item
   }));

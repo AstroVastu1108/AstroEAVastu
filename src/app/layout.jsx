@@ -7,7 +7,8 @@ import '@/app/globals.css'
 // Generated Icon CSS Imports
 import '@assets/iconify-icons/generated-icons.css'
 import { AuthProvider, useAuth } from '@/@core/contexts/authContext';
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export const metadata = {
   title: 'AstroVastu',
   description:
@@ -22,6 +23,7 @@ const RootLayout = ({ children }) => {
     <html id='__next' lang='en' dir={direction}>
       <body className='flex is-full min-bs-full flex-auto flex-col'>
       <AuthProvider>
+      <ToastContainer />
         {children}
         </AuthProvider>
         </body>
