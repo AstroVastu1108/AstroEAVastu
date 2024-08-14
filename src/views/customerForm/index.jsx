@@ -35,6 +35,7 @@ const CustomerForm = () => {
   const [conutryData, setConutryData] = useState([])
   const [cityData, setCityData] = useState([])
   const { setKundliData } = useAuth()
+  const [inputValue, setInputValue] = useState('')
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -53,13 +54,14 @@ const CustomerForm = () => {
 
     fetchData()
   }, [])
+
   const router = useRouter()
   useEffect(() => {
     const fetchCities = async () => {
-      if (userData.country) {
+      if (userData.country && inputValue) {
         try {
           const iso2 = userData.country.iso2
-          const response = await fetch(`https://api.astrovastu.app/geo/city/${iso2}/Surat`)
+          const response = await fetch(`https://api.astrovastu.app/geo/city/${iso2}/${inputValue}`)
           if (!response.ok) {
             throw new Error('Network response was not ok')
           }
@@ -72,7 +74,7 @@ const CustomerForm = () => {
     }
 
     fetchCities()
-  }, [userData.country])
+  }, [userData.country, inputValue])
 
   const handleSubmit = async event => {
     event.preventDefault()
@@ -98,16 +100,15 @@ const CustomerForm = () => {
 
     try {
       setIsDisable(true)
-      const response = await axios.post('https://api.astrovastu.app/astro/astro-vastu-report',
-        formattedData)
+      const response = await axios.post('https://api.astrovastu.app/astro/astro-vastu-report', formattedData)
 
       if (!response) {
         setIsDisable(false)
         const errorText = await response.text()
         throw new Error(`Failed to submit the form: ${errorText}`)
-      } 
+      }
       setIsDisable(false)
-      console.log("?.result : ",response?.data);
+      console.log('?.result : ', response?.data)
       setKundliData(response?.data?.Result)
       router.push('/kundli/preview')
 
@@ -212,6 +213,9 @@ const CustomerForm = () => {
                 onChange={(event, newValue) => {
                   setUserData({ ...userData, city: newValue })
                 }}
+                onInputChange={(event, newInputValue) => {
+                  setInputValue(newInputValue)
+                }}
                 renderInput={params => <TextField {...params} label='Select City' />}
               />
             </Grid>
@@ -219,9 +223,16 @@ const CustomerForm = () => {
           {/* <Button variant='contained' className='mt-4' onClick={handleSubmit} type='submit'>
             Submit
           </Button> */}
-          <Button fullWidth variant='contained' className='mt-4' type='submit' disabled={isDisable} onClick={handleSubmit}>
-  {isDisable ? <CircularProgress size={5} /> : 'Submit'}
-</Button>
+          <Button
+            fullWidth
+            variant='contained'
+            className='mt-4'
+            type='submit'
+            disabled={isDisable}
+            onClick={handleSubmit}
+          >
+            {isDisable ? <CircularProgress size={5} /> : 'Submit'}
+          </Button>
         </form>
       </CardContent>
     </Card>
