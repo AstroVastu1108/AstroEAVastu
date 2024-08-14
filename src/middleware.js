@@ -4,8 +4,7 @@ import { NextResponse } from 'next/server'
 
 export default async function middleware(req) {
   // List of paths that require authentication
-  console.log('Middleware called')
-  const protectedRoutes = ['/kundli','/about']
+  const protectedRoutes = ['/kundli','/about','/home']
 
   const { pathname } = req.nextUrl
 
@@ -27,5 +26,5 @@ export default async function middleware(req) {
 }
 
 export const config = {
-  matcher: ['/kundli','/about'] // Paths to protect
+  matcher: ['/kundli','/about','/home'] // Paths to protect
 }
