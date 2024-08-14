@@ -63,7 +63,7 @@ const CustomerForm = () => {
   const [query, setQuery] = useState('')
 
   const fetchCities = debounce(async (query) => {
-    if (query.length > 2 && userData.country) {
+    if (query.length > 1 && userData.country) {
       try {
         const iso2 = userData.country.iso2
         const response = await getCities(iso2,query)
