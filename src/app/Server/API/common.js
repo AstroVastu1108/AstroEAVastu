@@ -1,5 +1,7 @@
 import axios from 'axios'
 const API_URL = process.env.NEXT_PUBLIC_APIURL
+
+// get all the countries data
 export async function getCountries() {
   const responseBody = {
     responseData: null,
@@ -18,6 +20,7 @@ export async function getCountries() {
   }
 }
 
+// get all the cities data as per search
 export async function getCities(iso2, query) {
   const responseBody = {
     responseData: null,
@@ -36,6 +39,7 @@ export async function getCities(iso2, query) {
   }
 }
 
+// get existing pdf by kundli id
 export async function getKundliPdf(kundliId) {
   const responseBody = {
     responseData: null,
@@ -56,6 +60,8 @@ export async function getKundliPdf(kundliId) {
   }
 }
 
+
+// save kundli data and get report
 export async function getReport(payload) {
   const responseBody = {
     responseData: null,
