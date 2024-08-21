@@ -1,5 +1,5 @@
 import Breadcrumb from '@/components/common/BreadCrumb'
-import CustomerForm from '@/views/customerForm'
+import CustomerForm from '@/views/apps/customerForm'
 
 export default function Page() {
   return (

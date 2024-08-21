@@ -35,6 +35,7 @@ import { useAuth } from '@/@core/contexts/authContext'
 import FloatingTextField from '@/components/common/FloatingTextField'
 import CircularProgress from '@mui/material/CircularProgress';
 import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
+import { TextField } from '@mui/material'
 
 // Styled Custom Components
 const LoginIllustration = styled('img')(({ theme }) => ({
@@ -189,7 +190,23 @@ const LoginV2 = ({ mode }) => {
               placeholder='Enter your email or username'
               onChange={(e) => { handleInput("email", e); }}
             />
-            <FloatingTextField
+            <TextField
+              fullWidth
+              label='Password'
+              placeholder='············'
+              id='outlined-adornment-password'
+              type={isPasswordShown ? 'text' : 'password'}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <IconButton edge='end' onClick={handleClickShowPassword} onMouseDown={e => e.preventDefault()}>
+                      <i className={isPasswordShown ? 'tabler-eye-off' : 'tabler-eye'} />
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
+              onChange={(e) => { handleInput("password", e); }} />
+            {/* <FloatingTextField
               fullWidth
               label='Password'
               placeholder='············'
@@ -205,7 +222,7 @@ const LoginV2 = ({ mode }) => {
                 )
               }}
               onChange={(e) => { handleInput("password", e); }}
-            />
+            /> */}
             <div className='flex justify-between items-center gap-x-3 gap-y-1 flex-wrap'>
               <FormControlLabel control={<Checkbox />} label='Remember me' />
               <Typography className='text-end' color='primary' component={Link}>
