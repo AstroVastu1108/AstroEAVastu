@@ -1,9 +1,11 @@
-import { Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, TextField } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid"
+import { Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, IconButton, TextField } from "@mui/material";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid"
 import PreviewActions from "./preview/PreviewActions";
 import { useEffect, useState } from "react";
 import AddKundliPopUp from "./addKundli/addKundli";
 import { GetKundliDataAPI } from "@/app/Server/API/kundliAPI";
+import classNames from "classnames";
+import { useRouter } from "next/navigation";
 
 export default function KundliMain() {
 
@@ -14,16 +16,25 @@ export default function KundliMain() {
     //   headerAlign: 'left'
     // },
     {
-      field: 'FirstName', flex: 1, headerName: 'First Name', headerClassName: 'rowheader',
-      headerAlign: 'left'
+      field: 'FirstName', flex: 2, headerName: 'Full Name', headerClassName: 'rowheader',
+      headerAlign: 'left',
+      renderCell: (params) => (
+        <>
+          <span>{params.row.FirstName} {params.row.MiddleName} {params.row.LastName}</span>
+        </>
+      ),
     },
     {
-      field: 'MiddleName', flex: 1, headerName: 'Middle Name', headerClassName: 'rowheader',
-      headerAlign: 'left'
-    },
-    {
-      field: 'LastName', flex: 1, headerName: 'Last Name', headerClassName: 'rowheader',
-      headerAlign: 'left'
+      field: 'iconColumn', // Unique field name for this column
+      headerName: '',
+      width: 100,
+      renderCell: (params) => (
+        <IconButton onClick={() => handlePreviewClick(params?.row?.KundaliID)}>
+          <i
+            className={'tabler-arrow-up-right bg-primary'}
+          />
+        </IconButton>
+      ),
     },
     {
       field: 'Gender', flex: 1, headerName: 'Gender', headerClassName: 'rowheader',
@@ -49,10 +60,24 @@ export default function KundliMain() {
       field: 'Prakriti', flex: 1, headerName: 'Prakriti', headerClassName: 'rowheader',
       headerAlign: 'left'
     },
+    {
+      field: 'iconColumn', // Unique field name for this column
+      headerName: '',
+      width: 100,
+      renderCell: (params) => (
+        <IconButton onClick={() => handlePreviewClick(params?.row?.KundaliID)}>
+          <i
+            className={'tabler-arrow-up-right bg-primary'}
+          />
+        </IconButton>
+      ),
+    },
   ];
   const [open, setOpen] = useState(false);
   const [kundliData, setKundliData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const router = useRouter()
+
 
   // func
   const handleAddClick = () => {
@@ -62,7 +87,6 @@ export default function KundliMain() {
     setOpen(false)
   }
 
-  // func
   const getAllKundli = async () => {
     setLoading(true);
     const res = await GetKundliDataAPI(1000, 1);
@@ -72,6 +96,10 @@ export default function KundliMain() {
     } else {
       setKundliData(res?.responseData?.data?.Result?.KundaliList);
     }
+  }
+
+  const handlePreviewClick=(kid)=>{
+    router.push(`kundli/preview?kid=${kid}`)
   }
 
 
@@ -115,6 +143,7 @@ export default function KundliMain() {
                   ...kundliData.initialState,
                   pagination: { paginationModel: { pageSize: 10 } },
                 }}
+                components={{ Toolbar: GridToolbar }}
               />
             </CardContent>
           </Card>
@@ -123,7 +152,7 @@ export default function KundliMain() {
       </Grid>
 
       {open && (
-        <AddKundliPopUp open={open} handleAddClose={handleAddClose} getAllKundli={getAllKundli}/>
+        <AddKundliPopUp open={open} handleAddClose={handleAddClose} getAllKundli={getAllKundli} />
       )}
 
     </>

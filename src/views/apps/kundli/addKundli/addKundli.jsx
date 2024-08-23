@@ -132,7 +132,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
     }
   }
 
-  const handlePreview = async()=>{
+  const handlePreview = async () => {
     const kid = await handleSubmit();
     router.push(`kundli/preview?kid=${kid}`)
   }
@@ -323,20 +323,17 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
         <DialogActions>
           <Button onClick={handleAddClose}>Cancel</Button>
           <Button variant='outlined' type='submit' disabled={isDisable} >
-            {isDisable ? <CircularProgress size={5} aria-label='Wait' content='Saving' /> : 'Save'}
+            {isDisable ? <>
+              <CircularProgress size={14} aria-label="Wait" />
+              <span style={{ marginLeft: 8 }}>Saving</span>
+            </> : 'Save'}
           </Button>
           <Button variant='contained' disabled={isDisable} onClick={handlePreview} >
-            {isDisable ? <CircularProgress size={5} aria-label='Wait' content='Saving' /> : 'Save & Preview'}
+            {isDisable ? <>
+              <CircularProgress size={14} aria-label="Wait" />
+              <span style={{ marginLeft: 8 }}>Saving</span>
+            </> : 'Save & Preview'}
           </Button>
-          {/* <div className='submit-btn'>
-
-            <Button variant='contained' className='mt-4' type='reset' color='secondary' onClick={handleReset}>
-              Reset
-            </Button>
-            <Button variant='contained' className='mt-4 d-flex justify-content-end' type='submit' disabled={isDisable} onClick={handleSubmit} >
-              {isDisable ? <CircularProgress size={5} /> : 'Submit'}
-            </Button>
-          </div> */}
         </DialogActions>
       </Dialog>
     </>
