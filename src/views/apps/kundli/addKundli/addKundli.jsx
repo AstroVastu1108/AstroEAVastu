@@ -16,7 +16,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
     middleName: '',
     gender: 'male',
     date: null,
-    country: '',
+    country: { iso2: 'IN', name: 'India' },
     time: null,
     city: ''
   })
@@ -35,28 +35,34 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
   const [conutryData, setConutryData] = useState([])
   const [cityData, setCityData] = useState([])
   const { setKundliData } = useAuth()
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getCountries()
-        if (response.hasError) {
-          return toastDisplayer("error", response.error)
-        }
-        const result = await response.responseData
-        setConutryData(result.Result.Countries)
-      } catch (error) {
-        return toastDisplayer("error", `There was a problem with the fetch operation: ${error}`)
+  const fetchData = async () => {
+    try {
+      const response = await getCountries()
+      if (response.hasError) {
+        return toastDisplayer("error", response.error)
       }
+      const result = await response.responseData
+      setConutryData(result.Result.Countries)
+    } catch (error) {
+      return toastDisplayer("error", `There was a problem with the fetch operation: ${error}`)
     }
+  }
 
+  useEffect(() => {
     fetchData()
   }, [])
+
+  useEffect(() => {
+    console.log(conutryData.find((option) => option.iso2 === "IN"))
+  }, [conutryData])
+
   const router = useRouter()
 
   const [filteredCities, setFilteredCities] = useState([]);
   const [query, setQuery] = useState('')
 
   const fetchCities = debounce(async (query) => {
+    console.log(":here",userData.country)
     if (query.length > 1 && userData.country) {
       try {
         const iso2 = userData.country.iso2
@@ -162,6 +168,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
   // }
 
   const handleInputChange = (field, value, key) => {
+    console.log("first : ",value)
     setUserData(prev => ({
       ...prev,
       [field]: value
@@ -252,8 +259,8 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
                 showYearDropdown
                 showMonthDropdown
                 onChange={date => handleInputChange('date', date, 'BirthDate')}
-                // onChange={(date) => setUserData({ ...userData, date })}
-                placeholderText='MM/DD/YYYY'
+                placeholderText='DD/MM/YYYY'
+                dateFormat="dd/MM/yyyy"
                 customInput={
                   <TextField
                     value={userData.date}
@@ -293,7 +300,9 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
               <Autocomplete
                 id='country-select'
                 options={conutryData}
-                defaultValue={conutryData && (conutryData.find((option) => option.iso2 === "IN"))}
+                defaultValue={
+                  { iso2: 'IN', name: 'India' }
+                }
                 getOptionLabel={(option) => option.name}
                 getOptionKey={(option) => option.iso2}
                 onChange={(event, newValue) => handleInputChange('country', newValue, 'Country')}

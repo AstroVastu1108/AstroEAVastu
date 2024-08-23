@@ -14,6 +14,8 @@ import House from '@/components/preview/House/House'
 import "./preview.css"
 
 import { DataGrid } from '@mui/x-data-grid';
+import SummaryAspect from '@/components/preview/PlanetSummary/PlanetSummary'
+import textAlign from 'tailwindcss-logical/plugins/textAlign'
 
 
 
@@ -27,18 +29,20 @@ const PreviewCard = ({ kundliData, id }) => {
   const PratyantarDasha = kundliData?.AstroVastuReport?.DashaDetails?.PratyantarDasha;
   const AstroVastuHouseScript = kundliData?.AstroVastuReport?.AstroVastuHouseScript;
   const Symbols = kundliData?.AstroVastuReport?.Symbols;
+  const PlanetSummaryData = kundliData?.AstroVastuReport?.AsperctSummaryPlanet;
+  const HouseSummaryData = kundliData?.AstroVastuReport?.AsperctSummaryHouse;
   const columns = [
     {
-      field: 'Planet', headerName: 'Planet', headerClassName: 'rowheader',
-      headerAlign: 'center'
+      field: 'Planet', headerName: 'Planet', headerClassName: 'rowheader',flex:1,
+      // headerAlign: 'center', textAlign:'center'
     },
     {
-      field: 'StartDt', headerName: 'Beginning', headerClassName: 'rowheader',
-      headerAlign: 'center'
+      field: 'StartDt', headerName: 'Beginning', headerClassName: 'rowheader',flex:1,
+      // headerAlign: 'center'
     },
     {
-      field: 'EndDt', headerName: 'Ending', headerClassName: 'rowheader',
-      headerAlign: 'center'
+      field: 'EndDt', headerName: 'Ending', headerClassName: 'rowheader',flex:1,
+      // headerAlign: 'center'
     },
   ];
   // Adding unique IDs
@@ -127,6 +131,8 @@ const PreviewCard = ({ kundliData, id }) => {
                     columnHeaderHeight={38}
                     disableColumnResize
                     disableRowSelectionOnClick
+                    hideFooterPagination={true}
+                    hideFooter={true}
                   />
                 </div>
                 <div style={{ width: '33%' }}>
@@ -142,6 +148,8 @@ const PreviewCard = ({ kundliData, id }) => {
                     columnHeaderHeight={38}
                     disableColumnResize
                     disableRowSelectionOnClick
+                    hideFooterPagination={true}
+                    hideFooter={true}
                   />
                 </div>
               </div>
@@ -151,6 +159,18 @@ const PreviewCard = ({ kundliData, id }) => {
               <div className='heading-div'>❋ Astro Vastu Script ❋</div>
               <div className='AstroVastuScript-Div'>
                 <House houseArr={AstroVastuHouseScript} Symbols={Symbols}></House>
+              </div>
+            </div>
+            <div className='main-AstroVastuScript-Div'>
+              <div className='heading-div'>❋ Planet ↠ Planet Aspects Summary ❋</div>
+              <div className='Summary-Div'>
+                <SummaryAspect SummaryData={PlanetSummaryData} Aspect={"P"} />
+              </div>
+            </div>
+            <div className='main-AstroVastuScript-Div'>
+              <div className='heading-div'>❋ Planet ↠ House Aspects Summary ❋</div>
+              <div className='Summary-Div'>
+                <SummaryAspect SummaryData={HouseSummaryData} Aspect={"H"} />
               </div>
             </div>
           </Grid>

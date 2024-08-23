@@ -12,6 +12,7 @@ import KundliMain from '@/views/apps/kundli/page'
 // API Imports
 import { GetKundliDataAPI } from '@/app/Server/API/kundliAPI';
 import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer';
+import Loader from '@/components/common/Loader/Loader';
 
 
 export default function Page() {
@@ -37,7 +38,10 @@ export default function Page() {
     getAllKundli();
   }, [])
 
-  return <KundliMain kundliData={kundliData} />
+  return (<>
+    {loading && <Loader />}
+    <KundliMain kundliData={kundliData} />
+  </>)
 
 
   // return (

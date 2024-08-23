@@ -6,6 +6,7 @@ import AddKundliPopUp from "./addKundli/addKundli";
 import { GetKundliDataAPI } from "@/app/Server/API/kundliAPI";
 import classNames from "classnames";
 import { useRouter } from "next/navigation";
+import Loader from "@/components/common/Loader/Loader";
 
 export default function KundliMain() {
 
@@ -29,11 +30,18 @@ export default function KundliMain() {
       headerName: '',
       width: 100,
       renderCell: (params) => (
-        <IconButton onClick={() => handlePreviewClick(params?.row?.KundaliID)}>
-          <i
-            className={'tabler-arrow-up-right bg-primary'}
-          />
-        </IconButton>
+        <>
+          <IconButton onClick={() => handlePreviewClick(params?.row?.KundaliID)}>
+            <i
+              className={'tabler-arrow-up-right bg-primary'}
+            />
+          </IconButton>
+          <IconButton onClick={() => console.log(params?.row?.KundaliID)}>
+            <i
+              className={'tabler-edit'}
+            />
+          </IconButton>
+        </>
       ),
     },
     {
@@ -60,18 +68,7 @@ export default function KundliMain() {
       field: 'Prakriti', flex: 1, headerName: 'Prakriti', headerClassName: 'rowheader',
       headerAlign: 'left'
     },
-    {
-      field: 'iconColumn', // Unique field name for this column
-      headerName: '',
-      width: 100,
-      renderCell: (params) => (
-        <IconButton onClick={() => handlePreviewClick(params?.row?.KundaliID)}>
-          <i
-            className={'tabler-arrow-up-right bg-primary'}
-          />
-        </IconButton>
-      ),
-    },
+
   ];
   const [open, setOpen] = useState(false);
   const [kundliData, setKundliData] = useState([]);
@@ -90,15 +87,17 @@ export default function KundliMain() {
   const getAllKundli = async () => {
     setLoading(true);
     const res = await GetKundliDataAPI(1000, 1);
-    setLoading(false);
     if (res.hasError) {
+      setLoading(false);
       return toastDisplayer("error", res.error);
     } else {
       setKundliData(res?.responseData?.data?.Result?.KundaliList);
+      setLoading(false);
     }
   }
 
-  const handlePreviewClick=(kid)=>{
+  const handlePreviewClick = (kid) => {
+    setLoading(true);
     router.push(`kundli/preview?kid=${kid}`)
   }
 
@@ -111,6 +110,8 @@ export default function KundliMain() {
 
   return (
     <>
+
+    {loading && <Loader />}
       <Grid container spacing={6}>
 
         <Grid item xs={12} md={12}>
@@ -139,11 +140,19 @@ export default function KundliMain() {
                 disableColumnResize
                 disableRowSelectionOnClick
                 pagination
+                disableColumnFilter
+                disableColumnSelector
+                disableDensitySelector
                 initialState={{
-                  ...kundliData.initialState,
-                  pagination: { paginationModel: { pageSize: 10 } },
+                  pagination: { paginationModel: { pageSize: 12 } },
+                  pinnedColumns: { left: ['FirstName'], left: ['iconColumn'] }
                 }}
-                components={{ Toolbar: GridToolbar }}
+                slots={{ toolbar: GridToolbar }}
+                slotProps={{
+                  toolbar: {
+                    showQuickFilter: true,
+                  },
+                }}
               />
             </CardContent>
           </Card>
