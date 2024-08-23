@@ -36,6 +36,7 @@ import FloatingTextField from '@/components/common/FloatingTextField'
 import CircularProgress from '@mui/material/CircularProgress';
 import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
 import { TextField } from '@mui/material'
+import Loader from '@/components/common/Loader/Loader'
 
 // Styled Custom Components
 const LoginIllustration = styled('img')(({ theme }) => ({
@@ -97,8 +98,9 @@ const LoginV2 = ({ mode }) => {
     password: ""
   });
   const [isDisable, setIsDisable] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     try {
       if (formData.email == "") {
         return toastDisplayer("error", "Email or username is required.")
@@ -106,8 +108,10 @@ const LoginV2 = ({ mode }) => {
       if (formData.password == "") {
         return toastDisplayer("error", "password is required.")
       }
+      setLoading(true);
       setIsDisable(true);
-      const result = login(formData);
+      const result = await login(formData);
+      setLoading(false);
       if (result.error) {
         setIsDisable(false);
       } else {
@@ -145,68 +149,70 @@ const LoginV2 = ({ mode }) => {
     document.head.appendChild(styleSheet);
   }, []);
   return (
-    <div className='flex bs-full justify-center'>
-      <div
-        className={classnames(
-          'flex bs-full items-center justify-center flex-1 min-bs-[100dvh] relative p-6 max-md:hidden',
-          {
-            'border-ie': settings.skin === 'bordered'
-          }
-        )}
-        style={{ background: "#45163a", backgroundImage: 'url("../../public/images/illustrations/auth/stars.png")' }}
-      >
-        <div >
-          <LoginIllustration src={characterIllustration} alt='character-illustration' style={{ ...spinAnimation, width: '80%', height: '80%' }} />
-        </div>
-        {!hidden && (
-          <MaskImg
-            alt='mask'
-            src={authBackground}
-            className={classnames({ 'scale-x-[-1]': theme.direction === 'rtl' })}
-          />
-        )}
-      </div>
-      <div className='flex justify-center items-center bs-full bg-backgroundPaper !min-is-full p-6 md:!min-is-[unset] md:p-12 md:is-[480px]'>
-        <Link className='absolute block-start-5 sm:block-start-[33px] inline-start-6 sm:inline-start-[38px]'>
-          <Logo color={"white"} />
-        </Link>
-        <div className='flex flex-col gap-6 is-full sm:is-auto md:is-full sm:max-is-[400px] md:max-is-[unset] mbs-11 sm:mbs-14 md:mbs-0'>
-          <div className='flex flex-col gap-1'>
-            <Typography variant='h4'>{`Welcome to ${themeConfig.templateName}! 👋🏻`}</Typography>
-            <Typography>Please sign-in to your account and start the adventure</Typography>
+    <>
+    {loading && <Loader />}
+      <div className='flex bs-full justify-center'>
+        <div
+          className={classnames(
+            'flex bs-full items-center justify-center flex-1 min-bs-[100dvh] relative p-6 max-md:hidden',
+            {
+              'border-ie': settings.skin === 'bordered'
+            }
+          )}
+          style={{ background: "#45163a", backgroundImage: 'url("../../public/images/illustrations/auth/stars.png")' }}
+        >
+          <div >
+            <LoginIllustration src={characterIllustration} alt='character-illustration' style={{ ...spinAnimation, width: '80%', height: '80%' }} />
           </div>
-          <form
-            noValidate
-            autoComplete='off'
-            onSubmit={e => {
-              e.preventDefault()
-            }}
-            className='flex flex-col gap-5'
-          >
-            <FloatingTextField
-              fullWidth
-              autoFocus
-              label='Email or Username'
-              placeholder='Enter your email or username'
-              onChange={(e) => { handleInput("email", e); }}
+          {!hidden && (
+            <MaskImg
+              alt='mask'
+              src={authBackground}
+              className={classnames({ 'scale-x-[-1]': theme.direction === 'rtl' })}
             />
-            <TextField
-              fullWidth
-              label='Password'
-              placeholder='············'
-              id='outlined-adornment-password'
-              type={isPasswordShown ? 'text' : 'password'}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position='end'>
-                    <IconButton edge='end' onClick={handleClickShowPassword} onMouseDown={e => e.preventDefault()}>
-                      <i className={isPasswordShown ? 'tabler-eye-off' : 'tabler-eye'} />
-                    </IconButton>
-                  </InputAdornment>
-                )
+          )}
+        </div>
+        <div className='flex justify-center items-center bs-full bg-backgroundPaper !min-is-full p-6 md:!min-is-[unset] md:p-12 md:is-[480px]'>
+          <Link className='absolute block-start-5 sm:block-start-[33px] inline-start-6 sm:inline-start-[38px]'>
+            <Logo color={"white"} />
+          </Link>
+          <div className='flex flex-col gap-6 is-full sm:is-auto md:is-full sm:max-is-[400px] md:max-is-[unset] mbs-11 sm:mbs-14 md:mbs-0'>
+            <div className='flex flex-col gap-1'>
+              <Typography variant='h4'>{`Welcome to ${themeConfig.templateName}! 👋🏻`}</Typography>
+              <Typography>Please sign-in to your account and start the adventure</Typography>
+            </div>
+            <form
+              noValidate
+              autoComplete='off'
+              onSubmit={e => {
+                e.preventDefault()
               }}
-              onChange={(e) => { handleInput("password", e); }} />
-            {/* <FloatingTextField
+              className='flex flex-col gap-5'
+            >
+              <FloatingTextField
+                fullWidth
+                autoFocus
+                label='Email or Username'
+                placeholder='Enter your email or username'
+                onChange={(e) => { handleInput("email", e); }}
+              />
+              <TextField
+                fullWidth
+                label='Password'
+                placeholder='············'
+                id='outlined-adornment-password'
+                type={isPasswordShown ? 'text' : 'password'}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position='end'>
+                      <IconButton edge='end' onClick={handleClickShowPassword} onMouseDown={e => e.preventDefault()}>
+                        <i className={isPasswordShown ? 'tabler-eye-off' : 'tabler-eye'} />
+                      </IconButton>
+                    </InputAdornment>
+                  )
+                }}
+                onChange={(e) => { handleInput("password", e); }} />
+              {/* <FloatingTextField
               fullWidth
               label='Password'
               placeholder='············'
@@ -223,26 +229,27 @@ const LoginV2 = ({ mode }) => {
               }}
               onChange={(e) => { handleInput("password", e); }}
             /> */}
-            <div className='flex justify-between items-center gap-x-3 gap-y-1 flex-wrap'>
-              <FormControlLabel control={<Checkbox />} label='Remember me' />
-              <Typography className='text-end' color='primary' component={Link}>
-                Forgot password?
-              </Typography>
-            </div>
-            <Button fullWidth variant='contained' type='submit' disabled={isDisable} onClick={handleLogin}>
-              {isDisable ? <CircularProgress size={24} /> : 'Login'}
-            </Button>
+              <div className='flex justify-between items-center gap-x-3 gap-y-1 flex-wrap'>
+                <FormControlLabel control={<Checkbox />} label='Remember me' />
+                <Typography className='text-end' color='primary' component={Link}>
+                  Forgot password?
+                </Typography>
+              </div>
+              <Button fullWidth variant='contained' type='submit' disabled={isDisable} onClick={handleLogin}>
+                {isDisable ? <CircularProgress size={24} /> : 'Login'}
+              </Button>
 
-            <div className='flex justify-center items-center flex-wrap gap-2'>
-              <Typography>New on our platform?</Typography>
-              <Typography component={Link} color='primary'>
-                Create an account
-              </Typography>
-            </div>
-          </form>
+              <div className='flex justify-center items-center flex-wrap gap-2'>
+                <Typography>New on our platform?</Typography>
+                <Typography component={Link} color='primary'>
+                  Create an account
+                </Typography>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 

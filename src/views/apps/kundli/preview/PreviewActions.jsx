@@ -16,10 +16,10 @@ const PreviewActions = ({ value, onButtonClick }) => {
 
   return (
     <>
-      <Card>
-        <CardContent className='flex flex-col gap-4'>
+      {/* <Card>
+        <CardContent className='flex flex-col gap-4'> */}
         <Button
-            fullWidth
+            // fullWidth
             variant='contained'
             className='capitalize'
             startIcon={<i className='tabler-download' />}
@@ -27,14 +27,8 @@ const PreviewActions = ({ value, onButtonClick }) => {
           >
             {value}
           </Button>
-          {/* <div className='flex items-center gap-4'>
-            <Button fullWidth color='secondary' variant='tonal' className='capitalize' onClick={onButtonClick}>
-              Print
-            </Button>
-
-          </div> */}
-        </CardContent>
-      </Card>
+        {/* </CardContent>
+      </Card> */}
       </>
   )
 }

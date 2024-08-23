@@ -5,6 +5,7 @@ import Preview from '@/views/apps/kundli/preview/page';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { GetKundliIDDataAPI } from '@/app/Server/API/kundliAPI';
 import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer';
+import Loader from '@/components/common/Loader/Loader';
 
 const PreviewPage = () => {
   // var
@@ -39,7 +40,12 @@ const PreviewPage = () => {
 
   }
 
-  return <>{kundliData && (<Preview kundliData={kundliData} />)}</>;
+  return (
+    <>
+      {loading && <Loader />}
+
+      {kundliData && (<Preview kundliData={kundliData} />)}
+    </>);
 }
 
 export default PreviewPage;

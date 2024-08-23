@@ -170,6 +170,13 @@
             padding-bottom: 12px;
           }
 
+          .sub-div-rake{
+            color: gray;
+            display: flex;
+            gap: 4px;
+            align-items: center;
+          }
+
           .sub-div1 {
             color: blue;
             /* padding-bottom: 12px; */
@@ -209,6 +216,9 @@
 
               .rashi-Div1-sub1 {
                 font-weight: 600;
+                .rashiColor{
+                  color: var(--primary-color);
+                }
               }
 
               .rashi-Div1-sub2 {
@@ -285,6 +295,12 @@
 
               .rashi-div-sub {
                 padding-bottom: 12px;
+                .sub-div-rake{
+                  color: gray;
+                  display: flex;
+                  gap: 4px;
+                  align-items: center;
+                }
               }
 
               .sub-div1 {
@@ -313,13 +329,16 @@
     }
   }
 }
+
 @media print {
   body * {
     visibility: hidden;
   }
+
   .previewCard * {
     visibility: visible;
   }
+
   .previewCard {
     inline-size: 100%;
     block-size: 100%;
@@ -327,11 +346,11 @@
     inset: 0;
     box-sizing: border-box;
   }
-  
+
   .Birthdetail-div {
-    
-      background-color: red;
-  
+
+    background-color: red;
+
   }
 
   /* color: inherit;  */
@@ -350,6 +369,7 @@
   .previewCard * {
     visibility: visible;
   }
+
   .previewCard {
     inline-size: 100%;
     block-size: 100%;
@@ -357,9 +377,54 @@
     inset: 0;
     box-sizing: border-box;
   }
+
   @media (max-width: 600px) {
     .previewCard {
       position: relative !important;
     }
   }
+}
+
+
+.Summary-Div {
+  color: rebeccapurple;
+
+  .mui-yrdy0g-MuiDataGrid-columnHeaderRow {
+    background: var(--primary-soft-color) !important;
+
+    .mui-t89xny-MuiDataGrid-columnHeaderTitle {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      font-weight: bolder;
+      /* font-size: 15px; */
+    }
+  }
+
+  .MuiDataGrid-cell{
+    /* color: red; */
+    .summaryTxt{
+      /* color: yellow; */
+
+      .neutral{
+        color: blue;
+      }
+
+      .rake{
+        display: flex;
+        gap: 2px;
+        align-items: center;
+        color: gray;
+      }
+
+      .positive{
+        color: green;
+      }
+
+      .negative{
+        color: red;
+      }
+    }
+  }
+
 }
