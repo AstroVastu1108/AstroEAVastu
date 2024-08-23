@@ -1,31 +1,13 @@
-'use client'
-import * as React from 'react'
-import { useState, useEffect } from 'react'
-import Grid from '@mui/material/Grid'
-import Button from '@mui/material/Button'
-import MenuItem from '@mui/material/MenuItem'
-import { Card, CardHeader, FormControlLabel, CardContent, FormLabel, Radio, RadioGroup, FormControl, InputLabel, Select, debounce, FormHelperText } from '@mui/material'
-// import TextField from '@/components/common/TextField'
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo'
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import { TimePicker } from '@mui/x-date-pickers/TimePicker'
-import TextField from '@mui/material/TextField'
-import Autocomplete from '@mui/material/Autocomplete'
+import React, { useEffect, useState } from 'react'
+import { Autocomplete, Button, Card, CardContent, CardHeader, CircularProgress, debounce, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControlLabel, FormHelperText, FormLabel, Grid, Radio, RadioGroup, TextField } from "@mui/material";
+import { useAuth } from '@/@core/contexts/authContext';
+import { getCities, getCountries, getReport } from '@/app/Server/API/common';
+import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer';
+import { useRouter } from 'next/navigation';
+import AppReactDatepicker from '@/components/datePicker/AppReactDatepicker';
+import { CreateKundli } from '@/app/Server/API/kundliAPI';
 
-import { useRouter } from 'next/navigation'
-import { useAuth } from '@/@core/contexts/authContext'
-
-import CircularProgress from '@mui/material/CircularProgress';
-import { DatePicker } from '@mui/x-date-pickers'
-import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
-import { getCities, getCountries, getReport } from '@/app/Server/API/common'
-
-import "./index.css"
-import AppReactDatepicker from '@/components/datePicker/AppReactDatepicker'
-import CustomTextField from '@/@core/components/mui/TextField'
-
-const CustomerForm = () => {
+function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
 
   const [isDisable, setIsDisable] = useState(false);
   const [userData, setUserData] = useState({
@@ -95,8 +77,8 @@ const CustomerForm = () => {
     fetchCities(query)
   }, [query])
 
-  const handleSubmit = async event => {
-    event.preventDefault()
+  const handleSubmit = async () => {
+    // event.preventDefault()
     const birthDate = userData.date ? new Date(userData.date).toLocaleDateString('en-GB').split('/').join('-') : null
 
     const birthTime = userData.time ? new Date(userData.time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }).replace(/:/g, '') : null;
@@ -127,17 +109,20 @@ const CustomerForm = () => {
     try {
       setIsDisable(true)
       if (isValid) {
-        const response = await getReport(formattedData)
+        const response = await CreateKundli(formattedData)
 
         if (response.hasError) {
           setIsDisable(false)
           return toastDisplayer("error", response.error)
         }
-        var resData = response.responseData
+        var kId = response?.responseData?.Result?.KundaliID;
         setIsDisable(false)
-        setKundliData(resData?.Result)
-        router.push('kundli/preview')
-        toastDisplayer("success", `kundli data is getting successfully..\nyou will be redirecting to preview page shortly.`)
+        getAllKundli();
+        handleAddClose();
+        // setKundliData(resData?.Result)
+        // router.push('kundli/preview')
+        toastDisplayer("success", `kundli data is saved successfully.`)
+        return kId;
       } else {
         setIsDisable(false)
       }
@@ -147,29 +132,34 @@ const CustomerForm = () => {
     }
   }
 
-  const handleReset = () => {
-    setErrors({
-      FirstName: false,
-      LastName: false,
-      MiddleName: false,
-      Gender: false,
-      BirthDate: false,
-      Country: false,
-      BirthTime: false,
-      CityID: false,
-      Prakriti: false
-    })
-    setUserData({
-      firstName: '',
-      lastName: '',
-      middleName: '',
-      gender: 'male',
-      date: null,
-      country: '',
-      time: null,
-      city: ''
-    })
+  const handlePreview = async () => {
+    const kid = await handleSubmit();
+    router.push(`kundli/preview?kid=${kid}`)
   }
+
+  // const handleReset = () => {
+  //   setErrors({
+  //     FirstName: false,
+  //     LastName: false,
+  //     MiddleName: false,
+  //     Gender: false,
+  //     BirthDate: false,
+  //     Country: false,
+  //     BirthTime: false,
+  //     CityID: false,
+  //     Prakriti: false
+  //   })
+  //   setUserData({
+  //     firstName: '',
+  //     lastName: '',
+  //     middleName: '',
+  //     gender: 'male',
+  //     date: null,
+  //     country: '',
+  //     time: null,
+  //     city: ''
+  //   })
+  // }
 
   const handleInputChange = (field, value, key) => {
     setUserData(prev => ({
@@ -183,11 +173,28 @@ const CustomerForm = () => {
   }
 
   return (
-    <Card>
-      <CardHeader title='Add Customer Information' />
-      <CardContent>
-        <form onSubmit={handleSubmit}>
-          <Grid container spacing={5}>
+    <>
+      <Dialog
+        open={open}
+        onClose={handleAddClose}
+        maxWidth="md"   // 'xs', 'sm', 'md', 'lg', 'xl' or false for custom width
+        fullWidth={true}  // Ensures the dialog takes up full width of the container
+        PaperProps={{
+          component: 'form',
+          onSubmit: (event) => {
+            event.preventDefault();
+            handleSubmit();
+          },
+        }}
+      >
+        <DialogTitle>Add Kundli</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Enter the required information to create a new Kundli.
+          </DialogContentText>
+
+          {/* <form  onSubmit={handleSubmit}> */}
+          <Grid className='mt-4' container spacing={5}>
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
@@ -238,29 +245,7 @@ const CustomerForm = () => {
               </RadioGroup>
               {errors.Gender && <FormHelperText error>Gender is required.</FormHelperText>}
             </Grid>
-
             <Grid item xs={12} sm={6}>
-              {/* <AppReactDatepicker
-                selected={userData.date}
-                showYearDropdown
-                showMonthDropdown
-                onChange={date => setUserData({ ...userData, date })}
-                placeholderText='DD/MM/YYYY'
-                customInput={<CustomTextField fullWidth label='Birth Date' placeholder='DD-MM-YYYY' />}
-              /> */}
-              {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  label="Birth Date"
-                  className='w-[100%]'
-                  value={userData.date}
-                  onChange={(date) => setUserData({ ...userData, date })}
-                  renderInput={(params) => <CustomTextField {...params} fullWidth
-                    {...(errors.BirthDate && { error: true, helperText: 'BirthDate is required.' })}
-                  />}
-                  {...(errors.BirthDate && { error: true, helperText: 'BirthDate is required.' })}
-                />
-              </LocalizationProvider> */}
-
               <AppReactDatepicker
                 selected={userData.date}
                 value={userData.date}
@@ -302,36 +287,16 @@ const CustomerForm = () => {
                   />
                 }
               />
-              {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={['TimePicker']}>
-                  <TimePicker
-                    className='w-[100%]'
-                    label='Birth Time'
-                    value={userData.time}
-                    onChange={time => setUserData({ ...userData, time })}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        fullWidth
-                        error={!!errors.BirthTime} // Show error state if there's an error
-                        helperText={"errors.time"} // Display error message if there's an error
-                        {...(errors.BirthDate && { error: true, helperText: 'BirthDate is required.' })}
-                      />
-                    )}
-                  />
-                </DemoContainer>
-              </LocalizationProvider> */}
             </Grid>
             <Grid item xs={12} sm={6}>
 
               <Autocomplete
                 id='country-select'
                 options={conutryData}
+                defaultValue={conutryData && (conutryData.find((option) => option.iso2 === "IN"))}
                 getOptionLabel={(option) => option.name}
                 getOptionKey={(option) => option.iso2}
                 onChange={(event, newValue) => handleInputChange('country', newValue, 'Country')}
-                // onChange={(event, newValue) => {setUserData({ ...userData, country: newValue});
-                // }}
                 renderInput={(params) => (
                   <TextField {...params} label='Select Country' variant='outlined'
                     {...(errors.Country && { error: true, helperText: 'Country is required.' })}
@@ -339,7 +304,6 @@ const CustomerForm = () => {
                 )}
               />
             </Grid>
-
             <Grid item xs={12} sm={6}>
               <Autocomplete
                 id='city-autocomplete'
@@ -347,12 +311,6 @@ const CustomerForm = () => {
                 getOptionLabel={(option) => option.FormattedCity || ''}
                 onInputChange={(event, newQuery) => setQuery(newQuery)}
                 onChange={(event, newValue) => handleInputChange('city', newValue.CityID, 'CityID')}
-                // onChange={(event, newValue) => {
-                //   if (newValue) {
-                //     // Store the CityID in userData.city
-                //     setUserData({ ...userData, city: newValue.CityID })
-                //   }
-                // }}
                 renderInput={(params) => (
                   <TextField {...params} label='Select City' variant='outlined'
                     {...(errors.CityID && { error: true, helperText: 'City is required.' })}
@@ -361,19 +319,25 @@ const CustomerForm = () => {
               />
             </Grid>
           </Grid>
-          <div className='submit-btn'>
-
-            <Button variant='contained' className='mt-4' type='reset' color='secondary' onClick={handleReset}>
-              Reset
-            </Button>
-            <Button variant='contained' className='mt-4 d-flex justify-content-end' type='submit' disabled={isDisable} onClick={handleSubmit} >
-              {isDisable ? <CircularProgress size={5} /> : 'Submit'}
-            </Button>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleAddClose}>Cancel</Button>
+          <Button variant='outlined' type='submit' disabled={isDisable} >
+            {isDisable ? <>
+              <CircularProgress size={14} aria-label="Wait" />
+              <span style={{ marginLeft: 8 }}>Saving</span>
+            </> : 'Save'}
+          </Button>
+          <Button variant='contained' disabled={isDisable} onClick={handlePreview} >
+            {isDisable ? <>
+              <CircularProgress size={14} aria-label="Wait" />
+              <span style={{ marginLeft: 8 }}>Saving</span>
+            </> : 'Save & Preview'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   )
 }
 
-export default CustomerForm
+export default AddKundliPopUp

@@ -14,7 +14,7 @@ import { getKundliPdf } from '@/app/Server/API/common'
 import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
 const Preview = ({ kundliData }) => {
   const printRef = useRef()
-  
+
   const handleKundliApi = async () => {
     if (kundliData) {
       try {
@@ -22,7 +22,6 @@ const Preview = ({ kundliData }) => {
         if(response.hasError){
           return toastDisplayer("error",response.error)
         }
-        console.log("response : ",response)
         // Create a Blob from the PDF
         const pdfBlob = new Blob([response.responseData.data], { type: 'application/pdf' });
 

@@ -1,31 +1,3 @@
-// // src/@core/contexts/authContext.js
-// import { createContext, useContext, useState } from 'react';
-
-// const AuthContext = createContext();
-
-// export const AuthProvider = ({ children }) => {
-//     const [user, setUser] = useState(null);
-
-//     const login = (userData) => {
-//         console.log("login is called");
-//         setUser(userData);
-//         // Save to localStorage or other persistent storage if needed
-//     };
-
-//     const logout = () => {
-//         setUser(null);
-//         // Remove from localStorage or other persistent storage if needed
-//     };
-
-//     return (
-//         <AuthContext.Provider value={{ user, login, logout }}>
-//             {children}
-//         </AuthContext.Provider>
-//     );
-// };
-
-// export const useAuth = () => useContext(AuthContext);
-// src/@core/contexts/authContext.js
 'use client';
 import { LoginFormSchema } from '@/app/Server/auth/definition';
 import Cookies from 'js-cookie';
@@ -67,7 +39,7 @@ export const AuthProvider = ({ children }) => {
         })
 
         const errorMessage = { message: 'Invalid login credentials.' }
-        
+
         if (!validatedFields.success) {
 
             setIsLoggedIn(false);
@@ -101,14 +73,13 @@ export const AuthProvider = ({ children }) => {
                 error: true,
                 message: errorMessage
             };
-            
+
         }
     };
 
     function getUser() {
         try {
             const storedSessionValue = JSON.parse(sessionStorage.getItem("authState"));
-            console.log("Called");
             if (storedSessionValue) {
                 return {
                     isOk: true,

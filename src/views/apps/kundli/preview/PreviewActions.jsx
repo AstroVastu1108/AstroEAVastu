@@ -31,7 +31,7 @@ const PreviewActions = ({ value, onButtonClick }) => {
             <Button fullWidth color='secondary' variant='tonal' className='capitalize' onClick={onButtonClick}>
               Print
             </Button>
-            
+
           </div> */}
         </CardContent>
       </Card>
