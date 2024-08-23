@@ -19,3 +19,42 @@ export async function GetKundliDataAPI(PageSize,PageNumber) {
     return responseBody
   }
 }
+
+// save kundli data and get kundli id
+export async function CreateKundli(payload) {
+  const responseBody = {
+    responseData: null,
+    hasError: false,
+    error: null
+  }
+  try {
+    const response = await axios.post(`${API_URL}/astro/create-kundali`, payload)
+    responseBody.responseData = response.data
+    return responseBody
+  } catch (error) {
+    responseBody.hasError = true
+    responseBody.errorMessage = responseBody.errorMessage =
+      error.response?.data?.statusMsg || error.response?.data?.errors
+    return responseBody
+  }
+}
+
+
+// get kundli data from kundli id
+export async function GetKundliIDDataAPI(kId) {
+  const responseBody = {
+    responseData: null,
+    hasError: false,
+    error: null
+  }
+  try {
+    const response = await axios.get(`${API_URL}/astro/astro-vastu-report/${kId}`)
+    responseBody.responseData = response
+    return responseBody
+  } catch (error) {
+    responseBody.hasError = true
+    responseBody.errorMessage = responseBody.errorMessage =
+      error.response?.data?.statusMsg || error.response?.data?.errors
+    return responseBody
+  }
+}

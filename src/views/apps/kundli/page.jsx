@@ -1,8 +1,12 @@
-import { Button, Card, CardContent, Grid } from "@mui/material";
+import { Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, TextField } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid"
 import PreviewActions from "./preview/PreviewActions";
+import { useEffect, useState } from "react";
+import AddKundliPopUp from "./addKundli/addKundli";
+import { GetKundliDataAPI } from "@/app/Server/API/kundliAPI";
 
-export default function KundliMain({ kundliData }) {
+export default function KundliMain() {
+
   // vars
   const columns = [
     // {
@@ -10,47 +14,73 @@ export default function KundliMain({ kundliData }) {
     //   headerAlign: 'left'
     // },
     {
-      field: 'FirstName',flex: 1,  headerName: 'First Name', headerClassName: 'rowheader',
+      field: 'FirstName', flex: 1, headerName: 'First Name', headerClassName: 'rowheader',
       headerAlign: 'left'
     },
     {
-      field: 'MiddleName',flex: 1,  headerName: 'Middle Name', headerClassName: 'rowheader',
+      field: 'MiddleName', flex: 1, headerName: 'Middle Name', headerClassName: 'rowheader',
       headerAlign: 'left'
     },
     {
-      field: 'LastName',flex: 1,  headerName: 'Last Name', headerClassName: 'rowheader',
+      field: 'LastName', flex: 1, headerName: 'Last Name', headerClassName: 'rowheader',
       headerAlign: 'left'
     },
     {
-      field: 'Gender',flex: 1,  headerName: 'Gender', headerClassName: 'rowheader',
+      field: 'Gender', flex: 1, headerName: 'Gender', headerClassName: 'rowheader',
       headerAlign: 'left'
     },
     {
-      field: 'BirthDate',flex: 1,  headerName: 'BirthDate', headerClassName: 'rowheader',
+      field: 'BirthDate', flex: 1, headerName: 'BirthDate', headerClassName: 'rowheader',
       headerAlign: 'left'
     },
     {
-      field: 'BirthTime',flex: 1,  headerName: 'BirthTime', headerClassName: 'rowheader',
+      field: 'BirthTime', flex: 1, headerName: 'BirthTime', headerClassName: 'rowheader',
       headerAlign: 'left'
     },
     {
-      field: 'Country',flex: 1,  headerName: 'Country', headerClassName: 'rowheader',
+      field: 'Country', flex: 1, headerName: 'Country', headerClassName: 'rowheader',
       headerAlign: 'left'
     },
     {
-      field: 'CityID',flex: 1,  headerName: 'City', headerClassName: 'rowheader',
+      field: 'CityID', flex: 1, headerName: 'City', headerClassName: 'rowheader',
       headerAlign: 'left'
     },
     {
-      field: 'Prakriti',flex: 1,  headerName: 'Prakriti', headerClassName: 'rowheader',
+      field: 'Prakriti', flex: 1, headerName: 'Prakriti', headerClassName: 'rowheader',
       headerAlign: 'left'
     },
   ];
-  // Adding unique IDs
-  // const newKundliData = kundliData?.map((item, index) => ({
-  //   id: index + 1, // You can use uuidv4() for truly unique IDs if needed
-  //   ...item
-  // }));
+  const [open, setOpen] = useState(false);
+  const [kundliData, setKundliData] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  // func
+  const handleAddClick = () => {
+    setOpen(true)
+  }
+  const handleAddClose = () => {
+    setOpen(false)
+  }
+
+  // func
+  const getAllKundli = async () => {
+    setLoading(true);
+    const res = await GetKundliDataAPI(1000, 1);
+    setLoading(false);
+    if (res.hasError) {
+      return toastDisplayer("error", res.error);
+    } else {
+      setKundliData(res?.responseData?.data?.Result?.KundaliList);
+    }
+  }
+
+
+  // Hooks
+  useEffect(() => {
+    getAllKundli();
+  }, [])
+
+
   return (
     <>
       <Grid container spacing={6}>
@@ -65,7 +95,7 @@ export default function KundliMain({ kundliData }) {
                     variant='contained'
                     className='capitalize'
                     // startIcon={<i classNam e='tabler-download' />}
-                    // onClick={onButtonClick}
+                    onClick={handleAddClick}
                   >
                     Add New
                   </Button>
@@ -91,6 +121,10 @@ export default function KundliMain({ kundliData }) {
 
         </Grid>
       </Grid>
+
+      {open && (
+        <AddKundliPopUp open={open} handleAddClose={handleAddClose} getAllKundli={getAllKundli}/>
+      )}
 
     </>
   )

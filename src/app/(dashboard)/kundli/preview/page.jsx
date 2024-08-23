@@ -1,38 +1,45 @@
-// Next Imports
 'use client'
-import { useAuth } from '@/@core/contexts/authContext';
-import Preview from '@/views/apps/kundli/preview/page'
-// import { useRouter } from 'next/navigation'
-import { useRouter } from 'next/router';
 
+import { useEffect, useState } from 'react';
+import Preview from '@/views/apps/kundli/preview/page';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { GetKundliIDDataAPI } from '@/app/Server/API/kundliAPI';
+import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer';
 
+const PreviewPage = () => {
+  // var
+  const searchParams = useSearchParams();
+  const [kundliData, SetKundliData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter()
 
-// Component Imports
+  // Hooks
+  useEffect(() => {
+    const kidValue = searchParams.get('kid');
+    getKundliData(kidValue);
 
-// Data Imports
-// import { getInvoiceData } from '@/app/server/actions'
+  }, [searchParams]);
 
-/**
- * ! If you need data using an API call, uncomment the below API code, update the `process.env.API_URL` variable in the
- * ! `.env` file found at root of your project and also update the API endpoints like `/apps/invoice` in below example.
- * ! Also, remove the above server action import and the action itself from the `src/app/server/actions.ts` file to clean up unused code
- * ! because we've used the server action for getting our static data.
- */
-/* const getInvoiceData = async () => {
-  // Vars
-  const res = await fetch(`${process.env.API_URL}/apps/invoice`)
+  // Func
+  const getKundliData = async (kId) => {
+    if (kId != "undefined" && kId != null) {
+      setLoading(true);
+      const res = await GetKundliIDDataAPI(kId);
+      setLoading(false);
+      if (res.hasError) {
+        router.push('/kundli')
+        return toastDisplayer("error", res.error);
+      } else {
+        SetKundliData(res?.responseData?.data?.Result)
+      }
+    } else {
+      router.push('/kundli')
+      return toastDisplayer("error", "Kundli Id not found.");
+    }
 
-  if (!res.ok) {
-    throw new Error('Failed to fetch invoice data')
   }
 
-  return res.json()
-} */
-const PreviewPage = async ({ params }) => {
-  // Vars
-  const { kundliData } = useAuth()
-
-  return <Preview kundliData={kundliData} id={1} />
+  return <>{kundliData && (<Preview kundliData={kundliData} />)}</>;
 }
 
-export default PreviewPage
+export default PreviewPage;

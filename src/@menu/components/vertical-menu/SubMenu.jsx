@@ -264,12 +264,8 @@ const SubMenu = (props, ref) => {
     } else {
       setActive(false)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname])
 
-  /* useEffect(() => {
-      console.log(openSubmenu)
-    }, [openSubmenu]) */
   const submenuContent = (
     <SubMenuContent
       ref={isCollapsed && level === 0 && isPopoutWhenCollapsed ? refs.setFloating : contentRef}
