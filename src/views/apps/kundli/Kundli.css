@@ -1,0 +1,7 @@
+.KundliList{
+  .MuiDataGrid-toolbarContainer{
+    display: flex;
+    justify-content: end;
+    padding: 12px;
+  }
+}

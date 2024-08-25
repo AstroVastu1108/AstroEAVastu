@@ -4,9 +4,10 @@
 
 :root {
   /* new added */
-  --mui-palette-primary-main: #662294;
-  --mui-palette-primary-mainChannel: 120 38 148;
-  --primary-soft-color: rgb(102, 34, 148, 0.2);
+  /* --mui-palette-primary-main: #662294; */
+  /* --mui-palette-primary-mainChannel: 120 38 148; */
+  /* --primary-soft-color: rgba(102, 34, 148, 0.2); */
+  --primary-soft-color: #662294;
   --secondary-color: rgb(255, 196, 1);
   --secondary-soft-color: rgb(255, 196, 1, 0.5);
 
@@ -139,7 +140,7 @@ input[autocomplete='one-time-code'][data-input-otp='true'] {
 }
 
 code {
-  font-family: inherit;
+  font-family: 'Segoe UI';
   padding-block: 2px;
   padding-inline: 4px;
   border-radius: 4px;

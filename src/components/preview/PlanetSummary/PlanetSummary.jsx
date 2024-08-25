@@ -49,11 +49,6 @@ const SummaryAspect = ({ SummaryData, Aspect }) => {
     ...item
   }));
 
-  const handleCellClick = (params) => {
-    // Do nothing to disable cell click
-    console.log("first")
-  };
-
   return (
     <Box sx={{
       '& .MuiDataGrid-cell': {
@@ -76,7 +71,6 @@ const SummaryAspect = ({ SummaryData, Aspect }) => {
         hideFooter={true}
         rowHeight={32}
         columnHeaderHeight={44}
-        onCellClick={handleCellClick}
       />
     </Box>
   );

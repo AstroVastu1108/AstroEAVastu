@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Autocomplete, Button, Card, CardContent, CardHeader, CircularProgress, debounce, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControlLabel, FormHelperText, FormLabel, Grid, Radio, RadioGroup, TextField } from "@mui/material";
+import { Autocomplete, Button, Card, CardContent, CardHeader, CircularProgress, debounce, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormHelperText, FormLabel, Grid, InputLabel, MenuItem, Radio, RadioGroup, Select, TextField } from "@mui/material";
 import { useAuth } from '@/@core/contexts/authContext';
 import { getCities, getCountries, getReport } from '@/app/Server/API/common';
 import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer';
@@ -14,11 +14,11 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
     firstName: '',
     lastName: '',
     middleName: '',
-    gender: 'male',
+    gender: 'Male',
     date: null,
     country: { iso2: 'IN', name: 'India' },
     time: null,
-    city: ''
+    city: 'A1AE28185ED49D47211760BF32D40EB742C84998'
   })
 
   const [errors, setErrors] = useState({
@@ -32,9 +32,22 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
     CityID: false,
     Prakriti: false
   })
-  const [conutryData, setConutryData] = useState([])
-  const [cityData, setCityData] = useState([])
-  const { setKundliData } = useAuth()
+  const [conutryData, setConutryData] = useState([
+    { iso2: 'IN', name: 'India' }
+  ])
+  const [cityData, setCityData] = useState([{
+    "CityID": "A1AE28185ED49D47211760BF32D40EB742C84998",
+    "FormattedCity": "Surat, Gujarat"
+  }])
+
+  const [currentTime, setCurrentTime] = useState(null);
+
+  useEffect(() => {
+    const now = new Date();
+    setUserData((prev) => ({ ...prev, ["date"]: now, ["time"]: now }))
+    setCurrentTime(now);
+  }, []);
+
   const fetchData = async () => {
     try {
       const response = await getCountries()
@@ -52,17 +65,10 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
     fetchData()
   }, [])
 
-  useEffect(() => {
-    console.log(conutryData.find((option) => option.iso2 === "IN"))
-  }, [conutryData])
-
   const router = useRouter()
-
-  const [filteredCities, setFilteredCities] = useState([]);
   const [query, setQuery] = useState('')
 
   const fetchCities = debounce(async (query) => {
-    console.log(":here",userData.country)
     if (query.length > 1 && userData.country) {
       try {
         const iso2 = userData.country.iso2
@@ -87,7 +93,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
     // event.preventDefault()
     const birthDate = userData.date ? new Date(userData.date).toLocaleDateString('en-GB').split('/').join('-') : null
 
-    const birthTime = userData.time ? new Date(userData.time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }).replace(/:/g, '') : null;
+    const birthTime = userData.time ? new Date(userData.time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }).replace(/:/g, '') : null;
 
     const formattedData = {
       FirstName: userData.firstName,
@@ -101,20 +107,11 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
       Prakriti: userData.prakriti || ''
     }
 
-    let isValid = true;
-    Object.keys(formattedData).forEach(key => {
-      if (!formattedData[key] && key != 'Prakriti') {
-        isValid = false;
-        return setErrors(prev => ({
-          ...prev,
-          [key]: true
-        }))
-        // return toastDisplayer("error", `${key} is required`)
-      }
-    });
     try {
       setIsDisable(true)
-      if (isValid) {
+        if(formattedData.FirstName.trim("") == ""){
+          return console.log("prashna kundli")
+        }
         const response = await CreateKundli(formattedData)
 
         if (response.hasError) {
@@ -125,13 +122,8 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
         setIsDisable(false)
         getAllKundli();
         handleAddClose();
-        // setKundliData(resData?.Result)
-        // router.push('kundli/preview')
         toastDisplayer("success", `kundli data is saved successfully.`)
         return kId;
-      } else {
-        setIsDisable(false)
-      }
     } catch (error) {
       setIsDisable(false)
       console.error('There was an error submitting the form:', error)
@@ -143,39 +135,10 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
     router.push(`kundli/preview?kid=${kid}`)
   }
 
-  // const handleReset = () => {
-  //   setErrors({
-  //     FirstName: false,
-  //     LastName: false,
-  //     MiddleName: false,
-  //     Gender: false,
-  //     BirthDate: false,
-  //     Country: false,
-  //     BirthTime: false,
-  //     CityID: false,
-  //     Prakriti: false
-  //   })
-  //   setUserData({
-  //     firstName: '',
-  //     lastName: '',
-  //     middleName: '',
-  //     gender: 'male',
-  //     date: null,
-  //     country: '',
-  //     time: null,
-  //     city: ''
-  //   })
-  // }
-
   const handleInputChange = (field, value, key) => {
-    console.log("first : ",value)
     setUserData(prev => ({
       ...prev,
       [field]: value
-    }))
-    return setErrors(prev => ({
-      ...prev,
-      [key]: false
     }))
   }
 
@@ -184,7 +147,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
       <Dialog
         open={open}
         onClose={handleAddClose}
-        maxWidth="md"   // 'xs', 'sm', 'md', 'lg', 'xl' or false for custom width
+        maxWidth="sm"   // 'xs', 'sm', 'md', 'lg', 'xl' or false for custom width
         fullWidth={true}  // Ensures the dialog takes up full width of the container
         PaperProps={{
           component: 'form',
@@ -194,103 +157,105 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
           },
         }}
       >
-        <DialogTitle>Add Kundli</DialogTitle>
+        <DialogTitle className='PopupHeader'>Add Kundli</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Enter the required information to create a new Kundli.
           </DialogContentText>
-
-          {/* <form  onSubmit={handleSubmit}> */}
           <Grid className='mt-4' container spacing={5}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 fullWidth
-                label='First Name'
-                // placeholder='John'
+                label="First Name"
                 value={userData?.firstName}
-                // onChange={e => setUserData({ ...userData, firstName: e.target.value })}
-                onChange={e => handleInputChange('firstName', e.target.value, 'FirstName')}
-                {...(errors.FirstName && { error: true, helperText: 'FirstName is required.' })}
-
+                onChange={e => {
+                  const inputValue = e.target.value;
+                  const capitalizedValue = inputValue.charAt(0).toUpperCase() + inputValue.slice(1);
+                  handleInputChange('firstName', capitalizedValue, 'FirstName');
+                }}
+              // {...(errors.FirstName && { error: true, helperText: 'FirstName is required.' })}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 fullWidth
                 label='Middle Name'
                 // placeholder='John'
                 value={userData?.middleName}
                 onChange={e => handleInputChange('middleName', e.target.value, 'MiddleName')}
-                // onChange={e => setUserData({ ...userData, middleName: e.target.value })}
-                {...(errors.MiddleName && { error: true, helperText: 'MiddleName is required.' })}
+              // onChange={e => setUserData({ ...userData, middleName: e.target.value })}
+              // {...(errors.MiddleName && { error: true, helperText: 'MiddleName is required.' })}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 fullWidth
                 label='Last Name'
                 // placeholder='Doe'
                 value={userData?.lastName}
                 onChange={e => handleInputChange('lastName', e.target.value, 'LastName')}
-                // onChange={e => setUserData({ ...userData, lastName: e.target.value })}
-                {...(errors.LastName && { error: true, helperText: 'LastName is required.' })}
+              // onChange={e => setUserData({ ...userData, lastName: e.target.value })}
+              // {...(errors.LastName && { error: true, helperText: 'LastName is required.' })}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormLabel id='demo-radio-buttons-group-label'>Gender</FormLabel>
-              <RadioGroup
-                row
-                aria-labelledby='demo-radio-buttons-group-label'
-                value={userData?.gender || 'male'}
-                onChange={e => handleInputChange('gender', e.target.value, 'Gender')}
-                // onChange={e => setUserData({ ...userData, gender: e.target.value })}
-                name='radio-buttons-group'
-              >
-                <FormControlLabel value='male' control={<Radio />} label='Male' />
-                <FormControlLabel value='female' control={<Radio />} label='Female' />
-                <FormControlLabel value='other' control={<Radio />} label='Other' />
-              </RadioGroup>
-              {errors.Gender && <FormHelperText error>Gender is required.</FormHelperText>}
+            <Grid item xs={12} sm={4}>
+              <FormControl fullWidth>
+                <InputLabel id="gender-select-label">Gender</InputLabel>
+                <Select
+                  labelId="gender-select-label"
+                  id="gender-select"
+                  value={userData?.gender || ''}
+                  onChange={e => handleInputChange('gender', e.target.value, 'Gender')}
+                  label="Gender"
+                >
+                  <MenuItem value="Male">Male</MenuItem>
+                  <MenuItem value="Female">Female</MenuItem>
+                  <MenuItem value="Other">Other</MenuItem>
+                </Select>
+              </FormControl>
             </Grid>
-            <Grid item xs={12} sm={6}>
+
+            <Grid item xs={12} sm={4}>
               <AppReactDatepicker
-                selected={userData.date}
+                selected={currentTime}
+                defaultValue={currentTime}
                 value={userData.date}
                 showYearDropdown
                 showMonthDropdown
-                onChange={date => handleInputChange('date', date, 'BirthDate')}
-                placeholderText='DD/MM/YYYY'
-                dateFormat="dd/MM/yyyy"
+                onChange={date => {
+                  handleInputChange('date', date, 'BirthDate')
+                }}
+                placeholderText='dd-MM-yyyy'
+                dateFormat="dd-MM-yyyy"
                 customInput={
                   <TextField
                     value={userData.date}
                     onChange={date => handleInputChange('date', date, 'BirthDate')}
-                    // onChange={(date) => setUserData({ ...userData, date })}
                     fullWidth
                     label='Date Of Birth'
-                    {...(errors.BirthDate && { error: true, helperText: 'BirthDate is required.' })}
+                  // {...(errors.BirthDate && { error: true, helperText: 'BirthDate is required.' })}
                   />
                 }
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4}>
               <AppReactDatepicker
                 showTimeSelect
                 showTimeSelectOnly
-                dateFormat="h:mm:ss aa" // Format including seconds
-                timeFormat="h:mm:ss aa" // Time format including seconds
-                timeIntervals={1} // Allows minute-by-minute selection
+                timeFormat="HH:mm"
+                dateFormat="HH:mm"
+                timeIntervals={1}
                 id="time-only-picker"
-                selected={userData.time}
+                selected={currentTime}
+                defaultValue={currentTime}
                 value={userData.time}
                 onChange={date => handleInputChange('time', date, 'BirthTime')}
-                // onChange={(date) => setTime(date)} // Update the state with the selected time
                 customInput={
                   <TextField
-                    label="Time Only"
+                    label="Time Of Birth"
                     fullWidth
                     onChange={date => handleInputChange('time', date, 'BirthTime')}
-                    {...(errors.BirthTime && { error: true, helperText: 'BirthTime is required.' })}
+                  // {...(errors.BirthTime && { error: true, helperText: 'BirthTime is required.' })}
                   />
                 }
               />
@@ -317,12 +282,17 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
               <Autocomplete
                 id='city-autocomplete'
                 options={cityData}
+                // value={cityData.find(city => city.CityID === "A1AE28185ED49D47211760BF32D40EB742C84998") || null}
+                defaultValue={{
+                  "CityID": "A1AE28185ED49D47211760BF32D40EB742C84998",
+                  "FormattedCity": "Surat, Gujarat"
+                }}
                 getOptionLabel={(option) => option.FormattedCity || ''}
                 onInputChange={(event, newQuery) => setQuery(newQuery)}
                 onChange={(event, newValue) => handleInputChange('city', newValue.CityID, 'CityID')}
                 renderInput={(params) => (
                   <TextField {...params} label='Select City' variant='outlined'
-                    {...(errors.CityID && { error: true, helperText: 'City is required.' })}
+                  // {...(errors.CityID && { error: true, helperText: 'City is required.' })}
                   />
                 )}
               />
