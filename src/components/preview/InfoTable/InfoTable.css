@@ -1,0 +1,11 @@
+.text-Value {
+  font-weight: 600;
+  font-size: 14px;
+  padding-left: 8px;
+  color: #000;
+}
+.text-label {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--primary-color);
+}

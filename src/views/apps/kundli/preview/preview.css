@@ -1,17 +1,28 @@
 .pdf-Div {
   padding-left: 0rem !important;
   padding-top: 0rem !important;
+  font-family: 'Segoe UI' !important;
 }
 
 .Birthdetail-div {
-  background-color: var(--primary-soft-color);
+  background-color: var(--primary-color);
+  font-weight: 600;
+
+  .birthDateTime-Div{
+    .label{
+      color: gainsboro;
+    }
+    .value{
+      color: white;
+    }
+  }
 }
 
 .Name-title {
   /* border: 2px solid black; */
-  font-weight: 800;
-  font-size: 20px;
-  color: var(--primary-color);
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--secondary-color);
 }
 
 .label-container {

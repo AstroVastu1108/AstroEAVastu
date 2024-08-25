@@ -1,5 +1,5 @@
 import { Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, IconButton, TextField } from "@mui/material";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid"
+import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarQuickFilter } from "@mui/x-data-grid"
 import PreviewActions from "./preview/PreviewActions";
 import { useEffect, useState } from "react";
 import AddKundliPopUp from "./addKundli/addKundli";
@@ -7,6 +7,7 @@ import { GetKundliDataAPI } from "@/app/Server/API/kundliAPI";
 import classNames from "classnames";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/common/Loader/Loader";
+import "./Kundli.css"
 
 export default function KundliMain() {
 
@@ -107,11 +108,23 @@ export default function KundliMain() {
     getAllKundli();
   }, [])
 
+  function CustomToolbar() {
+    return (
+      <GridToolbarContainer>
+        <GridToolbarQuickFilter />
+      </GridToolbarContainer>
+    );
+  }
+
+  const handleFilterModelChange = (e) => {
+    console.log(e?.quickFilterValues[0])
+  }
+
 
   return (
     <>
 
-    {loading && <Loader />}
+      {loading && <Loader />}
       <Grid container spacing={6}>
 
         <Grid item xs={12} md={12}>
@@ -120,40 +133,42 @@ export default function KundliMain() {
               <Grid item xs={12} md={12} >
                 <div className='flex justify-end gap-4' xs={12} md={12} xl={12}>
                   <Button
-                    // fullWidth
                     variant='contained'
                     className='capitalize'
-                    // startIcon={<i classNam e='tabler-download' />}
                     onClick={handleAddClick}
                   >
-                    Add New
+                    New Kundli
                   </Button>
                 </div>
               </Grid>
-              <DataGrid
-                getRowId={(row) => row.KundaliID}
-                rows={kundliData}
-                columns={columns}
-                disableColumnMenu
-                rowHeight={50}
-                columnHeaderHeight={60}
-                disableColumnResize
-                disableRowSelectionOnClick
-                pagination
-                disableColumnFilter
-                disableColumnSelector
-                disableDensitySelector
-                initialState={{
-                  pagination: { paginationModel: { pageSize: 12 } },
-                  pinnedColumns: { left: ['FirstName'], left: ['iconColumn'] }
-                }}
-                slots={{ toolbar: GridToolbar }}
-                slotProps={{
-                  toolbar: {
-                    showQuickFilter: true,
-                  },
-                }}
-              />
+              <div className="KundliList">
+                <DataGrid
+                  getRowId={(row) => row.KundaliID}
+                  rows={kundliData}
+                  columns={columns}
+                  disableColumnMenu
+                  rowHeight={50}
+                  columnHeaderHeight={60}
+                  disableColumnResize
+                  disableRowSelectionOnClick
+                  pagination
+                  disableColumnFilter
+                  disableColumnSelector
+                  disableDensitySelector
+                  pageSizeOptions={[10]}
+                  initialState={{
+                    pagination: { paginationModel: { pageSize: 10 } },
+                    pinnedColumns: { left: ['FirstName'], left: ['iconColumn'] }
+                  }}
+                  slots={{ toolbar: CustomToolbar }}
+                  slotProps={{
+                    toolbar: {
+                      showQuickFilter: true,
+                    },
+                  }}
+                  onFilterModelChange={handleFilterModelChange}
+                />
+              </div>
             </CardContent>
           </Card>
 
