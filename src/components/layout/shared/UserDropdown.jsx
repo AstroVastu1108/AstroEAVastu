@@ -108,9 +108,9 @@ const UserDropdown = () => {
                     <Avatar alt='John Doe' src='/images/avatars/1.png' />
                     <div className='flex items-start flex-col'>
                       <Typography className='font-medium' color='text.primary'>
-                      {user?.username}
+                      {user}
                       </Typography>
-                      <Typography variant='caption'>{user?.email}</Typography>
+                      <Typography variant='caption'>{user}</Typography>
                     </div>
                   </div>
                   <Divider className='mlb-1' />

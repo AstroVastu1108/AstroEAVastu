@@ -92,7 +92,7 @@ const LoginV2 = ({ mode }) => {
 
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
-  const { login } = useAuth();
+  const { login, loginData } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: ""
@@ -100,6 +100,28 @@ const LoginV2 = ({ mode }) => {
   const [isDisable, setIsDisable] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  // const handleLogin = async () => {
+  //   try {
+  //     if (formData.email == "") {
+  //       return toastDisplayer("error", "Email or username is required.")
+  //     }
+  //     if (formData.password == "") {
+  //       return toastDisplayer("error", "password is required.")
+  //     }
+  //     setLoading(true);
+  //     setIsDisable(true);
+  //     const result = await login(formData);
+  //     setLoading(false);
+  //     if (result.error) {
+  //       setIsDisable(false);
+  //     } else {
+  //       setIsDisable(false);
+  //       router.push('/kundli')
+  //     }
+  //   } catch (error) {
+
+  //   }
+  // };
   const handleLogin = async () => {
     try {
       if (formData.email == "") {
@@ -108,18 +130,19 @@ const LoginV2 = ({ mode }) => {
       if (formData.password == "") {
         return toastDisplayer("error", "password is required.")
       }
-      setLoading(true);
-      setIsDisable(true);
-      const result = await login(formData);
-      setLoading(false);
+      setIsDisable(true)
+      // console.log("=============================formData",formData)
+      const result = await loginData(formData)
+      // console.log("Result : ",result)
       if (result.error) {
         setIsDisable(false);
+        return toastDisplayer("error",result.message)
       } else {
         setIsDisable(false);
-        router.push('/kundli')
+        router.push('/kundlipage')
       }
     } catch (error) {
-
+      setIsDisable(false);
     }
   };
 

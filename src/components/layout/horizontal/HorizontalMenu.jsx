@@ -18,6 +18,7 @@ import menuRootStyles from '@core/styles/horizontal/menuRootStyles'
 import verticalNavigationCustomStyles from '@core/styles/vertical/navigationCustomStyles'
 import verticalMenuItemStyles from '@core/styles/vertical/menuItemStyles'
 import verticalMenuSectionStyles from '@core/styles/vertical/menuSectionStyles'
+import { navigation } from '@/app-navigation'
 
 const RenderExpandIcon = ({ level }) => (
   <StyledHorizontalNavExpandIcon level={level}>
@@ -66,12 +67,17 @@ const HorizontalMenu = () => {
           menuSectionStyles: verticalMenuSectionStyles(verticalNavOptions, theme)
         }}
       >
-        <MenuItem href='/' icon={<i className='tabler-smart-home' />}>
+        {navigation.map(({ icon,href,label }) => (
+        <MenuItem href={href} icon={<i className={icon} />}>
+          {label}
+        </MenuItem>
+        ))}
+        {/* <MenuItem href='/' icon={<i className='tabler-smart-home' />}>
           Home
         </MenuItem>
         <MenuItem href='/about' icon={<i className='tabler-info-circle' />}>
           About
-        </MenuItem>
+        </MenuItem> */}
       </Menu>
       {/* <Menu
           rootStyles={menuRootStyles(theme)}

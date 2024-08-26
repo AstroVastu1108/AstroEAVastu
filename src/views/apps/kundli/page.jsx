@@ -99,7 +99,7 @@ export default function KundliMain() {
 
   const handlePreviewClick = (kid) => {
     setLoading(true);
-    router.push(`kundli/preview?kid=${kid}`)
+    router.push(`preview?kid=${kid}`)
   }
 
 

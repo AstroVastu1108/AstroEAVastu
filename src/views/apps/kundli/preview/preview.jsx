@@ -1,7 +1,6 @@
-// 'use client'
+'use client'
 
 // MUI Imports
-import Grid from '@mui/material/Grid'
 
 // Component Imports
 import PreviewCard from './PreviewCard'
@@ -12,6 +11,7 @@ import { useRef } from 'react'
 import axios from 'axios'
 import { getKundliPdf } from '@/app/Server/API/common'
 import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
+import { Grid } from '@mui/material'
 const Preview = ({ kundliData }) => {
   const printRef = useRef()
 
