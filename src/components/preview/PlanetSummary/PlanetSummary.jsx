@@ -5,7 +5,7 @@ import { Box } from '@mui/material';
 const SummaryAspect = ({ SummaryData, Aspect }) => {
   const { columns, rows } = useMemo(() => {
     const columns = [{
-      field: 'key', headerName: Aspect == "P" ? 'Planet' : 'House', flex: 1
+      field: 'key', headerName: Aspect == "P" ? 'Planet' : 'House', flex: 1,headerClassName: 'rowheader'
     }];
     const rows = [];
 
@@ -19,6 +19,7 @@ const SummaryAspect = ({ SummaryData, Aspect }) => {
         // renderCell: (params) => (
         //   <span className='summaryTxt' dangerouslySetInnerHTML={{ __html: params.value }} />
         // ),
+        headerClassName: 'rowheader',
         renderCell : (params) => {
           // Ensure params.value is a string before using dangerouslySetInnerHTML
           const value = typeof params.value === 'string' ? params.value : '';

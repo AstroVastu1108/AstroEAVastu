@@ -70,10 +70,10 @@
   padding: 12px 8px;
   border-bottom: 1.5px solid var(--primary-color);
 
-  .mui-yrdy0g-MuiDataGrid-columnHeaderRow {
+  /* .MuiDataGrid-container--top {
     background-color: var(--primary-soft-color) !important;
     color: white;
-  }
+  } */
 }
 
 .MahaDasha-Div {
@@ -82,9 +82,10 @@
 
   gap: 12px;
 
-  /* .rowheader {
-    background-color: var(--primary-soft-color);
-  } */
+  .rowheader {
+    background-color: var(--primary-color);
+    color: #fff;
+  }
 
   color: black;
 

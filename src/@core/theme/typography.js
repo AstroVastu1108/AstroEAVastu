@@ -2,11 +2,11 @@ const typography = fontFamily => ({
   fontFamily:
     typeof fontFamily === 'undefined' || fontFamily === ''
       ? [
+        '"Segoe UI"',
           '"Public Sans"',
           'sans-serif',
           '-apple-system',
           'BlinkMacSystemFont',
-          '"Segoe UI"',
           'Roboto',
           '"Helvetica Neue"',
           'Arial',
