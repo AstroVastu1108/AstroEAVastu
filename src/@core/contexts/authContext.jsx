@@ -123,7 +123,7 @@ import { createContext, useCallback, useContext, useEffect, useLayoutEffect, use
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState([]);
     const [kundliData, setKundliData] = useState(null);
     const [isloggedIn, setIsLoggedIn] = useState();
     const [loading, setLoading] = useState(true);
@@ -137,7 +137,7 @@ export const AuthProvider = ({ children }) => {
             const result = await getUser();
 
             if (result.isOk) {
-
+                setUser(result.data);
                 setIsLoggedIn(true);
 
                 // const data = {
@@ -155,15 +155,16 @@ export const AuthProvider = ({ children }) => {
         // console.log("Context is called", userData)
         const result = await sendSignInRequest(userData.email, userData.password);
         if (result.isOk) {
-            setUser(result.data.username)
+            setUser(result.data)
+            // console.log("result.data : ",result.data)
             setAuthRuleContext(result.data.authRule);
-            const { username, authRule, refreshToken, accessToken,userRole } = result.data;
+            const { useremail, authRule, refreshToken, accessToken,userRole } = result.data;
             const expirationTime = new Date().getTime() + 5 * 60 * 1000;
 
             const authData = {
-                username, authRule, refreshToken, accessToken,userRole,expirationTime
+                useremail, authRule, refreshToken, accessToken,userRole,expirationTime
             };
-            setUser(username);
+            // setUser(username);
             sessionStorage.setItem("authState", JSON.stringify(authData));
             Cookies.set('authState', JSON.stringify(authData), { expires: 1 }); // Expires in 1 day
             
@@ -187,7 +188,8 @@ export const AuthProvider = ({ children }) => {
 
     function getUser() {
         try {
-            const storedSessionValue = JSON.parse(sessionStorage.getItem("authState"));
+            const storedSessionValue = JSON.parse(Cookies.get('authState'));
+            
             // console.log("Called");
             if (storedSessionValue) {
                 return {
