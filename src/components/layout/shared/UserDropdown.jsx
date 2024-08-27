@@ -38,7 +38,7 @@ const UserDropdown = () => {
   // States
   const [open, setOpen] = useState(false)
   const { user,logout } = useAuth();
-
+  // console.log("user : ",user)
   // Refs
   
   const anchorRef = useRef(null)
@@ -108,9 +108,9 @@ const UserDropdown = () => {
                     <Avatar alt='John Doe' src='/images/avatars/1.png' />
                     <div className='flex items-start flex-col'>
                       <Typography className='font-medium' color='text.primary'>
-                      {user?.username}
+                      {user?.useremail}
                       </Typography>
-                      <Typography variant='caption'>{user?.email}</Typography>
+                      <Typography variant='caption'>{user?.userRole == "CA" ? "Company" : (user?userRole == "SA" ? "Super Admin" : "" : "") }</Typography>
                     </div>
                   </div>
                   <Divider className='mlb-1' />

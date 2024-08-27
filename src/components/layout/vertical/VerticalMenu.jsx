@@ -16,6 +16,7 @@ import StyledVerticalNavExpandIcon from '@menu/styles/vertical/StyledVerticalNav
 // Style Imports
 import menuItemStyles from '@core/styles/vertical/menuItemStyles'
 import menuSectionStyles from '@core/styles/vertical/menuSectionStyles'
+import { navigation } from '@/app-navigation'
 
 const RenderExpandIcon = ({ open, transitionDuration }) => (
   <StyledVerticalNavExpandIcon open={open} transitionDuration={transitionDuration}>
@@ -58,12 +59,17 @@ const VerticalMenu = ({ scrollMenu }) => {
         {/* <MenuItem href='/home' icon={<i className='tabler-smart-home' />}>
           Home
         </MenuItem> */}
-        <MenuItem href='/kundli' icon={<i className='tabler-smart-home' />}>
+        {navigation.map(({ icon,href,label }) => (
+        <MenuItem href={href} icon={<i className={icon} />}>
+          {label}
+        </MenuItem>
+        ))}
+        {/* <MenuItem href='/kundli' icon={<i className='tabler-smart-home' />}>
           Kundli
         </MenuItem>
         <MenuItem href='/about' icon={<i className='tabler-info-circle' />}>
           About
-        </MenuItem>
+        </MenuItem> */}
       </Menu>
       {/* <Menu
           popoutMenuOffset={{ mainAxis: 23 }}

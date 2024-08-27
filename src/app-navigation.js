@@ -1,7 +1,7 @@
-const verticalMenuData = () => [
+export const navigation = [
   {
     label: 'Kundli',
-    href: '/kundliPage',
+    href: '/kundlipage',
     icon: 'tabler-smart-home'
   },
   {
@@ -9,6 +9,4 @@ const verticalMenuData = () => [
     href: '/about',
     icon: 'tabler-info-circle'
   }
-]
-
-export default verticalMenuData
+];
