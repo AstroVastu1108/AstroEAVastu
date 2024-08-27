@@ -418,8 +418,12 @@
 
 .Summary-Div {
   color: rebeccapurple;
+  .rowheader {
+    background-color: var(--primary-color);
+    color: #fff;
+  }
 
-  .mui-yrdy0g-MuiDataGrid-columnHeaderRow {
+  /* .mui-yrdy0g-MuiDataGrid-columnHeaderRow {
     background: var(--primary-soft-color) !important;
     color: white;
 
@@ -428,9 +432,8 @@
       overflow: hidden;
       white-space: nowrap;
       font-weight: bolder;
-      /* font-size: 15px; */
     }
-  }
+  } */
 
   .MuiDataGrid-cell{
     /* color: red; */
