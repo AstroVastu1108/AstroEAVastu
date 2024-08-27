@@ -70,9 +70,10 @@
   padding: 12px 8px;
   border-bottom: 1.5px solid var(--primary-color);
 
-  .mui-yrdy0g-MuiDataGrid-columnHeaderRow {
+  /* .MuiDataGrid-container--top {
     background-color: var(--primary-soft-color) !important;
-  }
+    color: white;
+  } */
 }
 
 .MahaDasha-Div {
@@ -81,9 +82,10 @@
 
   gap: 12px;
 
-  /* .rowheader {
-    background-color: var(--primary-soft-color);
-  } */
+  .rowheader {
+    background-color: var(--primary-color);
+    color: #fff;
+  }
 
   color: black;
 
@@ -94,12 +96,12 @@
   }
 
   .highlight-row:hover {
-    background-color: var(--primary-soft-color);
+    background-color: var(--secondary-soft-color) !important;
   }
 
-  .MuiDataGrid-row:hover {
+  /* .MuiDataGrid-row:hover {
     background-color: transparent !important;
-  }
+  } */
 
   .MuiDataGrid-footerContainer {
     display: none;
@@ -141,9 +143,10 @@
         justify-content: space-between;
         gap: 8px;
         width: 100%;
-        color: #000;
+        color: #fff;
 
         .house-header-Div1 {
+          color: #fff;
           display: flex;
           gap: 8px;
 
@@ -157,7 +160,7 @@
           gap: 8px;
 
           .house-header-Div2-sub2 {
-            color: var(--primary-color);
+            color: var(--secondary-color);
           }
         }
       }
@@ -246,13 +249,52 @@
               display: flex;
               flex-direction: column;
               border-left: 1.5px solid var(--primary-color);
-              width: 40%;
-              border-right: 1.5px solid var(--primary-color);
+              width: 80%;
+              /* border-right: 1.5px solid var(--primary-color); */
 
               .planet-Div {
                 width: 100%;
                 /* display: flex; */
-                /* border-bottom: 1.5px solid var(--primary-color); */
+                border-bottom: 1.5px solid var(--primary-color);
+                display: flex;
+
+                .planet-Div-sub{
+                  width: 60%;
+                  border-right: 1.5px solid var(--primary-color);
+                }
+
+                .rahi-Div3 {
+                  padding: 8px;
+                  display: flex;
+                  flex-direction: column;
+                  width: 40%;
+
+                  .rashi-div-sub {
+                    padding-bottom: 12px;
+                    .sub-div-rake{
+                      color: gray;
+                      display: flex;
+                      gap: 4px;
+                      align-items: center;
+                    }
+                  }
+
+                  .sub-div1 {
+                    color: blue;
+                    /* padding-bottom: 12px; */
+                  }
+
+                  .sub-div2 {
+                    color: green;
+                    /* padding-bottom: 12px; */
+                  }
+
+                  .sub-div3 {
+                    color: red;
+                    /* padding-bottom: 12px; */
+                  }
+
+                }
 
                 .planet-Div1 {
                   width: 100%;
@@ -296,40 +338,17 @@
                   }
                 }
               }
+
+              .planet-Div:last-child{
+                border-right: 0px solid black;
+                border-bottom: 0px solid black;
+              }
             }
 
-            .rahi-Div3 {
-              padding: 8px;
-              display: flex;
-              flex-direction: column;
-              width: 20%;
+            /* .rahi-Div2 {
+            } */
 
-              .rashi-div-sub {
-                padding-bottom: 12px;
-                .sub-div-rake{
-                  color: gray;
-                  display: flex;
-                  gap: 4px;
-                  align-items: center;
-                }
-              }
 
-              .sub-div1 {
-                color: blue;
-                /* padding-bottom: 12px; */
-              }
-
-              .sub-div2 {
-                color: green;
-                /* padding-bottom: 12px; */
-              }
-
-              .sub-div3 {
-                color: red;
-                /* padding-bottom: 12px; */
-              }
-
-            }
           }
 
           .rahi-Div:last-child {
@@ -399,18 +418,22 @@
 
 .Summary-Div {
   color: rebeccapurple;
+  .rowheader {
+    background-color: var(--primary-color);
+    color: #fff;
+  }
 
-  .mui-yrdy0g-MuiDataGrid-columnHeaderRow {
+  /* .mui-yrdy0g-MuiDataGrid-columnHeaderRow {
     background: var(--primary-soft-color) !important;
+    color: white;
 
     .mui-t89xny-MuiDataGrid-columnHeaderTitle {
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
       font-weight: bolder;
-      /* font-size: 15px; */
     }
-  }
+  } */
 
   .MuiDataGrid-cell{
     /* color: red; */

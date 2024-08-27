@@ -4,4 +4,9 @@
     justify-content: end;
     padding: 12px;
   }
+
+  .rowheader {
+    background-color: var(--primary-color);
+    color: #fff;
+  }
 }

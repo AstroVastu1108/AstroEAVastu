@@ -1,22 +1,17 @@
 // MUI Imports
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
-import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
+import { DataGrid } from '@mui/x-data-grid';
 
 // Component Imports
 import House from '@/components/preview/House/House'
-
-// Style Imports
-// import tableStyles from '@core/styles/table.module.css'
-import "./preview.css"
-
-import { DataGrid } from '@mui/x-data-grid';
 import SummaryAspect from '@/components/preview/PlanetSummary/PlanetSummary'
-import textAlign from 'tailwindcss-logical/plugins/textAlign'
 import InfoTable from '@/components/preview/InfoTable/InfoTable'
 
-
+// Style Imports
+import "./preview.css"
+import NakshtraSummary from '@/components/preview/NakshtraSummary/NakshtraSummary';
 
 const PreviewCard = ({ kundliData, id }) => {
   // var
@@ -30,6 +25,8 @@ const PreviewCard = ({ kundliData, id }) => {
   const Symbols = kundliData?.AstroVastuReport?.Symbols;
   const PlanetSummaryData = kundliData?.AstroVastuReport?.AsperctSummaryPlanet;
   const HouseSummaryData = kundliData?.AstroVastuReport?.AsperctSummaryHouse;
+  const PlaneNSummaryData = kundliData?.AstroVastuReport?.PlanetScript;
+  const HouseNSummaryData = kundliData?.AstroVastuReport?.HouseScript;
   const columns = [
     {
       field: 'Planet', headerName: 'Planet', headerClassName: 'rowheader', flex: 1,
@@ -126,61 +123,32 @@ const PreviewCard = ({ kundliData, id }) => {
             <div className='main-MahaDasha-Div'>
               <div className='heading-div'>❋ Nakshatra Astrology ↠ Planet Script ❋</div>
               <div className='MahaDasha-Div'>
-                <div style={{ width: '33%' }}>
-                  <DataGrid
-                    rows={rowsMahaDasha}
-                    columns={columns}
-                    getRowClassName={(params) =>
-                      params.row.IsCurrent ? 'highlight-row' : ''
-                    }
-                    disableColumnSorting
-                    disableColumnMenu
-                    rowHeight={30}
-                    columnHeaderHeight={38}
-                    disableColumnResize
-                    disableRowSelectionOnClick
-                  />
-                </div>
-                <div style={{ width: '33%' }}>
-                  <DataGrid
-                    rows={rowsAntarDasha}
-                    columns={columns}
-                    pageSize={rowsAntarDasha.length} // Show all rows
-                    getRowClassName={(params) =>
-                      params.row.IsCurrent ? 'highlight-row' : ''
-                    }
-                    disableColumnSorting
-                    disableColumnMenu
-                    rowHeight={30}
-                    columnHeaderHeight={38}
-                    disableColumnResize
-                    disableRowSelectionOnClick
-                    hideFooterPagination={true}
-                    hideFooter={true}
-                  />
-                </div>
-                <div style={{ width: '33%' }}>
-                  <DataGrid
-                    rows={rowsPratyantarDasha}
-                    columns={columns}
-                    getRowClassName={(params) =>
-                      params.row.IsCurrent ? 'highlight-row' : ''
-                    }
-                    disableColumnSorting
-                    disableColumnMenu
-                    rowHeight={30}
-                    columnHeaderHeight={38}
-                    disableColumnResize
-                    disableRowSelectionOnClick
-                    hideFooterPagination={true}
-                    hideFooter={true}
-                  />
-                </div>
+                <NakshtraSummary SummaryData={PlaneNSummaryData} Aspect={"P"} symbols={Symbols}/>
               </div>
-
             </div>
             <div className='main-MahaDasha-Div'>
-              <div className='heading-div'>❋ Vimshottari Dasha / Planetary Periods of Life❋</div>
+              <div className='heading-div'>❋ Nakshatra Astrology ↠ House Script ❋</div>
+              <div className='MahaDasha-Div'>
+                <NakshtraSummary SummaryData={HouseNSummaryData} Aspect={"H"} symbols={Symbols} />
+              </div>
+            </div>
+
+
+            <div className='main-AstroVastuScript-Div'>
+              <div className='heading-div'>❋ Planet ↠ Planet Aspects Summary ❋</div>
+              <div className='Summary-Div'>
+                <SummaryAspect SummaryData={PlanetSummaryData} Aspect={"P"} />
+              </div>
+            </div>
+            <div className='main-AstroVastuScript-Div'>
+              <div className='heading-div'>❋ Planet ↠ House Aspects Summary ❋</div>
+              <div className='Summary-Div'>
+                <SummaryAspect SummaryData={HouseSummaryData} Aspect={"H"} />
+              </div>
+            </div>
+
+            <div className='main-MahaDasha-Div'>
+              <div className='heading-div'>❋ Vimshottari Dasha / Planetary Periods of Life ❋</div>
               <div className='MahaDasha-Div'>
                 <div style={{ width: '33%' }}>
                   <DataGrid
@@ -195,6 +163,8 @@ const PreviewCard = ({ kundliData, id }) => {
                     columnHeaderHeight={38}
                     disableColumnResize
                     disableRowSelectionOnClick
+                    hideFooterPagination={true}
+                    hideFooter={true}
                   />
                 </div>
                 <div style={{ width: '33%' }}>
@@ -233,24 +203,12 @@ const PreviewCard = ({ kundliData, id }) => {
                   />
                 </div>
               </div>
-
             </div>
+
             <div className='main-AstroVastuScript-Div'>
               <div className='heading-div'>❋ Astro Vastu Script ❋</div>
               <div className='AstroVastuScript-Div'>
                 <House houseArr={AstroVastuHouseScript} Symbols={Symbols}></House>
-              </div>
-            </div>
-            <div className='main-AstroVastuScript-Div'>
-              <div className='heading-div'>❋ Planet ↠ Planet Aspects Summary ❋</div>
-              <div className='Summary-Div'>
-                <SummaryAspect SummaryData={PlanetSummaryData} Aspect={"P"} />
-              </div>
-            </div>
-            <div className='main-AstroVastuScript-Div'>
-              <div className='heading-div'>❋ Planet ↠ House Aspects Summary ❋</div>
-              <div className='Summary-Div'>
-                <SummaryAspect SummaryData={HouseSummaryData} Aspect={"H"} />
               </div>
             </div>
           </Grid>

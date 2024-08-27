@@ -67,6 +67,7 @@ const HorizontalMenu = () => {
           menuSectionStyles: verticalMenuSectionStyles(verticalNavOptions, theme)
         }}
       >
+        
         {navigation.map(({ icon,href,label }) => (
         <MenuItem href={href} icon={<i className={icon} />}>
           {label}

@@ -30,6 +30,8 @@ export default function KundliMain() {
       field: 'iconColumn', // Unique field name for this column
       headerName: '',
       width: 100,
+      headerClassName: 'rowheader',
+
       renderCell: (params) => (
         <>
           <IconButton onClick={() => handlePreviewClick(params?.row?.KundaliID)}>
