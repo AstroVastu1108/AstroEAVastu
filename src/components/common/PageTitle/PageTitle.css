@@ -1,0 +1,10 @@
+
+.PageHeader{
+  .HeaderTitle{
+    font-size: 20px;
+    font-weight: 600;
+    /* color: #1e1e1e; */
+  }
+
+  border-bottom: 1px solid var(--border-color) ;
+}

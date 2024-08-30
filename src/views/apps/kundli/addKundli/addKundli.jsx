@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { Autocomplete, Button, Card, CardContent, CardHeader, CircularProgress, debounce, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormHelperText, FormLabel, Grid, InputLabel, MenuItem, Radio, RadioGroup, Select, TextField } from "@mui/material";
+import { Autocomplete, Button, Card, CardContent, CardHeader, CircularProgress, debounce, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormHelperText, FormLabel, Grid, IconButton, InputLabel, MenuItem, Radio, RadioGroup, Select, TextField } from "@mui/material";
 import { useAuth } from '@/@core/contexts/authContext';
 import { getCities, getCountries, getReport } from '@/app/Server/API/common';
 import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer';
 import { useRouter } from 'next/navigation';
 import AppReactDatepicker from '@/components/datePicker/AppReactDatepicker';
 import { CreateKundli } from '@/app/Server/API/kundliAPI';
+import "./addKundli.css"
 
 function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
 
@@ -44,6 +45,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
 
   useEffect(() => {
     const now = new Date();
+    console.log(now)
     setUserData((prev) => ({ ...prev, ["date"]: now, ["time"]: now }))
     setCurrentTime(now);
   }, []);
@@ -109,21 +111,21 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
 
     try {
       setIsDisable(true)
-        if(formattedData.FirstName.trim("") == ""){
-          return console.log("prashna kundli")
-        }
-        const response = await CreateKundli(formattedData)
+      if (formattedData.FirstName.trim("") == "") {
+        return console.log("prashna kundli")
+      }
+      const response = await CreateKundli(formattedData)
 
-        if (response.hasError) {
-          setIsDisable(false)
-          return toastDisplayer("error", response.error)
-        }
-        var kId = response?.responseData?.Result?.KundaliID;
+      if (response.hasError) {
         setIsDisable(false)
-        getAllKundli();
-        handleAddClose();
-        toastDisplayer("success", `kundli data is saved successfully.`)
-        return kId;
+        return toastDisplayer("error", response.error)
+      }
+      var kId = response?.responseData?.Result?.KundaliID;
+      setIsDisable(false)
+      getAllKundli();
+      handleAddClose();
+      toastDisplayer("success", `kundli data is saved successfully.`)
+      return kId;
     } catch (error) {
       setIsDisable(false)
       console.error('There was an error submitting the form:', error)
@@ -136,6 +138,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
   }
 
   const handleInputChange = (field, value, key) => {
+    console.log(value)
     setUserData(prev => ({
       ...prev,
       [field]: value
@@ -157,12 +160,28 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
           },
         }}
       >
-        <DialogTitle className='PopupHeader'>Add Kundli</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
+        <DialogTitle className="PopupHeader bg-primary text-white p-4">
+          <div className='w-100' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span>
+
+            Add Kundli
+          </span>
+            <IconButton
+              aria-label="close"
+              onClick={handleAddClose} // Replace with your close handler function
+              sx={{
+                color: 'white',
+              }}
+            >
+              <i className='tabler-x'></i>
+            </IconButton>
+          </div>
+          <DialogContentText className="text-white">
             Enter the required information to create a new Kundli.
           </DialogContentText>
-          <Grid className='mt-4' container spacing={5}>
+        </DialogTitle>
+        <DialogContent>
+          <Grid className='mt-2' container spacing={5}>
             <Grid item xs={12} sm={4}>
               <TextField
                 fullWidth
@@ -246,8 +265,8 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
                 dateFormat="HH:mm"
                 timeIntervals={1}
                 id="time-only-picker"
-                selected={currentTime}
-                defaultValue={currentTime}
+                selected={userData.time}
+                // defaultValue={currentTime}
                 value={userData.time}
                 onChange={date => handleInputChange('time', date, 'BirthTime')}
                 customInput={
@@ -300,19 +319,20 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleAddClose}>Cancel</Button>
-          <Button variant='outlined' type='submit' disabled={isDisable} >
-            {isDisable ? <>
-              <CircularProgress size={14} aria-label="Wait" />
-              <span style={{ marginLeft: 8 }}>Saving</span>
-            </> : 'Save'}
-          </Button>
-          <Button variant='contained' disabled={isDisable} onClick={handlePreview} >
+        <Button variant='contained' disabled={isDisable} onClick={handlePreview} >
             {isDisable ? <>
               <CircularProgress size={14} aria-label="Wait" />
               <span style={{ marginLeft: 8 }}>Saving</span>
             </> : 'Save & Preview'}
           </Button>
+          <Button variant='contained' type='submit' disabled={isDisable} >
+            {isDisable ? <>
+              <CircularProgress size={14} aria-label="Wait" />
+              <span style={{ marginLeft: 8 }}>Saving</span>
+            </> : 'Save'}
+          </Button>
+
+          <Button variant='contained' className='bg-secondary' onClick={handleAddClose}>Cancel</Button>
         </DialogActions>
       </Dialog>
     </>

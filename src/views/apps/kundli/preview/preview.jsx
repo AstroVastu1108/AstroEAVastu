@@ -11,7 +11,8 @@ import { useRef } from 'react'
 import axios from 'axios'
 import { getKundliPdf } from '@/app/Server/API/common'
 import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
-import { Grid } from '@mui/material'
+import { Card, CardContent, Grid } from '@mui/material'
+import PageTitle from '@/components/common/PageTitle/PageTitle'
 const Preview = ({ kundliData }) => {
   const printRef = useRef()
 
@@ -19,8 +20,8 @@ const Preview = ({ kundliData }) => {
     if (kundliData) {
       try {
         const response = await getKundliPdf(kundliData.AstroVastuReport.BirthDetails.KundaliID);
-        if(response.hasError){
-          return toastDisplayer("error",response.error)
+        if (response.hasError) {
+          return toastDisplayer("error", response.error)
         }
         // Create a Blob from the PDF
         const pdfBlob = new Blob([response.responseData.data], { type: 'application/pdf' });
@@ -69,19 +70,35 @@ const Preview = ({ kundliData }) => {
   };
 
   return (
-    <Grid container spacing={6}>
-      <Grid item xs={12} md={12}>
-        <div className='flex justify-end gap-4'>
+    <>
+
+      <Grid container spacing={6}>
+        <Grid item xs={12} md={12}>
+          <Card>
+            <CardContent className='flex flex-col gap-4 p-0'>
+              <PageTitle title={"Kundli Preview"} endCmp={<>
+                <PreviewActions value={"Existing"} onButtonClick={handleKundliApi} />
+                <PreviewActions value={"Download"} onButtonClick={handleButtonClick} />
+              </>} />
+              <div ref={printRef} className='previewPDF'>
+                <PreviewCard kundliData={kundliData} />
+              </div>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+      {/* <Grid container spacing={6}>
+        <PageTitle title={"Kundli Preview"} endCmp={<>
           <PreviewActions value={"Existing"} onButtonClick={handleKundliApi} />
           <PreviewActions value={"Download"} onButtonClick={handleButtonClick} />
-        </div>
-      </Grid>
-      <Grid item xs={12} md={12}>
-        <div ref={printRef}>
-          <PreviewCard kundliData={kundliData} />
-        </div>
-      </Grid>
-    </Grid>
+        </>} />
+        <Grid item xs={12} md={12}>
+          <div ref={printRef}>
+            <PreviewCard kundliData={kundliData} />
+          </div>
+        </Grid>
+      </Grid> */}
+    </>
   )
 }
 

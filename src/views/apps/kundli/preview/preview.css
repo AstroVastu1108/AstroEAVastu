@@ -2,17 +2,20 @@
   padding-left: 0rem !important;
   padding-top: 0rem !important;
   font-family: 'Segoe UI' !important;
+  /* border: 1px solid var(--border-color); */
 }
 
 .Birthdetail-div {
   background-color: var(--primary-color);
+  border-radius: 4px;
   font-weight: 600;
 
-  .birthDateTime-Div{
-    .label{
+  .birthDateTime-Div {
+    .label {
       color: gainsboro;
     }
-    .value{
+
+    .value {
       color: white;
     }
   }
@@ -48,6 +51,9 @@
   font-size: 18px;
   font-weight: 600;
   padding-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .ChartSVG-Div {
@@ -61,6 +67,7 @@
   .ChartSVG-Div-sub {
     display: flex;
     flex-direction: column;
+    width: 33.33%;
   }
 }
 
@@ -152,6 +159,7 @@
 
           .house-header-text {
             font-weight: bolder;
+            color: var(--secondary-color);
           }
         }
 
@@ -184,26 +192,42 @@
             padding-bottom: 12px;
           }
 
-          .sub-div-rake{
+          .sub-div-rake {
             color: gray;
             display: flex;
-            gap: 4px;
+            /* gap: 4px; */
             align-items: center;
+            div {
+              width: 35px;
+              display: flex;
+            }
           }
 
           .sub-div1 {
             color: blue;
-            /* padding-bottom: 12px; */
+            display: flex;
+            div {
+              width: 35px;
+              display: flex;
+            }
           }
 
           .sub-div2 {
             color: green;
-            /* padding-bottom: 12px; */
+            display: flex;
+            div {
+              width: 35px;
+              display: flex;
+            }
           }
 
           .sub-div3 {
             color: red;
-            /* padding-bottom: 12px; */
+            display: flex;
+            div {
+              width: 35px;
+              display: flex;
+            }
           }
 
         }
@@ -230,7 +254,8 @@
 
               .rashi-Div1-sub1 {
                 font-weight: 600;
-                .rashiColor{
+
+                .rashiColor {
                   color: var(--primary-color);
                 }
               }
@@ -258,7 +283,7 @@
                 border-bottom: 1.5px solid var(--primary-color);
                 display: flex;
 
-                .planet-Div-sub{
+                .planet-Div-sub {
                   width: 60%;
                   border-right: 1.5px solid var(--primary-color);
                 }
@@ -271,7 +296,8 @@
 
                   .rashi-div-sub {
                     padding-bottom: 12px;
-                    .sub-div-rake{
+
+                    .sub-div-rake {
                       color: gray;
                       display: flex;
                       gap: 4px;
@@ -339,7 +365,7 @@
                 }
               }
 
-              .planet-Div:last-child{
+              .planet-Div:last-child {
                 border-right: 0px solid black;
                 border-bottom: 0px solid black;
               }
@@ -418,6 +444,7 @@
 
 .Summary-Div {
   color: rebeccapurple;
+
   .rowheader {
     background-color: var(--primary-color);
     color: #fff;
@@ -435,30 +462,36 @@
     }
   } */
 
-  .MuiDataGrid-cell{
+  .MuiDataGrid-cell {
+
     /* color: red; */
-    .summaryTxt{
+    .summaryTxt {
       /* color: yellow; */
 
-      .neutral{
+      .neutral {
         color: blue;
       }
 
-      .rake{
+      .rake {
         display: flex;
         gap: 2px;
         align-items: center;
         color: gray;
       }
 
-      .positive{
+      .positive {
         color: green;
       }
 
-      .negative{
+      .negative {
         color: red;
       }
     }
   }
 
+}
+
+
+.previewPDF {
+  padding: 0rem 1.25rem;
 }

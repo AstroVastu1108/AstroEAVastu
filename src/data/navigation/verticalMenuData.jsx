@@ -5,6 +5,11 @@ const verticalMenuData = () => [
     icon: 'tabler-smart-home'
   },
   {
+    label: 'User Config',
+    href: '/user',
+    icon: 'tabler-info-circle'
+  },
+  {
     label: 'About',
     href: '/about',
     icon: 'tabler-info-circle'

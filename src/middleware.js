@@ -47,13 +47,13 @@
 //     // console.log("token : ",JSON.parse(token.value))
 //     const { username,authRule,refreshToken,accessToken,userRole,expirationTime} = JSON.parse(token.value);
 //     var protectedRoutesData = JSON.parse(authRule)
-  
-    
+
+
 //       const hrefsWithAccess = protectedRoutesData
 //         .filter(item => item.HasAccess)
 //         .map(item => item.Href)
 //         myROutes.push(hrefsWithAccess)
-    
+
 //     // If no token is found, redirect to the login page
 //     // if (!token) {
 //     //   return NextResponse.redirect(new URL('/login', req.url))
@@ -87,7 +87,7 @@ export default async function middleware(req) {
           hrefsWithAccess.push('/preview');
         }
         const hasAccess = hrefsWithAccess.some(accessPath => pathname.startsWith(accessPath));
-        
+
         if (!hasAccess) {
           // Redirect to a forbidden or login page
           return NextResponse.redirect(new URL('/forbidden', req.url))
@@ -105,5 +105,5 @@ export default async function middleware(req) {
 }
 
 export const config = {
-  matcher: ['/kundlipage/:path*', '/about', '/home']
+  matcher: ['/kundlipage/:path*', '/about', '/home','/user']
 }

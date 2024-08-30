@@ -5,6 +5,11 @@ export const navigation = [
     icon: 'tabler-smart-home'
   },
   {
+    label: 'User Config',
+    href: '/user',
+    icon: 'tabler-smart-home'
+  },
+  {
     label: 'About',
     href: '/about',
     icon: 'tabler-info-circle'

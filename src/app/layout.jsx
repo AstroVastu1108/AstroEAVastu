@@ -22,11 +22,11 @@ const RootLayout = ({ children }) => {
   return (
     <html id='__next' lang='en' dir={direction}>
       <body className='flex is-full min-bs-full flex-auto flex-col'>
-      <AuthProvider>
-      <ToastContainer />
-        {children}
+        <AuthProvider>
+          <ToastContainer />
+          {children}
         </AuthProvider>
-        </body>
+      </body>
     </html>
   )
 }
