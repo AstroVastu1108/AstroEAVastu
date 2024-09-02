@@ -23,6 +23,8 @@
     "@mui/material-nextjs": "5.16.4",
     "@mui/x-data-grid": "^7.12.1",
     "@mui/x-date-pickers": "^7.12.1",
+    "@tanstack/match-sorter-utils": "^8.19.4",
+    "@tanstack/react-table": "^8.20.5",
     "axios": "^1.7.3",
     "classnames": "2.5.1",
     "dayjs": "^1.11.12",

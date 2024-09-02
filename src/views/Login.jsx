@@ -37,6 +37,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
 import { TextField } from '@mui/material'
 import Loader from '@/components/common/Loader/Loader'
+import OTPverify from '@/components/common/OTPVerify/OTPverify'
+import { requestOtp } from '@/app/Server/API/auth'
 
 // Styled Custom Components
 const LoginIllustration = styled('img')(({ theme }) => ({
@@ -99,29 +101,44 @@ const LoginV2 = ({ mode }) => {
   });
   const [isDisable, setIsDisable] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isOtpVerified, setIsOtpVerified] = useState("pending");
+  const [errors, setErrors] = useState({
+    email: false,
+    password: false
+  })
 
-  // const handleLogin = async () => {
-  //   try {
-  //     if (formData.email == "") {
-  //       return toastDisplayer("error", "Email or username is required.")
-  //     }
-  //     if (formData.password == "") {
-  //       return toastDisplayer("error", "password is required.")
-  //     }
-  //     setLoading(true);
-  //     setIsDisable(true);
-  //     const result = await login(formData);
-  //     setLoading(false);
-  //     if (result.error) {
-  //       setIsDisable(false);
-  //     } else {
-  //       setIsDisable(false);
-  //       router.push('/kundli')
-  //     }
-  //   } catch (error) {
+  const handleVerifyEmail = async () => {
+    try {
+      if (formData.email == "") {
+        toastDisplayer("error", "Email or username is required.")
+        return setErrors(prev => ({
+          ...prev,
+          email: true
+        }));
 
-  //   }
-  // };
+      }
+
+      setIsDisable(true)
+      const result = await requestOtp(formData?.email, "login")
+      if (result.hasError) {
+        setIsDisable(false);
+        setIsOtpVerified("pending")
+        return toastDisplayer("error", result.error)
+      } else {
+        setIsDisable(false);
+        setIsOtpVerified("sent")
+      }
+    } catch (error) {
+      setIsDisable(false);
+      setIsOtpVerified("pending")
+      return toastDisplayer("error", error)
+    }
+  }
+
+  const handlePreviousBtn = () => {
+    setIsOtpVerified("pending")
+  }
+
   const handleLogin = async () => {
     try {
       if (formData.email == "") {
@@ -131,18 +148,22 @@ const LoginV2 = ({ mode }) => {
         return toastDisplayer("error", "password is required.")
       }
       setIsDisable(true)
-      // console.log("=============================formData",formData)
       const result = await loginData(formData)
-      // console.log("Result : ",result)
       if (result.error) {
-        setIsDisable(false);
-        return toastDisplayer("error",result.message)
+        // setIsDisable(false);
+        console.log("Result : ", result.error)
+        setIsOtpVerified("pending")
+        return toastDisplayer("error", result.message)
       } else {
         setIsDisable(false);
+        setIsOtpVerified("pending")
         router.push('/kundlipage')
       }
     } catch (error) {
       setIsDisable(false);
+      setIsOtpVerified("pending")
+      console.log("error : ", error)
+      return toastDisplayer("error", error)
     }
   };
 
@@ -173,7 +194,7 @@ const LoginV2 = ({ mode }) => {
   }, []);
   return (
     <>
-    {loading && <Loader />}
+      {loading && <Loader />}
       <div className='flex bs-full justify-center'>
         <div
           className={classnames(
@@ -200,75 +221,118 @@ const LoginV2 = ({ mode }) => {
             <Logo color={"white"} />
           </Link>
           <div className='flex flex-col gap-6 is-full sm:is-auto md:is-full sm:max-is-[400px] md:max-is-[unset] mbs-11 sm:mbs-14 md:mbs-0'>
-            <div className='flex flex-col gap-1'>
-              <Typography variant='h4'>{`Welcome to ${themeConfig.templateName}! 👋🏻`}</Typography>
-              <Typography>Please sign-in to your account and start the adventure</Typography>
-            </div>
-            <form
-              noValidate
-              autoComplete='off'
-              onSubmit={e => {
-                e.preventDefault()
-              }}
-              className='flex flex-col gap-5'
-            >
-              <FloatingTextField
-                fullWidth
-                autoFocus
-                label='Email or Username'
-                placeholder='Enter your email or username'
-                onChange={(e) => { handleInput("email", e); }}
-              />
-              <TextField
-                fullWidth
-                label='Password'
-                placeholder='············'
-                id='outlined-adornment-password'
-                type={isPasswordShown ? 'text' : 'password'}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position='end'>
-                      <IconButton edge='end' onClick={handleClickShowPassword} onMouseDown={e => e.preventDefault()}>
-                        <i className={isPasswordShown ? 'tabler-eye-off' : 'tabler-eye'} />
-                      </IconButton>
-                    </InputAdornment>
-                  )
-                }}
-                onChange={(e) => { handleInput("password", e); }} />
-              {/* <FloatingTextField
-              fullWidth
-              label='Password'
-              placeholder='············'
-              id='outlined-adornment-password'
-              type={isPasswordShown ? 'text' : 'password'}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position='end'>
-                    <IconButton edge='end' onClick={handleClickShowPassword} onMouseDown={e => e.preventDefault()}>
-                      <i className={isPasswordShown ? 'tabler-eye-off' : 'tabler-eye'} />
-                    </IconButton>
-                  </InputAdornment>
-                )
-              }}
-              onChange={(e) => { handleInput("password", e); }}
-            /> */}
-              <div className='flex justify-between items-center gap-x-3 gap-y-1 flex-wrap'>
-                <FormControlLabel control={<Checkbox />} label='Remember me' />
-                <Typography className='text-end' color='primary' component={Link}>
-                  Forgot password?
-                </Typography>
-              </div>
-              <Button fullWidth variant='contained' type='submit' disabled={isDisable} onClick={handleLogin}>
-                {isDisable ? <CircularProgress size={24} /> : 'Login'}
-              </Button>
+            {isOtpVerified == "pending" || isOtpVerified == "verified" ? (
+              <>
+                <div className='flex flex-col gap-1'>
+                  <Typography variant='h4'>{`Welcome to ${themeConfig.templateName}! 👋🏻`}</Typography>
+                  <Typography>Please sign-in to your account and start the adventure</Typography>
+                </div>
+                <form
+                  noValidate
+                  autoComplete='off'
+                  onSubmit={e => {
+                    e.preventDefault()
+                  }}
+                  className='flex flex-col gap-5'
+                >
+                  <TextField
+                    fullWidth
+                    autoFocus
+                    label='Email'
+                    placeholder='Enter your email'
+                    onChange={(e) => { handleInput("email", e); }}
+                    value={formData.email}
+                    {...(errors.email && { error: true })}
+                  />
+                  {
+                    isOtpVerified == "verified" ? <>
 
-              <div className='flex justify-center items-center flex-wrap gap-2'>
-                <Typography>New on our platform?</Typography>
-                <Typography component={Link} color='primary'>
-                  Create an account
-                </Typography>
-              </div>
-            </form>
+                    <TextField
+                      fullWidth
+                      label='Password'
+                      placeholder='············'
+                      id='outlined-adornment-password'
+                      type={isPasswordShown ? 'text' : 'password'}
+                      value={formData.password}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position='end'>
+                            <IconButton edge='end' onClick={handleClickShowPassword} onMouseDown={e => e.preventDefault()}>
+                              <i className={isPasswordShown ? 'tabler-eye-off' : 'tabler-eye'} />
+                            </IconButton>
+                          </InputAdornment>
+                        )
+                      }}
+                      onChange={(e) => { handleInput("password", e); }}
+                      {...(errors.password && { error: true })}
+                    />
+                    <div className='flex justify-between items-center gap-x-3 gap-y-1 flex-wrap'>
+                      <FormControlLabel control={<Checkbox />} label='Remember me' />
+                      <Typography className='text-end' color='primary' component={Link}>
+                        Forgot password?
+                      </Typography>
+                    </div>
+                  </> : ""}
+
+
+                  {
+                    isOtpVerified == "pending" ? (<Button fullWidth variant='contained' type='submit' disabled={isDisable} onClick={handleVerifyEmail}>
+                      {isDisable ?
+                        <>
+                          <CircularProgress size={24} aria-label="Wait" />
+                          <span style={{ marginLeft: 8 }}>Loading...</span>
+
+                        </>
+                        : 'Verify Email'}
+                    </Button>) : ""
+                  }
+                  {
+                    isOtpVerified == "verified" ? (<Button fullWidth variant='contained' type='submit' disabled={isDisable} onClick={handleLogin}>
+                      {isDisable ?
+                        <>
+                          <CircularProgress size={24} aria-label="Wait" />
+                          <span style={{ marginLeft: 8 }}>Loading...</span>
+                        </>
+                        : 'Login'}
+                    </Button>) : ""
+                  }
+
+                  {/* <Button fullWidth variant='contained' type='submit' disabled={isDisable} onClick={handleLogin}>
+                  {isDisable ? <CircularProgress size={24} value={"Loading"} /> : 'Login'}
+                </Button> */}
+
+                  <div className='flex justify-center items-center flex-wrap gap-2'>
+                    <Typography>New on our platform?</Typography>
+                    <Typography component={Link} color='primary'>
+                      Create an account
+                    </Typography>
+                  </div>
+                </form>
+              </>
+            ) :
+              <>
+                <div className="backbtn">
+                  <i
+                    className="tabler-arrow-left"
+                    style={{
+                      fontSize: "20px",
+                      cursor: "pointer",
+                    }}
+                    onClick={handlePreviousBtn}
+                  ></i>
+                  <div className="step-text">Go Back</div>
+                </div>
+                <div className='flex flex-col gap-1'>
+                  <Typography variant='h4'>{`OTP Verification`}</Typography>
+                  <Typography>Please enter the 6 digit code sent to {formData?.email}.</Typography>
+                </div>
+                <OTPverify email={formData?.email} role={"login"} setIsOtpVerified={setIsOtpVerified} />
+              </>
+
+            }
+
+
+
           </div>
         </div>
       </div>

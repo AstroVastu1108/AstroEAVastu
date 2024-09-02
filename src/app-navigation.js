@@ -4,9 +4,9 @@ export const navigation = [
     href: '/kundlipage',
     icon: 'tabler-smart-home'
   },
-  {
-    label: 'About',
-    href: '/about',
-    icon: 'tabler-info-circle'
-  }
+  // {
+  //   label: 'About',
+  //   href: '/about',
+  //   icon: 'tabler-info-circle'
+  // }
 ];
