@@ -1,7 +1,41 @@
-.KundliList{
-  .MuiDataGrid-toolbarContainer{
+.KundliList {
+  .MuiDataGrid-toolbarContainer {
     display: flex;
     justify-content: end;
-    padding: 12px;
+    padding: 12px 0px;
   }
+
+  .rowheader {
+    background-color: var(--primary-color);
+    color: #fff;
+  }
+}
+
+.CardContent {
+  padding: 0px !important;
+}
+
+.KundliListGrid {
+  /* border: none; */
+  /* border-radius: 0px; */
+  /* gap: 1.25rem; */
+  /* padding: 0rem 1.25rem; */
+
+  .MuiDataGrid-main{
+    /* border: 1px solid var(--border-color); */
+  }
+
+  .SearchBar {
+    border: 1px solid var(--border-color);
+    padding: 0.4rem 0.8em;
+    border-radius: 4px;
+
+    .MuiInput-underline::before {
+      border: none;
+
+      -webkit-transition: none;
+      transition: none;
+    }
+  }
+
 }

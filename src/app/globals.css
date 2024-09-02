@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+main{
+  font-family: 'Segoe UI' !important;
+}
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
 :root {
   /* new added */
   /* --mui-palette-primary-main: #662294; */

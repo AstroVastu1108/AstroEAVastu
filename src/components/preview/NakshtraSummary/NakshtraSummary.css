@@ -1,0 +1,30 @@
+.plDiv{
+  display: flex;
+}
+.planetN{
+  color: var(--primary-color);
+  font-weight: 600;
+  width: 40px;
+}
+
+.rashiMainDiv{
+  display: flex;
+  justify-content: space-between;
+  padding-right: 4px;
+}
+
+.rashiDiv{
+  color: var(--primary-color);
+  font-weight: 400;
+}
+
+.degreeDiv{
+  color: black;
+  font-family:  'Segoe UI';
+  /* font-weight: 500; */
+}
+
+.NMainDiv{
+  display: flex;
+  justify-content: space-between;
+}

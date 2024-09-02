@@ -1,6 +1,7 @@
 import UserAuthorization from "./app/(dashboard)/Authorization/authorization";
 import KundliPage from "./app/(dashboard)/kundli/kundli";
 import PreviewPage from "./app/(dashboard)/kundli/preview/preview";
+import UserConfig from "./app/(dashboard)/userConfig/userConfig";
 
 export const routes = [
     {
@@ -8,15 +9,15 @@ export const routes = [
       element: KundliPage,
     },
     {
+      path: "user",
+      element: UserConfig,
+    },
+    {
       path: "preview",
       element: PreviewPage,
     },
     {
-      path: "user",
-      element: KundliPage,
-    },
-    {
       path: "permission",
       element: UserAuthorization,
-    },
+    }
   ];

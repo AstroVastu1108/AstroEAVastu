@@ -2,17 +2,20 @@
   padding-left: 0rem !important;
   padding-top: 0rem !important;
   font-family: 'Segoe UI' !important;
+  /* border: 1px solid var(--border-color); */
 }
 
 .Birthdetail-div {
   background-color: var(--primary-color);
+  border-radius: 4px;
   font-weight: 600;
 
-  .birthDateTime-Div{
-    .label{
+  .birthDateTime-Div {
+    .label {
       color: gainsboro;
     }
-    .value{
+
+    .value {
       color: white;
     }
   }
@@ -48,6 +51,9 @@
   font-size: 18px;
   font-weight: 600;
   padding-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .ChartSVG-Div {
@@ -61,6 +67,7 @@
   .ChartSVG-Div-sub {
     display: flex;
     flex-direction: column;
+    width: 33.33%;
   }
 }
 
@@ -70,9 +77,10 @@
   padding: 12px 8px;
   border-bottom: 1.5px solid var(--primary-color);
 
-  .mui-yrdy0g-MuiDataGrid-columnHeaderRow {
+  /* .MuiDataGrid-container--top {
     background-color: var(--primary-soft-color) !important;
-  }
+    color: white;
+  } */
 }
 
 .MahaDasha-Div {
@@ -81,9 +89,10 @@
 
   gap: 12px;
 
-  /* .rowheader {
-    background-color: var(--primary-soft-color);
-  } */
+  .rowheader {
+    background-color: var(--primary-color);
+    color: #fff;
+  }
 
   color: black;
 
@@ -94,12 +103,12 @@
   }
 
   .highlight-row:hover {
-    background-color: var(--primary-soft-color);
+    background-color: var(--secondary-soft-color) !important;
   }
 
-  .MuiDataGrid-row:hover {
+  /* .MuiDataGrid-row:hover {
     background-color: transparent !important;
-  }
+  } */
 
   .MuiDataGrid-footerContainer {
     display: none;
@@ -141,14 +150,16 @@
         justify-content: space-between;
         gap: 8px;
         width: 100%;
-        color: #000;
+        color: #fff;
 
         .house-header-Div1 {
+          color: #fff;
           display: flex;
           gap: 8px;
 
           .house-header-text {
             font-weight: bolder;
+            color: var(--secondary-color);
           }
         }
 
@@ -157,7 +168,7 @@
           gap: 8px;
 
           .house-header-Div2-sub2 {
-            color: var(--primary-color);
+            color: var(--secondary-color);
           }
         }
       }
@@ -181,26 +192,42 @@
             padding-bottom: 12px;
           }
 
-          .sub-div-rake{
+          .sub-div-rake {
             color: gray;
             display: flex;
-            gap: 4px;
+            /* gap: 4px; */
             align-items: center;
+            div {
+              width: 35px;
+              display: flex;
+            }
           }
 
           .sub-div1 {
             color: blue;
-            /* padding-bottom: 12px; */
+            display: flex;
+            div {
+              width: 35px;
+              display: flex;
+            }
           }
 
           .sub-div2 {
             color: green;
-            /* padding-bottom: 12px; */
+            display: flex;
+            div {
+              width: 35px;
+              display: flex;
+            }
           }
 
           .sub-div3 {
             color: red;
-            /* padding-bottom: 12px; */
+            display: flex;
+            div {
+              width: 35px;
+              display: flex;
+            }
           }
 
         }
@@ -227,7 +254,8 @@
 
               .rashi-Div1-sub1 {
                 font-weight: 600;
-                .rashiColor{
+
+                .rashiColor {
                   color: var(--primary-color);
                 }
               }
@@ -246,13 +274,53 @@
               display: flex;
               flex-direction: column;
               border-left: 1.5px solid var(--primary-color);
-              width: 40%;
-              border-right: 1.5px solid var(--primary-color);
+              width: 80%;
+              /* border-right: 1.5px solid var(--primary-color); */
 
               .planet-Div {
                 width: 100%;
                 /* display: flex; */
-                /* border-bottom: 1.5px solid var(--primary-color); */
+                border-bottom: 1.5px solid var(--primary-color);
+                display: flex;
+
+                .planet-Div-sub {
+                  width: 60%;
+                  border-right: 1.5px solid var(--primary-color);
+                }
+
+                .rahi-Div3 {
+                  padding: 8px;
+                  display: flex;
+                  flex-direction: column;
+                  width: 40%;
+
+                  .rashi-div-sub {
+                    padding-bottom: 12px;
+
+                    .sub-div-rake {
+                      color: gray;
+                      display: flex;
+                      gap: 4px;
+                      align-items: center;
+                    }
+                  }
+
+                  .sub-div1 {
+                    color: blue;
+                    /* padding-bottom: 12px; */
+                  }
+
+                  .sub-div2 {
+                    color: green;
+                    /* padding-bottom: 12px; */
+                  }
+
+                  .sub-div3 {
+                    color: red;
+                    /* padding-bottom: 12px; */
+                  }
+
+                }
 
                 .planet-Div1 {
                   width: 100%;
@@ -296,40 +364,17 @@
                   }
                 }
               }
+
+              .planet-Div:last-child {
+                border-right: 0px solid black;
+                border-bottom: 0px solid black;
+              }
             }
 
-            .rahi-Div3 {
-              padding: 8px;
-              display: flex;
-              flex-direction: column;
-              width: 20%;
+            /* .rahi-Div2 {
+            } */
 
-              .rashi-div-sub {
-                padding-bottom: 12px;
-                .sub-div-rake{
-                  color: gray;
-                  display: flex;
-                  gap: 4px;
-                  align-items: center;
-                }
-              }
 
-              .sub-div1 {
-                color: blue;
-                /* padding-bottom: 12px; */
-              }
-
-              .sub-div2 {
-                color: green;
-                /* padding-bottom: 12px; */
-              }
-
-              .sub-div3 {
-                color: red;
-                /* padding-bottom: 12px; */
-              }
-
-            }
           }
 
           .rahi-Div:last-child {
@@ -400,42 +445,53 @@
 .Summary-Div {
   color: rebeccapurple;
 
-  .mui-yrdy0g-MuiDataGrid-columnHeaderRow {
+  .rowheader {
+    background-color: var(--primary-color);
+    color: #fff;
+  }
+
+  /* .mui-yrdy0g-MuiDataGrid-columnHeaderRow {
     background: var(--primary-soft-color) !important;
+    color: white;
 
     .mui-t89xny-MuiDataGrid-columnHeaderTitle {
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
       font-weight: bolder;
-      /* font-size: 15px; */
     }
-  }
+  } */
 
-  .MuiDataGrid-cell{
+  .MuiDataGrid-cell {
+
     /* color: red; */
-    .summaryTxt{
+    .summaryTxt {
       /* color: yellow; */
 
-      .neutral{
+      .neutral {
         color: blue;
       }
 
-      .rake{
+      .rake {
         display: flex;
         gap: 2px;
         align-items: center;
         color: gray;
       }
 
-      .positive{
+      .positive {
         color: green;
       }
 
-      .negative{
+      .negative {
         color: red;
       }
     }
   }
 
+}
+
+
+.previewPDF {
+  padding: 0rem 1.25rem;
 }

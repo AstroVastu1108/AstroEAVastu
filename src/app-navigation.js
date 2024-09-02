@@ -4,9 +4,14 @@ export const navigation = [
     href: '/kundlipage',
     icon: 'tabler-smart-home'
   },
-  // {
-  //   label: 'About',
-  //   href: '/about',
-  //   icon: 'tabler-info-circle'
-  // }
+  {
+    label: 'User Config',
+    href: '/user',
+    icon: 'tabler-smart-home'
+  },
+  {
+    label: 'About',
+    href: '/about',
+    icon: 'tabler-info-circle'
+  }
 ];

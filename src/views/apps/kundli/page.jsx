@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, IconButton, TextField } from "@mui/material";
+import { Box, Button, Card, CardContent, createTheme, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, IconButton, TextField, ThemeProvider } from "@mui/material";
 import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarQuickFilter } from "@mui/x-data-grid"
 import PreviewActions from "./preview/PreviewActions";
 import { useEffect, useState } from "react";
@@ -8,6 +8,7 @@ import classNames from "classnames";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/common/Loader/Loader";
 import "./Kundli.css"
+import PageTitle from "@/components/common/PageTitle/PageTitle";
 
 export default function KundliMain() {
 
@@ -30,6 +31,8 @@ export default function KundliMain() {
       field: 'iconColumn', // Unique field name for this column
       headerName: '',
       width: 100,
+      headerClassName: 'rowheader',
+
       renderCell: (params) => (
         <>
           <IconButton onClick={() => handlePreviewClick(params?.row?.KundaliID)}>
@@ -111,7 +114,7 @@ export default function KundliMain() {
   function CustomToolbar() {
     return (
       <GridToolbarContainer>
-        <GridToolbarQuickFilter />
+        <GridToolbarQuickFilter className="SearchBar" />
       </GridToolbarContainer>
     );
   }
@@ -119,6 +122,27 @@ export default function KundliMain() {
   const handleFilterModelChange = (e) => {
     console.log(e?.quickFilterValues[0])
   }
+
+  const customTheme = createTheme({
+    components: {
+      MuiDataGrid: {
+        styleOverrides: {
+          root: {
+            fontFamily: 'Segoe UI, Arial, sans-serif',
+          },
+          cell: {
+            fontFamily: 'Segoe UI, Arial, sans-serif',
+          },
+          columnHeaders: {
+            fontFamily: 'Segoe UI, Arial, sans-serif',
+          },
+          toolbar: {
+            fontFamily: 'Segoe UI, Arial, sans-serif',
+          },
+        },
+      },
+    },
+  });
 
 
   return (
@@ -129,45 +153,69 @@ export default function KundliMain() {
 
         <Grid item xs={12} md={12}>
           <Card>
-            <CardContent className='flex flex-col gap-4'>
-              <Grid item xs={12} md={12} >
-                <div className='flex justify-end gap-4' xs={12} md={12} xl={12}>
-                  <Button
-                    variant='contained'
-                    className='capitalize'
-                    onClick={handleAddClick}
-                  >
-                    New Kundli
-                  </Button>
-                </div>
-              </Grid>
+            <CardContent className='flex flex-col gap-4 p-0'>
+              <PageTitle title={"Kundli List"} endCmp={<PreviewActions value={"New Kundli"} onButtonClick={handleAddClick} />
+              } />
               <div className="KundliList">
-                <DataGrid
-                  getRowId={(row) => row.KundaliID}
-                  rows={kundliData}
-                  columns={columns}
-                  disableColumnMenu
-                  rowHeight={50}
-                  columnHeaderHeight={60}
-                  disableColumnResize
-                  disableRowSelectionOnClick
-                  pagination
-                  disableColumnFilter
-                  disableColumnSelector
-                  disableDensitySelector
-                  pageSizeOptions={[10]}
-                  initialState={{
-                    pagination: { paginationModel: { pageSize: 10 } },
-                    pinnedColumns: { left: ['FirstName'], left: ['iconColumn'] }
-                  }}
-                  slots={{ toolbar: CustomToolbar }}
-                  slotProps={{
-                    toolbar: {
-                      showQuickFilter: true,
-                    },
-                  }}
-                  onFilterModelChange={handleFilterModelChange}
-                />
+                <Box className="p-5">
+
+                  {/* <DataGrid
+                    className="KundliListGrid"
+                    getRowId={(row) => row.KundaliID}
+                    rows={kundliData}
+                    columns={columns}
+                    disableColumnMenu
+                    rowHeight={50}
+                    columnHeaderHeight={60}
+                    disableColumnResize
+                    disableRowSelectionOnClick
+                    pagination
+                    disableColumnFilter
+                    disableColumnSelector
+                    disableDensitySelector
+                    pageSizeOptions={[10]}
+                    initialState={{
+                      pagination: { paginationModel: { pageSize: 10 } },
+                      pinnedColumns: { left: ['FirstName'], left: ['iconColumn'] }
+                    }}
+                    slots={{ toolbar: CustomToolbar }}
+                    slotProps={{
+                      toolbar: {
+                        showQuickFilter: true,
+                      },
+                    }}
+                    onFilterModelChange={handleFilterModelChange}
+                  /> */}
+
+                  <ThemeProvider theme={customTheme}>
+                    <DataGrid
+                      className="KundliListGrid"
+                      onFilterModelChange={handleFilterModelChange}
+                      getRowId={(row) => row.KundaliID}
+                      rows={kundliData}
+                      columns={columns}
+                      disableColumnSorting
+                      disableColumnMenu
+                      rowHeight={45}
+                      columnHeaderHeight={45}
+                      disableColumnResize
+                      disableRowSelectionOnClick
+                      pageSizeOptions={[10]}
+                      initialState={{
+                        pagination: { paginationModel: { pageSize: 10 } },
+                        pinnedColumns: { left: ['FirstName'], left: ['iconColumn'] }
+                      }}
+                    // slots={{ toolbar: GridToolbarQuickFilter  }}
+                    // slotProps={{
+                    //   toolbar: {
+                    //     showQuickFilter: true,
+                    //   },
+                    // }}
+                    />
+                  </ThemeProvider>
+
+
+                </Box>
               </div>
             </CardContent>
           </Card>

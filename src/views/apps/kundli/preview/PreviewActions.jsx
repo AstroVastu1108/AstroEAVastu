@@ -12,7 +12,7 @@ import Button from '@mui/material/Button'
 
 // Component Imports
 
-const PreviewActions = ({ value, onButtonClick }) => {
+const PreviewActions = ({ value, onButtonClick, icon }) => {
 
   return (
     <>
@@ -22,7 +22,7 @@ const PreviewActions = ({ value, onButtonClick }) => {
             // fullWidth
             variant='contained'
             className='capitalize'
-            startIcon={<i className='tabler-download' />}
+            startIcon={<i className={icon} />}
             onClick={onButtonClick}
           >
             {value}
