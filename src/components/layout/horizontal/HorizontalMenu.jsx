@@ -19,6 +19,7 @@ import verticalNavigationCustomStyles from '@core/styles/vertical/navigationCust
 import verticalMenuItemStyles from '@core/styles/vertical/menuItemStyles'
 import verticalMenuSectionStyles from '@core/styles/vertical/menuSectionStyles'
 import { navigation } from '@/app-navigation'
+import { useAuth } from '@/@core/contexts/authContext'
 
 const RenderExpandIcon = ({ level }) => (
   <StyledHorizontalNavExpandIcon level={level}>
@@ -36,7 +37,12 @@ const HorizontalMenu = () => {
   // Hooks
   const verticalNavOptions = useVerticalNav()
   const theme = useTheme()
-
+  const { authRuleContext } = useAuth()
+  // const routePermissions = JSON.parse(authRuleContext);
+  console.log("authRuleContext -: ",authRuleContext)
+  // const hrefsWithAccess = authRuleContext
+  // .filter(item => item.HasAccess);
+  // console.log("hrefsWithAccess -: ",hrefsWithAccess)
   // Vars
   const { transitionDuration } = verticalNavOptions
 
@@ -67,10 +73,9 @@ const HorizontalMenu = () => {
           menuSectionStyles: verticalMenuSectionStyles(verticalNavOptions, theme)
         }}
       >
-        
-        {navigation.map(({ icon,href,label }) => (
-        <MenuItem href={href} icon={<i className={icon} />}>
-          {label}
+        {authRuleContext.map((item) => (
+        <MenuItem href={item.Href} icon={<i className={item.Icon} />}>
+          {item.Label}
         </MenuItem>
         ))}
         {/* <MenuItem href='/' icon={<i className='tabler-smart-home' />}>

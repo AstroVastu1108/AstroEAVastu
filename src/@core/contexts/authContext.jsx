@@ -137,7 +137,13 @@ export const AuthProvider = ({ children }) => {
             const result = await getUser();
 
             if (result.isOk) {
+                const { useremail, authRule, refreshToken, accessToken,userRole,TransactionID } = result.data;
+                console.log("result.data : ",result.data)
                 setUser(result.data);
+                const authRuleData = JSON.parse(authRule)
+                const hrefsWithAccess = authRuleData
+                .filter(item => item.HasAccess);
+                setAuthRuleContext(hrefsWithAccess);
                 setIsLoggedIn(true);
 
                 // const data = {
@@ -157,12 +163,19 @@ export const AuthProvider = ({ children }) => {
         if (result.isOk) {
             setUser(result.data)
             // console.log("result.data : ",result.data)
-            setAuthRuleContext(result.data.authRule);
-            const { useremail, authRule, refreshToken, accessToken,userRole } = result.data;
+            const routePermissions = JSON.parse(result.data.authRule);
+            // const hrefsWithAccess = routePermissions
+            //     .filter(item => item.HasAccess)
+            const hrefsWithAccess = routePermissions
+  .filter(item => item.HasAccess);
+            setAuthRuleContext(hrefsWithAccess);
+            // setAuthRuleContext(result.data.authRule);
+            console.log("result.data===============>",result.data)
+            const { useremail, authRule, refreshToken, accessToken,userRole,transactionID } = result.data;
             const expirationTime = new Date().getTime() + 5 * 60 * 1000;
 
             const authData = {
-                useremail, authRule, refreshToken, accessToken,userRole,expirationTime
+                useremail, authRule, refreshToken, accessToken,userRole,expirationTime,transactionID
             };
             // setUser(username);
             sessionStorage.setItem("authState", JSON.stringify(authData));
@@ -179,7 +192,7 @@ export const AuthProvider = ({ children }) => {
             setIsLoggedIn(false);
             return {
                 error: true,
-                message: errorMessage
+                message: result.data
             };
 
         }

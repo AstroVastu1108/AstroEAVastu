@@ -286,7 +286,7 @@ async function refreshTokenGet(refreshToken, accessToken) {
       refreshToken,
     }, { httpsAgent });
 
-    return response.data.accessToken;
+    return response.data.result.accessToken;
   } catch (error) {
     throw new Error('Token refresh failed');
   }
@@ -319,6 +319,7 @@ export default async function Page({ params }) {
     } catch (error) {
       if (error.message === 'Token expired') {
         const newAccessToken = await refreshTokenGet(refreshToken, accessToken);
+        // console.log("NewAccessToken : ",newAccessToken)
         secureData = await fetchSecureData(newAccessToken);
       } else {
         throw error;
