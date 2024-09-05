@@ -17,6 +17,7 @@ import StyledVerticalNavExpandIcon from '@menu/styles/vertical/StyledVerticalNav
 import menuItemStyles from '@core/styles/vertical/menuItemStyles'
 import menuSectionStyles from '@core/styles/vertical/menuSectionStyles'
 import { navigation } from '@/app-navigation'
+import { useAuth } from '@/@core/contexts/authContext'
 
 const RenderExpandIcon = ({ open, transitionDuration }) => (
   <StyledVerticalNavExpandIcon open={open} transitionDuration={transitionDuration}>
@@ -28,7 +29,7 @@ const VerticalMenu = ({ scrollMenu }) => {
   // Hooks
   const theme = useTheme()
   const verticalNavOptions = useVerticalNav()
-
+  const { authRuleContext } = useAuth()
   // Vars
   const { isBreakpointReached, transitionDuration } = verticalNavOptions
   const ScrollWrapper = isBreakpointReached ? 'div' : PerfectScrollbar
@@ -59,9 +60,9 @@ const VerticalMenu = ({ scrollMenu }) => {
         {/* <MenuItem href='/home' icon={<i className='tabler-smart-home' />}>
           Home
         </MenuItem> */}
-        {navigation.map(({ icon,href,label }) => (
-        <MenuItem href={href} icon={<i className={icon} />}>
-          {label}
+           {authRuleContext.map((item) => (
+        <MenuItem href={item.Href} icon={<i className={item.Icon} />}>
+          {item.Label}
         </MenuItem>
         ))}
         {/* <MenuItem href='/kundli' icon={<i className='tabler-smart-home' />}>

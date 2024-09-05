@@ -1,285 +1,37 @@
-// 'use client';
-
-// import * as React from 'react';
-// import PropTypes from 'prop-types';
-// import Box from '@mui/material/Box';
-// import Table from '@mui/material/Table';
-// import TableBody from '@mui/material/TableBody';
-// import TableCell from '@mui/material/TableCell';
-// import TableContainer from '@mui/material/TableContainer';
-// import TableHead from '@mui/material/TableHead';
-// import TableRow from '@mui/material/TableRow';
-// import Toolbar from '@mui/material/Toolbar';
-// import Typography from '@mui/material/Typography';
-// import Paper from '@mui/material/Paper';
-// import Checkbox from '@mui/material/Checkbox';
-// import Button from '@mui/material/Button';
-// import { useState } from 'react';
-// import { Card, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, InputAdornment, List, ListItem, ListItemText, TextField } from '@mui/material';
-
-
-// function EnhancedTableHead(props) {
-//   const { order, orderBy } = props;
-
-//   return (
-//     <TableHead>
-//       <TableRow>
-//         {headCells.map((headCell) => (
-//           <TableCell
-//             key={headCell.id}
-//             align='center'
-//             padding={headCell.disablePadding ? 'none' : 'normal'}
-//             sortDirection={orderBy === headCell.id ? order : false}
-//           >
-//             {headCell.label}
-//           </TableCell>
-//         ))}
-//       </TableRow>
-//     </TableHead>
-//   );
-// }
-
-// EnhancedTableHead.propTypes = {
-//   order: PropTypes.oneOf(['asc', 'desc']).isRequired,
-//   orderBy: PropTypes.string.isRequired,
-// };
-
-// function EnhancedTableToolbar(props) {
-//   const { numSelected } = props;
-//   return (
-//     <Toolbar
-//       sx={[
-//         {
-//           pl: { sm: 2 },
-//           pr: { xs: 1, sm: 1 },
-//         },
-//       ]}
-//     >
-//       <Typography
-//         sx={{ flex: '1 1 100%' }}
-//         variant="h6"
-//         id="tableTitle"
-//         component="div"
-//       >
-//         User Permission
-//       </Typography>
-//     </Toolbar>
-//   );
-// }
-
-// EnhancedTableToolbar.propTypes = {
-//   numSelected: PropTypes.number.isRequired,
-// };
-
-// export default function EnhancedTable() {
-//   const [rows, setRows] = useState(initialRows);
-//   const [selected, setSelected] = useState([]);
-
-//   const handleCheckboxChange = (index, type) => {
-//     const updatedRows = [...rows];
-//     updatedRows[index].rightsAccess[type] = !updatedRows[index].rightsAccess[type];
-//     setRows(updatedRows);
-//   };
-
-//   const handleButtonClick = () => {
-//     console.log('Updated rows data:', rows);
-//     // You can now send this data to your backend or perform any other operation.
-//   };
-//   const [open, setOpen] = React.useState(false);
-//   const [selectedValue, setSelectedValue] = React.useState('');
-
-//   const handleClickOpen = () => {
-//     setOpen(true);
-//   };
-
-//   const handleClose = (value) => {
-//     setOpen(false);
-//     if (value) {
-//       setSelectedValue(value);
-//     }
-//   };
-//   return (
-//     <>
-//       <Grid item xs={12} md={12}>
-//         <Card>
-//           <CardContent>
-//             <Grid container alignItems="center" justifyContent="space-between" spacing={2}>
-//               <Grid item xs={8}>
-//                 <EnhancedTableToolbar numSelected={selected.length} />
-//               </Grid>
-//               <Grid item xs={4}>
-//                 <TextField
-//                   label="Select Item"
-//                   value={selectedValue}
-//                   fullWidth
-//                   InputProps={{
-//                     endAdornment: (
-//                       <InputAdornment position="end">
-//                         <IconButton onClick={handleClickOpen}>
-//                           <i className="tabler-eye-off" />
-//                         </IconButton>
-//                       </InputAdornment>
-//                     ),
-//                   }}
-//                 />
-//               </Grid>
-//             </Grid>
-
-//             <TableContainer sx={{ marginTop: 2 }}>
-//               <Table
-//                 sx={{ minWidth: 750 }}
-//                 aria-labelledby="tableTitle"
-//                 size="medium"
-//               >
-//                 <EnhancedTableHead
-//                   order="asc"
-//                   orderBy="Module"
-//                 />
-//                 <TableBody>
-//                   {rows.map((item, index) => (
-//                     <TableRow
-//                       hover
-//                       key={item.label}
-//                       sx={{ cursor: 'pointer' }}
-//                     >
-//                       <TableCell
-//                         component="th"
-//                         id={item.label}
-//                         scope="row"
-//                         padding="normal"
-//                         align="center"
-//                         sx={{ fontSize: '14pt' }}
-//                       >
-//                         {item.label}
-//                       </TableCell>
-//                       <TableCell align="center">
-//                         <Checkbox
-//                           color="primary"
-//                           checked={item.rightsAccess.read}
-//                           onChange={() => handleCheckboxChange(index, 'read')}
-//                         />
-//                       </TableCell>
-//                       <TableCell align="center">
-//                         <Checkbox
-//                           color="primary"
-//                           checked={item.rightsAccess.write}
-//                           onChange={() => handleCheckboxChange(index, 'write')}
-//                         />
-//                       </TableCell>
-//                     </TableRow>
-//                   ))}
-//                 </TableBody>
-//               </Table>
-//             </TableContainer>
-
-//             <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
-//               <Button variant="contained" color="primary" onClick={handleButtonClick}>
-//                 Get Updated Data
-//               </Button>
-//             </Box>
-//           </CardContent>
-//         </Card>
-//       </Grid>
-//     </>
-//   );
-// }
-
 'use client';
 
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Box from '@mui/material/Box';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
-import Button from '@mui/material/Button';
-import { useState } from 'react';
-import { Card, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, InputAdornment, List, ListItem, ListItemText, TextField } from '@mui/material';
+import {
+  Box, Table, TableBody, TableCell, TableHead, TableRow, Checkbox, Button, Card, CardContent, 
+  createTheme, Grid, IconButton, InputAdornment, TextField, ThemeProvider
+} from '@mui/material';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/@core/contexts/authContext';
 import Loader from '@/components/common/Loader/Loader';
-import { getUserAuthRule, getUsers } from '@/app/Server/API/userPermission';
+import { getUserAuthRule, getUsers, saveUserAuthRule } from '@/app/Server/API/userPermission';
 import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer';
 import UserPopUp from './user-popup/selectUser';
-
+import PageTitle from '@/components/common/PageTitle/PageTitle';
 
 const initialRows = [
-  {
-    Label: "Home",
-    Href: "/home",
-    Icon: "tabler-smart-home",
-    HasAccess: true,
-    rightsAccess: [{
-      read: true,
-      write: true
-    }]
-  },
-  {
-    Label: "Kundli",
-    Href: "/kundlipage",
-    Icon: "tabler-smart-home",
-    HasAccess: true,
-    rightsAccess: [{
-      read: true,
-      write: true
-    }]
-  },
-  {
-    Label: "About",
-    Href: "/about",
-    Icon: "tabler-info-circle",
-    HasAccess: false,
-    rightsAccess: [{
-      read: true,
-      write: false
-    }]
-  }
+  { Label: "Kundli", Href: "/kundlipage", Icon: "tabler-smart-home", HasAccess: false, rightsAccess: [{ read: false, write: false }] },
+  { Label: "User", Href: "/user", Icon: "tabler-user-pentagon", HasAccess: false, rightsAccess: [{ read: false, write: false }] }
 ];
-
 
 const headCells = [
-  {
-    id: 'Module',
-    numeric: false,
-    disablePadding: false,
-    label: 'Module',
-  },
-  {
-    id: 'read',
-    numeric: true,
-    disablePadding: false,
-    label: 'Read',
-  },
-  {
-    id: 'write',
-    numeric: true,
-    disablePadding: false,
-    label: 'Write',
-  },
+  { id: 'Module', label: 'Module' },
+  { id: 'read', label: 'Read', align: 'center' },
+  { id: 'write', label: 'Write', align: 'center' }
 ];
 
-
-function EnhancedTableHead(props) {
-  const { order, orderBy } = props;
-
+function EnhancedTableHead({ order, orderBy }) {
   return (
     <TableHead>
       <TableRow>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align='center'
-            padding={headCell.disablePadding ? 'none' : 'normal'}
-            sortDirection={orderBy === headCell.id ? order : false}
-            sx={{ fontSize: '12pt', fontFamily: 'Segoe UI' }}
-          >
-            {headCell.label}
+        {headCells.map(({ id, label, align = 'left' }) => (
+          <TableCell key={id} align={align} sx={{ fontSize: '12pt', fontFamily: 'Segoe UI' }}>
+            {label}
           </TableCell>
         ))}
       </TableRow>
@@ -292,84 +44,76 @@ EnhancedTableHead.propTypes = {
   orderBy: PropTypes.string.isRequired,
 };
 
-function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
-  return (
-    <Toolbar
-      sx={[
-        {
-          pl: { sm: 2 },
-          pr: { xs: 1, sm: 1 },
-          fontSize: '12pt',
-          fontFamily: 'Segoe UI'
-        },
-      ]}
-    >
-      <Typography
-        sx={{ flex: '1 1 100%' }}
-        variant="h6"
-        id="tableTitle"
-        component="div"
-      >
-        User Permission
-      </Typography>
-    </Toolbar>
-  );
-}
-
-EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-};
-
 export default function EnhancedTable() {
-  const [rows, setRows] = useState(initialRows);
-  const [selected, setSelected] = useState([]);
-  const [usersData, setUsersData] = useState([]);
-  const [loading, setLoading] = useState(false);
   const { user } = useAuth();
-  
-  
- 
-  console.log("user : ",user)
-  const fetchUsers = async (transactionID)=>{
-    try {
-      setLoading(true)
-      console.log("transactionID =========>",transactionID)
-      const response = await getUsers(transactionID)
-      if(response.hasError){
-        setLoading(false)
-        return toastDisplayer("error",response?.errorMessage)
-      }
-      setLoading(false)
-      console.log("response : ",response.responseData)
-      setUsersData(response.responseData)
-      
-    } catch (error) {
-      
-    }
-  }
+  const [rows, setRows] = useState(initialRows);
+  const [loading, setLoading] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [usersData, setUsersData] = useState([]);
+  const [selectedValue, setSelectedValue] = useState('');
+  const [open, setOpen] = useState(false);
 
-  const fetchUserAuthRule = async (transactionID,Email)=>{
+  const customTheme = createTheme({
+    components: {
+      MuiDataGrid: {
+        styleOverrides: {
+          root: { fontFamily: 'Segoe UI, Arial, sans-serif' },
+          cell: { fontFamily: 'Segoe UI, Arial, sans-serif' },
+          columnHeaders: { fontFamily: 'Segoe UI, Arial, sans-serif' },
+          toolbar: { fontFamily: 'Segoe UI, Arial, sans-serif' },
+        },
+      },
+    },
+  });
+
+  useEffect(() => {
+    if (user?.transactionID) {
+      fetchUsers(user.transactionID);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (user?.transactionID && selectedValue) {
+      fetchUserAuthRule(user.transactionID, selectedValue.email);
+    }
+  }, [selectedValue, user]);
+
+  const fetchUsers = async (transactionID) => {
+    setLoading(true);
     try {
-      setLoading(true)
-      const response = await getUserAuthRule(transactionID,Email)
-      if(response.hasError){
-        setLoading(false)
-        return toastDisplayer("error",response?.errorMessage)
+      const response = await getUsers(transactionID);
+      if (response.hasError) {
+        toastDisplayer("error", response.errorMessage);
+      } else {
+        setUsersData(response.responseData);
       }
-      setLoading(false)
-      console.log("responseData : ",response.responseData)
-      setRows(response.responseData)
-      
     } catch (error) {
-      
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
-  }
-  React.useEffect(()=>{
-    if(user?.transactionID){
-      fetchUsers(user?.transactionID)
+  };
+
+  const fetchUserAuthRule = async (transactionID, email) => {
+    setLoading(true);
+    try {
+      const response = await getUserAuthRule(transactionID, email);
+      if (response.hasError) {
+        toastDisplayer("error", response.errorMessage);
+      } else {
+        setIsVisible(true);
+        const updatedRows = initialRows.map(row => {
+          const updatedRow = response.responseData.find(data => data.Href === row.Href);
+          return updatedRow ? { ...row, HasAccess: updatedRow.HasAccess, rightsAccess: updatedRow.rightsAccess } : row;
+        });
+        setRows(updatedRows);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
-  },[user])
+  };
 
   const handleCheckboxChange = (index, type) => {
     const updatedRows = [...rows];
@@ -377,131 +121,108 @@ export default function EnhancedTable() {
     setRows(updatedRows);
   };
 
-  const handleButtonClick = () => {
-    console.log('Updated rows data:', rows);
-    // You can now send this data to your backend or perform any other operation.
-  };
+  const handleButtonClick = async () => {
+    if (!user?.transactionID) return toastDisplayer("error", "User Transaction ID not found.");
+    if (!selectedValue.email) return toastDisplayer("error", "Selected user not found.");
 
-  const [open, setOpen] = React.useState(false);
-  const [selectedValue, setSelectedValue] = React.useState('');
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  
-  const handleAddClose = () => {
-  // const handleAddClose = (value) => {
-    setOpen(false);
-    // if (value) {
-    //   setSelectedValue(value);
-    // }
-  };
-
-  const handleSelectUser = (user) => {
-    setSelectedValue(user);
-  };
-
-  React.useEffect(()=>{
-    if(user?.transactionID && selectedValue != ""){
-      fetchUserAuthRule(user?.transactionID,selectedValue.email)
+    setLoading(true);
+    try {
+      const updatedRows = rows.map(row => ({
+        ...row,
+        HasAccess: row.rightsAccess.some(access => access.read || access.write)
+      }));
+      const response = await saveUserAuthRule(user.transactionID, selectedValue.email, updatedRows);
+      if (response.hasError) {
+        toastDisplayer("error", response.errorMessage);
+      } else {
+        setIsVisible(false);
+        setSelectedValue("");
+        toastDisplayer("success", response.responseData.statusMsg);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
-    console.log("selectedValue : ",selectedValue)
-  },[selectedValue])
-
+  };
 
   return (
     <>
-     {open && (
-        <UserPopUp open={open} handleAddClose={handleAddClose} userData={usersData} onSelectUser={handleSelectUser}/>
+      {open && (
+        <UserPopUp open={open} handleAddClose={() => setOpen(false)} userData={usersData} onSelectUser={setSelectedValue} />
       )}
-     {loading && <Loader />}
-      <Grid item xs={12} md={12}>
-        <Card>
-          <CardContent>
-            <Grid container alignItems="center" justifyContent="space-between" spacing={2}>
-              <Grid item xs={8}>
-                <EnhancedTableToolbar numSelected={selected.length} />
-              </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  label="Select User"
-                  value={selectedValue ? selectedValue.email : ""}
-                  placeholder='Select user to give permission'
-                  fullWidth
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                         {selectedValue && (
-          <IconButton onClick={() => setSelectedValue("")} sx={{ p: 1 }}>
-            X
-          </IconButton>
-        )}
-                        <IconButton onClick={handleClickOpen} sx={{ p: 1 }}>
-                          <i className="tabler-circle-arrow-up-right " style={{ fontSize: '24px !important' }}/>
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                  sx={{ fontSize: '12pt', fontFamily: 'Segoe UI' }}
-                />
-              </Grid>
-            </Grid>
+      {loading && <Loader />}
+      <Grid container spacing={6}>
+        <Grid item xs={12}>
+          <Card>
+            <CardContent className='flex flex-col gap-4 p-0'>
+              <PageTitle 
+                title="User Permission" 
+                endCmp={
+                  <TextField
+                    label="Select User"
+                    value={selectedValue?.email || ""}
+                    placeholder='Select user to give permission'
+                    fullWidth
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          {selectedValue && (
+                            <IconButton onClick={() => setSelectedValue("")} sx={{ p: 1 }}>
+                              <i className="tabler-circle-x" style={{ fontSize: '18px' }} />
+                            </IconButton>
+                          )}
+                          <IconButton onClick={() => setOpen(true)} sx={{ p: 1 }}>
+                            <i className="tabler-circle-arrow-up-right" style={{ fontSize: '24px !important' }} />
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                    sx={{ fontSize: '12pt', fontFamily: 'Segoe UI' }}
+                  />
+                } 
+              />
 
-            <TableContainer sx={{ marginTop: 2 }}>
-              <Table
-                sx={{ minWidth: 750 }}
-                aria-labelledby="tableTitle"
-                size="medium"
-              >
-                <EnhancedTableHead
-                  order="asc"
-                  orderBy="Module"
-                />
-                <TableBody>
-                  {rows.map((item, index) => (
-                    <TableRow
-                      hover
-                      key={item.Label}
-                      sx={{ cursor: 'pointer' }}
-                    >
-                      <TableCell
-                        component="th"
-                        id={item.Label}
-                        scope="row"
-                        padding="normal"
-                        align="center"
-                        sx={{ fontSize: '12pt', fontFamily: 'Segoe UI' }}
-                      >
-                        {item.Label}
-                      </TableCell>
-                      <TableCell align="center">
-                        <Checkbox
-                          color="primary"
-                          checked={item.rightsAccess[0].read}
-                          onChange={() => handleCheckboxChange(index, 'read')}
-                        />
-                      </TableCell>
-                      <TableCell align="center">
-                        <Checkbox
-                          color="primary"
-                          checked={item.rightsAccess[0].write}
-                          onChange={() => handleCheckboxChange(index, 'write')}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
-              <Button variant="contained" color="primary" onClick={handleButtonClick}>
-                Get Updated Data
-              </Button>
-            </Box>
-          </CardContent>
-        </Card>
+              {isVisible && (
+                <Box className="p-5">
+                  <ThemeProvider theme={customTheme}>
+                    <Table sx={{ minWidth: 750 }} size="medium">
+                      <EnhancedTableHead order="asc" orderBy="Module" />
+                      <TableBody>
+                        {rows.map((item, index) => (
+                          <TableRow hover key={item.Label} sx={{ cursor: 'pointer' }}>
+                            <TableCell align="center" sx={{ fontSize: '12pt', fontFamily: 'Segoe UI' }}>
+                              {item.Label}
+                            </TableCell>
+                            <TableCell align="center">
+                              <Checkbox
+                                color="primary"
+                                checked={item.rightsAccess[0].read}
+                                onChange={() => handleCheckboxChange(index, 'read')}
+                              />
+                            </TableCell>
+                            <TableCell align="center">
+                              <Checkbox
+                                color="primary"
+                                checked={item.rightsAccess[0].write}
+                                onChange={() => handleCheckboxChange(index, 'write')}
+                              />
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </ThemeProvider>
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
+                    <Button variant="contained" color="primary" onClick={handleButtonClick}>
+                      Give Permission
+                    </Button>
+                  </Box>
+                </Box>
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
       </Grid>
     </>
   );
