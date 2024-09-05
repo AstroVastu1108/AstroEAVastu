@@ -62,11 +62,16 @@ const VerticalMenu = ({ scrollMenu }) => {
         {/* <MenuItem href='/home' icon={<i className='tabler-smart-home' />}>
           Home
         </MenuItem> */}
-        {authRuleContext.map((item,index) => (
+        {/* {authRuleContext.map((item,index) => (
         <MenuItem key={index} href={item.Href} icon={<i className={item.Icon} />}>
           {item.Label}
         </MenuItem>
-      ))}
+      ))} */}
+       {authRuleContext.map((item, index) => (
+          <MenuItem key={index} href={item.Href} icon={<i className={item.Icon} />}>
+            {item.Label}
+          </MenuItem>
+        ))}
         {/* <MenuItem href='/kundli' icon={<i className='tabler-smart-home' />}>
           Kundli
         </MenuItem>

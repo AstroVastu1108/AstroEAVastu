@@ -73,10 +73,15 @@ const HorizontalMenu = () => {
           menuSectionStyles: verticalMenuSectionStyles(verticalNavOptions, theme)
         }}
       >
-        {authRuleContext.map((item) => (
+        {/* {authRuleContext.map((item) => (
         <MenuItem href={item.Href} icon={<i className={item.Icon} />}>
           {item.Label}
         </MenuItem>
+        ))} */}
+         {authRuleContext.map((item, index) => (
+          <MenuItem key={index} href={item.Href} icon={<i className={item.Icon} />}>
+            {item.Label}
+          </MenuItem>
         ))}
         {/* <MenuItem href='/' icon={<i className='tabler-smart-home' />}>
           Home
