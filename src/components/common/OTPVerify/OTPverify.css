@@ -4,7 +4,7 @@
     align-items: center;
     justify-content: center;
     /* padding: 2rem;s */
-    background-color: #ffffff;
+    /* background-color: #ffffff; */
     border-radius: 10px;
     /* box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); */
     max-width: 800px;
@@ -24,7 +24,7 @@
         }
     }
     .resend-button {
-        background-color: #fff;
+        /* background-color: #fff; */
         color: #4b37b3;
         border: none;
         padding: 0.5rem 1rem;

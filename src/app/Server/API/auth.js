@@ -36,6 +36,48 @@ export async function sendSignInRequest(username,password) {
     }
   }
 
+export async function registerCompnay(company) {
+  const responseBody = {
+    responseData: null,
+    hasError: false,
+    error: null,
+  };
+    try {
+      console.log("Data compnay : ",company)
+      const payload = {
+        userType: "CompanyMaster",
+        email:company.email,
+        password: company.password,
+        businessName:company.businessname,
+        businessLocation:company.businesslocation,
+        userAvatar:company.profilePicture,
+        phone:company.phone
+      }
+
+      const response = await axios.post(`${API_URL}/Auth/Registration`, payload);
+      responseBody.responseData = response.data;
+      if (response.status === 200) {
+        return {
+          isOk: true,
+          data: response.data.result,
+        };
+      }else{
+        return {
+          isOk: false,
+          data: response.data,
+        };
+      }
+    } catch (error) {
+      return {
+        isOk: false,
+        data: responseBody.errorMessage =
+        error.response?.data?.statusMsg ||
+        error.message ||
+        error.response?.data?.errors
+      };
+    }
+  }
+
 
   
 export const requestOtp = async (email, role) => {

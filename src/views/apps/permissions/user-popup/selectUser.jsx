@@ -131,7 +131,6 @@ function UserPopUp({ open, handleAddClose, userData, onSelectUser }) {
         renderCell: (params) => (
           <Checkbox
             checked={user?.email === params.row.email}
-            onChange={(event) => handleCheckboxChange(event, params.row)}
           />
         ),
       },
