@@ -247,25 +247,25 @@ const LoginV2 = ({ mode }) => {
                   {
                     isOtpVerified == "verified" ? <>
 
-                    <TextField
-                      fullWidth
-                      label='Password'
-                      placeholder='············'
-                      id='outlined-adornment-password'
-                      type={isPasswordShown ? 'text' : 'password'}
-                      value={formData.password}
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position='end'>
-                            <IconButton edge='end' onClick={handleClickShowPassword} onMouseDown={e => e.preventDefault()}>
-                              <i className={isPasswordShown ? 'tabler-eye-off' : 'tabler-eye'} />
-                            </IconButton>
-                          </InputAdornment>
-                        )
-                      }}
-                      onChange={(e) => { handleInput("password", e); }}
-                      {...(errors.password && { error: true })}
-                    />
+                      <TextField
+                        fullWidth
+                        label='Password'
+                        placeholder='············'
+                        id='outlined-adornment-password'
+                        type={isPasswordShown ? 'text' : 'password'}
+                        value={formData.password}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position='end'>
+                              <IconButton edge='end' onClick={handleClickShowPassword} onMouseDown={e => e.preventDefault()}>
+                                <i className={isPasswordShown ? 'tabler-eye-off' : 'tabler-eye'} />
+                              </IconButton>
+                            </InputAdornment>
+                          )
+                        }}
+                        onChange={(e) => { handleInput("password", e); }}
+                        {...(errors.password && { error: true })}
+                      />
                     <div className='flex justify-between items-center gap-x-3 gap-y-1 flex-wrap'>
                       <FormControlLabel control={<Checkbox />} label='Remember me' />
                       <Typography className='text-end' color='primary' component={Link}>

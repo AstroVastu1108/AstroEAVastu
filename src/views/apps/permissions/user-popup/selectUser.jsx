@@ -18,7 +18,7 @@
 //     CityID: false,
 //     Prakriti: false
 //   })
-  
+
 
 //   const [query, setQuery] = useState('')
 
@@ -105,7 +105,7 @@
 //               <span style={{ marginLeft: 8 }}>Selecting ...</span>
 //             </> : 'Select'}
 //           </Button>
-         
+
 //         </DialogActions>
 //       </Dialog>
 //     </>

@@ -204,7 +204,7 @@ import { useState } from 'react';
 import { Card, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, InputAdornment, List, ListItem, ListItemText, TextField } from '@mui/material';
 import { useAuth } from '@/@core/contexts/authContext';
 import Loader from '@/components/common/Loader/Loader';
-import { getUserAuthRule, getUsers } from '@/app/Server/API/userPermission';
+import { GetUserAuthRule, GetUsers } from '@/app/Server/API/userPermission';
 import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer';
 import UserPopUp from './user-popup/selectUser';
 
@@ -327,49 +327,49 @@ export default function EnhancedTable() {
   const [usersData, setUsersData] = useState([]);
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
-  
-  
- 
-  console.log("user : ",user)
-  const fetchUsers = async (transactionID)=>{
+
+
+
+  console.log("user : ", user)
+  const fetchUsers = async (transactionID) => {
     try {
       setLoading(true)
-      console.log("transactionID =========>",transactionID)
-      const response = await getUsers(transactionID)
-      if(response.hasError){
+      console.log("transactionID =========>", transactionID)
+      const response = await GetUsers(transactionID)
+      if (response.hasError) {
         setLoading(false)
-        return toastDisplayer("error",response?.errorMessage)
+        return toastDisplayer("error", response?.errorMessage)
       }
       setLoading(false)
-      console.log("response : ",response.responseData)
+      console.log("response : ", response.responseData)
       setUsersData(response.responseData)
-      
+
     } catch (error) {
-      
+
     }
   }
 
-  const fetchUserAuthRule = async (transactionID,Email)=>{
+  const fetchUserAuthRule = async (transactionID, Email) => {
     try {
       setLoading(true)
-      const response = await getUserAuthRule(transactionID,Email)
-      if(response.hasError){
+      const response = await GetUserAuthRule(transactionID, Email)
+      if (response.hasError) {
         setLoading(false)
-        return toastDisplayer("error",response?.errorMessage)
+        return toastDisplayer("error", response?.errorMessage)
       }
       setLoading(false)
-      console.log("responseData : ",response.responseData)
+      console.log("responseData : ", response.responseData)
       setRows(response.responseData)
-      
+
     } catch (error) {
-      
+
     }
   }
-  React.useEffect(()=>{
-    if(user?.transactionID){
+  React.useEffect(() => {
+    if (user?.transactionID) {
       fetchUsers(user?.transactionID)
     }
-  },[user])
+  }, [user])
 
   const handleCheckboxChange = (index, type) => {
     const updatedRows = [...rows];
@@ -389,9 +389,9 @@ export default function EnhancedTable() {
     setOpen(true);
   };
 
-  
+
   const handleAddClose = () => {
-  // const handleAddClose = (value) => {
+    // const handleAddClose = (value) => {
     setOpen(false);
     // if (value) {
     //   setSelectedValue(value);
@@ -402,20 +402,20 @@ export default function EnhancedTable() {
     setSelectedValue(user);
   };
 
-  React.useEffect(()=>{
-    if(user?.transactionID && selectedValue != ""){
-      fetchUserAuthRule(user?.transactionID,selectedValue.email)
+  React.useEffect(() => {
+    if (user?.transactionID && selectedValue != "") {
+      fetchUserAuthRule(user?.transactionID, selectedValue.email)
     }
-    console.log("selectedValue : ",selectedValue)
-  },[selectedValue])
+    console.log("selectedValue : ", selectedValue)
+  }, [selectedValue])
 
 
   return (
     <>
-     {open && (
-        <UserPopUp open={open} handleAddClose={handleAddClose} userData={usersData} onSelectUser={handleSelectUser}/>
+      {open && (
+        <UserPopUp open={open} handleAddClose={handleAddClose} userData={usersData} onSelectUser={handleSelectUser} />
       )}
-     {loading && <Loader />}
+      {loading && <Loader />}
       <Grid item xs={12} md={12}>
         <Card>
           <CardContent>
@@ -432,13 +432,13 @@ export default function EnhancedTable() {
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
-                         {selectedValue && (
-          <IconButton onClick={() => setSelectedValue("")} sx={{ p: 1 }}>
-            X
-          </IconButton>
-        )}
+                        {selectedValue && (
+                          <IconButton onClick={() => setSelectedValue("")} sx={{ p: 1 }}>
+                            X
+                          </IconButton>
+                        )}
                         <IconButton onClick={handleClickOpen} sx={{ p: 1 }}>
-                          <i className="tabler-circle-arrow-up-right " style={{ fontSize: '24px !important' }}/>
+                          <i className="tabler-circle-arrow-up-right " style={{ fontSize: '24px !important' }} />
                         </IconButton>
                       </InputAdornment>
                     ),

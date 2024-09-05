@@ -64,7 +64,11 @@ const PreviewCard = ({ kundliData, id }) => {
           <div className='p-3 Birthdetail-div'>
             <div className='flex justify-between gap-y-4 flex-col sm:flex-row'>
               <div className='flex flex-col gap-6'>
-                <span className="Name-title">{BirthDetails?.FirstName} {BirthDetails?.MiddleName} {BirthDetails?.LastName}</span>
+                <span className="Name-title">
+                  {BirthDetails?.FirstName ? `${BirthDetails.FirstName} ${BirthDetails.MiddleName} ${BirthDetails.LastName}` : 'Prashna Kundli'}
+                </span>
+
+                {/* <span className="Name-title">{BirthDetails?.FirstName} {BirthDetails?.MiddleName} {BirthDetails?.LastName}</span> */}
               </div>
               <div className='flex flex-row gap-5 birthDateTime-Div'>
                 <div>
