@@ -98,6 +98,7 @@ function OTPverify({ email,role,setIsOtpVerified }) {
       if (result.hasError) {
         return toastDisplayer("error", result.error)
       } 
+      setOtp(["", "", "", "", "", ""])
       toastDisplayer('success', 'OTP sent successfully');
     } catch (error) {
       console.log("Error Resending OTP:", error); // Log the error response

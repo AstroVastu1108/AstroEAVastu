@@ -150,14 +150,15 @@ const LoginV2 = ({ mode }) => {
       setIsDisable(true)
       const result = await loginData(formData)
       if (result.error) {
-        // setIsDisable(false);
+        setIsDisable(false);
         console.log("Result : ", result.error)
         setIsOtpVerified("pending")
         return toastDisplayer("error", result.message)
       } else {
-        setIsDisable(false);
+        // setIsDisable(false);
         setIsOtpVerified("pending")
-        router.push('/kundlipage')
+        toastDisplayer('success', 'Loggedin successful! \nYou will be redirecting...')
+        return router.push('/kundlipage')
       }
     } catch (error) {
       setIsDisable(false);
@@ -174,7 +175,7 @@ const LoginV2 = ({ mode }) => {
     }));
   }
   const spinAnimation = {
-    animation: 'spin 25s linear infinite'
+    animation: 'spin 50s linear infinite'
   };
   useEffect(() => {
     const keyframes = `
@@ -203,7 +204,16 @@ const LoginV2 = ({ mode }) => {
               'border-ie': settings.skin === 'bordered'
             }
           )}
-          style={{ background: "#45163a", backgroundImage: 'url("../../public/images/illustrations/auth/stars.png")' }}
+          style={{
+            background: "#45163a",
+            backgroundImage: 'url("/images/illustrations/auth/stars.png")',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            minHeight: '100vh',
+            position: 'relative'
+          }}
+          // style={{ background: "#45163a", backgroundImage: 'url("../../public/images/illustrations/auth/stars.png")' }}
         >
           <div >
             <LoginIllustration src={characterIllustration} alt='character-illustration' style={{ ...spinAnimation, width: '80%', height: '80%' }} />
@@ -303,7 +313,9 @@ const LoginV2 = ({ mode }) => {
 
                   <div className='flex justify-center items-center flex-wrap gap-2'>
                     <Typography>New on our platform?</Typography>
-                    <Typography component={Link} color='primary'>
+                    <Typography color='primary' style={{ cursor: 'pointer' }} onClick={()=>{
+                      router.push('/register')
+                    }}>
                       Create an account
                     </Typography>
                   </div>

@@ -43,3 +43,26 @@ export async function getUserAuthRule(TransactionID,Email) {
     return responseBody
   }
 }
+
+// save user authrule
+export async function saveUserAuthRule(TransactionID,Email,moduleCLasses) {
+  const responseBody = {
+    responseData: null,
+    hasError: false,
+    error: null
+  }
+  try {
+    const response = await axios.post(`${API_URL}/Auth/SaveAuthRule`,{
+      "cmpTransId": TransactionID,
+      "userEmail": Email,
+      "moduleCLasses":moduleCLasses
+      })
+    responseBody.responseData = response.data
+    return responseBody
+  } catch (error) {
+    responseBody.hasError = true
+    responseBody.errorMessage = responseBody.errorMessage =
+      error.response?.data?.statusMsg || error.response?.data?.errors
+    return responseBody
+  }
+}
