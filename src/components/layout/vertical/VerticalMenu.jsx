@@ -29,7 +29,9 @@ const VerticalMenu = ({ scrollMenu }) => {
   // Hooks
   const theme = useTheme()
   const verticalNavOptions = useVerticalNav()
+
   const { authRuleContext } = useAuth()
+
   // Vars
   const { isBreakpointReached, transitionDuration } = verticalNavOptions
   const ScrollWrapper = isBreakpointReached ? 'div' : PerfectScrollbar
@@ -60,11 +62,11 @@ const VerticalMenu = ({ scrollMenu }) => {
         {/* <MenuItem href='/home' icon={<i className='tabler-smart-home' />}>
           Home
         </MenuItem> */}
-           {authRuleContext.map((item) => (
-        <MenuItem href={item.Href} icon={<i className={item.Icon} />}>
+        {authRuleContext.map((item,index) => (
+        <MenuItem key={index} href={item.Href} icon={<i className={item.Icon} />}>
           {item.Label}
         </MenuItem>
-        ))}
+      ))}
         {/* <MenuItem href='/kundli' icon={<i className='tabler-smart-home' />}>
           Kundli
         </MenuItem>

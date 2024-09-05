@@ -5,22 +5,22 @@ import { getCities, getCountries, getReport } from '@/app/Server/API/common';
 import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer';
 import { useRouter } from 'next/navigation';
 import AppReactDatepicker from '@/components/datePicker/AppReactDatepicker';
-import { CreateKundli } from '@/app/Server/API/kundliAPI';
+import { CreateKundli, UpdateKundli } from '@/app/Server/API/kundliAPI';
 import "./addKundli.css"
 
-function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
+function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserData }) {
 
   const [isDisable, setIsDisable] = useState(false);
-  const [userData, setUserData] = useState({
-    firstName: '',
-    lastName: '',
-    middleName: '',
-    gender: 'Male',
-    date: null,
-    country: { iso2: 'IN', name: 'India' },
-    time: null,
-    city: 'A1AE28185ED49D47211760BF32D40EB742C84998'
-  })
+  // const [userData, setUserData] = useState({
+  //   FirstName: '',
+  //   LastName: '',
+  //   MiddleName: '',
+  //   Gender: 'Male',
+  //   date: null,
+  //   country: { iso2: 'IN', name: 'India' },
+  //   time: null,
+  //   city: 'A1AE28185ED49D47211760BF32D40EB742C84998'
+  // })
 
   const [errors, setErrors] = useState({
     FirstName: false,
@@ -44,11 +44,43 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
   const [currentTime, setCurrentTime] = useState(null);
 
   useEffect(() => {
-    const now = new Date();
-    console.log(now)
-    setUserData((prev) => ({ ...prev, ["date"]: now, ["time"]: now }))
-    setCurrentTime(now);
-  }, []);
+    if (!userData.isUpdate) {
+        const now = new Date();
+        setUserData((prev) => ({ ...prev, ["date"]: now, ["time"]: now }));
+        setCurrentTime(now);
+    } else {
+        const dateParts = userData.BirthDate.split('-');
+        const timeParts = userData.BirthTime;
+
+        const day = parseInt(dateParts[0], 10);
+        const month = parseInt(dateParts[1], 10) - 1; // month is 0-indexed in JS
+        const year = parseInt(dateParts[2], 10);
+
+        let hours, minutes;
+        if (timeParts && timeParts.length === 4 && !isNaN(timeParts)) {
+            hours = parseInt(timeParts.substring(0, 2), 10);
+            minutes = parseInt(timeParts.substring(2, 4), 10);
+        } else {
+            // Use current time if BirthTime is not in the correct format
+            const now = new Date();
+            hours = now.getHours();
+            minutes = now.getMinutes();
+        }
+
+        const birthDate = new Date(year, month, day, hours, minutes);
+        var newCounty = conutryData.filter((e) => e.name === userData.Country || e.iso2 === userData.Country);
+        console.log(newCounty);
+
+        setUserData((prev) => ({
+            ...prev,
+            ["date"]: birthDate,
+            ["time"]: birthDate,
+            ["country"]: newCounty[0],
+        }));
+        setCurrentTime(birthDate);
+    }
+}, []);
+
 
   const fetchData = async () => {
     try {
@@ -98,12 +130,13 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
     const birthTime = userData.time ? new Date(userData.time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }).replace(/:/g, '') : null;
 
     const formattedData = {
-      FirstName: userData.firstName,
-      LastName: userData.lastName,
-      MiddleName: userData.middleName,
-      Gender: userData.gender,
+      KundaliID : userData.KundaliID,
+      FirstName: userData.FirstName,
+      LastName: userData.LastName,
+      MiddleName: userData.MiddleName,
+      Gender: userData.Gender,
       Country: userData.country.name,
-      CityID: userData.city,
+      CityID: userData.CityID,
       BirthDate: birthDate,
       BirthTime: birthTime,
       Prakriti: userData.prakriti || ''
@@ -111,34 +144,47 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
 
     try {
       setIsDisable(true)
-      if (formattedData.FirstName.trim("") == "") {
-        return console.log("prashna kundli")
-      }
-      const response = await CreateKundli(formattedData)
+      // if (formattedData.FirstName.trim("") == "") {
+      //   return console.log("prashna kundli")
+      // }
+      if (!userData.isUpdate) {
+        const response = await CreateKundli(formattedData)
 
-      if (response.hasError) {
+        if (response.hasError) {
+          setIsDisable(false)
+          return toastDisplayer("error", response.error)
+        }
+        var kId = response?.responseData?.Result?.KundaliID;
         setIsDisable(false)
-        return toastDisplayer("error", response.error)
+        getAllKundli();
+        handleAddClose();
+        toastDisplayer("success", `kundli data is saved successfully.`)
+        return kId;
+      } else {
+        const response = await UpdateKundli(formattedData)
+
+        if (response.hasError) {
+          setIsDisable(false)
+          return toastDisplayer("error", response.error)
+        }
+        var kId = response?.responseData?.Result?.KundaliID;
+        setIsDisable(false)
+        getAllKundli();
+        handleAddClose();
+        toastDisplayer("success", `Kundli data is updated successfully.`)
+        return kId;
       }
-      var kId = response?.responseData?.Result?.KundaliID;
-      setIsDisable(false)
-      getAllKundli();
-      handleAddClose();
-      toastDisplayer("success", `kundli data is saved successfully.`)
-      return kId;
     } catch (error) {
       setIsDisable(false)
-      console.error('There was an error submitting the form:', error)
     }
   }
 
   const handlePreview = async () => {
     const kid = await handleSubmit();
-    router.push(`kundli/preview?kid=${kid}`)
+    router.push(`preview?kid=${kid}`)
   }
 
   const handleInputChange = (field, value, key) => {
-    console.log(value)
     setUserData(prev => ({
       ...prev,
       [field]: value
@@ -162,10 +208,10 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
       >
         <DialogTitle className="PopupHeader bg-primary text-white p-4">
           <div className='w-100' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span>
+            <span>
 
-            Add Kundli
-          </span>
+              Add Kundli
+            </span>
             <IconButton
               aria-label="close"
               onClick={handleAddClose} // Replace with your close handler function
@@ -186,11 +232,11 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
               <TextField
                 fullWidth
                 label="First Name"
-                value={userData?.firstName}
+                value={userData?.FirstName}
                 onChange={e => {
                   const inputValue = e.target.value;
                   const capitalizedValue = inputValue.charAt(0).toUpperCase() + inputValue.slice(1);
-                  handleInputChange('firstName', capitalizedValue, 'FirstName');
+                  handleInputChange('FirstName', capitalizedValue, 'FirstName');
                 }}
               // {...(errors.FirstName && { error: true, helperText: 'FirstName is required.' })}
               />
@@ -200,9 +246,9 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
                 fullWidth
                 label='Middle Name'
                 // placeholder='John'
-                value={userData?.middleName}
-                onChange={e => handleInputChange('middleName', e.target.value, 'MiddleName')}
-              // onChange={e => setUserData({ ...userData, middleName: e.target.value })}
+                value={userData?.MiddleName}
+                onChange={e => handleInputChange('MiddleName', e.target.value, 'MiddleName')}
+              // onChange={e => setUserData({ ...userData, MiddleName: e.target.value })}
               // {...(errors.MiddleName && { error: true, helperText: 'MiddleName is required.' })}
               />
             </Grid>
@@ -211,20 +257,20 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
                 fullWidth
                 label='Last Name'
                 // placeholder='Doe'
-                value={userData?.lastName}
-                onChange={e => handleInputChange('lastName', e.target.value, 'LastName')}
-              // onChange={e => setUserData({ ...userData, lastName: e.target.value })}
+                value={userData?.LastName}
+                onChange={e => handleInputChange('LastName', e.target.value, 'LastName')}
+              // onChange={e => setUserData({ ...userData, LastName: e.target.value })}
               // {...(errors.LastName && { error: true, helperText: 'LastName is required.' })}
               />
             </Grid>
             <Grid item xs={12} sm={4}>
               <FormControl fullWidth>
-                <InputLabel id="gender-select-label">Gender</InputLabel>
+                <InputLabel id="Gender-select-label">Gender</InputLabel>
                 <Select
-                  labelId="gender-select-label"
-                  id="gender-select"
-                  value={userData?.gender || ''}
-                  onChange={e => handleInputChange('gender', e.target.value, 'Gender')}
+                  labelId="Gender-select-label"
+                  id="Gender-select"
+                  value={userData?.Gender || ''}
+                  onChange={e => handleInputChange('Gender', e.target.value, 'Gender')}
                   label="Gender"
                 >
                   <MenuItem value="Male">Male</MenuItem>
@@ -287,6 +333,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
                 defaultValue={
                   { iso2: 'IN', name: 'India' }
                 }
+
                 getOptionLabel={(option) => option.name}
                 getOptionKey={(option) => option.iso2}
                 onChange={(event, newValue) => handleInputChange('country', newValue, 'Country')}
@@ -308,7 +355,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
                 }}
                 getOptionLabel={(option) => option.FormattedCity || ''}
                 onInputChange={(event, newQuery) => setQuery(newQuery)}
-                onChange={(event, newValue) => handleInputChange('city', newValue.CityID, 'CityID')}
+                onChange={(event, newValue) => handleInputChange('CityID', newValue.CityID, 'CityID')}
                 renderInput={(params) => (
                   <TextField {...params} label='Select City' variant='outlined'
                   // {...(errors.CityID && { error: true, helperText: 'City is required.' })}
@@ -319,7 +366,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli }) {
           </Grid>
         </DialogContent>
         <DialogActions>
-        <Button variant='contained' disabled={isDisable} onClick={handlePreview} >
+          <Button variant='contained' disabled={isDisable} onClick={handlePreview} >
             {isDisable ? <>
               <CircularProgress size={14} aria-label="Wait" />
               <span style={{ marginLeft: 8 }}>Saving</span>

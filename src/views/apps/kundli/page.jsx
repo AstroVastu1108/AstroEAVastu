@@ -40,7 +40,7 @@ export default function KundliMain() {
               className={'tabler-arrow-up-right bg-primary'}
             />
           </IconButton>
-          <IconButton onClick={() => console.log(params?.row?.KundaliID)}>
+          <IconButton onClick={() => handleEditClick(params?.row)}>
             <i
               className={'tabler-edit'}
             />
@@ -77,20 +77,45 @@ export default function KundliMain() {
   const [open, setOpen] = useState(false);
   const [kundliData, setKundliData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const router = useRouter()
+  const router = useRouter();
+  const [userData, setUserData] = useState({
+    KundaliID: '',
+    FirstName: '',
+    LastName: '',
+    MiddleName: '',
+    Gender: 'Male',
+    BirthDate: null,
+    Country: { iso2: 'IN', name: 'India' },
+    BirthTime: null,
+    CityID: 'A1AE28185ED49D47211760BF32D40EB742C84998',
+    isUpdate: false
+  })
+  const [totalRowCount, setTotalRowCount] = useState(1000);
+
 
 
   // func
   const handleAddClick = () => {
-    setOpen(true)
+    setUserData({
+      FirstName: '',
+      LastName: '',
+      MiddleName: '',
+      Gender: 'Male',
+      BirthDate: null,
+      Country: { iso2: 'IN', name: 'India' },
+      BirthTime: null,
+      CityID: 'A1AE28185ED49D47211760BF32D40EB742C84998',
+      isUpdate: false
+    })
+    setOpen(true);
   }
   const handleAddClose = () => {
     setOpen(false)
   }
 
-  const getAllKundli = async () => {
+  const getAllKundli = async (pageNo) => {
     setLoading(true);
-    const res = await GetKundliDataAPI(1000, 1);
+    const res = await GetKundliDataAPI(10, pageNo);
     if (res.hasError) {
       setLoading(false);
       return toastDisplayer("error", res.error);
@@ -105,15 +130,24 @@ export default function KundliMain() {
     router.push(`preview?kid=${kid}`)
   }
 
+  const handleEditClick = (data) => {
+    setLoading(true);
+    data.isUpdate = true;
+    setUserData(data)
+    setOpen(true);
+    setLoading(false);
+  }
+
 
   // Hooks
   useEffect(() => {
-    getAllKundli();
+    getAllKundli(1);
   }, [])
 
   function CustomToolbar() {
     return (
-      <GridToolbarContainer>
+      <GridToolbarContainer className="px-5  d-flex justify-content-between align-items-center">
+        <div className="me-auto" style={{ fontSize: '16px', fontWeight: '500', color: "#2F2B3DB3" }}>Review your Kundli records below</div>
         <GridToolbarQuickFilter className="SearchBar" />
       </GridToolbarContainer>
     );
@@ -121,6 +155,11 @@ export default function KundliMain() {
 
   const handleFilterModelChange = (e) => {
     console.log(e?.quickFilterValues[0])
+  }
+
+  const fetchDataForPage = (e) => {
+    console.log(e)
+    getAllKundli(parseInt(e)+1);
   }
 
   const customTheme = createTheme({
@@ -205,12 +244,14 @@ export default function KundliMain() {
                         pagination: { paginationModel: { pageSize: 10 } },
                         pinnedColumns: { left: ['FirstName'], left: ['iconColumn'] }
                       }}
-                    // slots={{ toolbar: GridToolbarQuickFilter  }}
-                    // slotProps={{
-                    //   toolbar: {
-                    //     showQuickFilter: true,
-                    //   },
-                    // }}
+                      paginationMode="server"
+                      rowCount={totalRowCount} // Set the total count of rows
+                      // paginationModel={paginationModel}
+                      onPaginationModelChange={(paginationModel) => {
+                        fetchDataForPage(paginationModel.page);
+                      }}
+                      slots={{ toolbar: CustomToolbar }}
+                      slotProps={{ toolbar: { showQuickFilter: true } }}
                     />
                   </ThemeProvider>
 
@@ -224,7 +265,7 @@ export default function KundliMain() {
       </Grid>
 
       {open && (
-        <AddKundliPopUp open={open} handleAddClose={handleAddClose} getAllKundli={getAllKundli} />
+        <AddKundliPopUp open={open} handleAddClose={handleAddClose} getAllKundli={getAllKundli} setUserData={setUserData} userData={userData} />
       )}
 
     </>

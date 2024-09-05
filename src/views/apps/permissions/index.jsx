@@ -9,7 +9,7 @@ import {
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/@core/contexts/authContext';
 import Loader from '@/components/common/Loader/Loader';
-import { getUserAuthRule, getUsers, saveUserAuthRule } from '@/app/Server/API/userPermission';
+import { GetUserAuthRule, GetUsers } from '@/app/Server/API/userPermission';
 import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer';
 import UserPopUp from './user-popup/selectUser';
 import PageTitle from '@/components/common/PageTitle/PageTitle';
@@ -48,6 +48,7 @@ export default function EnhancedTable() {
   const { user } = useAuth();
   const [rows, setRows] = useState(initialRows);
   const [loading, setLoading] = useState(false);
+
   const [isVisible, setIsVisible] = useState(false);
   const [usersData, setUsersData] = useState([]);
   const [selectedValue, setSelectedValue] = useState('');
@@ -93,6 +94,7 @@ export default function EnhancedTable() {
       setLoading(false);
     }
   };
+
 
   const fetchUserAuthRule = async (transactionID, email) => {
     setLoading(true);

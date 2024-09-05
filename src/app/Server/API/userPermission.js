@@ -2,7 +2,7 @@ import axios from 'axios'
 const API_URL = process.env.NEXT_PUBLIC_APIURL1
 
 // get all the users
-export async function getUsers(TransactionID) {
+export async function GetUsers(TransactionID) {
   const responseBody = {
     responseData: null,
     hasError: false,
@@ -23,7 +23,7 @@ export async function getUsers(TransactionID) {
 }
 
 // get user authrule
-export async function getUserAuthRule(TransactionID,Email) {
+export async function GetUserAuthRule(TransactionID,Email) {
   const responseBody = {
     responseData: null,
     hasError: false,
@@ -44,6 +44,7 @@ export async function getUserAuthRule(TransactionID,Email) {
   }
 }
 
+
 // save user authrule
 export async function saveUserAuthRule(TransactionID,Email,moduleCLasses) {
   const responseBody = {
@@ -57,6 +58,25 @@ export async function saveUserAuthRule(TransactionID,Email,moduleCLasses) {
       "userEmail": Email,
       "moduleCLasses":moduleCLasses
       })
+    responseBody.responseData = response.data
+    return responseBody
+  } catch (error) {
+    responseBody.hasError = true
+    responseBody.errorMessage = responseBody.errorMessage =
+      error.response?.data?.statusMsg || error.response?.data?.errors
+    return responseBody
+  }
+}
+
+// save user data
+export async function CreateUser(payload) {
+  const responseBody = {
+    responseData: null,
+    hasError: false,
+    error: null
+  }
+  try {
+    const response = await axios.post(`${API_URL}/Auth/UserRegistration`, payload)
     responseBody.responseData = response.data
     return responseBody
   } catch (error) {

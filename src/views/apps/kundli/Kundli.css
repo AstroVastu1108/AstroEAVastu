@@ -39,3 +39,11 @@
   }
 
 }
+
+
+.MuiDataGrid-cell:focus-within,
+.MuiDataGrid-cell:focus,
+.MuiDataGrid-cell--editing {
+  outline: none !important;
+  box-shadow: none !important;
+}

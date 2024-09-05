@@ -39,6 +39,25 @@ export async function CreateKundli(payload) {
   }
 }
 
+// update kundli data and get kundli id
+export async function UpdateKundli(payload) {
+  const responseBody = {
+    responseData: null,
+    hasError: false,
+    error: null
+  }
+  try {
+    const response = await axios.post(`${API_URL}/astro/update-kundali`, payload)
+    responseBody.responseData = response.data
+    return responseBody
+  } catch (error) {
+    responseBody.hasError = true
+    responseBody.errorMessage = responseBody.errorMessage =
+      error.response?.data?.statusMsg || error.response?.data?.errors
+    return responseBody
+  }
+}
+
 
 // get kundli data from kundli id
 export async function GetKundliIDDataAPI(kId) {
