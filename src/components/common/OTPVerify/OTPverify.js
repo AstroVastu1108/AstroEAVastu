@@ -97,7 +97,7 @@ function OTPverify({ email,role,setIsOtpVerified }) {
       const result = await requestOtp(email,role);
       if (result.hasError) {
         return toastDisplayer("error", result.error)
-      } 
+      }
       setOtp(["", "", "", "", "", ""])
       toastDisplayer('success', 'OTP sent successfully');
     } catch (error) {
@@ -123,11 +123,12 @@ function OTPverify({ email,role,setIsOtpVerified }) {
             maxLength={1}
             className="otp-input"
             ref={(el) => (inputRefs.current[index] = el)} // Assign ref to input elements
+            inputMode="numeric"
           />
         ))}
       </div>
       <div className="resendOTP">
-      
+
         <button
           onClick={handleResend}
           disabled={isResendDisabled}

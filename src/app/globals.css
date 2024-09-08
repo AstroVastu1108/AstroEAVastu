@@ -16,8 +16,10 @@ body {
   /* --mui-palette-primary-mainChannel: 120 38 148; */
   /* --primary-soft-color: rgba(102, 34, 148, 0.2); */
   --primary-soft-color: #662294;
-  --secondary-color: rgb(255, 196, 1);
-  --secondary-soft-color: rgb(255, 196, 1, 0.5);
+  /* --secondary-color: rgb(255, 196, 1); */
+  --secondary-color: #FFCB04;
+  --secondary-soft-color: rgb(255, 203, 4);
+  --mui-palette-divider:rgb(128, 128, 128,0.5);
 
   /* built in */
   --border-radius: var(--mui-shape-borderRadius);

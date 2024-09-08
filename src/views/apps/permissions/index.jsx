@@ -3,7 +3,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Box, Table, TableBody, TableCell, TableHead, TableRow, Checkbox, Button, Card, CardContent, 
+  Box, Table, TableBody, TableCell, TableHead, TableRow, Checkbox, Button, Card, CardContent,
   createTheme, Grid, IconButton, InputAdornment, TextField, ThemeProvider
 } from '@mui/material';
 import { useState, useEffect } from 'react';
@@ -13,6 +13,7 @@ import { GetUserAuthRule, GetUsers, saveUserAuthRule } from '@/app/Server/API/us
 import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer';
 import UserPopUp from './user-popup/selectUser';
 import PageTitle from '@/components/common/PageTitle/PageTitle';
+import "./permissions.css";
 
 const initialRows = [
   { Label: "Kundli", Href: "/kundlipage", Icon: "tabler-smart-home", HasAccess: false, rightsAccess: [{ read: false, write: false }] },
@@ -158,8 +159,8 @@ export default function EnhancedTable() {
         <Grid item xs={12}>
           <Card>
             <CardContent className='flex flex-col gap-4 p-0'>
-              <PageTitle 
-                title="User Permission" 
+              <PageTitle
+                title="User Permission"
                 endCmp={
                   <TextField
                     label="Select User"
@@ -174,15 +175,15 @@ export default function EnhancedTable() {
                               <i className="tabler-circle-x" style={{ fontSize: '18px' }} />
                             </IconButton>
                           )}
-                          <IconButton onClick={() => setOpen(true)} sx={{ p: 1 }}>
-                            <i className="tabler-circle-arrow-up-right" style={{ fontSize: '24px !important' }} />
+                          <IconButton className='HelperBtn' onClick={() => setOpen(true)} sx={{ p: 1 }}>
+                            <i className="tabler-circle-arrow-up-right" />
                           </IconButton>
                         </InputAdornment>
                       ),
                     }}
                     sx={{ fontSize: '12pt', fontFamily: 'Segoe UI' }}
                   />
-                } 
+                }
               />
 
               {isVisible && (

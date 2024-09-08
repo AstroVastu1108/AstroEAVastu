@@ -12,15 +12,16 @@ import PageTitle from "@/components/common/PageTitle/PageTitle";
 
 export default function KundliMain() {
 
-  // vars
-  const columns = [
+   // vars
+   const columns = [
     // {
     //   field: 'KundaliID', headerName: 'Planet', headerClassName: 'rowheader',
     //   headerAlign: 'left'
     // },
     {
-      field: 'FirstName', flex: 2, headerName: 'Full Name', headerClassName: 'rowheader',
+      field: 'FirstName', headerName: 'Full Name', headerClassName: 'rowheader',
       minWidth: 200,
+      flex:2,
       headerAlign: 'left',
       renderCell: (params) => (
         <>
@@ -31,8 +32,8 @@ export default function KundliMain() {
     {
       field: 'iconColumn', // Unique field name for this column
       headerName: '',
-      flex: 1,
       minWidth: 100,
+      flex:1,
       headerClassName: 'rowheader',
 
       renderCell: (params) => (
@@ -51,40 +52,33 @@ export default function KundliMain() {
       ),
     },
     {
-      field: 'Gender',
-      flex: 1,
-      minWidth: 100, headerName: 'Gender', headerClassName: 'rowheader',
+      field: 'Gender', minWidth: 100, headerName: 'Gender', headerClassName: 'rowheader',
+      flex:1,
       headerAlign: 'left'
     },
     {
-      field: 'BirthDate',
-      flex: 1,
-      minWidth: 100,
-      headerName: 'BirthDate', headerClassName: 'rowheader',
+      field: 'BirthDate', minWidth: 100, headerName: 'BirthDate', headerClassName: 'rowheader',
+      flex:1,
+      headerAlign: 'left',
+    },
+    {
+      field: 'BirthTime', minWidth: 100, headerName: 'BirthTime', headerClassName: 'rowheader',
+      flex:1,
       headerAlign: 'left'
     },
     {
-      field: 'BirthTime',
-      flex: 1,
-      minWidth: 100, headerName: 'BirthTime', headerClassName: 'rowheader',
+      field: 'Country', minWidth: 100, headerName: 'Country', headerClassName: 'rowheader',
+      flex:1,
       headerAlign: 'left'
     },
     {
-      field: 'Country',
-      flex: 1,
-      minWidth: 100, headerName: 'Country', headerClassName: 'rowheader',
+      field: 'CityID', minWidth: 100, headerName: 'City', headerClassName: 'rowheader',
+      flex:1,
       headerAlign: 'left'
     },
     {
-      field: 'CityID',
-      flex: 1,
-      minWidth: 100, headerName: 'City', headerClassName: 'rowheader',
-      headerAlign: 'left'
-    },
-    {
-      field: 'Prakriti',
-      flex: 1,
-      minWidth: 100, headerName: 'Prakriti', headerClassName: 'rowheader',
+      field: 'Prakriti', minWidth: 100, headerName: 'Prakriti', headerClassName: 'rowheader',
+      flex:1,
       headerAlign: 'left'
     },
 

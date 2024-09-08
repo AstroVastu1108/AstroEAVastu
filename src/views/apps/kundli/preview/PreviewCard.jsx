@@ -61,7 +61,7 @@ const PreviewCard = ({ kundliData, id }) => {
        <CardContent className='p-3'> */}
       <Grid className='previewCard' item xs={12} md={12}>
         <Grid item xs={12} className='pdf-Div'>
-          <div className='p-3 Birthdetail-div'>
+          <div className='p-2 Birthdetail-div'>
             <div className='flex justify-between gap-y-4 flex-col sm:flex-row'>
               <div className='flex flex-col gap-6'>
                 <span className="Name-title">
@@ -70,7 +70,7 @@ const PreviewCard = ({ kundliData, id }) => {
 
                 {/* <span className="Name-title">{BirthDetails?.FirstName} {BirthDetails?.MiddleName} {BirthDetails?.LastName}</span> */}
               </div>
-              <div className='flex flex-row gap-5 birthDateTime-Div'>
+              <div className='flex flex-row justify-between items-center gap-5 birthDateTime-Div'>
                 <div>
                   <span className='label'>Birth Date & Time: </span>
                   <span className='value'>{BirthDetails?.Date} {BirthDetails?.Time.substring(0, 2)}:{BirthDetails?.Time.substring(2, 4)}</span>

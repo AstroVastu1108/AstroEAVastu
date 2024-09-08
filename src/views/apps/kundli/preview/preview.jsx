@@ -75,12 +75,12 @@ const Preview = ({ kundliData }) => {
       <Grid container spacing={6}>
         <Grid item xs={12} md={12}>
           <Card>
-            <CardContent className='flex flex-col gap-4 p-0'>
+            <CardContent className='flex flex-col p-0'>
               <PageTitle title={"Kundli Preview"} endCmp={<>
                 <PreviewActions value={"Existing"} onButtonClick={handleKundliApi} />
                 <PreviewActions value={"Download"} onButtonClick={handleButtonClick} />
               </>} />
-              <div ref={printRef} className='previewPDF'>
+              <div ref={printRef} className='previewPDF p-5'>
                 <PreviewCard kundliData={kundliData} />
               </div>
             </CardContent>
