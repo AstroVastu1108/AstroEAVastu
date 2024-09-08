@@ -49,13 +49,10 @@ export default function UserListing({mode}) {
       headerAlign: 'left',
       renderCell: (params) => {
         const base64Image = params.value;
-        const defaultAvatar = "https://example.com/default-avatar.png"; // URL to your default avatar
-
-
-
+        const defaultAvatar = "/images/avatars/user.jpg";
         return (
           <img
-            src={base64Image ? `${base64Image}` : userIllustration}
+            src={base64Image ? `data:image/png;base64${base64Image}` : defaultAvatar}
             alt="User Avatar"
             style={{ width: 40, height: 40, borderRadius: '50%' }} // You can adjust styles as needed
           />
@@ -181,7 +178,7 @@ export default function UserListing({mode}) {
   return (
     <>
 
-      {/* {loading && <Loader />} */}
+      {loading && <Loader />}
       <Grid container spacing={6}>
 
         <Grid item xs={12} md={12}>
@@ -214,8 +211,6 @@ export default function UserListing({mode}) {
                       slotProps={{ toolbar: { showQuickFilter: true } }}
                     />
                   </ThemeProvider>
-
-
                 </Box>
               </div>
             </CardContent>

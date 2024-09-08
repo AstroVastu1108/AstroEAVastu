@@ -9,7 +9,7 @@ import {
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/@core/contexts/authContext';
 import Loader from '@/components/common/Loader/Loader';
-import { GetUserAuthRule, GetUsers } from '@/app/Server/API/userPermission';
+import { GetUserAuthRule, GetUsers, saveUserAuthRule } from '@/app/Server/API/userPermission';
 import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer';
 import UserPopUp from './user-popup/selectUser';
 import PageTitle from '@/components/common/PageTitle/PageTitle';
@@ -82,7 +82,7 @@ export default function EnhancedTable() {
   const fetchUsers = async (transactionID) => {
     setLoading(true);
     try {
-      const response = await getUsers(transactionID);
+      const response = await GetUsers(transactionID);
       if (response.hasError) {
         toastDisplayer("error", response.errorMessage);
       } else {
@@ -99,7 +99,7 @@ export default function EnhancedTable() {
   const fetchUserAuthRule = async (transactionID, email) => {
     setLoading(true);
     try {
-      const response = await getUserAuthRule(transactionID, email);
+      const response = await GetUserAuthRule(transactionID, email);
       if (response.hasError) {
         toastDisplayer("error", response.errorMessage);
       } else {

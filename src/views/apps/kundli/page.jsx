@@ -20,6 +20,7 @@ export default function KundliMain() {
     // },
     {
       field: 'FirstName', flex: 2, headerName: 'Full Name', headerClassName: 'rowheader',
+      minWidth: 200,
       headerAlign: 'left',
       renderCell: (params) => (
         <>
@@ -30,7 +31,8 @@ export default function KundliMain() {
     {
       field: 'iconColumn', // Unique field name for this column
       headerName: '',
-      width: 100,
+      flex: 1,
+      minWidth: 100,
       headerClassName: 'rowheader',
 
       renderCell: (params) => (
@@ -49,27 +51,40 @@ export default function KundliMain() {
       ),
     },
     {
-      field: 'Gender', flex: 1, headerName: 'Gender', headerClassName: 'rowheader',
+      field: 'Gender',
+      flex: 1,
+      minWidth: 100, headerName: 'Gender', headerClassName: 'rowheader',
       headerAlign: 'left'
     },
     {
-      field: 'BirthDate', flex: 1, headerName: 'BirthDate', headerClassName: 'rowheader',
+      field: 'BirthDate',
+      flex: 1,
+      minWidth: 100,
+      headerName: 'BirthDate', headerClassName: 'rowheader',
       headerAlign: 'left'
     },
     {
-      field: 'BirthTime', flex: 1, headerName: 'BirthTime', headerClassName: 'rowheader',
+      field: 'BirthTime',
+      flex: 1,
+      minWidth: 100, headerName: 'BirthTime', headerClassName: 'rowheader',
       headerAlign: 'left'
     },
     {
-      field: 'Country', flex: 1, headerName: 'Country', headerClassName: 'rowheader',
+      field: 'Country',
+      flex: 1,
+      minWidth: 100, headerName: 'Country', headerClassName: 'rowheader',
       headerAlign: 'left'
     },
     {
-      field: 'CityID', flex: 1, headerName: 'City', headerClassName: 'rowheader',
+      field: 'CityID',
+      flex: 1,
+      minWidth: 100, headerName: 'City', headerClassName: 'rowheader',
       headerAlign: 'left'
     },
     {
-      field: 'Prakriti', flex: 1, headerName: 'Prakriti', headerClassName: 'rowheader',
+      field: 'Prakriti',
+      flex: 1,
+      minWidth: 100, headerName: 'Prakriti', headerClassName: 'rowheader',
       headerAlign: 'left'
     },
 
@@ -159,7 +174,7 @@ export default function KundliMain() {
 
   const fetchDataForPage = (e) => {
     console.log(e)
-    getAllKundli(parseInt(e)+1);
+    getAllKundli(parseInt(e) + 1);
   }
 
   const customTheme = createTheme({

@@ -366,7 +366,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button variant='contained' disabled={isDisable} onClick={handlePreview} >
+          <Button variant='contained' style={{textWrap:"nowrap"}} disabled={isDisable} onClick={handlePreview} >
             {isDisable ? <>
               <CircularProgress size={14} aria-label="Wait" />
               <span style={{ marginLeft: 8 }}>Saving</span>

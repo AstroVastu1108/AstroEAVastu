@@ -38,7 +38,7 @@ const UserDropdown = () => {
   // States
   const [open, setOpen] = useState(false)
   const { user,logout } = useAuth();
-  // console.log("user : ",user)
+  console.log("user : ",user)
   // Refs
   
   const anchorRef = useRef(null)
@@ -68,7 +68,6 @@ const UserDropdown = () => {
     logout();
     router.push('/login')
   }
-
   return (
     <>
       <Badge
@@ -81,7 +80,9 @@ const UserDropdown = () => {
         <Avatar
           ref={anchorRef}
           alt='John Doe'
-          src='/images/avatars/1.png'
+          // src={'A'}
+          // src={'/images/avatars/user.jpg'}
+          src={user ? "data:image/png;base64"+user?.userAvatar : '/images/avatars/user.jpg'}
           onClick={handleDropdownOpen}
           className='cursor-pointer bs-[38px] is-[38px]'
         />
@@ -105,13 +106,22 @@ const UserDropdown = () => {
               <ClickAwayListener onClickAway={e => handleDropdownClose(e)}>
                 <MenuList>
                   <div className='flex items-center plb-2 pli-6 gap-2' tabIndex={-1}>
-                    <Avatar alt='John Doe' src='/images/avatars/1.png' />
+                    <Avatar alt='John Doe' src={user ? "data:image/png;base64"+user?.userAvatar : '/images/avatars/user.jpg'} />
                     <div className='flex items-start flex-col'>
                       <Typography className='font-medium' color='text.primary'>
                       {user?.useremail}
                       </Typography>
-                      <Typography variant='caption'>{user?.userRole == "CA" ? "Company" : (user?userRole == "SA" ? "Super Admin" : "" : "") }</Typography>
-                    </div>
+                      <Typography variant="caption">
+  {user?.userRole === "CA" 
+    ? "Company" 
+    : user?.userRole === "SA" 
+    ? "Super Admin" 
+    : user?.userRole === "UA" 
+    ? "User" 
+    : ""}
+</Typography>
+
+                      </div>
                   </div>
                   <Divider className='mlb-1' />
                   <MenuItem className='mli-2 gap-3' onClick={e => handleDropdownClose(e)}>
