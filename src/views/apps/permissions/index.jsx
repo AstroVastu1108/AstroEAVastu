@@ -13,6 +13,7 @@ import { GetUserAuthRule, GetUsers, saveUserAuthRule } from '@/app/Server/API/us
 import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer';
 import UserPopUp from './user-popup/selectUser';
 import PageTitle from '@/components/common/PageTitle/PageTitle';
+import { LoadingButton } from '@mui/lab';
 
 const initialRows = [
   { Label: "Kundli", Href: "/kundlipage", Icon: "tabler-smart-home", HasAccess: false, rightsAccess: [{ read: false, write: false }] },
@@ -216,9 +217,21 @@ export default function EnhancedTable() {
                     </Table>
                   </ThemeProvider>
                   <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
-                    <Button variant="contained" color="primary" onClick={handleButtonClick}>
+                  <LoadingButton
+                      variant='contained'
+                      onClick={handleButtonClick}
+                      loading={loading}
+                      loadingPosition="start"
+                      sx={{ width: '200px' }}
+                      className='mt-4 d-flex justify-content-end'
+                      type='submit'
+                      color="primary"
+                    >
+                       {loading ? "Loading ...": "Give Permission"}
+                    </LoadingButton>
+                    {/* <Button variant="contained" color="primary" onClick={handleButtonClick}>
                       Give Permission
-                    </Button>
+                    </Button> */}
                   </Box>
                 </Box>
               )}

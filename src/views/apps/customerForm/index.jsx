@@ -24,6 +24,7 @@ import { getCities, getCountries, getReport } from '@/app/Server/API/common'
 import "./index.css"
 import AppReactDatepicker from '@/components/datePicker/AppReactDatepicker'
 import CustomTextField from '@/@core/components/mui/TextField'
+import { LoadingButton } from '@mui/lab'
 
 const CustomerForm = () => {
 
@@ -366,9 +367,19 @@ const CustomerForm = () => {
             <Button variant='contained' className='mt-4' type='reset' color='secondary' onClick={handleReset}>
               Reset
             </Button>
-            <Button variant='contained' className='mt-4 d-flex justify-content-end' type='submit' disabled={isDisable} onClick={handleSubmit} >
+            <LoadingButton
+                      variant='contained'
+                      onClick={handleSubmit}
+                      loading={isDisable}
+                      loadingPosition="start"
+                      className='mt-4 d-flex justify-content-end'
+                      type='submit'
+                    >
+                       {isDisable ? "Loading ...": "Submit"}
+                    </LoadingButton>
+            {/* <Button variant='contained' className='mt-4 d-flex justify-content-end' type='submit' disabled={isDisable} onClick={handleSubmit} >
               {isDisable ? <CircularProgress size={5} /> : 'Submit'}
-            </Button>
+            </Button> */}
           </div>
         </form>
       </CardContent>

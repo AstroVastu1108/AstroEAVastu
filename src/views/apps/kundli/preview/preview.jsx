@@ -7,7 +7,7 @@ import PreviewCard from './PreviewCard'
 import PreviewActions from './PreviewActions'
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import axios from 'axios'
 import { getKundliPdf } from '@/app/Server/API/common'
 import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
@@ -15,10 +15,12 @@ import { Card, CardContent, Grid } from '@mui/material'
 import PageTitle from '@/components/common/PageTitle/PageTitle'
 const Preview = ({ kundliData }) => {
   const printRef = useRef()
-
+  const [downloadLoading, setDownloadLoading] = useState(false);
+  const [existdownloadLoading, setExistDownloadLoading] = useState(false);
   const handleKundliApi = async () => {
     if (kundliData) {
       try {
+        setExistDownloadLoading(true);
         const response = await getKundliPdf(kundliData.AstroVastuReport.BirthDetails.KundaliID);
         if (response.hasError) {
           return toastDisplayer("error", response.error)
@@ -37,13 +39,15 @@ const Preview = ({ kundliData }) => {
         //     newWindow.print();
         //   });
         // }
-
+        setExistDownloadLoading(false);
       } catch (error) {
+        setExistDownloadLoading(false);
         console.error('Error fetching the PDF:', error);
       }
     }
   }
   const handleButtonClick = () => {
+    setDownloadLoading(true);
     if (printRef.current) {
       html2canvas(printRef.current, { scale: 1.5 }).then(canvas => {
         const imgData = canvas.toDataURL('image/jpeg', 0.7); // Convert to JPEG with lower quality
@@ -66,7 +70,12 @@ const Preview = ({ kundliData }) => {
 
         pdf.save('document.pdf');
       });
+      // setDownloadLoading(false);
     }
+    setTimeout(() => {
+      
+      setDownloadLoading(false);
+    }, 2000);
   };
 
   return (
@@ -77,8 +86,8 @@ const Preview = ({ kundliData }) => {
           <Card>
             <CardContent className='flex flex-col gap-4 p-0'>
               <PageTitle title={"Kundli Preview"} endCmp={<>
-                <PreviewActions value={"Existing"} onButtonClick={handleKundliApi} />
-                <PreviewActions value={"Download"} onButtonClick={handleButtonClick} />
+                <PreviewActions value={"Existing"} onButtonClick={handleKundliApi} loading={existdownloadLoading}/>
+                <PreviewActions value={"Download"} onButtonClick={handleButtonClick} loading={downloadLoading} />
               </>} />
               <div ref={printRef} className='previewPDF'>
                 <PreviewCard kundliData={kundliData} />

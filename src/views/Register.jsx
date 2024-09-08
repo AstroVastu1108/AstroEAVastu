@@ -1,8 +1,8 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Box, CircularProgress, Icon, TextField, useMediaQuery, useTheme } from '@mui/material'
-import { styled } from '@mui/material/styles'
+import { Box, CircularProgress, Icon, TextField, useMediaQuery } from '@mui/material'
+import { styled,useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -10,7 +10,7 @@ import Button from '@mui/material/Button'
 import classnames from 'classnames'
 import { useImageVariant } from '@core/hooks/useImageVariant'
 import themeConfig from '@/configs/themeConfig'
-import Logo from '@/@core/svg/Logo'
+import Logo from '@components/layout/shared/Logo'
 import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
 import Stepper from '@mui/material/Stepper'
 import Step from '@mui/material/Step'
@@ -22,6 +22,8 @@ import OTPverify from '@/components/common/OTPVerify/OTPverify'
 import { registerCompnay, requestOtp } from '@/app/Server/API/auth'
 import { useAuth } from '@/@core/contexts/authContext'
 import Loader from '@/components/common/Loader/Loader'
+import { LoadingButton } from '@mui/lab'
+import { useSettings } from '@/@core/hooks/useSettings'
 
 const steps = ['Personal Details', 'Business Details']
 
@@ -34,10 +36,19 @@ const RegisterIllustration = styled('img')(({ theme }) => ({
   [theme.breakpoints.down(1536)]: {
     maxBlockSize: 550
   },
-  [theme.breakpoints.down('md')]: {
+  [theme.breakpoints.down('lg')]: {
     maxBlockSize: 450
   }
 }))
+
+const MaskImg = styled('img')({
+  blockSize: 'auto',
+  maxBlockSize: 355,
+  inlineSize: '100%',
+  position: 'absolute',
+  insetBlockEnd: 0,
+  zIndex: -1
+})
 
 const RegisterPage = ({ mode }) => {
   const { companyRegistration } = useAuth();
@@ -53,7 +64,10 @@ const RegisterPage = ({ mode }) => {
   const completedSteps = () => Object.keys(completed).length
   const isLastStep = () => activeStep === totalSteps() - 1
   const allStepsCompleted = () => completedSteps() === totalSteps()
-
+  const { settings } = useSettings()
+  const theme = useTheme()
+  const hidden = useMediaQuery(theme.breakpoints.down('md'))
+  const authBackground = useImageVariant(mode)
   const lightIllustration = '/images/illustrations/auth/sign-picture.png'
   // const lightIllustration = '/images/illustrations/auth/hand_bg.png'
 
@@ -237,11 +251,13 @@ const RegisterPage = ({ mode }) => {
   const handleSubmit = async event => {
     event.preventDefault()
     setLoading(true);
+    setIsDisable(true);
     if (validateFields()) {
       try {
         const result = await companyRegistration(userData)
         if (result.error) {
           setLoading(false);
+          setIsDisable(false);
           console.log("Result : ", result.error)
           setActiveStep(0)
           setIsOtpVerified("pending")
@@ -261,11 +277,13 @@ const RegisterPage = ({ mode }) => {
         }
       } catch (error) {
         setLoading(false);
+        setIsDisable(false);
         setActiveStep(0)
         toastDisplayer('error', error)
       }
     } else {
       setLoading(false);
+      setIsDisable(false);
       toastDisplayer('error', 'Please fill the required fields in the form.')
     }
   }
@@ -273,9 +291,11 @@ const RegisterPage = ({ mode }) => {
   return (
     <>
       {loading && <Loader />}
-      <div className='flex justify-center items-center w-full p-0'>
+      <div className='flex bs-full justify-center'>
         <div
-          className={classnames('flex items-center justify-center w-full h-full relative')}
+          className={classnames('flex bs-full items-center justify-center flex-1 min-bs-[100dvh] relative p-6 max-md:hidden',{
+            'border-ie': settings.skin === 'bordered'
+          })}
           style={{
             backgroundImage: 'url("/images/illustrations/auth/RegisterBG.jpg")',
             backgroundSize: 'cover',
@@ -285,36 +305,31 @@ const RegisterPage = ({ mode }) => {
             position: 'relative'
           }}
         >
-          <div
-            style={{
-              // backgroundImage: 'url("/images/illustrations/auth/handimg.png")',
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              backgroundPosition: 'center',
-              backgroundSize: 'contain',
-              backgroundRepeat: 'no-repeat',
-              width: '350px',
-              height: '350px'
-            }}
-          ></div>
+         <div>
           <RegisterIllustration
             src={characterIllustration}
             alt='character-illustration'
-            style={{ ...spinAnimation, width: '50%', height: '50%' }}
+            style={{ ...spinAnimation, width: '80%', height: '80%' }}
           />
+         </div>
+         {!hidden && (
+            <MaskImg
+              alt='mask'
+              src={authBackground}
+              className={classnames({ 'scale-x-[-1]': theme.direction === 'rtl' })}
+            />
+          )}
         </div>
 
-        <div className='flex justify-center items-center bs-full !min-is-full md:!min-is-[unset] md:p-12 md:is-[580px]'>
+        <div className='flex justify-center items-center bs-full bg-backgroundPaper !min-is-full p-6 md:!min-is-[unset] md:p-12 md:is-[480px]'>
           <Link
             href={'/login'}
             className='absolute block-start-5 sm:block-start-[33px] inline-start-6 sm:inline-start-[38px]'
           >
-            <Logo color={'white'} />
+            <Logo color={hidden ? 'primary' : 'white'} />
           </Link>
 
-          <div className='flex flex-col gap-6 min-w-[400px] mbs-8 sm:mbs-11 md:mbs-0'>
+          <div className='flex flex-col gap-6 is-full sm:is-auto md:is-full sm:max-is-[400px] md:max-is-[unset] mbs-11 sm:mbs-14 md:mbs-0'>
             {activeStep > 0 && (
               <div className="backbtn">
                 <i
@@ -477,20 +492,41 @@ const RegisterPage = ({ mode }) => {
 
                 <Box sx={{ flex: '1 1 auto' }} />
                 {activeStep < steps.length - 1 ? (
-                  <Button variant='contained' type='button' disabled={isDisable} onClick={handleComplete}>
-                    {isDisable ?
-                      <>
-                        <CircularProgress size={24} aria-label="Wait" />
-                        <span style={{ marginLeft: 8 }}>Loading...</span>
-                      </>
-                      : 'Next'}
-                  </Button>
+                   <LoadingButton
+                  //  fullWidth
+                   variant='contained'
+                   onClick={handleComplete}
+                   sx={{ width: '132px' }}
+                   loading={isDisable}
+                   loadingPosition="start"
+                   type='submit'
+                 >
+                    {isDisable ? "Loading...": "Next"}
+                 </LoadingButton>
+                  // <Button variant='contained' type='button' disabled={isDisable} onClick={handleComplete}>
+                  //   {isDisable ?
+                  //     <>
+                  //       <CircularProgress size={24} aria-label="Wait" />
+                  //       <span style={{ marginLeft: 8 }}>Loading...</span>
+                  //     </>
+                  //     : 'Next'}
+                  // </Button>
                 ) :
                   (isOtpVerified == "verified" ?
                     <>
-                      <Button variant='contained' type='submit' onClick={handleSubmit}>
+                     <LoadingButton
+                      variant='contained'
+                      onClick={handleSubmit}
+                      loading={isDisable}
+                      sx={{ width: '132px' }}
+                      loadingPosition="start"
+                      type='submit'
+                    >
+                       {isDisable ? "Loading ...": "Finish"}
+                    </LoadingButton>
+                      {/* <Button variant='contained' type='submit' onClick={handleSubmit}>
                         Finish
-                      </Button>
+                      </Button> */}
                     </>
                     : ""
                   )
