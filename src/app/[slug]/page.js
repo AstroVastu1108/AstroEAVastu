@@ -253,6 +253,125 @@
 //   }
 // }
 
+// 8th sept
+
+// import { cookies } from 'next/headers';
+// import { routes } from '@/app-routes';
+// import NotFoundPage from '@/app/[...not-found]/page';
+// import Layout from '../(dashboard)/layout';
+// import axios from 'axios';
+// import https from 'https';
+
+// const httpsAgent = new https.Agent({ rejectUnauthorized: false });
+
+// const API_URL = process.env.NEXT_PUBLIC_APIURL1;
+// async function fetchSecureData(accessToken) {
+//   try {
+//     const response = await axios.get(`${API_URL}/Auth/secure-data`, {
+//       headers: { Authorization: `Bearer ${accessToken}` },
+//       httpsAgent,
+//     });
+//     return response;
+//   } catch (error) {
+//     if (error.response?.status === 401) {
+//       throw new Error('Token expired');
+//     }
+//     throw error;
+//   }
+// }
+
+// async function refreshTokenGet(refreshToken, accessToken) {
+//   try {
+//     const response = await axios.post(`${API_URL}/Auth/refresh`, {
+//       accessToken,
+//       refreshToken,
+//     }, { httpsAgent });
+
+//     return response.data.result.accessToken;
+//   } catch (error) {
+//     throw new Error('Token refresh failed');
+//   }
+// }
+
+// export default async function Page({ params }) {
+//   const { slug } = params;
+  
+//   const cookieStore = cookies();
+//   const token = cookieStore.get('authState')?.value;
+
+//   if (!token) {
+//     return <NotFoundPage />;
+//   }
+
+//   const { authRule, refreshToken, accessToken } = JSON.parse(token);
+//   const routePermissions = JSON.parse(authRule);
+//   const hrefsWithAccess = routePermissions
+//     .filter(item => item.HasAccess)
+//     .map(item => item.Href);
+
+//   if (hrefsWithAccess.includes('/kundlipage')) {
+//     hrefsWithAccess.push('/preview');
+//   }
+//   try {
+//     let secureData;
+
+//     try {
+//       secureData = await fetchSecureData(accessToken);
+//     } catch (error) {
+//       if (error.message === 'Token expired') {
+//         const newAccessToken = await refreshTokenGet(refreshToken, accessToken);
+//         // console.log("NewAccessToken : ",newAccessToken)
+//         secureData = await fetchSecureData(newAccessToken);
+//       } else {
+//         throw error;
+//       }
+//     }
+
+//     if (secureData.status === 200) {
+//       const filteredObjects = routes.filter((obj) => {
+//         return hrefsWithAccess.some((path) => {
+//           const normalizedPath = path.startsWith('/') ? path.slice(1) : path;
+//           return obj.path.includes(normalizedPath);
+//         });
+//       });
+
+//       // const matchingRoute = filteredObjects.find(route => slug.startsWith(route.path));
+//       // const matchingRoute = routes.find(route => {
+//       //   return hrefsWithAccess.some(accessPath => {
+//       //     return slug.startsWith(accessPath) || accessPath.startsWith(slug);
+//       //   });
+//       // });
+//       // const matchingRoute = routes.find(route => {
+//       //   return hrefsWithAccess.some(accessPath => {
+//       //     // Check if the slug starts with the accessPath
+//       //     return slug.startsWith(accessPath.replace(/^\//, ''));
+//       //   });
+//       // });
+
+//       // console.log("Matching Route:", matchingRoute);
+//       const matchingRoute = filteredObjects.find(route => route.path.includes(slug));
+//       // const matchingRoute = filteredObjects.find(route => route.path === slug);
+//       if (matchingRoute) {
+//         const Element = matchingRoute.element;
+//         return (
+//           <Layout>
+//             <Element />
+//           </Layout>
+//         );
+//       } else {
+//         // console.log("Not found")
+//         return <NotFoundPage />;
+//       }
+//     } else {
+//       // console.log("unsecure Not found")
+//       return <NotFoundPage />;
+//     }
+//   } catch (error) {
+//     console.error('Request failed:', error);
+//     return <NotFoundPage />;
+//   }
+// }
+
 
 import { cookies } from 'next/headers';
 import { routes } from '@/app-routes';
@@ -262,8 +381,8 @@ import axios from 'axios';
 import https from 'https';
 
 const httpsAgent = new https.Agent({ rejectUnauthorized: false });
-
 const API_URL = process.env.NEXT_PUBLIC_APIURL1;
+
 async function fetchSecureData(accessToken) {
   try {
     const response = await axios.get(`${API_URL}/Auth/secure-data`, {
@@ -273,8 +392,10 @@ async function fetchSecureData(accessToken) {
     return response;
   } catch (error) {
     if (error.response?.status === 401) {
+      console.error('Token expired:', error.response.data);
       throw new Error('Token expired');
     }
+    console.error('Fetch secure data failed:', error);
     throw error;
   }
 }
@@ -285,20 +406,20 @@ async function refreshTokenGet(refreshToken, accessToken) {
       accessToken,
       refreshToken,
     }, { httpsAgent });
-
     return response.data.result.accessToken;
   } catch (error) {
+    console.error('Token refresh failed:', error.response?.data || error.message);
     throw new Error('Token refresh failed');
   }
 }
 
 export default async function Page({ params }) {
   const { slug } = params;
-  
   const cookieStore = cookies();
   const token = cookieStore.get('authState')?.value;
-
+  console.log("Slug is called")
   if (!token) {
+    console.warn('No auth token found in cookies');
     return <NotFoundPage />;
   }
 
@@ -311,6 +432,7 @@ export default async function Page({ params }) {
   if (hrefsWithAccess.includes('/kundlipage')) {
     hrefsWithAccess.push('/preview');
   }
+
   try {
     let secureData;
 
@@ -318,10 +440,11 @@ export default async function Page({ params }) {
       secureData = await fetchSecureData(accessToken);
     } catch (error) {
       if (error.message === 'Token expired') {
+        console.log('Access token expired, attempting refresh');
         const newAccessToken = await refreshTokenGet(refreshToken, accessToken);
-        // console.log("NewAccessToken : ",newAccessToken)
         secureData = await fetchSecureData(newAccessToken);
       } else {
+        console.error('Unexpected error during secure data fetch:', error.message);
         throw error;
       }
     }
@@ -334,22 +457,7 @@ export default async function Page({ params }) {
         });
       });
 
-      // const matchingRoute = filteredObjects.find(route => slug.startsWith(route.path));
-      // const matchingRoute = routes.find(route => {
-      //   return hrefsWithAccess.some(accessPath => {
-      //     return slug.startsWith(accessPath) || accessPath.startsWith(slug);
-      //   });
-      // });
-      // const matchingRoute = routes.find(route => {
-      //   return hrefsWithAccess.some(accessPath => {
-      //     // Check if the slug starts with the accessPath
-      //     return slug.startsWith(accessPath.replace(/^\//, ''));
-      //   });
-      // });
-
-      // console.log("Matching Route:", matchingRoute);
       const matchingRoute = filteredObjects.find(route => route.path.includes(slug));
-      // const matchingRoute = filteredObjects.find(route => route.path === slug);
       if (matchingRoute) {
         const Element = matchingRoute.element;
         return (
@@ -358,15 +466,15 @@ export default async function Page({ params }) {
           </Layout>
         );
       } else {
-        // console.log("Not found")
+        console.warn('No matching route found for slug:', slug);
         return <NotFoundPage />;
       }
     } else {
-      // console.log("unsecure Not found")
+      console.warn('Secure data fetch returned non-200 status:', secureData.status);
       return <NotFoundPage />;
     }
   } catch (error) {
-    console.error('Request failed:', error);
+    console.error('Request failed:', error.message);
     return <NotFoundPage />;
   }
 }
