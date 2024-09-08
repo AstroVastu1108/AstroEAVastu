@@ -67,43 +67,44 @@
 //   matcher: ['/kundlipage','/about','/home'] // Paths to protect
 //   // matcher: ['/kundlipage','/about','/home'] // Paths to protect
 // }
-import { NextResponse } from 'next/server'
 
-export default async function middleware(req) {
-  const protectedRoutes = ['/kundlipage']
-  const { pathname } = req.nextUrl
+// import { NextResponse } from 'next/server'
 
-  if (protectedRoutes.includes(pathname)) {
-    const token = req.cookies.get('authState')
-    if (token) {
-      try {
-        const { authRule } = JSON.parse(token.value)
-        const protectedRoutesData = JSON.parse(authRule)
+// export default async function middleware(req) {
+//   const protectedRoutes = ['/kundlipage']
+//   const { pathname } = req.nextUrl
 
-        const hrefsWithAccess = protectedRoutesData
-          .filter(item => item.HasAccess)
-          .map(item => item.Href)
-        if (hrefsWithAccess.includes('kundlipage')) {
-          hrefsWithAccess.push('/preview');
-        }
-        const hasAccess = hrefsWithAccess.some(accessPath => pathname.startsWith(accessPath));
+//   if (protectedRoutes.includes(pathname)) {
+//     const token = req.cookies.get('authState')
+//     if (token) {
+//       try {
+//         const { authRule } = JSON.parse(token.value)
+//         const protectedRoutesData = JSON.parse(authRule)
 
-        if (!hasAccess) {
-          // Redirect to a forbidden or login page
-          return NextResponse.redirect(new URL('/forbidden', req.url))
-        }
-        return NextResponse.next()
-      } catch (error) {
-        console.error('Error parsing token or routes:', error)
-      }
-    } else {
-      return NextResponse.redirect(new URL('/login', req.url))
-    }
-  }
+//         const hrefsWithAccess = protectedRoutesData
+//           .filter(item => item.HasAccess)
+//           .map(item => item.Href)
+//         if (hrefsWithAccess.includes('kundlipage')) {
+//           hrefsWithAccess.push('/preview');
+//         }
+//         const hasAccess = hrefsWithAccess.some(accessPath => pathname.startsWith(accessPath));
 
-  return NextResponse.next()
-}
+//         if (!hasAccess) {
+//           // Redirect to a forbidden or login page
+//           return NextResponse.redirect(new URL('/forbidden', req.url))
+//         }
+//         return NextResponse.next()
+//       } catch (error) {
+//         console.error('Error parsing token or routes:', error)
+//       }
+//     } else {
+//       return NextResponse.redirect(new URL('/login', req.url))
+//     }
+//   }
 
-export const config = {
-  matcher: ['/kundlipage/:path*', '/about', '/home','/user']
-}
+//   return NextResponse.next()
+// }
+
+// export const config = {
+//   matcher: ['/kundlipage/:path*', '/about', '/home','/user']
+// }
