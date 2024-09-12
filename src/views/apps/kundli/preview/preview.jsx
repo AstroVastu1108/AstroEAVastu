@@ -7,14 +7,16 @@ import PreviewCard from './PreviewCard'
 import PreviewActions from './PreviewActions'
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import axios from 'axios'
 import { getKundliPdf } from '@/app/Server/API/common'
 import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
 import { Card, CardContent, Grid } from '@mui/material'
 import PageTitle from '@/components/common/PageTitle/PageTitle'
+import TimeTool from './TimeTool'
 const Preview = ({ kundliData }) => {
   const printRef = useRef()
+  const [timeToolPopUp,setTimeToolPopUp] = useState(false);
 
   const handleKundliApi = async () => {
     if (kundliData) {
@@ -45,7 +47,7 @@ const Preview = ({ kundliData }) => {
   }
   const handleButtonClick = () => {
     if (printRef.current) {
-      html2canvas(printRef.current, { scale: 1.5 }).then(canvas => {
+      html2canvas(printRef.current).then(canvas => {
         const imgData = canvas.toDataURL('image/jpeg', 0.7); // Convert to JPEG with lower quality
         const pdf = new jsPDF('p', 'mm', 'a4');
         const imgWidth = 210; // A4 width in mm
@@ -69,35 +71,32 @@ const Preview = ({ kundliData }) => {
     }
   };
 
+  const handleTimeTool =()=>{
+    console.log("first")
+    setTimeToolPopUp(true)
+  }
+
   return (
     <>
 
       <Grid container spacing={6}>
         <Grid item xs={12} md={12}>
           <Card>
-            <CardContent className='flex flex-col p-0'>
+            <CardContent className='flex flex-col gap-4 p-0'>
               <PageTitle title={"Kundli Preview"} endCmp={<>
+                <PreviewActions value={"Time Tool"} onButtonClick={handleTimeTool} />
                 <PreviewActions value={"Existing"} onButtonClick={handleKundliApi} />
                 <PreviewActions value={"Download"} onButtonClick={handleButtonClick} />
               </>} />
-              <div ref={printRef} className='previewPDF p-5'>
+              <div ref={printRef} className='previewPDF'>
                 <PreviewCard kundliData={kundliData} />
               </div>
             </CardContent>
           </Card>
         </Grid>
       </Grid>
-      {/* <Grid container spacing={6}>
-        <PageTitle title={"Kundli Preview"} endCmp={<>
-          <PreviewActions value={"Existing"} onButtonClick={handleKundliApi} />
-          <PreviewActions value={"Download"} onButtonClick={handleButtonClick} />
-        </>} />
-        <Grid item xs={12} md={12}>
-          <div ref={printRef}>
-            <PreviewCard kundliData={kundliData} />
-          </div>
-        </Grid>
-      </Grid> */}
+
+      {timeToolPopUp && <TimeTool />}
     </>
   )
 }

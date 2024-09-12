@@ -1,13 +1,13 @@
 import { DataGrid } from '@mui/x-data-grid'
 import React from 'react'
 import "./NakshtraSummary.css"
-import { Box } from '@mui/material';
+import { Box, createTheme, ThemeProvider } from '@mui/material';
 
 function NakshtraSummary({ SummaryData, Aspect, symbols }) {
   const columns = [
     Aspect === 'P'
       ? {
-        field: 'Planet', headerName: 'Planet', headerClassName: 'rowheader', flex: 1,
+        field: 'Planet', headerName: 'Planet', headerClassName: 'rowheader', minWidth: 120, flex: 1,
         renderCell: (e) => {
           const { IsRetro, IsExalted, IsDebilitated, IsCombust, IsUntenanted, IsSelfStar } = e.row;
           const activeSymbols = [
@@ -24,14 +24,14 @@ function NakshtraSummary({ SummaryData, Aspect, symbols }) {
               <div className="rashiMainDiv">
                 <div className='planetN'>{e.value}
                 </div>
-                {activeSymbols && <span className='rashiDiv' style={{fontSize:"16px"}}>{activeSymbols}</span>}
+                {activeSymbols && <span className='rashiDiv' style={{ fontSize: "16px" }}>{activeSymbols}</span>}
               </div>
             </>
           );
         }
       }
       : {
-        field: 'id', headerName: 'House', headerClassName: 'rowheader', flex: 1, align: 'center',
+        field: 'id', headerName: 'House', headerClassName: 'rowheader',width:65, minWidth: 65, align: 'center',
         renderCell: (e) => {
           return (
             <>
@@ -43,14 +43,14 @@ function NakshtraSummary({ SummaryData, Aspect, symbols }) {
         }
       },
     {
-      field: 'Rashi', headerName: 'Sign', headerClassName: 'rowheader', flex: 1,
+      field: 'Rashi', headerName: 'Sign', headerClassName: 'rowheader', minWidth: 80, flex: 1,
       renderCell: (e) => {
         const Rashi = e?.value.slice(0, 3) || "";
         const Degree = e?.row?.Degree?.split(":")[0] || "";
         return (
           <>
             <div className="rashiMainDiv">
-              <div className='rashiDiv'>{Rashi}.</div>
+              <div className='signDiv'>{Rashi}.</div>
               <span className='degreeDiv'>{Degree}</span>
             </div>
           </>
@@ -58,13 +58,12 @@ function NakshtraSummary({ SummaryData, Aspect, symbols }) {
       }
     },
     {
-      field: 'Nakshatra', headerName: 'Nakshatra', headerClassName: 'rowheader', flex: 1,
+      field: 'Nakshatra', headerName: 'Nakshatra', headerClassName: 'rowheader', minWidth: 150, flex: 1.5,
       renderCell: (e) => {
-        const Degree = e?.row?.Degree?.split(":")[0] || "";
         return (
           <>
             <div className="NMainDiv">
-              <div>{e.value}</div>
+              <div className='degreeDiv'>{e.value}</div>
               <span className='degreeDiv'>{e?.row?.NakshatraPada}</span>
             </div>
           </>
@@ -72,19 +71,19 @@ function NakshtraSummary({ SummaryData, Aspect, symbols }) {
       }
     },
     {
-      field: 'EnergyField', headerName: 'Devta', headerClassName: 'rowheader', flex: 1,
+      field: 'EnergyField', headerName: 'Devta', headerClassName: 'rowheader', minWidth: 100, flex: 1,
       renderCell: (e) => {
         return (
           <>
             <div className="plDiv">
-              <div className='rashiDiv'>{e.value}</div>
+              <div className='signDiv'>{e.value}</div>
             </div>
           </>
         );
       }
     },
     {
-      field: 'PL', headerName: 'PL (Source)', headerClassName: 'rowheader', flex: 1,
+      field: 'PL', headerName: 'PL (Source)', headerClassName: 'rowheader', minWidth: 120, flex: 1,
       renderCell: (e) => {
         const planetName = e?.row?.PL?.Planet?.slice(0, 3) || "";
         const scriptFull = e?.row?.PL?.ScriptFull || "";
@@ -93,14 +92,14 @@ function NakshtraSummary({ SummaryData, Aspect, symbols }) {
           <>
             <div className="plDiv">
               <div className='planetN'>{planetName}</div>
-              <span>{scriptFull}</span>
+              <span className='degreeDiv'>{scriptFull}</span>
             </div>
           </>
         );
       }
     },
     {
-      field: 'NL', headerName: 'NL (Result)', headerClassName: 'rowheader', flex: 1,
+      field: 'NL', headerName: 'NL (Result)', headerClassName: 'rowheader', minWidth: 120, flex: 1,
       renderCell: (e) => {
         const planetName = e?.row?.NL?.Planet?.slice(0, 3) || "";
         const scriptFull = e?.row?.NL?.ScriptFull || "";
@@ -109,14 +108,14 @@ function NakshtraSummary({ SummaryData, Aspect, symbols }) {
           <>
             <div className="plDiv">
               <div className='planetN'>{planetName}</div>
-              <span>{scriptFull}</span>
+              <span className='degreeDiv'>{scriptFull}</span>
             </div>
           </>
         );
       }
     },
     {
-      field: 'SL', headerName: 'SL (Verifier)', headerClassName: 'rowheader', flex: 1,
+      field: 'SL', headerName: 'SL (Verifier)', headerClassName: 'rowheader', minWidth: 120, flex: 1,
       renderCell: (e) => {
         const planetName = e?.row?.SL?.Planet?.slice(0, 3) || "";
         const scriptFull = e?.row?.SL?.ScriptFull || "";
@@ -125,14 +124,14 @@ function NakshtraSummary({ SummaryData, Aspect, symbols }) {
           <>
             <div className="plDiv">
               <div className='planetN'>{planetName}</div>
-              <span>{scriptFull}</span>
+              <span className='degreeDiv'>{scriptFull}</span>
             </div>
           </>
         );
       }
     },
     {
-      field: 'NLSL', headerName: 'NL-SL (InnerSelf)', headerClassName: 'rowheader', flex: 1,
+      field: 'NLSL', headerName: 'NL-SL (InnerSelf)', headerClassName: 'rowheader', minWidth: 120, flex: 1,
       renderCell: (e) => {
         const planetName = e?.row?.NLSL?.Planet?.slice(0, 3) || "";
         const scriptFull = e?.row?.NLSL?.ScriptFull || "";
@@ -141,14 +140,17 @@ function NakshtraSummary({ SummaryData, Aspect, symbols }) {
           <>
             <div className="plDiv">
               <div className='planetN'>{planetName}</div>
-              <span>{scriptFull}</span>
+              <span className='degreeDiv'>{scriptFull}</span>
             </div>
           </>
         );
       }
     },
     {
-      field: 'PHScriptFull', headerName: 'PH', headerClassName: 'rowheader', flex: 1
+      field: 'PHScriptFull', headerName: 'PH', headerClassName: 'rowheader', minWidth: 100, with: 100,
+      renderCell: (e) => {
+        return <span className='degreeDiv'>{e.value}</span>
+      }
     },
   ];
   // Adding unique IDs
@@ -157,29 +159,55 @@ function NakshtraSummary({ SummaryData, Aspect, symbols }) {
     ...item
   }));
 
+  const customTheme = createTheme({
+    components: {
+      MuiDataGrid: {
+        styleOverrides: {
+          root: {
+            fontFamily: 'Segoe UI, Arial, sans-serif',
+          },
+          cell: {
+            fontFamily: 'Segoe UI, Arial, sans-serif',
+          },
+          columnHeaders: {
+            fontFamily: 'Segoe UI, Arial, sans-serif',
+          },
+          toolbar: {
+            fontFamily: 'Segoe UI, Arial, sans-serif',
+          },
+        },
+      },
+    },
+  });
+
   return (
 
     <Box width={"100%"} sx={{
       '& .MuiDataGrid-cell': {
-        borderLeft: '0.5px solid #662294',
-        borderBottom: '0.5px solid #662294',
+        fontSize: "14px",
+        borderLeft: '0.5px solid var(--border-color)',
+        borderBottom: '0.5px solid var(--border-color)',
       },
       '& .MuiDataGrid-cell:last-child': {
-        borderRight: '0.5px solid #662294',
+        borderRight: '0.5px solid var(--border-color)',
       }
     }}>
-      <DataGrid
-        rows={rowsSummaryData}
-        columns={columns}
-        disableColumnSorting
-        disableColumnMenu
-        rowHeight={30}
-        columnHeaderHeight={38}
-        disableColumnResize
-        disableRowSelectionOnClick
-        hideFooterPagination={true}
-        hideFooter={true}
-      />
+      <ThemeProvider theme={customTheme}>
+
+        <DataGrid
+          rows={rowsSummaryData}
+          columns={columns}
+          disableColumnSorting
+          disableColumnMenu
+          rowHeight={30}
+          columnHeaderHeight={38}
+          disableColumnResize
+          disableRowSelectionOnClick
+          hideFooterPagination={true}
+          hideFooter={true}
+        />
+      </ThemeProvider>
+
     </Box>
   )
 }

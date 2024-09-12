@@ -3,9 +3,11 @@
   font-size: 14px;
   padding-left: 8px;
   color: #2c2c2c;
+  text-wrap: nowrap;
 }
 .text-label {
   font-weight: 600;
   font-size: 14px;
   color: var(--primary-color);
+  text-wrap: nowrap;
 }

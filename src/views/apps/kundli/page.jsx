@@ -12,8 +12,8 @@ import PageTitle from "@/components/common/PageTitle/PageTitle";
 
 export default function KundliMain() {
 
-   // vars
-   const columns = [
+  // vars
+  const columns = [
     // {
     //   field: 'KundaliID', headerName: 'Planet', headerClassName: 'rowheader',
     //   headerAlign: 'left'
@@ -21,7 +21,7 @@ export default function KundliMain() {
     {
       field: 'FirstName', headerName: 'Full Name', headerClassName: 'rowheader',
       minWidth: 200,
-      flex:2,
+      flex: 2,
       headerAlign: 'left',
       renderCell: (params) => (
         <>
@@ -33,7 +33,7 @@ export default function KundliMain() {
       field: 'iconColumn', // Unique field name for this column
       headerName: '',
       minWidth: 100,
-      flex:1,
+      flex: 1,
       headerClassName: 'rowheader',
 
       renderCell: (params) => (
@@ -53,32 +53,32 @@ export default function KundliMain() {
     },
     {
       field: 'Gender', minWidth: 100, headerName: 'Gender', headerClassName: 'rowheader',
-      flex:1,
+      flex: 1,
       headerAlign: 'left'
     },
     {
       field: 'BirthDate', minWidth: 100, headerName: 'BirthDate', headerClassName: 'rowheader',
-      flex:1,
+      flex: 1,
       headerAlign: 'left',
     },
     {
       field: 'BirthTime', minWidth: 100, headerName: 'BirthTime', headerClassName: 'rowheader',
-      flex:1,
+      flex: 1,
       headerAlign: 'left'
     },
     {
       field: 'Country', minWidth: 100, headerName: 'Country', headerClassName: 'rowheader',
-      flex:1,
+      flex: 1,
       headerAlign: 'left'
     },
     {
       field: 'CityID', minWidth: 100, headerName: 'City', headerClassName: 'rowheader',
-      flex:1,
+      flex: 1,
       headerAlign: 'left'
     },
     {
       field: 'Prakriti', minWidth: 100, headerName: 'Prakriti', headerClassName: 'rowheader',
-      flex:1,
+      flex: 1,
       headerAlign: 'left'
     },
 
@@ -106,6 +106,7 @@ export default function KundliMain() {
   // func
   const handleAddClick = () => {
     setUserData({
+      KundaliID: '',
       FirstName: '',
       LastName: '',
       MiddleName: '',

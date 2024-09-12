@@ -36,7 +36,7 @@ function House({ houseArr, Symbols }) {
               <div className="house-header">
                 <div className='house-header-Div1'>
                   <div className='house-header-text'>House-{(index + 1)}</div>
-                  <div className='house-header-text'>🡒</div>
+                  <div>🡒</div>
                   <div>{e?.HouseDescAstro}, {e?.HouseDescVastu}</div>
                 </div>
                 <div className='house-header-Div2'>
@@ -58,11 +58,11 @@ function House({ houseArr, Symbols }) {
                             (<div className='sub-div-rake'><div>
                               {houseaspect?.Aspect}°
                             </div>
-                            <span>↠ {houseaspect?.Planet}</span>
-                            <span className='ps-1'>⦿</span></div>) :
+                              <span>↠&nbsp;&nbsp;{houseaspect?.Planet}</span>
+                              <span className='ps-1'>⦿</span></div>) :
                             <div className='sub-div1'>
                               <div>{houseaspect?.Aspect}°</div>
-                              <span>↠ {houseaspect?.Planet}</span>
+                              <span>↠&nbsp;&nbsp;{houseaspect?.Planet}</span>
                             </div>
                         }
                         <div>{houseaspect?.PlanetRashiShort}. {houseaspect?.ScriptFull}</div>
@@ -78,11 +78,11 @@ function House({ houseArr, Symbols }) {
                               <div>
                                 {houseaspect?.Aspect}°
                               </div>
-                              <span>↠ {houseaspect?.Planet}</span>
+                              <span>↠&nbsp;&nbsp;{houseaspect?.Planet}</span>
                               <span className='ps-1'>⦿</span>
                             </div>) : (<div className='sub-div2'>
                               <div>{houseaspect?.Aspect}°</div>
-                              <span>↠ {houseaspect?.Planet}</span>
+                              <span>↠&nbsp;&nbsp;{houseaspect?.Planet}</span>
                             </div>)
                         }
 
@@ -100,12 +100,12 @@ function House({ houseArr, Symbols }) {
                               <div>
                                 {houseaspect?.Aspect}°
                               </div>
-                              <span>↠ {houseaspect?.Planet}</span>
+                              <span>↠&nbsp;&nbsp;{houseaspect?.Planet}</span>
                               <span className='ps-1'>⦿</span>
                             </div>) :
                             <div className='sub-div3'>
                               <div>{houseaspect?.Aspect}°</div>
-                              <span>↠ {houseaspect?.Planet}</span>
+                              <span>↠&nbsp;&nbsp;{houseaspect?.Planet}</span>
                             </div>
                         }
                         <div>{houseaspect?.PlanetRashiShort}. {houseaspect?.ScriptFull}</div>
@@ -157,7 +157,7 @@ function House({ houseArr, Symbols }) {
                                     </div>
                                   </div>
                                   <div className='planet-Div3'>
-                                    <div className="sub-div1"> {Planet?.Nakshatra} / {Planet?.NakshatraPada} 🡐 {Planet?.EnergyField}</div>
+                                    <div className="sub-div1"> ✻ {Planet?.Nakshatra} / {Planet?.NakshatraPada} 🡐 {Planet?.EnergyField}</div>
                                     <div className="sub-div"> {Planet?.PlanetDescAstro} </div>
                                     <div className="sub-div"> {Planet?.PlanetDescVastu} </div>
                                   </div>
@@ -168,8 +168,18 @@ function House({ houseArr, Symbols }) {
                                       <div className='rashi-div-sub' key={key}>
                                         {
                                           Planetaspect?.IsWithRaKe ?
-                                            (<div className='sub-div-rake'><span>{Planetaspect?.Aspect}° ↠ {Planetaspect?.Planet}</span><span>⦿</span></div>) :
-                                            <div className='sub-div1'>{Planetaspect?.Aspect}° ↠ {Planetaspect?.Planet}</div>
+                                            // ()
+
+                                            (
+                                              <div className='sub-div-rake'><div>
+                                                {Planetaspect?.Aspect}°
+                                              </div>
+                                                <span>↠&nbsp;&nbsp;{Planetaspect?.Planet}</span>
+                                                <span className='ps-1'>⦿</span></div>) :
+                                            <div className='sub-div1'>
+                                              <div>{Planetaspect?.Aspect}°</div>
+                                              <span>↠&nbsp;&nbsp;{Planetaspect?.Planet}</span>
+                                            </div>
                                         }
                                         <div>{Planetaspect?.PlanetRashiShort}. {Planetaspect?.ScriptFull}</div>
                                       </div>
@@ -180,8 +190,15 @@ function House({ houseArr, Symbols }) {
                                       <div className='rashi-div-sub' key={key}>
                                         {
                                           Planetaspect?.IsWithRaKe ?
-                                            (<div className='sub-div-rake'><span>{Planetaspect?.Aspect}° ↠ {Planetaspect?.Planet}</span><span>⦿</span></div>) :
-                                            <div className='sub-div2'>{Planetaspect?.Aspect}° ↠ {Planetaspect?.Planet}</div>
+                                            (<div className='sub-div-rake'><div>
+                                              {Planetaspect?.Aspect}°
+                                            </div>
+                                              <span>↠&nbsp;&nbsp;{Planetaspect?.Planet}</span>
+                                              <span className='ps-1'>⦿</span></div>) :
+                                            <div className='sub-div2'>
+                                              <div>{Planetaspect?.Aspect}°</div>
+                                              <span>↠&nbsp;&nbsp;{Planetaspect?.Planet}</span>
+                                            </div>
                                         }
                                         <div>{Planetaspect?.PlanetRashiShort}. {Planetaspect?.ScriptFull}</div>
                                       </div>
@@ -192,8 +209,14 @@ function House({ houseArr, Symbols }) {
                                       <div className='rashi-div-sub' key={key}>
                                         {
                                           Planetaspect?.IsWithRaKe ?
-                                            (<div className='sub-div-rake'><span>{Planetaspect?.Aspect}° ↠ {Planetaspect?.Planet}</span><span>⦿</span></div>) :
-                                            <div className='sub-div3'>{Planetaspect?.Aspect}° ↠ {Planetaspect?.Planet}</div>
+                                            (<div className='sub-div-rake'>
+                                              <div>{Planetaspect?.Aspect}°</div>
+                                              <span>↠&nbsp;&nbsp;{Planetaspect?.Planet}</span>
+                                              <span className='ps-1'>⦿</span></div>) :
+                                            <div className='sub-div3'>
+                                              <div>{Planetaspect?.Aspect}°</div>
+                                              <span>↠&nbsp;&nbsp;{Planetaspect?.Planet}</span>
+                                            </div>
                                         }
                                         <div>{Planetaspect?.PlanetRashiShort}. {Planetaspect?.ScriptFull}</div>
                                       </div>

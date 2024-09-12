@@ -38,6 +38,7 @@
   display: flex;
   /* justify-content: space-around; */
   border-bottom: 2px solid var(--border-color);
+  overflow: auto;
 
   .block-detail {
     padding: 0px 18px 0px 12px;
@@ -61,17 +62,17 @@
 }
 
 .ChartSVG-Div {
-  padding: 12px 8px;
+  /* padding: 12px 8px;
   border-bottom: 2px solid var(--border-color);
   display: flex;
-  gap: 8px;
+  gap: 8px; */
 
 
 
   .ChartSVG-Div-sub {
     display: flex;
     flex-direction: column;
-    width: 33.33%;
+    /* width: 33.33%; */
   }
 }
 
@@ -102,8 +103,9 @@
 
   .highlight-row {
     /* background-color: var(--primary-soft-color); */
-    background-color: var(--secondary-soft-color);
-    color: black;
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    font-weight: 600;
   }
 
   .highlight-row:hover {
@@ -135,8 +137,10 @@
   border-bottom: 2px solid var(--border-color); */
   display: flex;
   gap: 8px;
+  overflow: auto;
 
   .house-main-Div {
+    min-width: 915px;
 
     width: 100%;
     display: flex;
@@ -210,6 +214,7 @@
           .sub-div1 {
             color: blue;
             display: flex;
+            font-weight: 500;
             div {
               width: 35px;
               display: flex;
@@ -219,6 +224,7 @@
           .sub-div2 {
             color: green;
             display: flex;
+            font-weight: 500;
             div {
               width: 35px;
               display: flex;
@@ -228,6 +234,7 @@
           .sub-div3 {
             color: red;
             display: flex;
+            font-weight: 500;
             div {
               width: 35px;
               display: flex;
@@ -265,11 +272,11 @@
               }
 
               .rashi-Div1-sub2 {
-                color: #242424;
+                color: #878383;
               }
 
               .rashi-Div1-sub3 {
-                color: #242424;
+                color: #878383;
                 /* font-weight: 600; */
               }
             }
@@ -304,24 +311,48 @@
                     .sub-div-rake {
                       color: gray;
                       display: flex;
-                      gap: 4px;
                       align-items: center;
+                      div {
+                        width: 35px;
+                        display: flex;
+                      }
                     }
                   }
 
                   .sub-div1 {
                     color: blue;
                     /* padding-bottom: 12px; */
+                    display: flex;
+                    align-items: center;
+            font-weight: 500;
+            div {
+                      width: 35px;
+                      display: flex;
+                    }
                   }
 
                   .sub-div2 {
                     color: green;
                     /* padding-bottom: 12px; */
+                    display: flex;
+                    align-items: center;
+            font-weight: 500;
+            div {
+                      width: 35px;
+                      display: flex;
+                    }
                   }
 
                   .sub-div3 {
                     color: red;
                     /* padding-bottom: 12px; */
+                    display: flex;
+                    align-items: center;
+            font-weight: 500;
+            div {
+                      width: 35px;
+                      display: flex;
+                    }
                   }
 
                 }
@@ -332,6 +363,7 @@
                   border-bottom: 2px solid var(--border-color);
                   display: flex;
                   justify-content: space-between;
+                  font-weight: 500;
 
                   .planet-Div1-sub {
                     display: flex;
@@ -352,7 +384,9 @@
                     display: flex;
                     flex-direction: column;
                   }
-
+                  span:first-child{
+                    font-weight: 500;
+                  }
                   .sub-div:last-child {
                     border-right: none;
                   }
@@ -365,6 +399,10 @@
 
                   .sub-div1 {
                     color: var(--primary-color);
+                    font-weight: 500;
+                  }
+                  .sub-div {
+                    color:#878383;
                   }
                 }
               }
@@ -469,26 +507,33 @@
   .MuiDataGrid-cell {
 
     /* color: red; */
+    .row-title{
+      color: var(--primary-color);
+    }
     .summaryTxt {
-      /* color: yellow; */
 
       .neutral {
         color: blue;
+        font-weight: 700;
       }
 
       .rake {
         display: flex;
         gap: 2px;
         align-items: center;
+        justify-content: center;
         color: gray;
+        font-weight: 700;
       }
 
       .positive {
         color: green;
+        font-weight: 700;
       }
 
       .negative {
         color: red;
+        font-weight: 700;
       }
     }
   }
