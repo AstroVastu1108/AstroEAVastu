@@ -66,19 +66,19 @@ function OTPverify({ email,role,setIsOtpVerified }) {
 
   const handleVerifyOTP = async (otpCode) => {
     try {
-      console.log("Sending OTP:", otpCode); // Log OTP
-      console.log("Sending Email:", email);  // Log Email
+      // console.log("Sending OTP:", otpCode); // Log OTP
+      // console.log("Sending Email:", email);  // Log Email
       const response = await VerifyOtp(email, otpCode,role);
       if(response.hasError){
         return toastDisplayer('error', error.error || 'Failed to verify OTP');
       }else{
         setIsOtpVerified("verified")
       }
-      console.log("API Response:", response); // Log the response
+      // console.log("API Response:", response); // Log the response
       toastDisplayer('success', 'OTP verified successfully');
       // onSuccess(otpCode); // Pass OTP to the next step
     } catch (error) {
-      console.log("Error Response:", error); // Log the error response
+      // console.log("Error Response:", error); // Log the error response
       toastDisplayer('error', error.error || 'Failed to verify OTP');
     }
   };
@@ -101,7 +101,7 @@ function OTPverify({ email,role,setIsOtpVerified }) {
       setOtp(["", "", "", "", "", ""])
       toastDisplayer('success', 'OTP sent successfully');
     } catch (error) {
-      console.log("Error Resending OTP:", error); // Log the error response
+      // console.log("Error Resending OTP:", error); // Log the error response
       toastDisplayer('error', error.error || 'Failed to resend OTP');
     }
   };

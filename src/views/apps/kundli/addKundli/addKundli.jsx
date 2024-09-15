@@ -69,7 +69,6 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
 
         const birthDate = new Date(year, month, day, hours, minutes);
         var newCounty = conutryData.filter((e) => e.name === userData.Country || e.iso2 === userData.Country);
-        console.log(newCounty);
 
         setUserData((prev) => ({
             ...prev,
@@ -125,7 +124,6 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
 
   const handleSubmit = async () => {
     // event.preventDefault()
-    console.log(userData)
     const birthDate = userData.date ? new Date(userData.date).toLocaleDateString('en-GB').split('/').join('-') : null
 
     const birthTime = userData.time ? new Date(userData.time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }).replace(/:/g, '') : null;

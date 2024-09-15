@@ -242,7 +242,7 @@ const RegisterPage = ({ mode }) => {
         const result = await companyRegistration(userData)
         if (result.error) {
           setLoading(false);
-          console.log("Result : ", result.error)
+          // console.log("Result : ", result.error)
           setActiveStep(0)
           setIsOtpVerified("pending")
           return toastDisplayer("error", result.message)

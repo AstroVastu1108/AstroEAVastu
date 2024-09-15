@@ -138,7 +138,7 @@ export const AuthProvider = ({ children }) => {
 
             if (result.isOk) {
                 const { useremail, authRule, refreshToken, accessToken, userRole, TransactionID } = result.data;
-                console.log("result.data : ", result.data)
+                // console.log("result.data : ", result.data)
                 setUser(result.data);
                 const authRuleData = JSON.parse(authRule)
                 const hrefsWithAccess = authRuleData
@@ -170,7 +170,7 @@ export const AuthProvider = ({ children }) => {
                 .filter(item => item.HasAccess);
             setAuthRuleContext(hrefsWithAccess);
             // setAuthRuleContext(result.data.authRule);
-            console.log("result.data===============>", result.data)
+            // console.log("result.data===============>", result.data)
             const { useremail, authRule, refreshToken, accessToken, userRole, transactionID } = result.data;
             const expirationTime = new Date().getTime() + 5 * 60 * 1000;
 
@@ -211,7 +211,7 @@ export const AuthProvider = ({ children }) => {
                 .filter(item => item.HasAccess);
             setAuthRuleContext(hrefsWithAccess);
             // setAuthRuleContext(result.data.authRule);
-            console.log("result.data===============>", result.data)
+            // console.log("result.data===============>", result.data)
             const { useremail, authRule, refreshToken, accessToken, userRole, transactionID } = result.data;
             const expirationTime = new Date().getTime() + 5 * 60 * 1000;
 

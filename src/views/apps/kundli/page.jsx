@@ -168,7 +168,6 @@ export default function KundliMain() {
   }
 
   const fetchDataForPage = (e) => {
-    console.log(e)
     getAllKundli(parseInt(e) + 1);
   }
 
