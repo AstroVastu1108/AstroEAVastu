@@ -3,7 +3,7 @@
 }
 .planetN{
   color: var(--primary-color);
-  font-weight: 600;
+  font-weight: 700;
   width: 40px;
 }
 
@@ -15,13 +15,17 @@
 
 .rashiDiv{
   color: var(--primary-color);
-  font-weight: 400;
+  font-weight: 700;
+}
+.signDiv{
+  color: var(--primary-color);
+  font-weight: 500;
 }
 
 .degreeDiv{
   color: black;
   font-family:  'Segoe UI';
-  /* font-weight: 500; */
+  font-weight: 500;
 }
 
 .NMainDiv{

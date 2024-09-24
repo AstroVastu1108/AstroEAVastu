@@ -77,3 +77,22 @@ export async function GetKundliIDDataAPI(kId) {
     return responseBody
   }
 }
+
+// change kundli data and get kundli details
+export async function ChangeDateTimeKundli(payload) {
+  const responseBody = {
+    responseData: null,
+    hasError: false,
+    error: null
+  }
+  try {
+    const response = await axios.post(`${API_URL}/astro/datetime-change`, payload)
+    responseBody.responseData = response.data
+    return responseBody
+  } catch (error) {
+    responseBody.hasError = true
+    responseBody.errorMessage = responseBody.errorMessage =
+      error.response?.data?.statusMsg || error.response?.data?.errors
+    return responseBody
+  }
+}

@@ -259,6 +259,7 @@ const RegisterPage = ({ mode }) => {
           setLoading(false);
           setIsDisable(false);
           console.log("Result : ", result.error)
+
           setActiveStep(0)
           setIsOtpVerified("pending")
           return toastDisplayer("error", result.message)

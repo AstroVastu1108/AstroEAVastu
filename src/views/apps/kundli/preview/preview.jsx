@@ -7,16 +7,26 @@ import PreviewCard from './PreviewCard'
 import PreviewActions from './PreviewActions'
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
-import { useRef, useState } from 'react'
+
+import { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import { getKundliPdf } from '@/app/Server/API/common'
 import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
-import { Card, CardContent, Grid } from '@mui/material'
+import { Box, Button, Card, CardContent, Grid } from '@mui/material'
 import PageTitle from '@/components/common/PageTitle/PageTitle'
-const Preview = ({ kundliData }) => {
+import TimeTool from './TimeTool'
+import { ChangeDateTimeKundli } from '@/app/Server/API/kundliAPI'
+import Loader from '@/components/common/Loader/Loader'
+
+const Preview = ({ kundliData, setKundliData }) => {
   const printRef = useRef()
+
   const [downloadLoading, setDownloadLoading] = useState(false);
   const [existdownloadLoading, setExistDownloadLoading] = useState(false);
+  const [timeToolPopUp, setTimeToolPopUp] = useState(false);
+  const [kundliBirthData, setKundliBirthData] = useState(kundliData?.AstroVastuReport?.BirthDetails);
+  const [loading, setLoading] = useState(false);
+
   const handleKundliApi = async () => {
     if (kundliData) {
       try {
@@ -46,10 +56,11 @@ const Preview = ({ kundliData }) => {
       }
     }
   }
+
   const handleButtonClick = () => {
     setDownloadLoading(true);
     if (printRef.current) {
-      html2canvas(printRef.current, { scale: 1.5 }).then(canvas => {
+      html2canvas(printRef.current).then(canvas => {
         const imgData = canvas.toDataURL('image/jpeg', 0.7); // Convert to JPEG with lower quality
         const pdf = new jsPDF('p', 'mm', 'a4');
         const imgWidth = 210; // A4 width in mm
@@ -78,9 +89,49 @@ const Preview = ({ kundliData }) => {
     }, 2000);
   };
 
+  const handleTimeTool = () => {
+    setTimeToolPopUp(!timeToolPopUp)
+  }
+
+  const handleDateChange = async (datePicker) => {
+    var kdata = kundliData?.AstroVastuReport?.BirthDetails;
+    const formattedDate = datePicker.format('DD-MM-YYYY');
+    const formattedTime = datePicker.format('HHmm'); // 24-hour format without colon
+    const formattedData = {
+      KundaliID: kdata.KundaliID,
+      FirstName: kdata.FirstName,
+      LastName: kdata.LastName,
+      MiddleName: kdata.MiddleName,
+      Gender: kdata.Gender,
+      Country: kdata.Country,
+      CityID: "A1AE28185ED49D47211760BF32D40EB742C84998",
+      BirthDate: formattedDate,
+      BirthTime: formattedTime,
+      Prakriti: kdata.prakriti || ''
+    }
+    console.log("formattedData :",formattedData)
+    try {
+      // setLoading(true);
+      const response = await ChangeDateTimeKundli(formattedData)
+
+      if (response.hasError) {
+        setIsDisable(false)
+        return toastDisplayer("error", response.error)
+      }
+      setKundliData(response?.responseData?.Result)
+      // return setLoading(false);
+    } catch (error) {
+      setLoading(false)
+    }
+  }
+
+  // useEffect(()=>{
+  //   console.log("==>",kundliData)
+  // },[kundliData])
+
   return (
     <>
-
+      {loading && <Loader />}
       <Grid container spacing={6}>
         <Grid item xs={12} md={12}>
           <Card>
@@ -88,25 +139,30 @@ const Preview = ({ kundliData }) => {
               <PageTitle title={"Kundli Preview"} endCmp={<>
                 <PreviewActions value={"Existing"} onButtonClick={handleKundliApi} loading={existdownloadLoading}/>
                 <PreviewActions value={"Download"} onButtonClick={handleButtonClick} loading={downloadLoading} />
+
               </>} />
-              <div ref={printRef} className='previewPDF'>
-                <PreviewCard kundliData={kundliData} />
+              <div ref={printRef} className='previewPDF  p-5'>
+                {kundliData &&
+                  <>
+                    <PreviewCard kundliData={kundliData} />
+                  </>
+                }
               </div>
             </CardContent>
           </Card>
         </Grid>
       </Grid>
-      {/* <Grid container spacing={6}>
-        <PageTitle title={"Kundli Preview"} endCmp={<>
-          <PreviewActions value={"Existing"} onButtonClick={handleKundliApi} />
-          <PreviewActions value={"Download"} onButtonClick={handleButtonClick} />
-        </>} />
-        <Grid item xs={12} md={12}>
-          <div ref={printRef}>
-            <PreviewCard kundliData={kundliData} />
-          </div>
-        </Grid>
-      </Grid> */}
+      <Button variant='contained' sx={{
+        position: 'fixed',
+        insetInlineEnd: '2.5rem',
+        insetBlockEnd: '6.5rem',
+        zIndex: 9999
+      }} className='is-10 bs-10 rounded-full p-0 min-is-0 flex items-center justify-center'
+        onClick={handleTimeTool}>
+        <i className='tabler-calendar-share' />
+      </Button>
+
+      {timeToolPopUp && <TimeTool handleDateChange={handleDateChange} kundliBirthData={kundliBirthData} />}
     </>
   )
 }

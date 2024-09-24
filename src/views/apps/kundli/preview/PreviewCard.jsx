@@ -2,7 +2,7 @@
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Grid from '@mui/material/Grid'
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbarContainer } from '@mui/x-data-grid';
 
 // Component Imports
 import House from '@/components/preview/House/House'
@@ -55,13 +55,22 @@ const PreviewCard = ({ kundliData, id }) => {
     ...item
   }));
 
+  function CustomToolbar({ title }) {
+    return (
+      <GridToolbarContainer className="flex-row justify-center items-center w-100 py-2">
+        <div style={{ fontSize: '16px', fontWeight: '700', color: 'var(--primary-color)' }}>{title}</div>
+        {/* <GridToolbarQuickFilter className="SearchBar" /> */}
+      </GridToolbarContainer>
+    );
+  }
+
   return (
     <>
       {/* <Card className='previewCard'>
        <CardContent className='p-3'> */}
       <Grid className='previewCard' item xs={12} md={12}>
         <Grid item xs={12} className='pdf-Div'>
-          <div className='p-3 Birthdetail-div'>
+          <div className='p-2 Birthdetail-div'>
             <div className='flex justify-between gap-y-4 flex-col sm:flex-row'>
               <div className='flex flex-col gap-6'>
                 <span className="Name-title">
@@ -70,12 +79,12 @@ const PreviewCard = ({ kundliData, id }) => {
 
                 {/* <span className="Name-title">{BirthDetails?.FirstName} {BirthDetails?.MiddleName} {BirthDetails?.LastName}</span> */}
               </div>
-              <div className='flex flex-row gap-5 birthDateTime-Div'>
-                <div>
+              <div className='flex flex-col justify-between md-items-center sm:flex-col lg:flex-row sm:gap-1 lg:gap-5 birthDateTime-Div' >
+                <div className='flex flex-row gap-1'>
                   <span className='label'>Birth Date & Time: </span>
                   <span className='value'>{BirthDetails?.Date} {BirthDetails?.Time.substring(0, 2)}:{BirthDetails?.Time.substring(2, 4)}</span>
                 </div>
-                <div>
+                <div className='flex flex-row gap-1'>
                   <span className='label'>Place: </span>
                   <span className='value'>{BirthDetails?.FormattedCity}</span>
                 </div>
@@ -84,7 +93,7 @@ const PreviewCard = ({ kundliData, id }) => {
               </div>
             </div>
           </div>
-          <div className='sm:flex-row AstroDetails-Div'>
+          <div className='xs:flex-col sm:flex-row AstroDetails-Div'>
             <div className='flex flex-row block-detail'>
 
               <InfoTable InfoTableTextArr={[
@@ -111,17 +120,17 @@ const PreviewCard = ({ kundliData, id }) => {
               ]} />
             </div>
           </div>
-          <div className='sm:flex-row justify-center ChartSVG-Div'>
-            <div className='ChartSVG-Div-sub'>
-              <div className='heading-div'>❋ Birth Chart / Lagna Kundali ❋</div>
+          <div className='flex flex-col gap-5 px-4 sm:flex-row sm:justify-start lg:flex-row md:justify-center sm:overflow-auto'>
+            <div className='w-auto flex-1 flex flex-col'>
+              <div className='heading-div pt-3'>❋ Birth Chart / Lagna Kundali ❋</div>
               <img src={`data:image/svg+xml;base64,${ChartSVG?.BirthChart}`} alt="birthChart" />
             </div>
-            <div className='ChartSVG-Div-sub'>
-              <div className='heading-div'>❋ House Chart / Bhav Chalit Kundali ❋</div>
+            <div className='w-auto flex-1 flex flex-col'>
+              <div className='heading-div pt-3'>❋ House Chart / Bhav Chalit Kundali ❋</div>
               <img src={`data:image/svg+xml;base64,${ChartSVG?.HouseChart}`} alt="birthChart" />
             </div>
-            <div className='ChartSVG-Div-sub'>
-              <div className='heading-div'>❋ House Chart / Bhav Chalit Kundali ❋</div>
+            <div className='w-auto flex-1 flex flex-col'>
+              <div className='heading-div pt-3'>❋ House Chart / Bhav Chalit Kundali ❋</div>
               <img src={`data:image/svg+xml;base64,${ChartSVG?.HouseChart}`} alt="birthChart" />
             </div>
           </div>
@@ -154,8 +163,8 @@ const PreviewCard = ({ kundliData, id }) => {
 
           <div className='main-MahaDasha-Div'>
             <div className='heading-div'>❋ Vimshottari Dasha / Planetary Periods of Life ❋</div>
-            <div className='MahaDasha-Div'>
-              <div style={{ width: '33%' }}>
+            <div className='MahaDasha-Div flex flex-col sm:flex-row lg:flex-row sm:overflow-auto'>
+              <div className='flex flex-col lg:w-1/3'  >
                 <DataGrid
                   rows={rowsMahaDasha}
                   columns={columns}
@@ -170,9 +179,11 @@ const PreviewCard = ({ kundliData, id }) => {
                   disableRowSelectionOnClick
                   hideFooterPagination={true}
                   hideFooter={true}
+                  // slots={{ toolbar: CustomToolbar("MahaDashas") }}
+                  slots={{ toolbar: () => <CustomToolbar title="MahaDashas" /> }}
                 />
               </div>
-              <div style={{ width: '33%' }}>
+              <div className='flex flex-col lg:w-1/3'>
                 <DataGrid
                   rows={rowsAntarDasha}
                   columns={columns}
@@ -188,9 +199,10 @@ const PreviewCard = ({ kundliData, id }) => {
                   disableRowSelectionOnClick
                   hideFooterPagination={true}
                   hideFooter={true}
+                  slots={{ toolbar: () => <CustomToolbar title="Moon (10 Years) > AntarDashas" /> }}
                 />
               </div>
-              <div style={{ width: '33%' }}>
+              <div className='flex flex-col lg:w-1/3'>
                 <DataGrid
                   rows={rowsPratyantarDasha}
                   columns={columns}
@@ -205,6 +217,7 @@ const PreviewCard = ({ kundliData, id }) => {
                   disableRowSelectionOnClick
                   hideFooterPagination={true}
                   hideFooter={true}
+                  slots={{ toolbar: () => <CustomToolbar title="Mercury > PratyantarDashas" /> }}
                 />
               </div>
             </div>

@@ -38,9 +38,9 @@ const UserDropdown = () => {
   // States
   const [open, setOpen] = useState(false)
   const { user,logout } = useAuth();
-  console.log("user : ",user)
+  // console.log("user : ",user)
   // Refs
-  
+
   const anchorRef = useRef(null)
 
   // Hooks
@@ -112,12 +112,12 @@ const UserDropdown = () => {
                       {user?.useremail}
                       </Typography>
                       <Typography variant="caption">
-  {user?.userRole === "CA" 
-    ? "Company" 
-    : user?.userRole === "SA" 
-    ? "Super Admin" 
-    : user?.userRole === "UA" 
-    ? "User" 
+  {user?.userRole === "CA"
+    ? "Company"
+    : user?.userRole === "SA"
+    ? "Super Admin"
+    : user?.userRole === "UA"
+    ? "User"
     : ""}
 </Typography>
 

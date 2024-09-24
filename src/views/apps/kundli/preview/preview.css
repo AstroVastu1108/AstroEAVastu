@@ -7,24 +7,24 @@
 
 .Birthdetail-div {
   background-color: var(--primary-color);
-  border-radius: 4px;
-  font-weight: 600;
+  /* border-radius: 4px; */
+  font-weight: 500;
 
   .birthDateTime-Div {
     .label {
-      color: gainsboro;
+      color: #fff;
     }
 
     .value {
-      color: white;
+      color: var(--secondary-color);
     }
   }
 }
 
 .Name-title {
   /* border: 2px solid black; */
-  font-weight: 700;
-  font-size: 18px;
+  font-weight: bold;
+  font-size: 24px;
   color: var(--secondary-color);
 }
 
@@ -34,14 +34,19 @@
 
 .AstroDetails-Div {
   /* border: 2px solid black; */
-  padding: 12px 8px;
+  padding: 8px 8px;
   display: flex;
   /* justify-content: space-around; */
-  border-bottom: 1.5px solid var(--primary-color);
+  border-bottom: 2px solid var(--border-color);
+  overflow: auto;
 
   .block-detail {
     padding: 0px 18px 0px 12px;
-    border-left: 1.5px solid var(--primary-color);
+    border-left: 2px solid var(--border-color);
+  }
+  .block-detail:first-child {
+    padding: 0px 18px 0px 0px;
+    border-left: none;
   }
 }
 
@@ -57,17 +62,17 @@
 }
 
 .ChartSVG-Div {
-  padding: 12px 8px;
-  border-bottom: 1.5px solid var(--primary-color);
+  /* padding: 12px 8px;
+  border-bottom: 2px solid var(--border-color);
   display: flex;
-  gap: 8px;
+  gap: 8px; */
 
 
 
   .ChartSVG-Div-sub {
     display: flex;
     flex-direction: column;
-    width: 33.33%;
+    /* width: 33.33%; */
   }
 }
 
@@ -75,7 +80,7 @@
   display: flex;
   flex-direction: column;
   padding: 12px 8px;
-  border-bottom: 1.5px solid var(--primary-color);
+  border-bottom: 2px solid var(--border-color);
 
   /* .MuiDataGrid-container--top {
     background-color: var(--primary-soft-color) !important;
@@ -98,8 +103,9 @@
 
   .highlight-row {
     /* background-color: var(--primary-soft-color); */
-    background-color: var(--secondary-soft-color);
-    color: black;
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    font-weight: 600;
   }
 
   .highlight-row:hover {
@@ -123,27 +129,29 @@
   display: flex;
   flex-direction: column;
   padding: 12px 8px;
-  border-bottom: 1.5px solid var(--primary-color);
+  border-bottom: 2px solid var(--border-color);
 }
 
 .AstroVastuScript-Div {
   /* padding: 12px 8px;
-  border-bottom: 1.5px solid var(--primary-color); */
+  border-bottom: 2px solid var(--border-color); */
   display: flex;
   gap: 8px;
+  overflow: auto;
 
   .house-main-Div {
+    min-width: 915px;
 
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    /* gap: 8px; */
 
     .house-Div {
       width: 100%;
 
       .house-header {
-        border: 1.5px solid var(--primary-color);
+        border: 2px solid var(--border-color);
         padding: 12px 8px;
         background-color: var(--primary-soft-color);
         display: flex;
@@ -179,14 +187,14 @@
         justify-content: space-between;
         width: 100%;
         color: #000;
-        border-bottom: 1.5px solid var(--primary-color);
+        border-bottom: 2px solid var(--border-color);
 
         .house-body-Div1 {
           padding: 8px;
           width: 25%;
-          border-right: 1.5px solid var(--primary-color);
-          border-left: 1.5px solid var(--primary-color);
-          /* border-bottom: 1.5px solid var(--primary-color); */
+          border-right: 2px solid var(--border-color);
+          border-left: 2px solid var(--border-color);
+          /* border-bottom: 2px solid var(--border-color); */
 
           .house-div-sub {
             padding-bottom: 12px;
@@ -206,6 +214,7 @@
           .sub-div1 {
             color: blue;
             display: flex;
+            font-weight: 500;
             div {
               width: 35px;
               display: flex;
@@ -215,6 +224,7 @@
           .sub-div2 {
             color: green;
             display: flex;
+            font-weight: 500;
             div {
               width: 35px;
               display: flex;
@@ -224,6 +234,7 @@
           .sub-div3 {
             color: red;
             display: flex;
+            font-weight: 500;
             div {
               width: 35px;
               display: flex;
@@ -235,8 +246,8 @@
         .house-body-Div2 {
           padding: 0px 0px;
           width: 75%;
-          border-right: 1.5px solid var(--primary-color);
-          /* border-bottom: 1.5px solid var(--primary-color); */
+          border-right: 2px solid var(--border-color);
+          /* border-bottom: 2px solid var(--border-color); */
           display: flex;
           flex-direction: column;
           /* gap: 8px; */
@@ -244,7 +255,7 @@
           .rahi-Div {
             /* padding: 0px 8px; */
             display: flex;
-            border-bottom: 1.5px solid var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
             width: 100%;
             justify-content: space-between;
 
@@ -261,11 +272,11 @@
               }
 
               .rashi-Div1-sub2 {
-                color: #242424;
+                color: #878383;
               }
 
               .rashi-Div1-sub3 {
-                color: #242424;
+                color: #878383;
                 /* font-weight: 600; */
               }
             }
@@ -273,19 +284,19 @@
             .rahi-Div2 {
               display: flex;
               flex-direction: column;
-              border-left: 1.5px solid var(--primary-color);
+              border-left: 2px solid var(--border-color);
               width: 80%;
-              /* border-right: 1.5px solid var(--primary-color); */
+              /* border-right: 2px solid var(--border-color); */
 
               .planet-Div {
                 width: 100%;
                 /* display: flex; */
-                border-bottom: 1.5px solid var(--primary-color);
+                border-bottom: 2px solid var(--border-color);
                 display: flex;
 
                 .planet-Div-sub {
                   width: 60%;
-                  border-right: 1.5px solid var(--primary-color);
+                  border-right: 2px solid var(--border-color);
                 }
 
                 .rahi-Div3 {
@@ -300,24 +311,48 @@
                     .sub-div-rake {
                       color: gray;
                       display: flex;
-                      gap: 4px;
                       align-items: center;
+                      div {
+                        width: 35px;
+                        display: flex;
+                      }
                     }
                   }
 
                   .sub-div1 {
                     color: blue;
                     /* padding-bottom: 12px; */
+                    display: flex;
+                    align-items: center;
+            font-weight: 500;
+            div {
+                      width: 35px;
+                      display: flex;
+                    }
                   }
 
                   .sub-div2 {
                     color: green;
                     /* padding-bottom: 12px; */
+                    display: flex;
+                    align-items: center;
+            font-weight: 500;
+            div {
+                      width: 35px;
+                      display: flex;
+                    }
                   }
 
                   .sub-div3 {
                     color: red;
                     /* padding-bottom: 12px; */
+                    display: flex;
+                    align-items: center;
+            font-weight: 500;
+            div {
+                      width: 35px;
+                      display: flex;
+                    }
                   }
 
                 }
@@ -325,9 +360,10 @@
                 .planet-Div1 {
                   width: 100%;
                   padding: 8px;
-                  border-bottom: 1.5px solid var(--primary-color);
+                  border-bottom: 2px solid var(--border-color);
                   display: flex;
                   justify-content: space-between;
+                  font-weight: 500;
 
                   .planet-Div1-sub {
                     display: flex;
@@ -337,18 +373,20 @@
 
                 .planet-Div2 {
                   width: 100%;
-                  border-bottom: 1.5px solid var(--primary-color);
+                  border-bottom: 2px solid var(--border-color);
                   justify-content: space-between;
                   display: flex;
 
                   .sub-div {
                     padding: 8px;
                     width: 33.33%;
-                    border-right: 1.5px solid var(--primary-color);
+                    border-right: 2px solid var(--border-color);
                     display: flex;
                     flex-direction: column;
                   }
-
+                  span:first-child{
+                    font-weight: 500;
+                  }
                   .sub-div:last-child {
                     border-right: none;
                   }
@@ -361,6 +399,10 @@
 
                   .sub-div1 {
                     color: var(--primary-color);
+                    font-weight: 500;
+                  }
+                  .sub-div {
+                    color:#878383;
                   }
                 }
               }
@@ -403,11 +445,11 @@
     box-sizing: border-box;
   }
 
-  .Birthdetail-div {
+  /* .Birthdetail-div {
 
     background-color: red;
 
-  }
+  } */
 
   /* color: inherit;  */
 
@@ -465,26 +507,33 @@
   .MuiDataGrid-cell {
 
     /* color: red; */
+    .row-title{
+      color: var(--primary-color);
+    }
     .summaryTxt {
-      /* color: yellow; */
 
       .neutral {
         color: blue;
+        font-weight: 700;
       }
 
       .rake {
         display: flex;
         gap: 2px;
         align-items: center;
+        justify-content: center;
         color: gray;
+        font-weight: 700;
       }
 
       .positive {
         color: green;
+        font-weight: 700;
       }
 
       .negative {
         color: red;
+        font-weight: 700;
       }
     }
   }
@@ -494,4 +543,31 @@
 
 .previewPDF {
   padding: 0rem 1.25rem;
+}
+
+.timeTool-div{
+  /* sx={{
+    position: 'fixed',
+    bottom: '110px',
+    right: '90px',
+    width: '250px',
+    height: 'auto',
+    backgroundColor: 'white',
+    padding: '16px',
+    borderRadius: '8px',
+    boxShadow: 3,
+    // zIndex: 9999
+  }} */
+   position: fixed;
+   bottom: 110px;
+   right: 90px;
+   width: 250px;
+   height: auto;
+   background-color: #fff;
+   padding: 16px;
+   border-radius: 4px;
+   box-shadow: 3;
+   display: flex;
+   flex-direction: column;
+   gap: 8px;
 }

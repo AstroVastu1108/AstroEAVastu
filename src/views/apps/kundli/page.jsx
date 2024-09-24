@@ -19,8 +19,9 @@ export default function KundliMain() {
     //   headerAlign: 'left'
     // },
     {
-      field: 'FirstName', flex: 2, headerName: 'Full Name', headerClassName: 'rowheader',
+      field: 'FirstName', headerName: 'Full Name', headerClassName: 'rowheader',
       minWidth: 200,
+      flex: 2,
       headerAlign: 'left',
       renderCell: (params) => (
         <>
@@ -31,8 +32,8 @@ export default function KundliMain() {
     {
       field: 'iconColumn', // Unique field name for this column
       headerName: '',
-      flex: 1,
       minWidth: 100,
+      flex: 1,
       headerClassName: 'rowheader',
 
       renderCell: (params) => (
@@ -51,40 +52,33 @@ export default function KundliMain() {
       ),
     },
     {
-      field: 'Gender',
+      field: 'Gender', minWidth: 100, headerName: 'Gender', headerClassName: 'rowheader',
       flex: 1,
-      minWidth: 100, headerName: 'Gender', headerClassName: 'rowheader',
       headerAlign: 'left'
     },
     {
-      field: 'BirthDate',
+      field: 'BirthDate', minWidth: 100, headerName: 'BirthDate', headerClassName: 'rowheader',
       flex: 1,
-      minWidth: 100,
-      headerName: 'BirthDate', headerClassName: 'rowheader',
+      headerAlign: 'left',
+    },
+    {
+      field: 'BirthTime', minWidth: 100, headerName: 'BirthTime', headerClassName: 'rowheader',
+      flex: 1,
       headerAlign: 'left'
     },
     {
-      field: 'BirthTime',
+      field: 'Country', minWidth: 100, headerName: 'Country', headerClassName: 'rowheader',
       flex: 1,
-      minWidth: 100, headerName: 'BirthTime', headerClassName: 'rowheader',
       headerAlign: 'left'
     },
     {
-      field: 'Country',
+      field: 'CityID', minWidth: 100, headerName: 'City', headerClassName: 'rowheader',
       flex: 1,
-      minWidth: 100, headerName: 'Country', headerClassName: 'rowheader',
       headerAlign: 'left'
     },
     {
-      field: 'CityID',
+      field: 'Prakriti', minWidth: 100, headerName: 'Prakriti', headerClassName: 'rowheader',
       flex: 1,
-      minWidth: 100, headerName: 'City', headerClassName: 'rowheader',
-      headerAlign: 'left'
-    },
-    {
-      field: 'Prakriti',
-      flex: 1,
-      minWidth: 100, headerName: 'Prakriti', headerClassName: 'rowheader',
       headerAlign: 'left'
     },
 
@@ -112,6 +106,7 @@ export default function KundliMain() {
   // func
   const handleAddClick = () => {
     setUserData({
+      KundaliID: '',
       FirstName: '',
       LastName: '',
       MiddleName: '',
@@ -173,7 +168,6 @@ export default function KundliMain() {
   }
 
   const fetchDataForPage = (e) => {
-    console.log(e)
     getAllKundli(parseInt(e) + 1);
   }
 

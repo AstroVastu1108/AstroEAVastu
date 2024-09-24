@@ -42,7 +42,6 @@ function AddUserPopUp({ open, handleAddClose, getAllUsers, userData, setUserData
         setIsDisable(true)
         if (!userData.isUpdate) {
           const response = await CreateUser(userData)
-          console.log(response)
           if (response.hasError) {
             setIsDisable(false)
             return toastDisplayer("error", response.errorMessage)
@@ -107,7 +106,6 @@ function AddUserPopUp({ open, handleAddClose, getAllUsers, userData, setUserData
     if (droppedFile && ['image/jpeg', 'image/png', 'image/jpg'].includes(droppedFile.type)) {
       setFile(droppedFile)
       const base64 = await convertToBase64(droppedFile);
-      console.log(base64)
       setUserData((prevState) => ({
         ...prevState,
         ["userAvatar"]: base64,

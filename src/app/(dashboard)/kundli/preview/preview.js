@@ -46,7 +46,7 @@ const PreviewPage = () => {
     <>
       {loading && <Loader />}
 
-      {kundliData && (<Preview kundliData={kundliData} />)}
+      {kundliData && (<Preview kundliData={kundliData} setKundliData={SetKundliData} />)}
     </>);
 }
 

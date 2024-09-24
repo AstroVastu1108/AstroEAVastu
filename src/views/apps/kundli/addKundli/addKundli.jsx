@@ -69,7 +69,6 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
 
         const birthDate = new Date(year, month, day, hours, minutes);
         var newCounty = conutryData.filter((e) => e.name === userData.Country || e.iso2 === userData.Country);
-        console.log(newCounty);
 
         setUserData((prev) => ({
             ...prev,
@@ -135,12 +134,14 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
       LastName: userData.LastName,
       MiddleName: userData.MiddleName,
       Gender: userData.Gender,
-      Country: userData.country.name,
+      Country: userData.Country.name,
       CityID: userData.CityID,
       BirthDate: birthDate,
       BirthTime: birthTime,
       Prakriti: userData.prakriti || ''
     }
+
+    console.log(formattedData)
 
     try {
       setIsDisable(true)
@@ -156,7 +157,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
         }
         var kId = response?.responseData?.Result?.KundaliID;
         setIsDisable(false)
-        getAllKundli();
+        getAllKundli(1);
         handleAddClose();
         toastDisplayer("success", `kundli data is saved successfully.`)
         return kId;

@@ -168,7 +168,7 @@ const LoginV2 = ({ mode }) => {
       const result = await loginData(formData)
       if (result.error) {
         setIsDisable(false);
-        console.log("Result : ", result.error)
+        // console.log("Result : ", result.error)
         setIsOtpVerified("pending")
         return toastDisplayer("error", result.message)
       } else {
@@ -180,7 +180,7 @@ const LoginV2 = ({ mode }) => {
     } catch (error) {
       setIsDisable(false);
       setIsOtpVerified("pending")
-      console.log("error : ", error)
+      // console.log("error : ", error)
       return toastDisplayer("error", error)
     }
   };

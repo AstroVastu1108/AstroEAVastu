@@ -43,7 +43,7 @@ export async function registerCompnay(company) {
     error: null,
   };
     try {
-      console.log("Data compnay : ",company)
+      // console.log("Data compnay : ",company)
       const payload = {
         userType: "CompanyMaster",
         email:company.email,
@@ -79,7 +79,7 @@ export async function registerCompnay(company) {
   }
 
 
-  
+
 export const requestOtp = async (email, role) => {
   var payload = {
     eMail: email,
@@ -121,7 +121,7 @@ export const VerifyOtp = async (email, otp, role) => {
     verifyOTP: otp,
     userType: role,
   };
-  
+
   try {
     const response = await axios.post(`${API_URL}/Otp/VerifyOTP`, payload);
     responseBody.responseData = response.data;

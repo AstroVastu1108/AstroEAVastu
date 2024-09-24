@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { Box } from '@mui/material';
+import { Box, createTheme, ThemeProvider } from '@mui/material';
+import "./PlanetSummary.css"
 
 const SummaryAspect = ({ SummaryData, Aspect }) => {
   const formatAspect = (data) => {
@@ -16,6 +17,7 @@ const SummaryAspect = ({ SummaryData, Aspect }) => {
     return '';
   };
 
+
   const { columns, rows } = useMemo(() => {
     const headerNames = Aspect === "P"
       ? ['Planet', 'Ketu', 'Venus', 'Sun', 'Moon', 'Mars', 'Rahu', 'Jupiter', 'Saturn', 'Mercury', 'Urans', 'Neptune', 'Pluto']
@@ -26,10 +28,17 @@ const SummaryAspect = ({ SummaryData, Aspect }) => {
       headerName,
       flex: 1,
       headerClassName: 'rowheader',
-      align:'center',
-      renderCell: index === 0 ? undefined : (params) => {
-        const value = typeof params.value === 'string' ? params.value : String(params.value || '');
-        return <span className='summaryTxt' dangerouslySetInnerHTML={{ __html: value }} />;
+      align: index === 0 ? 'left' : 'center',
+      headerAlign: index === 0 ? 'left' : 'center',
+      minWidth: index === 0 ? 100 : 70,
+      renderCell: (params) => {
+        if (index === 0) {
+          // Apply primary color to the first column
+          return <span className="row-title">{params.value}</span>;
+        } else {
+          const value = typeof params.value === 'string' ? params.value : String(params.value || '');
+          return <span className="summaryTxt" dangerouslySetInnerHTML={{ __html: value }} />;
+        }
       }
     }));
 
@@ -44,30 +53,53 @@ const SummaryAspect = ({ SummaryData, Aspect }) => {
 
     return { columns, rows };
   }, [SummaryData, Aspect]);
-
+  const customTheme = createTheme({
+    components: {
+      MuiDataGrid: {
+        styleOverrides: {
+          root: {
+            fontFamily: 'Segoe UI, Arial, sans-serif',
+          },
+          cell: {
+            fontFamily: 'Segoe UI, Arial, sans-serif',
+          },
+          columnHeaders: {
+            fontFamily: 'Segoe UI, Arial, sans-serif',
+          },
+          toolbar: {
+            fontFamily: 'Segoe UI, Arial, sans-serif',
+          },
+        },
+      },
+    },
+  });
   return (
     <Box sx={{
       '& .MuiDataGrid-cell': {
-        borderLeft: '0.5px solid #662294',
-        borderBottom: '0.5px solid #662294',
+        borderLeft: '0.5px solid var(--border-color)',
+        borderBottom: '0.5px solid var(--border-color)',
       },
       '& .MuiDataGrid-cell:last-child': {
-        borderRight: '0.5px solid #662294',
+        borderRight: '0.5px solid var(--border-color)',
       }
     }}>
-      <DataGrid
-        getRowId={(row) => row.id}
-        rows={rows}
-        columns={columns}
-        disableColumnSorting
-        disableColumnMenu
-        disableColumnResize
-        disableRowSelectionOnClick
-        hideFooterPagination
-        hideFooter
-        rowHeight={32}
-        columnHeaderHeight={44}
-      />
+      <ThemeProvider theme={customTheme}>
+
+        <DataGrid
+          getRowId={(row) => row.id}
+          rows={rows}
+          columns={columns}
+          disableColumnSorting
+          disableColumnMenu
+          disableColumnResize
+          disableRowSelectionOnClick
+          hideFooterPagination
+          hideFooter
+          rowHeight={32}
+          columnHeaderHeight={44}
+        />
+      </ThemeProvider>
+
     </Box>
   );
 };
