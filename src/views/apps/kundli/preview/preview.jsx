@@ -99,7 +99,7 @@ const Preview = ({ kundliData, setKundliData }) => {
     }
     console.log("formattedData :",formattedData)
     try {
-      setLoading(true);
+      // setLoading(true);
       const response = await ChangeDateTimeKundli(formattedData)
 
       if (response.hasError) {
@@ -107,7 +107,7 @@ const Preview = ({ kundliData, setKundliData }) => {
         return toastDisplayer("error", response.error)
       }
       setKundliData(response?.responseData?.Result)
-      return setLoading(false);
+      // return setLoading(false);
     } catch (error) {
       setLoading(false)
     }
@@ -129,7 +129,7 @@ const Preview = ({ kundliData, setKundliData }) => {
                 <PreviewActions value={"Existing"} onButtonClick={handleKundliApi} />
                 <PreviewActions value={"Download"} onButtonClick={handleButtonClick} />
               </>} />
-              <div ref={printRef} className='previewPDF'>
+              <div ref={printRef} className='previewPDF  p-5'>
                 {kundliData &&
                   <>
                     <PreviewCard kundliData={kundliData} />
