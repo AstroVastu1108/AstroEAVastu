@@ -137,8 +137,8 @@ export const AuthProvider = ({ children }) => {
             const result = await getUser();
 
             if (result.isOk) {
-                const { useremail, authRule, refreshToken, accessToken, userRole, TransactionID } = result.data;
-                // console.log("result.data : ", result.data)
+                const { useremail, authRule, refreshToken, accessToken, userRole, TransactionID,userAvatar } = result.data;
+
                 setUser(result.data);
                 const authRuleData = JSON.parse(authRule)
                 const hrefsWithAccess = authRuleData
@@ -170,16 +170,19 @@ export const AuthProvider = ({ children }) => {
                 .filter(item => item.HasAccess);
             setAuthRuleContext(hrefsWithAccess);
             // setAuthRuleContext(result.data.authRule);
-            // console.log("result.data===============>", result.data)
-            const { useremail, authRule, refreshToken, accessToken, userRole, transactionID } = result.data;
+            const { useremail, authRule, refreshToken, accessToken, userRole, transactionID,
+                userAvatar} = result.data;
+
             const expirationTime = new Date().getTime() + 5 * 60 * 1000;
 
             const authData = {
                 useremail, authRule, refreshToken, accessToken, userRole, expirationTime, transactionID
             };
             // setUser(username);
+            sessionStorage.setItem("userAvtarState", userAvatar);
             sessionStorage.setItem("authState", JSON.stringify(authData));
             Cookies.set('authState', JSON.stringify(authData), { expires: 1 }); // Expires in 1 day
+            
 
             setIsLoggedIn(true);
 
@@ -243,7 +246,12 @@ export const AuthProvider = ({ children }) => {
     function getUser() {
         try {
             const storedSessionValue = JSON.parse(Cookies.get('authState'));
-
+            const userAvatar = sessionStorage.getItem("userAvtarState");
+            if (typeof storedSessionValue === 'object' && storedSessionValue !== null) {
+                storedSessionValue.userAvatar = userAvatar; // Add or update the userAvatar property
+            } else {
+                console.error('Stored session value is not an object');
+            }
             // console.log("Called");
             if (storedSessionValue) {
                 return {

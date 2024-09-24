@@ -1,7 +1,7 @@
 'use client'
 
 // React Imports
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 
 // Next Imports
 import { useRouter } from 'next/navigation'
@@ -39,6 +39,7 @@ import { TextField } from '@mui/material'
 import Loader from '@/components/common/Loader/Loader'
 import OTPverify from '@/components/common/OTPVerify/OTPverify'
 import { requestOtp } from '@/app/Server/API/auth'
+import { LoadingButton } from '@mui/lab'
 
 // Styled Custom Components
 const LoginIllustration = styled('img')(({ theme }) => ({
@@ -91,6 +92,7 @@ const LoginV2 = ({ mode }) => {
     // borderedLightIllustration,
     // borderedDarkIllustration
   )
+  const passwordInputRef = useRef(null);
 
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
@@ -110,13 +112,24 @@ const LoginV2 = ({ mode }) => {
   const handleVerifyEmail = async () => {
     try {
       if (formData.email == "") {
-        toastDisplayer("error", "Email or username is required.")
+        toastDisplayer("error", "Email is required.")
         return setErrors(prev => ({
           ...prev,
           email: true
         }));
-
       }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!formData.email || !emailRegex.test(formData.email)) {
+        toastDisplayer("error", "Invalid Email address.")
+        return setErrors(prev => ({
+          ...prev,
+          email: true
+        }));
+      }
+      setErrors(prev => ({
+        ...prev,
+        email: false
+      }));
 
       setIsDisable(true)
       const result = await requestOtp(formData?.email, "login")
@@ -142,7 +155,11 @@ const LoginV2 = ({ mode }) => {
   const handleLogin = async () => {
     try {
       if (formData.email == "") {
-        return toastDisplayer("error", "Email or username is required.")
+        return toastDisplayer("error", "Email is required.")
+      }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!formData.email || !emailRegex.test(formData.email)) {
+        return toastDisplayer("error", "Invalid email address.")
       }
       if (formData.password == "") {
         return toastDisplayer("error", "password is required.")
@@ -193,6 +210,12 @@ const LoginV2 = ({ mode }) => {
     styleSheet.innerText = keyframes;
     document.head.appendChild(styleSheet);
   }, []);
+
+  useEffect(()=>{
+    if(isOtpVerified == "verified"){
+      passwordInputRef.current.focus();
+    }
+  },[isOtpVerified])
   return (
     <>
       {loading && <Loader />}
@@ -228,7 +251,7 @@ const LoginV2 = ({ mode }) => {
         </div>
         <div className='flex justify-center items-center bs-full bg-backgroundPaper !min-is-full p-6 md:!min-is-[unset] md:p-12 md:is-[480px]'>
           <Link className='absolute block-start-5 sm:block-start-[33px] inline-start-6 sm:inline-start-[38px]'>
-            <Logo color={"white"} />
+          <Logo color={hidden ? 'primary' : 'white'} />
           </Link>
           <div className='flex flex-col gap-6 is-full sm:is-auto md:is-full sm:max-is-[400px] md:max-is-[unset] mbs-11 sm:mbs-14 md:mbs-0'>
             {isOtpVerified == "pending" || isOtpVerified == "verified" ? (
@@ -264,6 +287,7 @@ const LoginV2 = ({ mode }) => {
                         id='outlined-adornment-password'
                         type={isPasswordShown ? 'text' : 'password'}
                         value={formData.password}
+                        inputRef={passwordInputRef}
                         InputProps={{
                           endAdornment: (
                             <InputAdornment position='end'>
@@ -286,25 +310,32 @@ const LoginV2 = ({ mode }) => {
 
 
                   {
-                    isOtpVerified == "pending" ? (<Button fullWidth variant='contained' type='submit' disabled={isDisable} onClick={handleVerifyEmail}>
-                      {isDisable ?
-                        <>
-                          <CircularProgress size={24} aria-label="Wait" />
-                          <span style={{ marginLeft: 8 }}>Loading...</span>
-
-                        </>
-                        : 'Verify Email'}
-                    </Button>) : ""
+                    isOtpVerified == "pending" ? (
+                      <LoadingButton
+                      fullWidth
+                      variant='contained'
+                      onClick={handleVerifyEmail}
+                      loading={isDisable}
+                      loadingPosition="start"
+                      type='submit'
+                    >
+                       {isDisable ? "Loading ...": "Verify Email"}
+                    </LoadingButton>
+                    ) : ""
                   }
                   {
-                    isOtpVerified == "verified" ? (<Button fullWidth variant='contained' type='submit' disabled={isDisable} onClick={handleLogin}>
-                      {isDisable ?
-                        <>
-                          <CircularProgress size={24} aria-label="Wait" />
-                          <span style={{ marginLeft: 8 }}>Loading...</span>
-                        </>
-                        : 'Login'}
-                    </Button>) : ""
+                    isOtpVerified == "verified" ? (
+                      <LoadingButton
+                      fullWidth
+                      variant='contained'
+                      onClick={handleLogin}
+                      loading={isDisable}
+                      loadingPosition="start"
+                      type='submit'
+                    >
+                       {isDisable ? "Loading ...": "Login"}
+                    </LoadingButton>
+                    ) : ""
                   }
 
                   {/* <Button fullWidth variant='contained' type='submit' disabled={isDisable} onClick={handleLogin}>

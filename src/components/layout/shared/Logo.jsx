@@ -59,7 +59,7 @@ const Logo = ({ color }) => {
 
   return (
     <div className='flex items-center'>
-      <AstroVastuLogo className='text-2xl text-primary' />
+      <AstroVastuLogo className={`text-2xl text-${color}`} />
       <LogoText
         color={color}
         ref={logoTextRef}

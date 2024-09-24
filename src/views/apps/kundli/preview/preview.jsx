@@ -7,6 +7,7 @@ import PreviewCard from './PreviewCard'
 import PreviewActions from './PreviewActions'
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
+
 import { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import { getKundliPdf } from '@/app/Server/API/common'
@@ -19,6 +20,9 @@ import Loader from '@/components/common/Loader/Loader'
 
 const Preview = ({ kundliData, setKundliData }) => {
   const printRef = useRef()
+
+  const [downloadLoading, setDownloadLoading] = useState(false);
+  const [existdownloadLoading, setExistDownloadLoading] = useState(false);
   const [timeToolPopUp, setTimeToolPopUp] = useState(false);
   const [kundliBirthData, setKundliBirthData] = useState(kundliData?.AstroVastuReport?.BirthDetails);
   const [loading, setLoading] = useState(false);
@@ -26,6 +30,7 @@ const Preview = ({ kundliData, setKundliData }) => {
   const handleKundliApi = async () => {
     if (kundliData) {
       try {
+        setExistDownloadLoading(true);
         const response = await getKundliPdf(kundliData.AstroVastuReport.BirthDetails.KundaliID);
         if (response.hasError) {
           return toastDisplayer("error", response.error)
@@ -44,14 +49,16 @@ const Preview = ({ kundliData, setKundliData }) => {
         //     newWindow.print();
         //   });
         // }
-
+        setExistDownloadLoading(false);
       } catch (error) {
+        setExistDownloadLoading(false);
         console.error('Error fetching the PDF:', error);
       }
     }
   }
 
   const handleButtonClick = () => {
+    setDownloadLoading(true);
     if (printRef.current) {
       html2canvas(printRef.current).then(canvas => {
         const imgData = canvas.toDataURL('image/jpeg', 0.7); // Convert to JPEG with lower quality
@@ -74,7 +81,12 @@ const Preview = ({ kundliData, setKundliData }) => {
 
         pdf.save('document.pdf');
       });
+      // setDownloadLoading(false);
     }
+    setTimeout(() => {
+      
+      setDownloadLoading(false);
+    }, 2000);
   };
 
   const handleTimeTool = () => {
@@ -125,9 +137,9 @@ const Preview = ({ kundliData, setKundliData }) => {
           <Card>
             <CardContent className='flex flex-col gap-4 p-0'>
               <PageTitle title={"Kundli Preview"} endCmp={<>
-                {/* <PreviewActions value={"Time Tool"} onButtonClick={handleTimeTool} /> */}
-                <PreviewActions value={"Existing"} onButtonClick={handleKundliApi} />
-                <PreviewActions value={"Download"} onButtonClick={handleButtonClick} />
+                <PreviewActions value={"Existing"} onButtonClick={handleKundliApi} loading={existdownloadLoading}/>
+                <PreviewActions value={"Download"} onButtonClick={handleButtonClick} loading={downloadLoading} />
+
               </>} />
               <div ref={printRef} className='previewPDF  p-5'>
                 {kundliData &&

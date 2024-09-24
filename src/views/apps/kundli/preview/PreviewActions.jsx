@@ -9,16 +9,26 @@ import { useParams } from 'next/navigation'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Button from '@mui/material/Button'
+import { LoadingButton } from '@mui/lab'
 
 // Component Imports
 
-const PreviewActions = ({ value, onButtonClick, icon }) => {
-
+const PreviewActions = ({ value, onButtonClick, icon,loading }) => {
   return (
     <>
       {/* <Card>
         <CardContent className='flex flex-col gap-4'> */}
-        <Button
+         <LoadingButton
+          variant='contained'
+          sx={{ width: '130px' }}
+          onClick={onButtonClick}
+          loading={loading}
+          loadingPosition="start"
+          startIcon={<i className={icon} />}
+        >
+          {value}
+        </LoadingButton>
+        {/* <Button
             // fullWidth
             variant='contained'
             className='capitalize'
@@ -26,7 +36,7 @@ const PreviewActions = ({ value, onButtonClick, icon }) => {
             onClick={onButtonClick}
           >
             {value}
-          </Button>
+          </Button> */}
         {/* </CardContent>
       </Card> */}
       </>

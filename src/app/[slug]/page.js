@@ -253,7 +253,6 @@
 //   }
 // }
 
-// 8th sept
 
 import { cookies } from 'next/headers';
 import { routes } from '@/app-routes';
@@ -371,4 +370,3 @@ export default async function Page({ params }) {
     return <NotFoundPage />;
   }
 }
-
