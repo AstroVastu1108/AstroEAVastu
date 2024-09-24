@@ -112,13 +112,24 @@ const LoginV2 = ({ mode }) => {
   const handleVerifyEmail = async () => {
     try {
       if (formData.email == "") {
-        toastDisplayer("error", "Email or username is required.")
+        toastDisplayer("error", "Email is required.")
         return setErrors(prev => ({
           ...prev,
           email: true
         }));
-
       }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!formData.email || !emailRegex.test(formData.email)) {
+        toastDisplayer("error", "Invalid Email address.")
+        return setErrors(prev => ({
+          ...prev,
+          email: true
+        }));
+      }
+      setErrors(prev => ({
+        ...prev,
+        email: false
+      }));
 
       setIsDisable(true)
       const result = await requestOtp(formData?.email, "login")
@@ -144,7 +155,11 @@ const LoginV2 = ({ mode }) => {
   const handleLogin = async () => {
     try {
       if (formData.email == "") {
-        return toastDisplayer("error", "Email or username is required.")
+        return toastDisplayer("error", "Email is required.")
+      }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!formData.email || !emailRegex.test(formData.email)) {
+        return toastDisplayer("error", "Invalid email address.")
       }
       if (formData.password == "") {
         return toastDisplayer("error", "password is required.")

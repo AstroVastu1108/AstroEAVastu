@@ -104,7 +104,8 @@ const Navigation = props => {
       {/* Nav Header including Logo & nav toggle icons  */}
       <NavHeader>
         <Link href='/'>
-          <Logo />
+          {/* <Logo /> */}
+          <Logo color={'primary'} />
         </Link>
         {!(isCollapsed && !isHovered) && (
           <NavCollapseIcons
