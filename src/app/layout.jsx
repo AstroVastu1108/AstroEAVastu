@@ -9,6 +9,7 @@ import '@assets/iconify-icons/generated-icons.css'
 import { AuthProvider, useAuth } from '@/@core/contexts/authContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ReduxProvider from '@/redux-store/ReduxProvider';
 export const metadata = {
   title: 'AstroVastu',
   description:
@@ -24,7 +25,7 @@ const RootLayout = ({ children }) => {
       <body className='flex is-full min-bs-full flex-auto flex-col'>
         <AuthProvider>
           <ToastContainer />
-          {children}
+          <ReduxProvider> {children}</ReduxProvider>
         </AuthProvider>
       </body>
     </html>
