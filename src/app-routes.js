@@ -1,5 +1,6 @@
 import UserAuthorization from "./app/(dashboard)/Authorization/authorization";
 import ClientPage from "./app/(dashboard)/Client/client";
+import DetailClient from "./app/(dashboard)/Client/detailClient/detailClient";
 import MyCoursePage from "./app/(dashboard)/Courses/course";
 import KundliPage from "./app/(dashboard)/kundli/kundli";
 import PreviewPage from "./app/(dashboard)/kundli/preview/preview";
@@ -29,5 +30,9 @@ export const routes = [
     {
       path: "my-clients",
       element: ClientPage,
+    },
+    {
+      path: "clientDetails",
+      element: DetailClient,
     }
   ];

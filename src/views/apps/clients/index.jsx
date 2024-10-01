@@ -13,6 +13,12 @@ import VerificationPopup from "@/@core/components/custom-verification/verificati
 
 export default function ClientMain() {
   const { user } = useAuth();
+  const router = useRouter()
+  const handleClientDetail = (data)=>{
+    console.log("Data : ",data)
+    router.push(`clientDetails?cid=${data.clientID}`)
+  }
+
   // vars
   const columns = [
     { field: 'clientID', headerName: 'Client ID',  width: 250,headerClassName: 'rowheader', },
@@ -24,7 +30,7 @@ export default function ClientMain() {
       headerClassName: 'rowheader',
       renderCell: (params) => (
         <>
-          <IconButton >
+          <IconButton onClick={() =>handleClientDetail(params?.row)}>
             <i
               className={'tabler-arrow-up-right bg-primary'}
             />
@@ -68,7 +74,6 @@ export default function ClientMain() {
   const [clientData, setClientData] = useState([]);
   const [selectedClientData, setSelectedClientData] = useState(null);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
   
   const [totalRowCount, setTotalRowCount] = useState(1000);
 
@@ -132,7 +137,8 @@ export default function ClientMain() {
       <GridToolbarContainer className="px-5  d-flex justify-content-between align-items-center">
 
         <div className="me-auto" style={{ fontSize: '16px', fontWeight: '500', color: "#2F2B3DB3" }}>  <GridToolbarColumnsButton />
-          <GridToolbarExport className="SearchBar" /></div>
+          {/* <GridToolbarExport className="SearchBar" /> */}
+          </div>
         <GridToolbarQuickFilter className="SearchBar" />
 
       </GridToolbarContainer>

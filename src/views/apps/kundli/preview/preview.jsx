@@ -105,6 +105,7 @@ const Preview = ({ kundliData, setKundliData }) => {
       Gender: kdata.Gender,
       Country: kdata.Country,
       CityID: "A1AE28185ED49D47211760BF32D40EB742C84998",
+      City: "A1AE28185ED49D47211760BF32D40EB742C84998",
       BirthDate: formattedDate,
       BirthTime: formattedTime,
       Prakriti: kdata.prakriti || ''

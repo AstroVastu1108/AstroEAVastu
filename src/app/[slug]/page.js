@@ -311,6 +311,9 @@ export default async function Page({ params }) {
   if (hrefsWithAccess.includes('/kundlipage')) {
     hrefsWithAccess.push('/preview');
   }
+  if (hrefsWithAccess.includes('/my-clients')) {
+    hrefsWithAccess.push('/clientDetails');
+  }
   try {
     let secureData;
 
