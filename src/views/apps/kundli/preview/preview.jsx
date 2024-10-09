@@ -52,7 +52,6 @@ const Preview = ({ kundliData, setKundliData }) => {
         setExistDownloadLoading(false);
       } catch (error) {
         setExistDownloadLoading(false);
-        console.error('Error fetching the PDF:', error);
       }
     }
   }
@@ -61,21 +60,21 @@ const Preview = ({ kundliData, setKundliData }) => {
     setDownloadLoading(true);
     if (printRef.current) {
       html2canvas(printRef.current).then(canvas => {
-        const imgData = canvas.toDataURL('image/jpeg', 0.7); // Convert to JPEG with lower quality
+        const imgData = canvas.toDataURL('image/jpeg', 5); // Convert to JPEG with lower quality
         const pdf = new jsPDF('p', 'mm', 'a4');
-        const imgWidth = 210; // A4 width in mm
+        const imgWidth = 200; // A4 width in mm
         const pageHeight = 297; // A4 height in mm
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
         let heightLeft = imgHeight;
-        let position = 0;
+        let position = 4;
 
-        pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight, '', 'FAST');
+        pdf.addImage(imgData, 'JPEG', 4, position, imgWidth, imgHeight, '', 'FAST');
         heightLeft -= pageHeight;
 
         while (heightLeft > 0) {
           position = heightLeft - imgHeight;
           pdf.addPage();
-          pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight, '', 'FAST');
+          pdf.addImage(imgData, 'JPEG', 4, position, imgWidth, imgHeight, '', 'FAST');
           heightLeft -= pageHeight;
         }
 
@@ -84,7 +83,7 @@ const Preview = ({ kundliData, setKundliData }) => {
       // setDownloadLoading(false);
     }
     setTimeout(() => {
-      
+
       setDownloadLoading(false);
     }, 2000);
   };
@@ -110,7 +109,6 @@ const Preview = ({ kundliData, setKundliData }) => {
       BirthTime: formattedTime,
       Prakriti: kdata.prakriti || ''
     }
-    console.log("formattedData :",formattedData)
     try {
       // setLoading(true);
       const response = await ChangeDateTimeKundli(formattedData)
@@ -138,14 +136,24 @@ const Preview = ({ kundliData, setKundliData }) => {
           <Card>
             <CardContent className='flex flex-col gap-4 p-0'>
               <PageTitle title={"Kundli Preview"} endCmp={<>
-                <PreviewActions value={"Existing"} onButtonClick={handleKundliApi} loading={existdownloadLoading}/>
+                <PreviewActions value={"Existing"} onButtonClick={handleKundliApi} loading={existdownloadLoading} />
                 <PreviewActions value={"Download"} onButtonClick={handleButtonClick} loading={downloadLoading} />
 
               </>} />
-              <div ref={printRef} className='previewPDF  p-5'>
+              <div>
+
+                <div ref={printRef} className='previewPDFPrint' style={{width:"1240px"}}>
+                  {kundliData &&
+                    <>
+                      <PreviewCard kundliData={kundliData} isPrintDiv={true} />
+                    </>
+                  }
+                </div>
+              </div>
+              <div className='previewPDF'>
                 {kundliData &&
                   <>
-                    <PreviewCard kundliData={kundliData} />
+                    <PreviewCard kundliData={kundliData} isPrintDiv={false}/>
                   </>
                 }
               </div>

@@ -102,9 +102,9 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
   const [query, setQuery] = useState('')
 
   const fetchCities = debounce(async (query) => {
-    if (query.length > 1 && userData.country) {
+    if (query.length > 1 && userData.Country) {
       try {
-        const iso2 = userData.country.iso2
+        const iso2 = userData.Country.iso2
         const response = await getCities(iso2, query)
         if (response.hasError) {
           return toastDisplayer("error", response.error)
@@ -123,7 +123,6 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
   }, [query])
 
   const handleSubmit = async () => {
-    // event.preventDefault()
     const birthDate = userData.date ? new Date(userData.date).toLocaleDateString('en-GB').split('/').join('-') : null
 
     const birthTime = userData.time ? new Date(userData.time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }).replace(/:/g, '') : null;
@@ -135,19 +134,15 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
       MiddleName: userData.MiddleName,
       Gender: userData.Gender,
       Country: userData.Country.name,
-      CityID: userData.CityID,
+      CityID: userData.CityID?.CityID,
       BirthDate: birthDate,
       BirthTime: birthTime,
-      Prakriti: userData.prakriti || ''
+      Prakriti: userData.prakriti || '',
+      City: userData.CityID?.City
     }
-
-    console.log(formattedData)
 
     try {
       setIsDisable(true)
-      // if (formattedData.FirstName.trim("") == "") {
-      //   return console.log("prashna kundli")
-      // }
       if (!userData.isUpdate) {
         const response = await CreateKundli(formattedData)
 
@@ -356,7 +351,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                 }}
                 getOptionLabel={(option) => option.FormattedCity || ''}
                 onInputChange={(event, newQuery) => setQuery(newQuery)}
-                onChange={(event, newValue) => handleInputChange('CityID', newValue.CityID, 'CityID')}
+                onChange={(event, newValue) => handleInputChange('CityID', newValue, 'CityID')}
                 renderInput={(params) => (
                   <TextField {...params} label='Select City' variant='outlined'
                   // {...(errors.CityID && { error: true, helperText: 'City is required.' })}

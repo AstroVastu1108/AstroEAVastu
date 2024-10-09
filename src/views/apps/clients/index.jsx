@@ -15,7 +15,6 @@ export default function ClientMain() {
   const { user } = useAuth();
   const router = useRouter()
   const handleClientDetail = (data)=>{
-    console.log("Data : ",data)
     router.push(`clientDetails?cid=${data.clientID}`)
   }
 
@@ -68,13 +67,13 @@ export default function ClientMain() {
     { field: 'email1', headerName: 'Email',  width: 200,headerClassName: 'rowheader', },
     { field: 'gstin', headerName: 'GSTIN',  width: 150,headerClassName: 'rowheader', },
   ];
-  
+
   const [open, setOpen] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [clientData, setClientData] = useState([]);
   const [selectedClientData, setSelectedClientData] = useState(null);
   const [loading, setLoading] = useState(false);
-  
+
   const [totalRowCount, setTotalRowCount] = useState(1000);
 
   const handleOpenDeletePopup = (data) =>{
@@ -103,7 +102,6 @@ export default function ClientMain() {
       return toastDisplayer("error", res.error);
     } else {
       setClientData(res?.responseData);
-      console.log("res?.responseData : ", res?.responseData)
       setLoading(false);
     }
   }
@@ -167,8 +165,7 @@ export default function ClientMain() {
   });
 
   const handleClientDelete = async ()=>{
-    console.log("Delete is called")
-    
+
     try {
       if(selectedClientData != null && user?.transactionID){
         const response = await DeleteClient(selectedClientData?.clientID,user?.transactionID);
@@ -223,9 +220,9 @@ export default function ClientMain() {
                           },
                         },
                       }}
-                      paginationMode="client"    
-                      slots={{ toolbar: CustomToolbar }} 
-                      slotProps={{ toolbar: { showQuickFilter: true } }} 
+                      paginationMode="client"
+                      slots={{ toolbar: CustomToolbar }}
+                      slotProps={{ toolbar: { showQuickFilter: true } }}
                     />
                   </ThemeProvider>
 

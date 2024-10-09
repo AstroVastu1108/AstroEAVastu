@@ -1,7 +1,7 @@
-import { Box, Button, Card, CardContent, createTheme, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, IconButton, TextField, ThemeProvider } from "@mui/material";
+import { Box, Button, Card, CardContent, createTheme, debounce, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, IconButton, TextField, ThemeProvider } from "@mui/material";
 import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarQuickFilter } from "@mui/x-data-grid"
 import PreviewActions from "./preview/PreviewActions";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AddKundliPopUp from "./addKundli/addKundli";
 import { GetKundliDataAPI } from "@/app/Server/API/kundliAPI";
 import classNames from "classnames";
@@ -72,7 +72,7 @@ export default function KundliMain() {
       headerAlign: 'left'
     },
     {
-      field: 'CityID', minWidth: 100, headerName: 'City', headerClassName: 'rowheader',
+      field: 'City', minWidth: 100, headerName: 'City', headerClassName: 'rowheader',
       flex: 1,
       headerAlign: 'left'
     },
@@ -96,11 +96,19 @@ export default function KundliMain() {
     BirthDate: null,
     Country: { iso2: 'IN', name: 'India' },
     BirthTime: null,
-    CityID: 'A1AE28185ED49D47211760BF32D40EB742C84998',
-    isUpdate: false
+    CityID: { CityID: 'A1AE28185ED49D47211760BF32D40EB742C84998', City: 'Surat, Gujarat' },
+    isUpdate: false,
+    City: 'Surat'
   })
   const [totalRowCount, setTotalRowCount] = useState(1000);
+  const [pageNo, setPageNo] = useState(1);
+  const searchInputRef = useRef(null);
 
+  useEffect(() => {
+    if (searchInputRef.current) {
+      searchInputRef.current.focus(); // Focus on the search bar when the component mounts
+    }
+  }, [searchInputRef]);
 
 
   // func
@@ -114,8 +122,10 @@ export default function KundliMain() {
       BirthDate: null,
       Country: { iso2: 'IN', name: 'India' },
       BirthTime: null,
-      CityID: 'A1AE28185ED49D47211760BF32D40EB742C84998',
-      isUpdate: false
+      // CityID: 'A1AE28185ED49D47211760BF32D40EB742C84998',
+      CityID: { CityID: 'A1AE28185ED49D47211760BF32D40EB742C84998', City: 'Surat, Gujarat' },
+      isUpdate: false,
+      City: 'Surat'
     })
     setOpen(true);
   }
@@ -123,9 +133,9 @@ export default function KundliMain() {
     setOpen(false)
   }
 
-  const getAllKundli = async (pageNo) => {
-    setLoading(true);
-    const res = await GetKundliDataAPI(10, pageNo);
+  const getAllKundli = async (pageNo, searchValue) => {
+    // setLoading(true);
+    const res = await GetKundliDataAPI(10, pageNo, searchValue);
     if (res.hasError) {
       setLoading(false);
       return toastDisplayer("error", res.error);
@@ -151,24 +161,36 @@ export default function KundliMain() {
 
   // Hooks
   useEffect(() => {
-    getAllKundli(1);
+    getAllKundli(1, "");
   }, [])
 
-  function CustomToolbar() {
+  function CustomToolbar({searchInputRef}) {
     return (
       <GridToolbarContainer className="px-5  d-flex justify-content-between align-items-center">
         <div className="me-auto" style={{ fontSize: '16px', fontWeight: '500', color: "#2F2B3DB3" }}>Review your Kundli records below</div>
-        <GridToolbarQuickFilter className="SearchBar" />
+        <GridToolbarQuickFilter inputRef={searchInputRef} className="SearchBar" />
       </GridToolbarContainer>
     );
   }
 
-  const handleFilterModelChange = (e) => {
-    console.log(e?.quickFilterValues[0])
+  const fetchData = debounce(async (query) => {
+    if (query.length > 0) {
+      await getAllKundli(pageNo,query);
+      if(searchInputRef.current)
+        searchInputRef.current.focus();
+    }
+  }, 500)
+
+  const handleFilterModelChange = (filterModel) => {
+    if (filterModel.quickFilterValues) {
+      const query = filterModel.quickFilterValues.join(' ');
+      fetchData(query);
+    }
   }
 
   const fetchDataForPage = (e) => {
-    getAllKundli(parseInt(e) + 1);
+    setPageNo(parseInt(e) + 1)
+    getAllKundli(parseInt(e) + 1, searchInputRef.current?.value ? searchInputRef.current?.value : "");
   }
 
   const customTheme = createTheme({
@@ -206,39 +228,10 @@ export default function KundliMain() {
               } />
               <div className="KundliList">
                 <Box className="p-5">
-
-                  {/* <DataGrid
-                    className="KundliListGrid"
-                    getRowId={(row) => row.KundaliID}
-                    rows={kundliData}
-                    columns={columns}
-                    disableColumnMenu
-                    rowHeight={50}
-                    columnHeaderHeight={60}
-                    disableColumnResize
-                    disableRowSelectionOnClick
-                    pagination
-                    disableColumnFilter
-                    disableColumnSelector
-                    disableDensitySelector
-                    pageSizeOptions={[10]}
-                    initialState={{
-                      pagination: { paginationModel: { pageSize: 10 } },
-                      pinnedColumns: { left: ['FirstName'], left: ['iconColumn'] }
-                    }}
-                    slots={{ toolbar: CustomToolbar }}
-                    slotProps={{
-                      toolbar: {
-                        showQuickFilter: true,
-                      },
-                    }}
-                    onFilterModelChange={handleFilterModelChange}
-                  /> */}
-
                   <ThemeProvider theme={customTheme}>
                     <DataGrid
                       className="KundliListGrid"
-                      onFilterModelChange={handleFilterModelChange}
+                      onFilterModelChange={(e)=>handleFilterModelChange(e,searchInputRef)}
                       getRowId={(row) => row.KundaliID}
                       rows={kundliData}
                       columns={columns}
@@ -248,12 +241,13 @@ export default function KundliMain() {
                       columnHeaderHeight={45}
                       disableColumnResize
                       disableRowSelectionOnClick
-                      pageSizeOptions={[10]}
+                      pageSizeOptions={[5]}
                       initialState={{
-                        pagination: { paginationModel: { pageSize: 10 } },
+                        pagination: { paginationModel: { pageSize: 5 } },
                         pinnedColumns: { left: ['FirstName'], left: ['iconColumn'] }
                       }}
                       paginationMode="server"
+                      filterMode="server"
                       rowCount={totalRowCount} // Set the total count of rows
                       // paginationModel={paginationModel}
                       onPaginationModelChange={(paginationModel) => {

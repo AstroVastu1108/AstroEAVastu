@@ -1,3 +1,10 @@
+.previewPDFPrint {
+  position: absolute;
+  left: -10000px;
+}
+
+
+
 .pdf-Div {
   padding-left: 0rem !important;
   padding-top: 0rem !important;
@@ -90,7 +97,7 @@
 
 .MahaDasha-Div {
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
 
   gap: 12px;
 
@@ -130,6 +137,38 @@
   flex-direction: column;
   padding: 12px 8px;
   border-bottom: 2px solid var(--border-color);
+}
+
+.main-RahuKetu-Div{
+  padding: 12px 8px;
+  .rowheader {
+    background-color: var(--primary-color);
+    color: #fff;
+  }
+
+  .rahuHeader{
+    color: var(--primary-color);
+    font-weight: 700  ;
+  }
+
+  .valueData{
+    display: flex;
+    gap: 8px;
+
+    .planetName{
+      width: 70px;
+      color: var(--primary-color);
+      font-weight: 500;
+    }
+
+    .sf{
+      color: #000;
+      font-weight: 500;
+    }
+  }
+  /* .RahuKetu-Div{
+    display: flex;
+  } */
 }
 
 .AstroVastuScript-Div {
@@ -369,6 +408,56 @@
                     display: flex;
                     gap: 4px;
                   }
+
+
+                }
+
+                .item-title-planet-bg-ketu {
+                  background-color: #dfcccc;
+                }
+
+                .item-title-planet-bg-venus {
+                  background-color: #f5d1e7;
+                }
+
+                .item-title-planet-bg-sun {
+                  background-color: #fce2c9;
+                }
+
+                .item-title-planet-bg-moon {
+                  background-color: #e0f1ff;
+                }
+
+                .item-title-planet-bg-mars {
+                  background-color: #f2cdcd;
+                }
+
+                .item-title-planet-bg-rahu {
+                  background-color: #d5d5d5;
+                }
+
+                .item-title-planet-bg-jupiter {
+                  background-color: #faefc3;
+                }
+
+                .item-title-planet-bg-saturn {
+                  background-color: #cdd4ee;
+                }
+
+                .item-title-planet-bg-mercury {
+                  background-color: #c6e1d1;
+                }
+
+                .item-title-planet-bg-uranus {
+                  background-color: #d3dbe2;
+                }
+
+                .item-title-planet-bg-neptune {
+                  background-color: #dfebf7;
+                }
+
+                .item-title-planet-bg-pluto {
+                  background-color: #e9dbd6;
                 }
 
                 .planet-Div2 {
@@ -438,11 +527,13 @@
   }
 
   .previewCard {
-    inline-size: 100%;
-    block-size: 100%;
+    width: 210px;
+    color: red;
+    /* inline-size: 100vw;
+    block-size: 100vw;
     position: fixed;
     inset: 0;
-    box-sizing: border-box;
+    box-sizing: border-box; */
   }
 
   /* .Birthdetail-div {
@@ -468,13 +559,13 @@
     visibility: visible;
   }
 
-  .previewCard {
+  /* .previewCard {
     inline-size: 100%;
     block-size: 100%;
     position: fixed;
     inset: 0;
     box-sizing: border-box;
-  }
+  } */
 
   @media (max-width: 600px) {
     .previewCard {

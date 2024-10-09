@@ -98,8 +98,6 @@ const KanbanBoard = ({cid}) => {
           // setTasksList(newTasksList)
           // setTasksList(columnsData)
           dispatch(addTasks(columnsData));
-          console.log("kanbanStore.tasks : ",kanbanStore.tasks)
-          console.log("columnsData : ",columnsData)
         }
       }
       fetchDatacolumn()
@@ -110,7 +108,6 @@ const KanbanBoard = ({cid}) => {
     if (user?.transactionID) {
       const fetchDatacolumn = async () =>{
         const columnsData = await fetchColumnsData(user?.transactionID,cid);
-        console.log("columnsData ===++ >>",columnsData)
         if(await columnsData){
           setColumns(columnsData)
         }

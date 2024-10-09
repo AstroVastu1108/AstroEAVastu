@@ -7,16 +7,17 @@ function NakshtraSummary({ SummaryData, Aspect, symbols }) {
   const columns = [
     Aspect === 'P'
       ? {
-        field: 'Planet', headerName: 'Planet', headerClassName: 'rowheader', minWidth: 120, flex: 1,
+        field: 'Planet', headerName: 'Planet', headerClassName: 'rowheader', minWidth: 160, flex: 1,
         renderCell: (e) => {
-          const { IsRetro, IsExalted, IsDebilitated, IsCombust, IsUntenanted, IsSelfStar } = e.row;
+          const { IsRetro, IsExalted, IsDebilitated, IsCombust, IsUntenanted, IsSelfStar, IsExchange } = e.row;
           const activeSymbols = [
-            IsRetro && symbols.IsRetro,
             IsExalted && symbols.IsExalted,
             IsDebilitated && symbols.IsDebilitated,
             IsCombust && symbols.IsCombust,
+            IsExchange && symbols.IsExchange,
             IsUntenanted && symbols.IsUntenanted,
-            IsSelfStar && symbols.IsSelfStar
+            IsSelfStar && symbols.IsSelfStar,
+            IsRetro && symbols.IsRetro,
           ].filter(Boolean).join(" "); // Filter out false values and join symbols with a space
 
           return (

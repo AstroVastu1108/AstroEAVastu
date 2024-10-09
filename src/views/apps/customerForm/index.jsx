@@ -144,7 +144,6 @@ const CustomerForm = () => {
       }
     } catch (error) {
       setIsDisable(false)
-      console.error('There was an error submitting the form:', error)
     }
   }
 

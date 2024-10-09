@@ -59,7 +59,7 @@ function TimeTool({handleDateChange, kundliBirthData}) {
 
   const getNewData = debounce(async (query) => {
     handleDateChange(datePicker)
-  }, 500) // Debounce API requests by 300ms
+  }, 500)
 
   // Use effect to fetch cities when the query changes
   useEffect(() => {

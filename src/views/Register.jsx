@@ -258,7 +258,6 @@ const RegisterPage = ({ mode }) => {
         if (result.error) {
           setLoading(false);
           setIsDisable(false);
-          console.log("Result : ", result.error)
 
           setActiveStep(0)
           setIsOtpVerified("pending")

@@ -120,23 +120,19 @@ function AddUserPopUp({ open, handleAddClose, getAllUsers, userData, setUserData
   }
 
   const convertToBase64 = (file) => {
-    console.log("file  :", file)
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader();
       fileReader.readAsDataURL(file);
       fileReader.onload = () => {
-        console.log(fileReader.result)
         resolve(fileReader.result);
       };
       fileReader.onerror = (error) => {
-        console.log("error :", error)
         reject(error);
       };
     });
   };
 
   const handleFileChange = async (event) => {
-    console.log("here")
     const selectedFile = event.target.files[0]
     if (selectedFile && ['image/jpeg', 'image/png', 'image/jpg'].includes(selectedFile.type)) {
       setFile(selectedFile)
