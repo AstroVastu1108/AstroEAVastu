@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import Loader from "@/components/common/Loader/Loader";
 import "./Kundli.css"
 import PageTitle from "@/components/common/PageTitle/PageTitle";
+import KundliDataGrid from "./KundliGrid/kundliGrid";
 
 export default function KundliMain() {
 
@@ -204,36 +205,8 @@ export default function KundliMain() {
             <CardContent className='flex flex-col gap-4 p-0'>
               <PageTitle title={"Kundli List"} endCmp={<PreviewActions value={"New Kundli"} onButtonClick={handleAddClick} />
               } />
-              <div className="KundliList">
+              {/* <div className="KundliList">
                 <Box className="p-5">
-
-                  {/* <DataGrid
-                    className="KundliListGrid"
-                    getRowId={(row) => row.KundaliID}
-                    rows={kundliData}
-                    columns={columns}
-                    disableColumnMenu
-                    rowHeight={50}
-                    columnHeaderHeight={60}
-                    disableColumnResize
-                    disableRowSelectionOnClick
-                    pagination
-                    disableColumnFilter
-                    disableColumnSelector
-                    disableDensitySelector
-                    pageSizeOptions={[10]}
-                    initialState={{
-                      pagination: { paginationModel: { pageSize: 10 } },
-                      pinnedColumns: { left: ['FirstName'], left: ['iconColumn'] }
-                    }}
-                    slots={{ toolbar: CustomToolbar }}
-                    slotProps={{
-                      toolbar: {
-                        showQuickFilter: true,
-                      },
-                    }}
-                    onFilterModelChange={handleFilterModelChange}
-                  /> */}
 
                   <ThemeProvider theme={customTheme}>
                     <DataGrid
@@ -266,7 +239,8 @@ export default function KundliMain() {
 
 
                 </Box>
-              </div>
+              </div> */}
+              <KundliDataGrid columns={columns} pageSize={10} />
             </CardContent>
           </Card>
 
