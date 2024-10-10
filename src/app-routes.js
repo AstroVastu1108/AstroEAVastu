@@ -4,6 +4,7 @@ import DetailClient from "./app/(dashboard)/Client/detailClient/detailClient";
 import MyCoursePage from "./app/(dashboard)/Courses/course";
 import KundliPage from "./app/(dashboard)/kundli/kundli";
 import PreviewPage from "./app/(dashboard)/kundli/preview/preview";
+import KundliTasksMain from "./app/(dashboard)/Tasks/kundliTasks";
 import UserConfig from "./app/(dashboard)/userConfig/userConfig";
 
 export const routes = [
@@ -34,5 +35,9 @@ export const routes = [
     {
       path: "clientDetails",
       element: DetailClient,
+    },
+    {
+      path: "taskPage",
+      element: KundliTasksMain,
     }
   ];

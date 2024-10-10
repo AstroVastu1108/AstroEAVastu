@@ -96,3 +96,22 @@ export async function ChangeDateTimeKundli(payload) {
     return responseBody
   }
 }
+
+// search kundli data 
+export async function SearchKundli(searchText) {
+  const responseBody = {
+    responseData: null,
+    hasError: false,
+    error: null
+  }
+  try {
+    const response = await axios.get(`${API_URL}/astro/kundali-list/5/1/${searchText}`)
+    responseBody.responseData = response.data
+    return responseBody
+  } catch (error) {
+    responseBody.hasError = true
+    responseBody.errorMessage = responseBody.errorMessage =
+      error.response?.data?.statusMsg || error.response?.data?.errors
+    return responseBody
+  }
+}

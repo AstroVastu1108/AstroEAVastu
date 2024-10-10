@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import Loader from "@/components/common/Loader/Loader";
 import "./Kundli.css"
 import PageTitle from "@/components/common/PageTitle/PageTitle";
+import KundliDataGrid from "./KundliGrid/kundliGrid";
 
 export default function KundliMain() {
 
@@ -250,8 +251,10 @@ export default function KundliMain() {
         <Grid item xs={12} md={12}>
           <Card>
             <CardContent className='flex flex-col gap-4 p-0'>
-              <div className="KundliList">
-                <Box>
+
+              {/* <div className="KundliList">
+                <Box className="p-5">
+
                   <ThemeProvider theme={customTheme}>
                     <DataGrid
                       className="KundliListGrid"
@@ -303,7 +306,8 @@ export default function KundliMain() {
 
 
                 </Box>
-              </div>
+              </div> */}
+              <KundliDataGrid columns={columns} pageSize={10} />
             </CardContent>
           </Card>
 

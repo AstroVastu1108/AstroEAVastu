@@ -40,6 +40,28 @@ export async function GetClients(TransactionID) {
   }
 }
 
+// get client by id
+export async function GetClientById(TransactionID,cid) {
+  const responseBody = {
+    responseData: null,
+    hasError: false,
+    error: null
+  }
+  try {
+    const response = await axios.post(`${API_URL}/Client/getClientById`,{
+        "clientID":cid,
+        "companyID": TransactionID
+      })
+    responseBody.responseData = response.data.result
+    return responseBody
+  } catch (error) {
+    responseBody.hasError = true
+    responseBody.errorMessage = responseBody.errorMessage =
+      error.response?.data?.statusMsg || error.response?.data?.errors
+    return responseBody
+  }
+}
+
 // delete the clients
 export async function DeleteClient(ClientID,TransactionID) {
   const responseBody = {
@@ -53,6 +75,66 @@ export async function DeleteClient(ClientID,TransactionID) {
         "companyID": TransactionID
       })
     responseBody.responseData = response.data.result
+    return responseBody
+  } catch (error) {
+    responseBody.hasError = true
+    responseBody.errorMessage = responseBody.errorMessage =
+      error.response?.data?.statusMsg || error.response?.data?.errors
+    return responseBody
+  }
+}
+
+// save the kundli of client
+export async function SaveClientKundli(payload) {
+  const responseBody = {
+    responseData: null,
+    hasError: false,
+    error: null
+  }
+  try {
+    const response = await axios.post(`${API_URL}/clientkundli/transaction`,payload)
+    responseBody.responseData = response.data
+    return responseBody
+  } catch (error) {
+    responseBody.hasError = true
+    responseBody.errorMessage = responseBody.errorMessage =
+      error.response?.data?.statusMsg || error.response?.data?.errors
+    return responseBody
+  }
+}
+
+// get the kundli of client
+export async function GetClientKundli(TransactionID,clientID) {
+  const responseBody = {
+    responseData: null,
+    hasError: false,
+    error: null
+  }
+  try {
+    const response = await axios.post(`${API_URL}/clientkundli/get`,{
+        "companyId": TransactionID,
+        "clientId": clientID
+      })
+    responseBody.responseData = response.data.result
+    return responseBody
+  } catch (error) {
+    responseBody.hasError = true
+    responseBody.errorMessage = responseBody.errorMessage =
+      error.response?.data?.statusMsg || error.response?.data?.errors
+    return responseBody
+  }
+}
+
+// delete the kundli of clients
+export async function DeleteClientKundli(KundliTransactionID) {
+  const responseBody = {
+    responseData: null,
+    hasError: false,
+    error: null
+  }
+  try {
+    const response = await axios.delete(`${API_URL}/ClientKundli/${KundliTransactionID}`)
+    responseBody.responseData = response.data
     return responseBody
   } catch (error) {
     responseBody.hasError = true

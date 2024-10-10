@@ -41,6 +41,27 @@ export async function GetColumns(TransactionID,ClientId) {
   }
 }
 
+// get all column by company
+export async function GetColumnsByComp(TransactionID) {
+  const responseBody = {
+    responseData: null,
+    hasError: false,
+    error: null
+  }
+  try {
+    const response = await axios.post(`${API_URL}/ColumnGroup/column/getByComp`,{
+        "cmpTransId": TransactionID
+      })
+    responseBody.responseData = response.data.result
+    return responseBody
+  } catch (error) {
+    responseBody.hasError = true
+    responseBody.errorMessage = responseBody.errorMessage =
+      error.response?.data?.statusMsg || error.response?.data?.errors
+    return responseBody
+  }
+}
+
 // get all tasks
 export async function GetTasks(TransactionID,ClientId) {
   const responseBody = {
@@ -52,6 +73,27 @@ export async function GetTasks(TransactionID,ClientId) {
     const response = await axios.post(`${API_URL}/KundliTask/task/get`,{
         "cmpTransId": TransactionID,
         "CmpClientId":ClientId
+      })
+    responseBody.responseData = response.data.result
+    return responseBody
+  } catch (error) {
+    responseBody.hasError = true
+    responseBody.errorMessage = responseBody.errorMessage =
+      error.response?.data?.statusMsg || error.response?.data?.errors
+    return responseBody
+  }
+}
+
+// get all tasks by company
+export async function GetCompanyTasks(TransactionID) {
+  const responseBody = {
+    responseData: null,
+    hasError: false,
+    error: null
+  }
+  try {
+    const response = await axios.post(`${API_URL}/KundliTask/task/getTasks`,{
+        "cmpTransId": TransactionID
       })
     responseBody.responseData = response.data.result
     return responseBody
