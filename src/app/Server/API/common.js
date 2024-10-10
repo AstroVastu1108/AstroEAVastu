@@ -47,9 +47,9 @@ export async function getKundliPdf(kundliId) {
     error: null
   }
   try {
-    const response = await axios.get(`${API_URL}/astro/astro-vastu-report-pdf/${kundliId}`,{
-        responseType: 'blob',
-      })
+    const response = await axios.get(`${API_URL}/astro/astro-vastu-report-pdf/${kundliId}`, {
+      responseType: 'blob'
+    })
     responseBody.responseData = response
     return responseBody
   } catch (error) {
@@ -59,7 +59,6 @@ export async function getKundliPdf(kundliId) {
     return responseBody
   }
 }
-
 
 // save kundli data and get report
 export async function getReport(payload) {

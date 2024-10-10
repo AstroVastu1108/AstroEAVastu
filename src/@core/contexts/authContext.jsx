@@ -182,7 +182,7 @@ export const AuthProvider = ({ children }) => {
             sessionStorage.setItem("userAvtarState", userAvatar);
             sessionStorage.setItem("authState", JSON.stringify(authData));
             Cookies.set('authState', JSON.stringify(authData), { expires: 1 }); // Expires in 1 day
-            
+
 
             setIsLoggedIn(true);
 
@@ -250,7 +250,7 @@ export const AuthProvider = ({ children }) => {
             if (typeof storedSessionValue === 'object' && storedSessionValue !== null) {
                 storedSessionValue.userAvatar = userAvatar; // Add or update the userAvatar property
             } else {
-                console.error('Stored session value is not an object');
+                // console.error('Stored session value is not an object');
             }
             // console.log("Called");
             if (storedSessionValue) {

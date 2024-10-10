@@ -4,7 +4,8 @@
     font-size: 20px;
     font-weight: 600;
     /* color: #1e1e1e; */
+    text-wrap: nowrap;
   }
 
-  border-bottom: 1px solid var(--border-color) ;
+  /* border-bottom: 1px solid var(--border-color) ; */
 }

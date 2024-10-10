@@ -132,7 +132,7 @@ function AddClientPopUp({ open, handleAddClose,saveClient }) {
                 "email1": data.email1,
                 "gstin": data.gstin
             }
-            
+
             if (validatePayload(payload)) {
                 return saveClient(payload);
                 // const response = await CreateClient(payload);
@@ -148,7 +148,6 @@ function AddClientPopUp({ open, handleAddClose,saveClient }) {
             }
         } catch (error) {
             setIsSaving(false)
-            console.error(error);
         } finally {
             setIsSaving(false);
         }
@@ -174,8 +173,6 @@ function AddClientPopUp({ open, handleAddClose,saveClient }) {
     const [query, setQuery] = useState('')
 
     const fetchCities = debounce(async (query) => {
-        console.log("query : ", query)
-        console.log("Data : ", data)
         if (query.length > 1 && data.country) {
             try {
                 const iso2 = data.country.iso2
@@ -203,7 +200,7 @@ function AddClientPopUp({ open, handleAddClose,saveClient }) {
       const isNumeric = (value) => {
         return /^\d+$/.test(value);
       };
-      
+
     const isRequired = (value) => {
         return value !== undefined && value !== null && value !== '';
       };
@@ -211,13 +208,13 @@ function AddClientPopUp({ open, handleAddClose,saveClient }) {
     const validatePayload = (payload) => {
         let isValid = true;
         const errors = {};
-      
+
         Object.keys(payload).forEach(key => {
           // Skip validation for specific fields
           if (['aliasID', 'state', 'phone2', 'phone3', 'phone2Name', 'phone3Name'].includes(key)) {
             return;
           }
-      
+
           // Check if the field is a number field
           const numberFields = ['phone1', 'phone2', 'phone3', 'pin']; // Add number fields here
           if (numberFields.includes(key) && !isNumeric(payload[key])) {
@@ -225,7 +222,7 @@ function AddClientPopUp({ open, handleAddClose,saveClient }) {
             errors[key] = true;
             return;
           }
-      
+
           // Check if the field is an email field
           const emailFields = ['email1', 'email2']; // Add email fields here
           if (emailFields.includes(key) && !isValidEmail(payload[key])) {
@@ -233,20 +230,20 @@ function AddClientPopUp({ open, handleAddClose,saveClient }) {
             errors[key] = true;
             return;
           }
-      
+
           // Check for required fields
           if (!isRequired(payload[key])) {
             isValid = false;
             errors[key] = true;
           }
         });
-      
+
         // Update errors state
         setErrors(errors);
-      
+
         return isValid;
       };
-      
+
 
 
     return (
@@ -459,7 +456,7 @@ function AddClientPopUp({ open, handleAddClose,saveClient }) {
                     >
                        {isSaving ? "Saving ...": "Add Client"}
                     </LoadingButton>
-               
+
                 <Button variant="contained" onClick={handleAddClose}>Cancel</Button>
             </DialogActions>
         </Dialog>

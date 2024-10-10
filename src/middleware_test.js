@@ -44,7 +44,6 @@
 //   if (protectedRoutes.includes(pathname)) {
 //     // Get the token from cookies (assuming the token is stored in cookies)
 //     const token = req.cookies.get('authState')
-//     // console.log("token : ",JSON.parse(token.value))
 //     const { username,authRule,refreshToken,accessToken,userRole,expirationTime} = JSON.parse(token.value);
 //     var protectedRoutesData = JSON.parse(authRule)
 
@@ -62,7 +61,6 @@
 //   }
 //   return NextResponse.next()
 // }
-// console.log(" myROutes : ",myROutes)
 // export const config = {
 //   matcher: ['/kundlipage','/about','/home'] // Paths to protect
 //   // matcher: ['/kundlipage','/about','/home'] // Paths to protect

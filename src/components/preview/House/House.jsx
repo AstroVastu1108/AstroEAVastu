@@ -129,7 +129,7 @@ function House({ houseArr, Symbols }) {
                             <>
                               <div className='planet-Div' key={key}>
                                 <div className='planet-Div-sub'>
-                                  <div className='planet-Div1'>
+                                  <div className={`planet-Div1 item-title-planet-bg-${Planet?.Planet.toLowerCase()}`}>
                                     <div>{Planet?.Planet} &gt; {Planet?.Degree && formatRashiDescAstro(Planet.Degree)} </div>
                                     <div className='planet-Div1-sub'>
                                       <div>{Planet?.IsRetro && Symbols?.IsRetro}</div>

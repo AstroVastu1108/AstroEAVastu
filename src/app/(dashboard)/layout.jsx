@@ -31,14 +31,14 @@ const Layout = async ({ children }) => {
         verticalLayout={
           <VerticalLayout
             navigation={<Navigation mode={mode} systemMode={systemMode} />}
-            navbar={<Navbar />}
+            // navbar={<Navbar />}
             footer={<VerticalFooter />}
           >
             {children}
           </VerticalLayout>
         }
         horizontalLayout={
-          <HorizontalLayout header={<Header />} footer={<HorizontalFooter />}>
+          <HorizontalLayout  footer={<HorizontalFooter />}>
             {children}
           </HorizontalLayout>
         }

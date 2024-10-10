@@ -1,7 +1,7 @@
 .KundliList {
   .MuiDataGrid-toolbarContainer {
     display: flex;
-    justify-content: end;
+    /* justify-content: end; */
     padding: 12px 0px;
   }
 
@@ -16,18 +16,17 @@
 }
 
 .KundliListGrid {
-  /* border: none; */
+  border: none !important;
   /* border-radius: 0px; */
   /* gap: 1.25rem; */
   /* padding: 0rem 1.25rem; */
-
-  .MuiDataGrid-main{
-    /* border: 1px solid var(--border-color); */
+  .MuiGrid-root{
+    width: 100% !important;
   }
 
   .SearchBar {
     border: 1px solid var(--border-color);
-    padding: 0.4rem 0.8em;
+    padding: 0.3rem 0.8em;
     border-radius: 4px;
 
     .MuiInput-underline::before {

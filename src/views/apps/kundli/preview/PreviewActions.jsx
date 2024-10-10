@@ -20,7 +20,7 @@ const PreviewActions = ({ value, onButtonClick, icon,loading }) => {
         <CardContent className='flex flex-col gap-4'> */}
          <LoadingButton
           variant='contained'
-          sx={{ width: '130px' }}
+          sx={{ width: '180px', textTransform:'none' }}
           onClick={onButtonClick}
           loading={loading}
           loadingPosition="start"

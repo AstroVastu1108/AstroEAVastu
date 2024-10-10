@@ -14,8 +14,8 @@ import VerificationPopup from "@/@core/components/custom-verification/verificati
 export default function ClientMain() {
   const { user } = useAuth();
   const router = useRouter()
-  const handleClientDetail = (data) => {
-    console.log("Data : ", data)
+
+  const handleClientDetail = (data)=>{
     router.push(`clientDetails?cid=${data.clientID}`)
   }
 
@@ -103,7 +103,6 @@ export default function ClientMain() {
       return toastDisplayer("error", res.error);
     } else {
       setClientData(res?.responseData);
-      console.log("res?.responseData : ", res?.responseData)
       setLoading(false);
     }
   }
@@ -166,8 +165,7 @@ export default function ClientMain() {
     },
   });
 
-  const handleClientDelete = async () => {
-    console.log("Delete is called")
+  const handleClientDelete = async ()=>{
 
     try {
       if (selectedClientData != null && user?.transactionID) {

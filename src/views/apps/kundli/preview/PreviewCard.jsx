@@ -1,8 +1,5 @@
 // MUI Imports
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
 import Grid from '@mui/material/Grid'
-import { DataGrid, GridToolbarContainer } from '@mui/x-data-grid';
 
 // Component Imports
 import House from '@/components/preview/House/House'
@@ -12,8 +9,10 @@ import InfoTable from '@/components/preview/InfoTable/InfoTable'
 // Style Imports
 import "./preview.css"
 import NakshtraSummary from '@/components/preview/NakshtraSummary/NakshtraSummary';
+import RahuKetu from '@/components/preview/RahuKetu/RahuKetu';
+import DashaDetails from '@/components/preview/DashaDetails/DashaDetails';
 
-const PreviewCard = ({ kundliData, id }) => {
+const PreviewCard = ({ kundliData, isPrintDiv }) => {
   // var
   const BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
   const AstroDetails = kundliData?.AstroVastuReport?.AstroDetails;
@@ -21,48 +20,15 @@ const PreviewCard = ({ kundliData, id }) => {
   const MahaDasha = kundliData?.AstroVastuReport?.DashaDetails?.MahaDasha;
   const AntarDasha = kundliData?.AstroVastuReport?.DashaDetails?.AntarDasha;
   const PratyantarDasha = kundliData?.AstroVastuReport?.DashaDetails?.PratyantarDasha;
+  const LifeAntarDasha = kundliData?.AstroVastuReport?.DashaDetails?.LifeAntarDasha;
   const AstroVastuHouseScript = kundliData?.AstroVastuReport?.AstroVastuHouseScript;
   const Symbols = kundliData?.AstroVastuReport?.Symbols;
   const PlanetSummaryData = kundliData?.AstroVastuReport?.AsperctSummaryPlanet;
   const HouseSummaryData = kundliData?.AstroVastuReport?.AsperctSummaryHouse;
   const PlaneNSummaryData = kundliData?.AstroVastuReport?.PlanetScript;
   const HouseNSummaryData = kundliData?.AstroVastuReport?.HouseScript;
-  const columns = [
-    {
-      field: 'Planet', headerName: 'Planet', headerClassName: 'rowheader', flex: 1,
-      // headerAlign: 'center', textAlign:'center'
-    },
-    {
-      field: 'StartDt', headerName: 'Beginning', headerClassName: 'rowheader', flex: 1,
-      // headerAlign: 'center'
-    },
-    {
-      field: 'EndDt', headerName: 'Ending', headerClassName: 'rowheader', flex: 1,
-      // headerAlign: 'center'
-    },
-  ];
-  // Adding unique IDs
-  const rowsMahaDasha = MahaDasha?.map((item, index) => ({
-    id: index + 1, // You can use uuidv4() for truly unique IDs if needed
-    ...item
-  }));
-  const rowsAntarDasha = AntarDasha?.map((item, index) => ({
-    id: index + 1, // You can use uuidv4() for truly unique IDs if needed
-    ...item
-  }));
-  const rowsPratyantarDasha = PratyantarDasha.map((item, index) => ({
-    id: index + 1, // You can use uuidv4() for truly unique IDs if needed
-    ...item
-  }));
-
-  function CustomToolbar({ title }) {
-    return (
-      <GridToolbarContainer className="flex-row justify-center items-center w-100 py-2">
-        <div style={{ fontSize: '16px', fontWeight: '700', color: 'var(--primary-color)' }}>{title}</div>
-        {/* <GridToolbarQuickFilter className="SearchBar" /> */}
-      </GridToolbarContainer>
-    );
-  }
+  const RahuData = kundliData?.AstroVastuReport?.RahuSpecial;
+  const KetuData = kundliData?.AstroVastuReport?.KetuSpecial;
 
   return (
     <>
@@ -71,7 +37,7 @@ const PreviewCard = ({ kundliData, id }) => {
       <Grid className='previewCard' item xs={12} md={12}>
         <Grid item xs={12} className='pdf-Div'>
           <div className='p-2 Birthdetail-div'>
-            <div className='flex justify-between gap-y-4 flex-col sm:flex-row'>
+            <div className={`flex justify-between lg:items-center gap-y-4 lg:flex-row ${!isPrintDiv ? 'sm:flex-row flex-col' : "items-center"}`}>
               <div className='flex flex-col gap-6'>
                 <span className="Name-title">
                   {BirthDetails?.FirstName ? `${BirthDetails.FirstName} ${BirthDetails.MiddleName} ${BirthDetails.LastName}` : 'Prashna Kundli'}
@@ -79,7 +45,7 @@ const PreviewCard = ({ kundliData, id }) => {
 
                 {/* <span className="Name-title">{BirthDetails?.FirstName} {BirthDetails?.MiddleName} {BirthDetails?.LastName}</span> */}
               </div>
-              <div className='flex flex-col justify-between md-items-center sm:flex-col lg:flex-row sm:gap-1 lg:gap-5 birthDateTime-Div' >
+              <div className={`flex  justify-between md-items-center lg:gap-4 lg:flex-row ${!isPrintDiv ? 'sm:flex-col flex-col sm:gap-1' : "gap-5"} birthDateTime-Div`} >
                 <div className='flex flex-row gap-1'>
                   <span className='label'>Birth Date & Time: </span>
                   <span className='value'>{BirthDetails?.Date} {BirthDetails?.Time.substring(0, 2)}:{BirthDetails?.Time.substring(2, 4)}</span>
@@ -93,34 +59,34 @@ const PreviewCard = ({ kundliData, id }) => {
               </div>
             </div>
           </div>
-          <div className='xs:flex-col sm:flex-row AstroDetails-Div'>
+          <div className={`${!isPrintDiv ? 'xs:flex-col sm:flex-row' : ""} AstroDetails-Div`}>
             <div className='flex flex-row block-detail'>
 
               <InfoTable InfoTableTextArr={[
-                { "label": "Rashi (Moon Sign) ", "value": AstroDetails?.Rashi },
+                { "label": "Rashi / Alphabet ", "value":`${AstroDetails?.Rashi} / A` },
                 { "label": "Nakshatra / Pada ", "value": `${AstroDetails?.Nakshatra?.Nakshatra} / ${AstroDetails?.Nakshatra.Pada} (${AstroDetails?.Nakshatra?.PlanetName})` },
                 { "label": "Gana / TriGuna ", "value": `${AstroDetails?.Nakshatra?.Gana == 'R' ? 'Rakshasa' : 'Manushya'} / ${AstroDetails?.Nakshatra?.TriGuna}` },
-                { "label": "First Alphabet ", "value": 'A' },
-              ]} />
+                { "label": "Yoga / Karana ", "value": `${AstroDetails?.JanmaYoga} / ${AstroDetails?.JanmaKarana}` },
+              ]} isPrintDiv={isPrintDiv}/>
             </div>
             <div className='flex flex-row block-detail'>
               <InfoTable InfoTableTextArr={[
                 { "label": "Vikram Samvant ", "value": AstroDetails?.VikramSamvat },
                 { "label": "Birth Tithi (Sun Rise) ", "value": `${AstroDetails?.JanmaTithi} (${AstroDetails?.SunRiseTime})` },
-                { "label": "Yoga / Karana ", "value": `${AstroDetails?.JanmaYoga} / ${AstroDetails?.JanmaKarana}` },
                 { "label": "Astro / Western Day ", "value": `${AstroDetails?.AstroWeekday} / ${AstroDetails?.WesternWeekday}` },
-              ]} />
+                { "label": "Location ", "value": `${BirthDetails?.FormattedCity}, ${BirthDetails?.Country}` },
+              ]}  isPrintDiv={isPrintDiv}/>
             </div>
             <div className='flex flex-row block-detail'>
               <InfoTable InfoTableTextArr={[
-                { "label": "Location ", "value": BirthDetails?.FormattedCity },
-                { "label": "Country ", "value": BirthDetails?.Country },
                 { "label": "Lat, Lng ", "value": `${BirthDetails?.Lat} , ${BirthDetails?.Lng}` },
-                { "label": "Prakriti ", "value": `${BirthDetails?.Gender} / ${BirthDetails?.Prakriti}` },
-              ]} />
+                { "label": "Lucky / Destiny # ", "value": BirthDetails?.FormattedCity },
+                { "label": "Destiny Year ", "value": BirthDetails?.Country },
+                { "label": "Prakriti", "value": `${BirthDetails?.Gender} / ${BirthDetails?.Prakriti}` },
+              ]} isPrintDiv={isPrintDiv} />
             </div>
           </div>
-          <div className='flex flex-col gap-5 px-4 sm:flex-row sm:justify-start lg:flex-row md:justify-center sm:overflow-auto'>
+          <div className={`flex lg:flex-row gap-5 px-4 ${!isPrintDiv ? 'sm:flex-row sm:justify-start  flex-col md:justify-start sm:overflow-auto' : ""} `}>
             <div className='w-auto flex-1 flex flex-col'>
               <div className='heading-div pt-3'>❋ Birth Chart / Lagna Kundali ❋</div>
               <img src={`data:image/svg+xml;base64,${ChartSVG?.BirthChart}`} alt="birthChart" />
@@ -129,10 +95,12 @@ const PreviewCard = ({ kundliData, id }) => {
               <div className='heading-div pt-3'>❋ House Chart / Bhav Chalit Kundali ❋</div>
               <img src={`data:image/svg+xml;base64,${ChartSVG?.HouseChart}`} alt="birthChart" />
             </div>
-            <div className='w-auto flex-1 flex flex-col'>
-              <div className='heading-div pt-3'>❋ House Chart / Bhav Chalit Kundali ❋</div>
-              <img src={`data:image/svg+xml;base64,${ChartSVG?.HouseChart}`} alt="birthChart" />
-            </div>
+            {!isPrintDiv &&
+              <div className='w-auto flex-1 flex flex-col'>
+                <div className='heading-div pt-3'>❋ House Chart / Bhav Chalit Kundali ❋</div>
+                <img src={`data:image/svg+xml;base64,${ChartSVG?.HouseChart}`} alt="birthChart" />
+              </div>
+            }
           </div>
           <div className='main-MahaDasha-Div'>
             <div className='heading-div'>❋ Nakshatra Astrology ↠ Planet Script ❋</div>
@@ -144,6 +112,12 @@ const PreviewCard = ({ kundliData, id }) => {
             <div className='heading-div'>❋ Nakshatra Astrology ↠ House Script ❋</div>
             <div className='MahaDasha-Div'>
               <NakshtraSummary SummaryData={HouseNSummaryData} Aspect={"H"} symbols={Symbols} />
+            </div>
+          </div>
+          <div className='main-RahuKetu-Div'>
+            <div className='heading-div'>❋ Rahu & Ketu Special Significators ❋</div>
+            <div className='RahuKetu-Div flex gap-4 w-100'>
+              <RahuKetu RahuData={RahuData} KetuData={KetuData} Significators={"R"} />
             </div>
           </div>
 
@@ -162,69 +136,39 @@ const PreviewCard = ({ kundliData, id }) => {
           </div>
 
           <div className='main-MahaDasha-Div'>
-            <div className='heading-div'>❋ Vimshottari Dasha / Planetary Periods of Life ❋</div>
-            <div className='MahaDasha-Div flex flex-col sm:flex-row lg:flex-row sm:overflow-auto'>
-              <div className='flex flex-col lg:w-1/3'  >
-                <DataGrid
-                  rows={rowsMahaDasha}
-                  columns={columns}
-                  getRowClassName={(params) =>
-                    params.row.IsCurrent ? 'highlight-row' : ''
-                  }
-                  disableColumnSorting
-                  disableColumnMenu
-                  rowHeight={30}
-                  columnHeaderHeight={38}
-                  disableColumnResize
-                  disableRowSelectionOnClick
-                  hideFooterPagination={true}
-                  hideFooter={true}
-                  // slots={{ toolbar: CustomToolbar("MahaDashas") }}
-                  slots={{ toolbar: () => <CustomToolbar title="MahaDashas" /> }}
-                />
+            <div className='heading-div'>❋ Current Vimshottari Dasha / Current Planetary Periods ❋</div>
+            <div className={`MahaDasha-Div flex lg:flex-row ${!isPrintDiv ? 'sm:flex-row  flex-col sm:overflow-auto' : ""}`}>
+              <div className='flex flex-col lg:w-1/3 flex-1'  >
+                <DashaDetails title={"MahaDashas"} DashaData={MahaDasha} />
               </div>
-              <div className='flex flex-col lg:w-1/3'>
-                <DataGrid
-                  rows={rowsAntarDasha}
-                  columns={columns}
-                  pageSize={rowsAntarDasha.length} // Show all rows
-                  getRowClassName={(params) =>
-                    params.row.IsCurrent ? 'highlight-row' : ''
-                  }
-                  disableColumnSorting
-                  disableColumnMenu
-                  rowHeight={30}
-                  columnHeaderHeight={38}
-                  disableColumnResize
-                  disableRowSelectionOnClick
-                  hideFooterPagination={true}
-                  hideFooter={true}
-                  slots={{ toolbar: () => <CustomToolbar title="Moon (10 Years) > AntarDashas" /> }}
-                />
+              <div className='flex flex-col lg:w-1/3 flex-1'>
+                <DashaDetails title={`Moon (${kundliData?.AstroVastuReport?.DashaDetails?.CurrentMDYears} Years) > AntarDashas`} DashaData={AntarDasha} />
               </div>
-              <div className='flex flex-col lg:w-1/3'>
-                <DataGrid
-                  rows={rowsPratyantarDasha}
-                  columns={columns}
-                  getRowClassName={(params) =>
-                    params.row.IsCurrent ? 'highlight-row' : ''
-                  }
-                  disableColumnSorting
-                  disableColumnMenu
-                  rowHeight={30}
-                  columnHeaderHeight={38}
-                  disableColumnResize
-                  disableRowSelectionOnClick
-                  hideFooterPagination={true}
-                  hideFooter={true}
-                  slots={{ toolbar: () => <CustomToolbar title="Mercury > PratyantarDashas" /> }}
-                />
+              <div className='flex flex-col lg:w-1/3 flex-1'>
+                <DashaDetails title={"Mercury > PratyantarDashas"} DashaData={PratyantarDasha} />
               </div>
             </div>
           </div>
 
+          <div className='main-MahaDasha-Div'>
+            <div className='heading-div'>❋ Vimshottari AntarDasha / Sub-Planetary Periods of Life ❋</div>
+            <div className={`MahaDasha-Div flex lg:flex-wrap ${!isPrintDiv ? 'sm:flex-wrap flex-wrap xs:flex xs:flex-col ' : "flex-wrap"}`}>
+              {LifeAntarDasha.length ? (
+                LifeAntarDasha.map((element, index) => (
+                  <div className={`flex flex-col lg:basis-[calc(33.33%-12px)]  ${!isPrintDiv ? 'sm:basis-[calc(50%-12px)] basis-[calc(100%-0px)] xs:flex-1' : " basis-[calc(33.33%-12px)] "}`} key={index}>
+                    <DashaDetails title={`${element.Planet} (${element.Years} Years)`} DashaData={element.AntarDasha} />
+                  </div>
+                ))
+              ) : (
+                ""
+              )}
+            </div>
+          </div>
+
+
+
           <div className='main-AstroVastuScript-Div'>
-            <div className='heading-div'>❋ Astro Vastu Script ❋</div>
+            <div className='heading-div'>❋ Astro Vastu Insights ❋</div>
             <div className='AstroVastuScript-Div'>
               <House houseArr={AstroVastuHouseScript} Symbols={Symbols}></House>
             </div>

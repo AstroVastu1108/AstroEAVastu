@@ -1,3 +1,8 @@
 .MuiPaper-root{
   overflow: visible;
 }
+
+.PopupHeader{
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+}
