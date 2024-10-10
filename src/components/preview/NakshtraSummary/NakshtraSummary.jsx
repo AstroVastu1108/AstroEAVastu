@@ -198,6 +198,9 @@ function NakshtraSummary({ SummaryData, Aspect, symbols }) {
         <DataGrid
           rows={rowsSummaryData}
           columns={columns}
+          initialState={{
+            pinnedColumns: { left: ['id', 'Planet'] } // Combine both columns here
+          }}
           disableColumnSorting
           disableColumnMenu
           rowHeight={30}

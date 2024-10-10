@@ -126,6 +126,7 @@ function PrakritiPopUp({ open, handlePraClose }) {
       field: 'name',
       headerName: '',
       width: 150,
+      minWidth:150,
       align:"end",
       renderCell: (params) => (
         <span variant="h6">{params.value}</span>
@@ -135,6 +136,7 @@ function PrakritiPopUp({ open, handlePraClose }) {
       field: 'vata',
       headerName: 'Vata',
       // width: 150,
+      minWidth:150,
       headerClassName: 'rowheader',
       flex:1,
       renderCell: (params) => {
@@ -158,6 +160,7 @@ function PrakritiPopUp({ open, handlePraClose }) {
       headerName: 'Pitta',
       flex:1,
       // width: 150,
+      minWidth:150,
       renderCell: (params) => (
         <FormControlLabel
           label={params.row.pitta}
@@ -175,6 +178,7 @@ function PrakritiPopUp({ open, handlePraClose }) {
       headerName: 'Kapha',
       flex:1,
       // width: 150,
+      minWidth:150,
       renderCell: (params) => (
         <FormControlLabel
           label={params.row.kapha}

@@ -37,7 +37,7 @@ const PreviewCard = ({ kundliData, isPrintDiv }) => {
       <Grid className='previewCard' item xs={12} md={12}>
         <Grid item xs={12} className='pdf-Div'>
           <div className='p-2 Birthdetail-div'>
-            <div className={`flex justify-between items-center gap-y-4 lg:flex-row ${!isPrintDiv ? 'sm:flex-row flex-col' : ""}`}>
+            <div className={`flex justify-between lg:items-center gap-y-4 lg:flex-row ${!isPrintDiv ? 'sm:flex-row flex-col' : "items-center"}`}>
               <div className='flex flex-col gap-6'>
                 <span className="Name-title">
                   {BirthDetails?.FirstName ? `${BirthDetails.FirstName} ${BirthDetails.MiddleName} ${BirthDetails.LastName}` : 'Prashna Kundli'}
@@ -45,7 +45,7 @@ const PreviewCard = ({ kundliData, isPrintDiv }) => {
 
                 {/* <span className="Name-title">{BirthDetails?.FirstName} {BirthDetails?.MiddleName} {BirthDetails?.LastName}</span> */}
               </div>
-              <div className={`flex  justify-between md-items-center lg:gap-4 lg:flex-row ${!isPrintDiv ? 'sm:flex-col flex-col sm:gap-1' : ""} birthDateTime-Div`} >
+              <div className={`flex  justify-between md-items-center lg:gap-4 lg:flex-row ${!isPrintDiv ? 'sm:flex-col flex-col sm:gap-1' : "gap-5"} birthDateTime-Div`} >
                 <div className='flex flex-row gap-1'>
                   <span className='label'>Birth Date & Time: </span>
                   <span className='value'>{BirthDetails?.Date} {BirthDetails?.Time.substring(0, 2)}:{BirthDetails?.Time.substring(2, 4)}</span>

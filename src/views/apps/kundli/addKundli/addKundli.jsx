@@ -152,7 +152,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
         }
         var kId = response?.responseData?.Result?.KundaliID;
         setIsDisable(false)
-        getAllKundli(1);
+        getAllKundli(1,"");
         handleAddClose();
         toastDisplayer("success", `kundli data is saved successfully.`)
         return kId;
@@ -192,21 +192,24 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
       <Dialog
         open={open}
         onClose={handleAddClose}
-        maxWidth="sm"   // 'xs', 'sm', 'md', 'lg', 'xl' or false for custom width
-        fullWidth={true}  // Ensures the dialog takes up full width of the container
+        maxWidth={false}  // 'xs', 'sm', 'md', 'lg', 'xl' or false for custom width
+        fullWidth={false}  // Ensures the dialog takes up full width of the container
         PaperProps={{
           component: 'form',
           onSubmit: (event) => {
             event.preventDefault();
             handleSubmit();
           },
+          sx: {
+            width: '700px', // Set your custom width here
+            maxWidth: '100%', // Optional: prevent exceeding container width
+          },
         }}
       >
-        <DialogTitle className="PopupHeader bg-primary text-white p-4">
+        <DialogTitle className="PopupHeader text-white p-3" style={{ borderTopLeftRadius: '8px', borderTopRightRadius: '8px' }}>
           <div className='w-100' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span>
-
-              Add Kundli
+            <span className='text-primary text-2xl font-semibold !pl-3'>
+              New Kundali
             </span>
             <IconButton
               aria-label="close"
@@ -215,12 +218,12 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                 color: 'white',
               }}
             >
-              <i className='tabler-x'></i>
+              <i className='tabler-x text-primary'></i>
             </IconButton>
           </div>
-          <DialogContentText className="text-white">
+          {/* <DialogContentText className="text-white">
             Enter the required information to create a new Kundli.
-          </DialogContentText>
+          </DialogContentText> */}
         </DialogTitle>
         <DialogContent>
           <Grid className='mt-2' container spacing={5}>
@@ -293,7 +296,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                     value={userData.date}
                     onChange={date => handleInputChange('date', date, 'BirthDate')}
                     fullWidth
-                    label='Date Of Birth'
+                    label='Birth Date'
                   // {...(errors.BirthDate && { error: true, helperText: 'BirthDate is required.' })}
                   />
                 }
@@ -313,7 +316,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                 onChange={date => handleInputChange('time', date, 'BirthTime')}
                 customInput={
                   <TextField
-                    label="Time Of Birth"
+                    label="Birth Time"
                     fullWidth
                     onChange={date => handleInputChange('time', date, 'BirthTime')}
                   // {...(errors.BirthTime && { error: true, helperText: 'BirthTime is required.' })}
@@ -321,8 +324,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                 }
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
-
+            <Grid item xs={12} sm={8}>
               <Autocomplete
                 id='country-select'
                 options={conutryData}
@@ -340,7 +342,20 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                 )}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4}>
+            <TextField
+                fullWidth
+                label='Timezone'
+                value={"UTC+05:30 > Asia/Kolkata"}
+                InputProps={{
+                  readOnly: true, // Makes the TextField read-only
+                }}
+                // onChange={e => handleInputChange('MiddleName', e.target.value, 'MiddleName')}
+              // onChange={e => setUserData({ ...userData, MiddleName: e.target.value })}
+              // {...(errors.MiddleName && { error: true, helperText: 'MiddleName is required.' })}
+              />
+            </Grid>
+            <Grid item xs={12} sm={8}>
               <Autocomplete
                 id='city-autocomplete'
                 options={cityData}
@@ -357,6 +372,17 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                   // {...(errors.CityID && { error: true, helperText: 'City is required.' })}
                   />
                 )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+            <TextField
+                fullWidth
+                label='Lat, Lng '
+                // placeholder='John'
+                // value={userData?.MiddleName}
+                // onChange={e => handleInputChange('MiddleName', e.target.value, 'MiddleName')}
+              // onChange={e => setUserData({ ...userData, MiddleName: e.target.value })}
+              // {...(errors.MiddleName && { error: true, helperText: 'MiddleName is required.' })}
               />
             </Grid>
           </Grid>

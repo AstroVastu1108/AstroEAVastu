@@ -60,7 +60,7 @@ const Preview = ({ kundliData, setKundliData }) => {
     setDownloadLoading(true);
     if (printRef.current) {
       html2canvas(printRef.current).then(canvas => {
-        const imgData = canvas.toDataURL('image/jpeg', 5); // Convert to JPEG with lower quality
+        const imgData = canvas.toDataURL('image/jpeg', 2); // Convert to JPEG with lower quality
         const pdf = new jsPDF('p', 'mm', 'a4');
         const imgWidth = 200; // A4 width in mm
         const pageHeight = 297; // A4 height in mm
@@ -134,15 +134,19 @@ const Preview = ({ kundliData, setKundliData }) => {
       <Grid container spacing={6}>
         <Grid item xs={12} md={12}>
           <Card>
-            <CardContent className='flex flex-col gap-4 p-0'>
-              <PageTitle title={"Kundli Preview"} endCmp={<>
-                <PreviewActions value={"Existing"} onButtonClick={handleKundliApi} loading={existdownloadLoading} />
-                <PreviewActions value={"Download"} onButtonClick={handleButtonClick} loading={downloadLoading} />
-
-              </>} />
+            <CardContent className='flex flex-col gap-2 p-0'>
+              <div className='px-6 pt-4'>
+              <PageTitle title={"Kundli Preview"} endCmp={
+                <>
+                  <div className='flex justify-end gap-3 sm:flex'>
+                    <PreviewActions value={"Existing"} onButtonClick={handleKundliApi} loading={existdownloadLoading} />
+                    <PreviewActions value={"Download"} onButtonClick={handleButtonClick} loading={downloadLoading} />
+                  </div>
+                </>} />
+              </div>
               <div>
 
-                <div ref={printRef} className='previewPDFPrint' style={{width:"1240px"}}>
+                <div ref={printRef} className='previewPDFPrint' style={{ width: "1240px" }}>
                   {kundliData &&
                     <>
                       <PreviewCard kundliData={kundliData} isPrintDiv={true} />
@@ -153,7 +157,7 @@ const Preview = ({ kundliData, setKundliData }) => {
               <div className='previewPDF'>
                 {kundliData &&
                   <>
-                    <PreviewCard kundliData={kundliData} isPrintDiv={false}/>
+                    <PreviewCard kundliData={kundliData} isPrintDiv={false} />
                   </>
                 }
               </div>
