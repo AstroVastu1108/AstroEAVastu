@@ -1,5 +1,5 @@
 import { useAuth } from '@/@core/contexts/authContext'
-import { GetCompanyTasks, GetTasks } from '@/app/Server/API/tasks'
+import { AddTasks, GetCompanyTasks, GetTasks } from '@/app/Server/API/tasks'
 import { animations } from '@formkit/drag-and-drop'
 import { useDragAndDrop } from '@formkit/drag-and-drop/react'
 import {
@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import KanbanDrawer from '../kanban/KanbanDrawer'
 import { LoadingButton } from '@mui/lab'
 import Loader from '@/components/common/Loader/Loader'
+import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
 
 function Listing({ cid, from }) {
   const { user } = useAuth()
@@ -24,7 +25,7 @@ function Listing({ cid, from }) {
   const [currentTask, setCurrentTask] = useState([])
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [loading, setLoading] = useState(false)
-
+  const [newTask, setNewTask] = useState("");
   // Hooks
   const kanbanStore = useSelector(state => state.kanbanReducer)
   const dispatch = useDispatch()
@@ -41,13 +42,18 @@ function Listing({ cid, from }) {
         const response = await GetTasks(transactionID, cid)
         // return await response.responseData
         setLoading(false)
-        return await setTasks(response.responseData)
+        if(response.responseData.length > 0){
+          return await setTasks(response.responseData)
+        }
       }
 
       const response = await GetCompanyTasks(transactionID)
       setLoading(false)
       // return await response.responseData
-      return await setTasks(response.responseData)
+      if(response.responseData.length > 0){
+        return await setTasks(response.responseData)
+      }
+      // return await setTasks(response.responseData)
     } catch (error) {
       setLoading(false)
       return toastDisplayer('error', error)
@@ -77,13 +83,42 @@ function Listing({ cid, from }) {
     // console.log("Item : ",item)
   }
 
+  const handleAddItem = async () => {
+    if (!newTask.trim()) return;
+    // const Tasks = { id: Date.now(), name: newTask };
+    try{
+      const payload = {
+        "title": newTask,
+        "badgeText": [],
+        "attachments": "",
+        "comments": "",
+        "assigned": [],
+        "dueDate": null,
+        "cmpTransId": user?.transactionID,
+        "columnGroupId": "",
+        "columnId": "",
+        "CmpClientId":cid
+        }
+      const response = await AddTasks(payload);
+      if(response.hasError){
+        return toastDisplayer("error",response.errorMessage)
+      }
+      setTasks((prevList) => [...prevList, payload]);
+      setNewTask(""); 
+      return toastDisplayer("success",response.responseData.statusMsg)
+    }catch(error){
+      return toastDisplayer("error",error)
+    }
+    // handleOpenKundliPopup(newKundli, false);
+  };
+
   return (
     <>
       {loading && <Loader />}
       <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
         <TextField
-          // value={newItem}
-          // onChange={(e) => setNewItem(e.target.value)}
+          value={newTask}
+          onChange={(e) => setNewTask(e.target.value)}
           placeholder='Add new Tasks'
           fullWidth
           variant='outlined'
@@ -93,7 +128,7 @@ function Listing({ cid, from }) {
         <LoadingButton
           fullWidth
           variant='contained'
-          // onClick={handleAddItem}
+          onClick={handleAddItem}
           loading={loading}
           style={{ flexBasis: '18%' }}
           color='primary'

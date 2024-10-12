@@ -80,8 +80,8 @@ const PreviewCard = ({ kundliData, isPrintDiv }) => {
             <div className='flex flex-row block-detail'>
               <InfoTable InfoTableTextArr={[
                 { "label": "Lat, Lng ", "value": `${BirthDetails?.Lat} , ${BirthDetails?.Lng}` },
-                { "label": "Lucky / Destiny # ", "value": BirthDetails?.FormattedCity },
-                { "label": "Destiny Year ", "value": BirthDetails?.Country },
+                { "label": "Lucky / Destiny # ", "value": `${AstroDetails?.Numerology?.BirthNumber} / ${AstroDetails?.Numerology?.DestinyNumber } (${AstroDetails?.Numerology?.DestinyYearNumber})` },
+                { "label": "Destiny Year ", "value":` ${AstroDetails?.Numerology?.DestinyYear -1 } - ${AstroDetails?.Numerology?.DestinyYear }` },
                 { "label": "Prakriti", "value": `${BirthDetails?.Gender} / ${BirthDetails?.Prakriti}` },
               ]} isPrintDiv={isPrintDiv} />
             </div>

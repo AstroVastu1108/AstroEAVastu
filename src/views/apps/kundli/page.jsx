@@ -252,7 +252,7 @@ export default function KundliMain() {
           <Card>
             <CardContent className='flex flex-col gap-4 p-0'>
 
-              {/* <div className="KundliList">
+             <div className="KundliList">
                 <Box className="p-5">
 
                   <ThemeProvider theme={customTheme}>
@@ -306,8 +306,8 @@ export default function KundliMain() {
 
 
                 </Box>
-              </div> */}
-              <KundliDataGrid columns={columns} pageSize={10} />
+              </div>
+              {/* <KundliDataGrid columns={columns} pageSize={10} /> */}
             </CardContent>
           </Card>
 

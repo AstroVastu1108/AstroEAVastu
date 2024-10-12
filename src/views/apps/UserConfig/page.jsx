@@ -187,8 +187,6 @@ export default function UserListing({mode}) {
               <PageTitle title={"User List"} endCmp={<PreviewActions value={"Add User"} onButtonClick={handleAddClick} />
               } />
               <div className="KundliList">
-                <Box className="p-5">
-
                   <ThemeProvider theme={customTheme}>
                     <DataGrid
                       className="KundliListGrid"
@@ -211,7 +209,6 @@ export default function UserListing({mode}) {
                       slotProps={{ toolbar: { showQuickFilter: true } }}
                     />
                   </ThemeProvider>
-                </Box>
               </div>
             </CardContent>
           </Card>

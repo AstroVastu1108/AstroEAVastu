@@ -103,18 +103,21 @@ export default function ClientKundli({ cid }) {
     const payload = {
       id: editItem,
       name: editText,
-      kundliId: item.kundliId,
+      kundaliId: item.kundaliId,
       clientId: cid,
       companyId: user?.transactionID,
     };
     try {
       const response = await SaveClientKundli(payload);
       if (response.hasError) throw new Error(response.errorMessage);
-      setClientKundliList((prevList) =>
-        prevList.map((item) => (item.id === editItem ? { ...item, name: editText } : item))
-      );
+      if(!kundliType){
+        setClientKundliList((prevList) =>
+          prevList.map((item) => (item.id === editItem ? { ...item, name: editText } : item))
+        );
+      }
       setEditItem(null);
       setEditText("");
+      setKundliType(false);
       toastDisplayer("success", response.responseData.statusMsg);
     } catch (error) {
       toastDisplayer("error", error.message);
@@ -133,7 +136,7 @@ export default function ClientKundli({ cid }) {
     const payload = {
       id: kundliType ? selectedKundliClient?.id : undefined,
       name: client.name,
-      kundliId: selectedData.KundaliID,
+      kundaliId: selectedData.KundaliID,
       clientId: cid,
       companyId: user?.transactionID,
     };
@@ -145,13 +148,16 @@ export default function ClientKundli({ cid }) {
       const payloadData = {
         id: response.responseData?.result,
         name: client.name,
-        kundliId: selectedData.KundaliID,
+        kundaliId: selectedData.KundaliID,
         clientId: cid,
         companyId: user?.transactionID,
       };
       console.log("response : ",response.responseData?.result)
-      setClientKundliList((prevList) => [...prevList, payloadData]);
-      toastDisplayer("success", response.responseData.statusMsg);
+      if(!kundliType){
+        setClientKundliList((prevList) => [...prevList, payloadData]);
+      }
+      setKundliType(false)
+      return toastDisplayer("success", response.responseData.statusMsg);
     } catch (error) {
       toastDisplayer("error", error.message);
     }
@@ -224,7 +230,7 @@ export default function ClientKundli({ cid }) {
                 <IconButton
                   edge="end"
                   aria-label="preview"
-                  onClick={() => router.push(`preview?kid=${item.kundliId}`)}
+                  onClick={() => router.push(`preview?kid=${item.kundaliId}`)}
                 >
                   <i className="tabler-arrow-up-right" />
                 </IconButton>

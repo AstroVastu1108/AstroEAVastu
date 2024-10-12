@@ -92,7 +92,7 @@ export async function SaveClientKundli(payload) {
     error: null
   }
   try {
-    const response = await axios.post(`${API_URL}/clientkundli/transaction`,payload)
+    const response = await axios.post(`${API_URL}/ClientKundali/transaction`,payload)
     responseBody.responseData = response.data
     return responseBody
   } catch (error) {
@@ -111,7 +111,7 @@ export async function GetClientKundli(TransactionID,clientID) {
     error: null
   }
   try {
-    const response = await axios.post(`${API_URL}/clientkundli/get`,{
+    const response = await axios.post(`${API_URL}/ClientKundali/get`,{
         "companyId": TransactionID,
         "clientId": clientID
       })
@@ -133,7 +133,7 @@ export async function DeleteClientKundli(KundliTransactionID) {
     error: null
   }
   try {
-    const response = await axios.delete(`${API_URL}/ClientKundli/${KundliTransactionID}`)
+    const response = await axios.delete(`${API_URL}/ClientKundali/${KundliTransactionID}`)
     responseBody.responseData = response.data
     return responseBody
   } catch (error) {

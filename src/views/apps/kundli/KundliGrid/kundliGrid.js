@@ -336,7 +336,7 @@ function CustomToolbar() {
 
   const getAllKundli = async (pageNo) => {
     setLoading(true)
-    const res = await GetKundliDataAPI(pageSize, pageNo)
+    const res = await GetKundliDataAPI(pageSize, pageNo,"")
     if (res.hasError) {
       setLoading(false)
       return toastDisplayer('error', res.error)
@@ -359,7 +359,6 @@ function CustomToolbar() {
     <>
       {loading && <Loader />}
       <div className='KundliList'>
-        <Box className='p-5'>
           <ThemeProvider theme={customTheme}>
             <DataGrid
               className='KundliListGrid'
@@ -383,7 +382,6 @@ function CustomToolbar() {
               slotProps={{ toolbar: { showQuickFilter: false } }}
             />
           </ThemeProvider>
-        </Box>
       </div>
     </>
   )
