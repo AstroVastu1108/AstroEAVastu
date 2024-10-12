@@ -1,8 +1,18 @@
+.KundliListGrid__highlight-row {
+  background-color: yellow; /* For highlighting rows */
+}
+
+.KundliListGrid__row--hover {
+  color: var(--primary-color);
+  background-color: var(--secondary-soft-color);
+}
+
+
 .KundliList {
   .MuiDataGrid-toolbarContainer {
     display: flex;
     /* justify-content: end; */
-    padding: 12px 0px;
+    /* padding: 12px 0px; */
   }
 
   .rowheader {

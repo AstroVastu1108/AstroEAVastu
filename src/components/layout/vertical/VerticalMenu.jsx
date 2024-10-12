@@ -59,35 +59,12 @@ const VerticalMenu = ({ scrollMenu }) => {
         renderExpandedMenuItemIcon={{ icon: <i className='tabler-circle text-xs' /> }}
         menuSectionStyles={menuSectionStyles(verticalNavOptions, theme)}
       >
-        {/* <MenuItem href='/home' icon={<i className='tabler-smart-home' />}>
-          Home
-        </MenuItem> */}
-        {/* {authRuleContext.map((item,index) => (
-        <MenuItem key={index} href={item.Href} icon={<i className={item.Icon} />}>
-          {item.Label}
-        </MenuItem>
-      ))} */}
        {authRuleContext.map((item, index) => (
           <MenuItem key={index} href={item.Href} icon={<i className={item.Icon} />}>
             {item.Label}
           </MenuItem>
         ))}
-        {/* <MenuItem href='/kundli' icon={<i className='tabler-smart-home' />}>
-          Kundli
-        </MenuItem>
-        <MenuItem href='/about' icon={<i className='tabler-info-circle' />}>
-          About
-        </MenuItem> */}
       </Menu>
-      {/* <Menu
-          popoutMenuOffset={{ mainAxis: 23 }}
-          menuItemStyles={menuItemStyles(verticalNavOptions, theme)}
-          renderExpandIcon={({ open }) => <RenderExpandIcon open={open} transitionDuration={transitionDuration} />}
-          renderExpandedMenuItemIcon={{ icon: <i className='tabler-circle text-xs' /> }}
-          menuSectionStyles={menuSectionStyles(verticalNavOptions, theme)}
-        >
-          <GenerateVerticalMenu menuData={menuData(dictionary)} />
-        </Menu> */}
     </ScrollWrapper>
   )
 }

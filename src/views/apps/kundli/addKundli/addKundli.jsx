@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Autocomplete, Button, Card, CardContent, CardHeader, CircularProgress, debounce, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormHelperText, FormLabel, Grid, IconButton, InputLabel, MenuItem, Radio, RadioGroup, Select, TextField } from "@mui/material";
 import { useAuth } from '@/@core/contexts/authContext';
 import { getCities, getCountries, getReport } from '@/app/Server/API/common';
@@ -42,6 +42,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
   }])
 
   const [currentTime, setCurrentTime] = useState(null);
+  const fnameRef = useRef(null);
 
   useEffect(() => {
     if (!userData.isUpdate) {
@@ -121,6 +122,14 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
   useEffect(() => {
     fetchCities(query)
   }, [query])
+
+  useEffect(()=>{
+    setTimeout(() => {
+      if (fnameRef.current){
+        fnameRef.current.focus();
+      }
+    }, 500);
+  },[])
 
   const handleSubmit = async () => {
     const birthDate = userData.date ? new Date(userData.date).toLocaleDateString('en-GB').split('/').join('-') : null
@@ -231,13 +240,14 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
               <TextField
                 fullWidth
                 label="First Name"
+                autoFocus
+                inputRef={fnameRef}
                 value={userData?.FirstName}
                 onChange={e => {
                   const inputValue = e.target.value;
                   const capitalizedValue = inputValue.charAt(0).toUpperCase() + inputValue.slice(1);
                   handleInputChange('FirstName', capitalizedValue, 'FirstName');
                 }}
-              // {...(errors.FirstName && { error: true, helperText: 'FirstName is required.' })}
               />
             </Grid>
             <Grid item xs={12} sm={4}>
@@ -247,8 +257,6 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                 // placeholder='John'
                 value={userData?.MiddleName}
                 onChange={e => handleInputChange('MiddleName', e.target.value, 'MiddleName')}
-              // onChange={e => setUserData({ ...userData, MiddleName: e.target.value })}
-              // {...(errors.MiddleName && { error: true, helperText: 'MiddleName is required.' })}
               />
             </Grid>
             <Grid item xs={12} sm={4}>

@@ -1,108 +1,196 @@
-import { Box, Button, Card, CardContent, createTheme, debounce, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, IconButton, TextField, ThemeProvider } from "@mui/material";
+import { Box, Button, Card, CardContent, createTheme, debounce, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, IconButton, Menu, MenuItem, TextField, ThemeProvider } from "@mui/material";
 import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarQuickFilter } from "@mui/x-data-grid"
 import PreviewActions from "./preview/PreviewActions";
 import { useEffect, useRef, useState } from "react";
 import AddKundliPopUp from "./addKundli/addKundli";
-import { GetKundliDataAPI } from "@/app/Server/API/kundliAPI";
+import { GetKundliDataAPI, GetKundliIDDataAPI } from "@/app/Server/API/kundliAPI";
 import classNames from "classnames";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/common/Loader/Loader";
 import "./Kundli.css"
 import PageTitle from "@/components/common/PageTitle/PageTitle";
-import KundliDataGrid from "./KundliGrid/kundliGrid";
+//import KundliDataGrid from "./KundliGrid/kundliGrid";
+
+import PreviewCard from "./preview/PreviewCard";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+
 
 export default function KundliMain() {
 
+  const highlightText = (text, searchText) => {
+    if (!searchText) return text;
+
+    const regex = new RegExp(`(${searchText})`, 'gi');
+    const parts = text.split(regex);
+
+    return (
+      <>
+        {parts.map((part, index) =>
+          part.toLowerCase() === searchText.toLowerCase() ? (
+            <span className="font-semibold" key={index} style={{ color: '#00a75a' }}>
+              {part}
+            </span>
+          ) : (
+            part
+          )
+        )}
+      </>
+    );
+  };
+
+
   // vars
   const columns = [
-    // {
-    //   field: 'KundaliID', headerName: 'Planet', headerClassName: 'rowheader',
-    //   headerAlign: 'left'
-    // },
     {
-      field: 'FirstName', headerName: 'Full Name', headerClassName: 'rowheader',
+      field: 'FirstName',
+      headerName: 'Full Name',
+      headerClassName: 'rowheader',
       minWidth: 200,
       flex: 2,
       headerAlign: 'left',
-      renderCell: (params) => (
-        <>
-          <span className="font-semibold">{params.row.FirstName} {params.row.MiddleName} {params.row.LastName}</span>
-        </>
-      ),
+      renderCell: (params) => {
+        const fullName = `${params.row.FirstName} ${params.row.MiddleName} ${params.row.LastName}`;
+        const searchText = searchInputRef.current.value;
+        return <span className="font-semibold">{highlightText(fullName, searchText)}</span>;
+      },
     },
     {
-      field: 'Gender', minWidth: 50, headerName: 'Gender', headerClassName: 'rowheader',
+      field: 'Gender',
+      minWidth: 50,
+      headerName: 'Gender',
+      headerClassName: 'rowheader',
       width: 75,
-      headerAlign: 'left'
-    },
-    // {
-    //   field: 'BirthDate', minWidth: 100, headerName: 'BirthDate', headerClassName: 'rowheader',
-    //   width:150,
-    //   headerAlign: 'left',
-    // },
-    {
-      field: 'BirthTime', minWidth: 100, headerName: 'Birth Date & Time', headerClassName: 'rowheader',
-      width: 150,
       headerAlign: 'left',
       renderCell: (params) => {
-        const value = params.value.toString(); // Convert to string if needed
-        const formattedValue = value.slice(0, 2) + ':' + value.slice(2, 4); // Format as "13:22"
-        return (
-          <>
-            <span className="font-semibold">
-              { params.row.BirthDate }&nbsp;
-            </span>
-            <span>
-              {formattedValue}
-            </span>
-          </>
-        )
-        // return formattedValue; // Return the formatted value
+        const genderValue = params.value || '';
+        const searchText = searchInputRef.current.value;
+        return <span>{highlightText(genderValue, searchText)}</span>;
       }
     },
     {
-      field: 'City', minWidth: 100, headerName: 'City', headerClassName: 'rowheader',
-      flex:1,
-      headerAlign: 'left'
-    },
-    {
-      field: 'Country', minWidth: 100, headerName: 'Country', headerClassName: 'rowheader',
-      flex:1,
-      headerAlign: 'left'
-    },
-    {
-      field: 'Prakriti', minWidth: 100, headerName: 'Prakriti', headerClassName: 'rowheader',
-      width: 100,
-      headerAlign: 'left'
-    },
+      field: 'BirthTime',
+      minWidth: 100,
+      headerName: 'Birth Date & Time',
+      headerClassName: 'rowheader',
+      width: 150,
+      headerAlign: 'left',
+      renderCell: (params) => {
+        const dateValue = params.row.BirthDate;
+        const timeValue = params.value.toString();
+        const formattedTime = timeValue.slice(0, 2) + ':' + timeValue.slice(2, 4);
+        const searchText = searchInputRef.current.value;
 
+        const fullValue = `${dateValue} ${formattedTime}`;
+        return <span className="font-semibold">{highlightText(fullValue, searchText)}</span>;
+      }
+    },
+    {
+      field: 'City',
+      minWidth: 100,
+      headerName: 'City',
+      headerClassName: 'rowheader',
+      flex: 1,
+      headerAlign: 'left',
+      renderCell: (params) => {
+        const cityValue = params.value || '';
+        const searchText = searchInputRef.current.value;
+        return highlightText(cityValue, searchText);
+      }
+    },
+    {
+      field: 'Country',
+      minWidth: 100,
+      headerName: 'Country',
+      headerClassName: 'rowheader',
+      flex: 1,
+      headerAlign: 'left',
+      renderCell: (params) => {
+        const countryValue = params.value || '';
+        const searchText = searchInputRef.current.value;
+        return highlightText(countryValue, searchText);
+      }
+    },
+    {
+      field: 'Prakriti',
+      minWidth: 100,
+      headerName: 'Prakriti',
+      headerClassName: 'rowheader',
+      width: 100,
+      headerAlign: 'left',
+      renderCell: (params) => {
+        const prakritiValue = params.value || '';
+        const searchText = searchInputRef.current.value;
+        return highlightText(prakritiValue, searchText);
+      }
+    },
     {
       field: 'iconColumn', // Unique field name for this column
+      type: "actions",
       headerName: '',
-      minWidth: 100,
-      width:100,
+      minWidth: 50,
+      width: 50,
       headerClassName: 'rowheader',
+      renderCell: (params) => {
+        const [anchorEl, setAnchorEl] = useState(null);
+        const open = Boolean(anchorEl);
 
-      renderCell: (params) => (
-        <>
-          <IconButton onClick={() => handlePreviewClick(params, params?.row?.KundaliID)}>
-            <i
-              className={'tabler-arrow-up-right bg-primary'}
-            />
-          </IconButton>
-          <IconButton onClick={() => handleEditClick(params?.row)}>
-            <i
-              className={'tabler-edit'}
-            />
-          </IconButton>
-        </>
-      ),
+        const handleClick = (event) => {
+          setAnchorEl(event.currentTarget);
+        };
+
+        const handleClose = () => {
+          setAnchorEl(null);
+        };
+
+        const handlePreview = () => {
+          handlePreviewClick(params, params?.row?.KundaliID);
+          handleClose();
+        };
+
+        const handleEdit = () => {
+          handleEditClick(params?.row);
+          handleClose();
+        };
+
+        const handleDownload = () => {
+          getAKundliData(params?.row?.KundaliID)
+          handleClose();
+        };
+
+        return (
+          <>
+            <IconButton onClick={handleClick}>
+              <i className={'tabler-dots-vertical bg-primary'} />
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+            >
+              <MenuItem onClick={handlePreview} className="flex gap-1"><i className={'tabler-arrow-up-right bg-primary'}/>Open</MenuItem>
+              <MenuItem onClick={handleEdit}  className="flex gap-1"><i className={'tabler-edit bg-secondary'}/>Edit</MenuItem>
+              <MenuItem onClick={handleDownload}  className="flex gap-1"><i className={'tabler-download bg-danger'}/>Download</MenuItem>
+            </Menu>
+          </>
+        );
+      },
     },
   ];
+
+
   const [open, setOpen] = useState(false);
   const [kundliData, setKundliData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
+  const [AKundliData, setAKundliData] = useState(false);
   const [userData, setUserData] = useState({
     KundaliID: '',
     FirstName: '',
@@ -116,16 +204,10 @@ export default function KundliMain() {
     isUpdate: false,
     City: 'Surat'
   })
-  const [totalRowCount, setTotalRowCount] = useState(1000);
+  const [totalRowCount, setTotalRowCount] = useState(0);
   const [pageNo, setPageNo] = useState(1);
   const searchInputRef = useRef(null);
-
-  useEffect(() => {
-    if (searchInputRef.current) {
-      searchInputRef.current.focus(); // Focus on the search bar when the component mounts
-    }
-  }, [searchInputRef]);
-
+  const printRef = useRef(null);
 
   // func
   const handleAddClick = () => {
@@ -138,13 +220,13 @@ export default function KundliMain() {
       BirthDate: null,
       Country: { iso2: 'IN', name: 'India' },
       BirthTime: null,
-      // CityID: 'A1AE28185ED49D47211760BF32D40EB742C84998',
       CityID: { CityID: 'A1AE28185ED49D47211760BF32D40EB742C84998', City: 'Surat, Gujarat' },
       isUpdate: false,
       City: 'Surat'
     })
     setOpen(true);
   }
+
   const handleAddClose = () => {
     setOpen(false)
   }
@@ -157,14 +239,10 @@ export default function KundliMain() {
       return toastDisplayer("error", res.error);
     } else {
       setKundliData(res?.responseData?.data?.Result?.KundaliList);
+      setTotalRowCount(res?.responseData?.data?.Result?.KundaliCount)
       setLoading(false);
     }
   }
-
-  // const handlePreviewClick = (kid) => {
-  //   setLoading(true);
-  //   router.push(`preview?kid=${kid}`)
-  // }
 
   const handlePreviewClick = (event, kid) => {
     window.open(`preview?kid=${kid}`, '_blank');
@@ -184,17 +262,15 @@ export default function KundliMain() {
     getAllKundli(1, "");
   }, [])
 
-  function CustomToolbar({ searchInputRef }) {
+  function CustomToolbar() {
     return (
-      <GridToolbarContainer style={{ width: "100%" }} className="px-5  d-flex justify-content-between  w-100 align-items-center">
+      <GridToolbarContainer className="d-flex justify-content-between p-0 w-full align-items-center">
         <PageTitle title={"Kundali / Birth Charts"} endCmp={
           <>
-            <GridToolbarQuickFilter inputRef={searchInputRef} className="SearchBar" style={{ width: "70%", height: "44px" }} />
+            <GridToolbarQuickFilter inputRef={searchInputRef} autoFocus={!open} className="SearchBar w-full md:w-full sm:w-8/12 " />
             <PreviewActions value={"New Kundali"} onButtonClick={handleAddClick} icon={'tabler-plus'} />
           </>
         } />
-
-        {/* <div className="me-auto" style={{ fontSize: '16px', fontWeight: '500', color: "#2F2B3DB3" }}>Review your Kundli records below</div> */}
       </GridToolbarContainer>
     );
   }
@@ -202,16 +278,25 @@ export default function KundliMain() {
   const fetchData = debounce(async (query) => {
     if (query.length > 0 || query.length == 0) {
       await getAllKundli(pageNo, query);
-      if (searchInputRef.current)
-        searchInputRef.current.focus();
+      setTimeout(() => {
+        if (searchInputRef.current) {
+          console.log("in if")
+          searchInputRef.current.focus();
+        } else {
+          console.log("in else")
+        }
+      }, 1000);
     }
   }, 500)
 
   const handleFilterModelChange = (filterModel) => {
-    if (filterModel.quickFilterValues) {
+    console.log(filterModel)
+    if (filterModel.quickFilterValues.length) {
       const query = filterModel.quickFilterValues.join(' ');
       if (query.length >= 3)
         fetchData(query);
+    } else {
+      getAllKundli(pageNo, "");
     }
   }
 
@@ -241,20 +326,76 @@ export default function KundliMain() {
     },
   });
 
+  // Func
+  const getAKundliData = async (kId) => {
+    if (kId != "undefined" && kId != null) {
+      setLoading(true);
+      const res = await GetKundliIDDataAPI(kId);
+      setLoading(false);
+      if (res.hasError) {
+        // router.push('/kundlipage')
+        return toastDisplayer("error", res.error);
+      } else {
+        setAKundliData(res?.responseData?.data?.Result)
+      }
+    } else {
+      // router.push('/kundlipage')
+      return toastDisplayer("error", "Kundli Id not found.");
+    }
+
+  }
+
+  useEffect(() => {
+    if(AKundliData!=null){
+      if (printRef.current) {
+        setLoading(true)
+        setTimeout(() => {
+          html2canvas(printRef.current).then(canvas => {
+            const imgData = canvas.toDataURL('image/jpeg', 2); // Convert to JPEG with lower quality
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const imgWidth = 200; // A4 width in mm
+            const pageHeight = 297; // A4 height in mm
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            let heightLeft = imgHeight;
+            let position = 4;
+
+            pdf.addImage(imgData, 'JPEG', 4, position, imgWidth, imgHeight, '', 'FAST');
+            heightLeft -= pageHeight;
+
+            while (heightLeft > 0) {
+              position = heightLeft - imgHeight;
+              pdf.addPage();
+              pdf.addImage(imgData, 'JPEG', 4, position, imgWidth, imgHeight, '', 'FAST');
+              heightLeft -= pageHeight;
+            }
+
+            pdf.save('document.pdf');
+          });
+          setLoading(false)
+        }, 2000);
+      }
+    }
+  }, [AKundliData])
+
 
   return (
     <>
 
       {loading && <Loader />}
-      <Grid>
-
+      {AKundliData &&
+        <>
+          <div ref={printRef} className='previewPDFPrint' style={{ width: "1240px" }}>
+            <PreviewCard kundliData={AKundliData} isPrintDiv={true} />
+          </div>
+        </>
+      }
+      <Grid container spacing={6}>
         <Grid item xs={12} md={12}>
           <Card>
-            <CardContent className='flex flex-col gap-4 p-0'>
 
-             <div className="KundliList">
-                <Box className="p-5">
-
+            <CardContent className='flex flex-col gap-2 p-0'>
+              <div className="KundliList">
+                <Box>
                   <ThemeProvider theme={customTheme}>
                     <DataGrid
                       className="KundliListGrid"
@@ -269,8 +410,11 @@ export default function KundliMain() {
                           backgroundColor: '#f5f5f5', // White color for even rows
                         },
                         '& .MuiDataGrid-row:hover': {
-                          color:'var(--primary-color) !important',
+                          color: 'var(--primary-color) !important',
                           backgroundColor: 'var(--secondary-soft-color) !important',
+                        },
+                        '& .MuiDataGrid-columnHeader .MuiDataGrid-sortIcon': {
+                          color: 'white', // Change to your desired color
                         },
                       }}
                       onRowDoubleClick={(e) => { handlePreviewClick(e, e.row.KundaliID) }}
@@ -278,24 +422,21 @@ export default function KundliMain() {
                       getRowId={(row) => row.KundaliID}
                       rows={kundliData}
                       columns={columns}
-                      disableColumnSorting
                       disableColumnMenu
                       rowHeight={45}
                       columnHeaderHeight={45}
                       disableColumnResize
                       disableRowSelectionOnClick
-                      pageSizeOptions={[5]}
+                      pageSizeOptions={[10]}
                       initialState={{
-                        pinnedColumns: { left: ['FirstName', 'iconColumn'] } // Combine both columns here
+                        pagination: { paginationModel: { pageSize: 10 } },
+                        pinnedColumns: {
+                          right: ['iconColumn'],  // iconColumn pinned to the right
+                        }
                       }}
-                      // initialState={{
-                      //   pagination: { paginationModel: { pageSize: 5 } },
-                      //   pinnedColumns: { left: ['FirstName'], left: ['iconColumn'] }
-                      // }}
                       paginationMode="server"
                       filterMode="server"
-                      rowCount={totalRowCount} // Set the total count of rows
-                      // paginationModel={paginationModel}
+                      rowCount={totalRowCount}
                       onPaginationModelChange={(paginationModel) => {
                         fetchDataForPage(paginationModel.page);
                       }}
@@ -313,7 +454,6 @@ export default function KundliMain() {
 
         </Grid>
       </Grid>
-
       {open && (
         <AddKundliPopUp open={open} handleAddClose={handleAddClose} getAllKundli={getAllKundli} setUserData={setUserData} userData={userData} />
       )}

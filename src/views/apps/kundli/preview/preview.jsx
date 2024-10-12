@@ -135,7 +135,7 @@ const Preview = ({ kundliData, setKundliData }) => {
         <Grid item xs={12} md={12}>
           <Card>
             <CardContent className='flex flex-col gap-2 p-0'>
-              <div className='px-6 pt-4'>
+              <div className=''>
               <PageTitle title={"Kundli Preview"} endCmp={
                 <>
                   <div className='flex justify-end gap-3 sm:flex'>
