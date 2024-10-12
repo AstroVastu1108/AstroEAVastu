@@ -20,14 +20,21 @@ const FooterContent = () => {
     <div
       className={classnames(verticalLayoutClasses.footerContent, 'flex items-center justify-between flex-wrap gap-4')}
     >
-      <p>
-        <span className='text-textSecondary'>{`© ${new Date().getFullYear()}, Made with `}</span>
-        <span>{`❤️`}</span>
-        <span className='text-textSecondary'>{` by `}</span>
-        <Link href='#' className='text-primary uppercase'>
-          AstroVastu
+      <div className='flex gap-x-2'>
+        <Link href='#' className='text-primary'>
+          AstroVastu.net
         </Link>
-      </p>
+        <i className='tabler-git-merge'></i>
+        <span>Version 24.05.17</span>
+        <i className='tabler-minus-vertical'></i>
+        <span>Powered by</span>
+        <Link href='#' className='text-primary'>
+          Elephant Astrology
+        </Link>
+      </div>
+      <div  className='flex gap-x-2'>
+      <span className='text-textSecondary'>{`© ${new Date().getFullYear()} `}</span>
+      </div>
       {!isBreakpointReached && (""
         // <div className='flex items-center gap-4'>
         //   <Link href='https://themeforest.net/licenses/standard' target='_blank' className='text-primary'>

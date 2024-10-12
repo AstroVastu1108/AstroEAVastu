@@ -3,7 +3,9 @@
   left: -10000px;
 }
 
-
+.MuiButtonBase-root{
+  font-family: 'Segoe UI' !important;
+}
 
 .pdf-Div {
   padding-left: 0rem !important;
@@ -632,23 +634,7 @@
 }
 
 
-.previewPDF {
-  padding: 0rem 1.25rem;
-}
-
 .timeTool-div{
-  /* sx={{
-    position: 'fixed',
-    bottom: '110px',
-    right: '90px',
-    width: '250px',
-    height: 'auto',
-    backgroundColor: 'white',
-    padding: '16px',
-    borderRadius: '8px',
-    boxShadow: 3,
-    // zIndex: 9999
-  }} */
    position: fixed;
    bottom: 110px;
    right: 90px;
