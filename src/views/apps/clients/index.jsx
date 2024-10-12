@@ -14,14 +14,38 @@ import VerificationPopup from "@/@core/components/custom-verification/verificati
 export default function ClientMain() {
   const { user } = useAuth();
   const router = useRouter()
+
   const handleClientDetail = (data)=>{
     router.push(`clientDetails?cid=${data.clientID}`)
   }
 
   // vars
   const columns = [
-    { field: 'clientID', headerName: 'Client ID',  width: 250,headerClassName: 'rowheader', },
-    { field: 'name', headerName: 'Name', width: 250,headerClassName: 'rowheader', },
+    { field: 'clientID', headerName: 'Client ID', width: 350, headerClassName: 'rowheader', },
+    { field: 'name', headerName: 'Name', width: 250, headerClassName: 'rowheader', renderCell: (params) => (
+      <>
+        <span className="font-semibold">{params.row.name}</span>
+      </>
+    ), },
+    { field: 'status', headerName: 'Status', width: 80, headerClassName: 'rowheader', },
+    { field: 'aliasID', headerName: 'Alias ID', width: 150, headerClassName: 'rowheader', },
+    { field: 'person', headerName: 'Person', width: 150, headerClassName: 'rowheader', },
+    { field: 'reference', headerName: 'Reference', width: 180, headerClassName: 'rowheader', },
+    { field: 'building', headerName: 'Building', width: 200, headerClassName: 'rowheader', },
+    { field: 'lane', headerName: 'Lane', width: 150, headerClassName: 'rowheader', },
+    { field: 'area', headerName: 'Area', width: 150, headerClassName: 'rowheader', },
+    { field: 'country', headerName: 'Country', width: 150, headerClassName: 'rowheader', },
+    { field: 'state', headerName: 'State', width: 150, headerClassName: 'rowheader', },
+    { field: 'city', headerName: 'City', width: 250, headerClassName: 'rowheader', },
+    { field: 'pin', headerName: 'Pin', width: 100, headerClassName: 'rowheader', },
+    { field: 'phone1', headerName: 'Phone 1', width: 130, headerClassName: 'rowheader', },
+    { field: 'phone2', headerName: 'Phone 2', width: 130, headerClassName: 'rowheader', },
+    { field: 'phone3', headerName: 'Phone 3', width: 130, headerClassName: 'rowheader', },
+    { field: 'phone1Name', headerName: 'Phone 1 Name', width: 180, headerClassName: 'rowheader', },
+    { field: 'phone2Name', headerName: 'Phone 2 Name', width: 180, headerClassName: 'rowheader', },
+    { field: 'phone3Name', headerName: 'Phone 3 Name', width: 180, headerClassName: 'rowheader', },
+    { field: 'email1', headerName: 'Email', width: 200, headerClassName: 'rowheader', },
+    { field: 'gstin', headerName: 'GSTIN', width: 150, headerClassName: 'rowheader', },
     {
       field: 'iconColumn', // Unique field name for this column
       headerName: '',
@@ -29,7 +53,7 @@ export default function ClientMain() {
       headerClassName: 'rowheader',
       renderCell: (params) => (
         <>
-          <IconButton onClick={() =>handleClientDetail(params?.row)}>
+          <IconButton onClick={() => handleClientDetail(params?.row)}>
             <i
               className={'tabler-arrow-up-right bg-primary'}
             />
@@ -39,7 +63,7 @@ export default function ClientMain() {
               className={'tabler-edit bg-primary'}
             />
           </IconButton>
-          <IconButton onClick={() =>handleOpenDeletePopup(params?.row)}>
+          <IconButton onClick={() => handleOpenDeletePopup(params?.row)}>
             <i
               className={'tabler-trash bg-primary'}
             />
@@ -47,25 +71,6 @@ export default function ClientMain() {
         </>
       ),
     },
-    { field: 'status', headerName: 'Status',  width: 100,headerClassName: 'rowheader', },
-    { field: 'aliasID', headerName: 'Alias ID',  width: 150,headerClassName: 'rowheader', },
-    { field: 'person', headerName: 'Person',  width: 150,headerClassName: 'rowheader', },
-    { field: 'reference', headerName: 'Reference',  width: 180,headerClassName: 'rowheader', },
-    { field: 'building', headerName: 'Building',  width: 200,headerClassName: 'rowheader', },
-    { field: 'lane', headerName: 'Lane',  width: 150,headerClassName: 'rowheader', },
-    { field: 'area', headerName: 'Area',  width: 150,headerClassName: 'rowheader', },
-    { field: 'city', headerName: 'City',  width: 150,headerClassName: 'rowheader', },
-    { field: 'pin', headerName: 'Pin',  width: 100,headerClassName: 'rowheader', },
-    { field: 'state', headerName: 'State',  width: 150,headerClassName: 'rowheader', },
-    { field: 'country', headerName: 'Country',  width: 150,headerClassName: 'rowheader', },
-    { field: 'phone1', headerName: 'Phone 1',  width: 130,headerClassName: 'rowheader', },
-    { field: 'phone2', headerName: 'Phone 2',  width: 130,headerClassName: 'rowheader', },
-    { field: 'phone3', headerName: 'Phone 3',  width: 130,headerClassName: 'rowheader', },
-    { field: 'phone1Name', headerName: 'Phone 1 Name',  width: 180,headerClassName: 'rowheader', },
-    { field: 'phone2Name', headerName: 'Phone 2 Name',  width: 180,headerClassName: 'rowheader', },
-    { field: 'phone3Name', headerName: 'Phone 3 Name',  width: 180,headerClassName: 'rowheader', },
-    { field: 'email1', headerName: 'Email',  width: 200,headerClassName: 'rowheader', },
-    { field: 'gstin', headerName: 'GSTIN',  width: 150,headerClassName: 'rowheader', },
   ];
 
   const [open, setOpen] = useState(false);
@@ -76,7 +81,7 @@ export default function ClientMain() {
 
   const [totalRowCount, setTotalRowCount] = useState(1000);
 
-  const handleOpenDeletePopup = (data) =>{
+  const handleOpenDeletePopup = (data) => {
     setSelectedClientData(data);
     return setOpenDelete(true);
   }
@@ -112,22 +117,22 @@ export default function ClientMain() {
     }
   }, [user])
 
-  const handleSaveClient = async (payload)=>{
-      try {
-            const response = await CreateClient(payload);
-            if (response.hasError) {
-                setIsSaving(false)
-                return toastDisplayer("error", response.errorMessage);
-            } else {
-                setOpen(false);
-                toastDisplayer("success", "Client added successfully.");
-                if (user?.transactionID) {
-                  getAllClients(user?.transactionID);
-                }
-            }
-      } catch (error) {
-        return toastDisplayer("error", error);
+  const handleSaveClient = async (payload) => {
+    try {
+      const response = await CreateClient(payload);
+      if (response.hasError) {
+        setIsSaving(false)
+        return toastDisplayer("error", response.errorMessage);
+      } else {
+        setOpen(false);
+        toastDisplayer("success", "Client added successfully.");
+        if (user?.transactionID) {
+          getAllClients(user?.transactionID);
+        }
       }
+    } catch (error) {
+      return toastDisplayer("error", error);
+    }
   }
 
   function CustomToolbar() {
@@ -136,7 +141,7 @@ export default function ClientMain() {
 
         <div className="me-auto" style={{ fontSize: '16px', fontWeight: '500', color: "#2F2B3DB3" }}>  <GridToolbarColumnsButton />
           {/* <GridToolbarExport className="SearchBar" /> */}
-          </div>
+        </div>
         <GridToolbarQuickFilter className="SearchBar" />
 
       </GridToolbarContainer>
@@ -167,21 +172,21 @@ export default function ClientMain() {
   const handleClientDelete = async ()=>{
 
     try {
-      if(selectedClientData != null && user?.transactionID){
-        const response = await DeleteClient(selectedClientData?.clientID,user?.transactionID);
+      if (selectedClientData != null && user?.transactionID) {
+        const response = await DeleteClient(selectedClientData?.clientID, user?.transactionID);
         if (response.hasError) {
-            return toastDisplayer("error", response.errorMessage);
+          return toastDisplayer("error", response.errorMessage);
         } else {
-            setOpenDelete(false);
-            toastDisplayer("success", "Client deleted successfully.");
-            if (user?.transactionID) {
-              getAllClients(user?.transactionID);
-            }
+          setOpenDelete(false);
+          toastDisplayer("success", "Client deleted successfully.");
+          if (user?.transactionID) {
+            getAllClients(user?.transactionID);
+          }
         }
       }
-} catch (error) {
-  return toastDisplayer("error", error);
-}
+    } catch (error) {
+      return toastDisplayer("error", error);
+    }
   }
 
 
@@ -196,10 +201,25 @@ export default function ClientMain() {
               <PageTitle title={"Client List"} endCmp={<PreviewActions value={"New Client"} onButtonClick={handleAddClick} />
               } />
               <div className="KundliList">
-                <Box className="p-5">
 
                   <ThemeProvider theme={customTheme}>
                     <DataGrid
+                      className="KundliListGrid"
+                      getRowClassName={(params) =>
+                        params.row.IsCurrent ? 'highlight-row' : ''
+                      }
+                      sx={{
+                        '& .MuiDataGrid-row:nth-of-type(odd)': {
+                          backgroundColor: '#ffffff', // Light color for odd rows
+                        },
+                        '& .MuiDataGrid-row:nth-of-type(even)': {
+                          backgroundColor: '#f5f5f5', // White color for even rows
+                        },
+                        '& .MuiDataGrid-row:hover': {
+                          color:'var(--primary-color) !important',
+                          backgroundColor: 'var(--secondary-soft-color) !important',
+                        },
+                      }}
                       rows={clientData}
                       columns={columns}
                       getRowId={(row) => row.clientID}
@@ -211,6 +231,18 @@ export default function ClientMain() {
                         pagination: { paginationModel: { pageSize: 5 } },
                         columns: {
                           columnVisibilityModel: {
+                            person:false,
+                            reference:false,
+                            building:false,
+                            lane:false,
+                            pin:false,
+                            state:false,
+                            area:false,
+                            phone2:false,
+                            phone3:false,
+                            phone2Name:false,
+                            gstin:false,
+                            phone3Name:false,
                             aliasID: false,
                             clientID: false,
                             phone2: false,
@@ -227,7 +259,6 @@ export default function ClientMain() {
                   </ThemeProvider>
 
 
-                </Box>
               </div>
             </CardContent>
           </Card>

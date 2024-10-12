@@ -17,7 +17,7 @@ export async function sendSignInRequest(username,password) {
       if (response.status === 200) {
         return {
           isOk: true,
-          data: response.data.result,
+          data: response.data,
         };
       }else{
         return {

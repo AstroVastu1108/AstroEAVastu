@@ -40,6 +40,7 @@ import Loader from '@/components/common/Loader/Loader'
 import OTPverify from '@/components/common/OTPVerify/OTPverify'
 import { requestOtp } from '@/app/Server/API/auth'
 import { LoadingButton } from '@mui/lab'
+import Cookies from 'js-cookie';
 
 // Styled Custom Components
 const LoginIllustration = styled('img')(({ theme }) => ({
@@ -96,7 +97,7 @@ const LoginV2 = ({ mode }) => {
 
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
-  const { login, loginData } = useAuth();
+  const { login, loginData, authRuleContext } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: ""
@@ -174,8 +175,13 @@ const LoginV2 = ({ mode }) => {
       } else {
         // setIsDisable(false);
         setIsOtpVerified("pending")
-        toastDisplayer('success', 'Loggedin successful! \nYou will be redirecting...')
-        return router.push('/kundlipage')
+        toastDisplayer('success', `${result.message} \nYou will be redirecting...`)
+        const storedSessionValue = JSON.parse(Cookies.get('authState'));
+        const {  authRule } = storedSessionValue;
+        const routePermissions = JSON.parse(authRule);
+        const firstAccessibleItem = routePermissions.find(item => item.HasAccess);
+
+        return router.push(firstAccessibleItem.Href)
       }
     } catch (error) {
       setIsDisable(false);
