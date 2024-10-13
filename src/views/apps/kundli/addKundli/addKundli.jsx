@@ -305,9 +305,9 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
 
             <Grid item xs={12} sm={4}>
               <AppReactDatepicker
-                selected={currentTime}
-                defaultValue={currentTime}
-                value={userData.date}
+                selected={userData.date}
+                defaultValue={userData.date}
+                // value={userData.date}
                 showYearDropdown
                 showMonthDropdown
                 onChange={date => {
