@@ -358,7 +358,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
 
                 getOptionLabel={(option) => option.name}
                 getOptionKey={(option) => option.iso2}
-                onChange={(event, newValue) => handleInputChange('country', newValue, 'Country')}
+                onChange={(event, newValue) => handleInputChange('Country', newValue, 'Country')}
                 renderInput={(params) => (
                   <TextField {...params} label='Select Country' variant='outlined'
                     {...(errors.Country && { error: true, helperText: 'Country is required.' })}
