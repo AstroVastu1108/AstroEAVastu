@@ -162,9 +162,9 @@ const LoginV2 = ({ mode }) => {
       if (!formData.email || !emailRegex.test(formData.email)) {
         return toastDisplayer("error", "Invalid email address.")
       }
-      if (formData.password == "") {
-        return toastDisplayer("error", "password is required.")
-      }
+      // if (formData.password == "") {
+      //   return toastDisplayer("error", "password is required.")
+      // }
       setIsDisable(true)
       const result = await loginData(formData)
       if (result.error) {
@@ -219,9 +219,12 @@ const LoginV2 = ({ mode }) => {
 
   useEffect(()=>{
     if(isOtpVerified == "verified"){
-      passwordInputRef.current.focus();
+      // passwordInputRef.current.focus();
+      handleLogin();
     }
   },[isOtpVerified])
+
+  // useEffect(()=>{},[is])
   return (
     <>
       {loading && <Loader />}
@@ -284,7 +287,7 @@ const LoginV2 = ({ mode }) => {
                     {...(errors.email && { error: true })}
                   />
                   {
-                    isOtpVerified == "verified" ? <>
+                    isOtpVerified == "verifiedd" ? <>
 
                       <TextField
                         fullWidth
@@ -330,7 +333,7 @@ const LoginV2 = ({ mode }) => {
                     ) : ""
                   }
                   {
-                    isOtpVerified == "verified" ? (
+                    isOtpVerified == "verifiedd" ? (
                       <LoadingButton
                       fullWidth
                       variant='contained'

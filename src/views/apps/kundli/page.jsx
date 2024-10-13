@@ -14,6 +14,7 @@ import PageTitle from "@/components/common/PageTitle/PageTitle";
 import PreviewCard from "./preview/PreviewCard";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { getKundliPdf } from "@/app/Server/API/common";
 
 
 export default function KundliMain() {
@@ -153,8 +154,14 @@ export default function KundliMain() {
           handleClose();
         };
 
+        // const handleDownload = () => {
+        //   getAKundliData(params?.row?.KundaliID)
+        //   handleClose();
+        // };
+
         const handleDownload = () => {
-          getAKundliData(params?.row?.KundaliID)
+          const cname = params?.row?.FirstName + " " + params?.row?.LastName;
+          getAKundliData(params?.row?.KundaliID,cname)
           handleClose();
         };
 
@@ -327,23 +334,58 @@ export default function KundliMain() {
   });
 
   // Func
-  const getAKundliData = async (kId) => {
-    if (kId != "undefined" && kId != null) {
-      setLoading(true);
-      const res = await GetKundliIDDataAPI(kId);
-      setLoading(false);
-      if (res.hasError) {
-        // router.push('/kundlipage')
-        return toastDisplayer("error", res.error);
-      } else {
-        setAKundliData(res?.responseData?.data?.Result)
+  const getAKundliData = async (kId,cname) => {
+    if (kId) {
+      try {
+        setLoading(true);
+        const response = await getKundliPdf(kId);
+        console.log(response);
+
+        if (response.hasError) {
+          setLoading(false);
+          return toastDisplayer("error", response.error);
+        }
+
+        // Create a Blob from the PDF
+        const pdfBlob = new Blob([response.responseData.data], { type: 'application/pdf' });
+
+        // Create a URL for the Blob
+        const pdfURL = URL.createObjectURL(pdfBlob);
+
+        // Create an anchor element and simulate a click to download the file
+        const link = document.createElement('a');
+        link.href = pdfURL;
+        link.setAttribute('download', `kundli_${cname}.pdf`); // Set the file name
+        document.body.appendChild(link);
+        link.click(); // Simulate the click
+        document.body.removeChild(link); // Clean up
+
+        setLoading(false);
+      } catch (error) {
+        console.error("Error downloading PDF:", error);
+        setLoading(false);
       }
     } else {
-      // router.push('/kundlipage')
-      return toastDisplayer("error", "Kundli Id not found.");
+      return toastDisplayer("error", "Kundli ID not found.");
     }
+  };
+  // const getAKundliData = async (kId) => {
+  //   if (kId != "undefined" && kId != null) {
+  //     setLoading(true);
+  //     const res = await GetKundliIDDataAPI(kId);
+  //     setLoading(false);
+  //     if (res.hasError) {
+  //       // router.push('/kundlipage')
+  //       return toastDisplayer("error", res.error);
+  //     } else {
+  //       setAKundliData(res?.responseData?.data?.Result)
+  //     }
+  //   } else {
+  //     // router.push('/kundlipage')
+  //     return toastDisplayer("error", "Kundli Id not found.");
+  //   }
 
-  }
+  // }
 
   useEffect(() => {
     if(AKundliData!=null){

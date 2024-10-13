@@ -159,7 +159,8 @@ export const AuthProvider = ({ children }) => {
 
     const loginData = async (userData) => {
         // console.log("Context is called", userData)
-        const result = await sendSignInRequest(userData.email, userData.password);
+        const result = await sendSignInRequest(userData.email);
+        // const result = await sendSignInRequest(userData.email, userData.password);
         if (result.isOk) {
             const responseData = result.data;
             setUser(responseData.result)
