@@ -176,7 +176,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
           MiddleName: userData.MiddleName,
           Gender: userData.Gender,
           Country: userData.Country?.name,
-          CityID: userData.CityID,
+          CityID: userData.CityID?.CityID,
           BirthDate: birthDate,
           BirthTime: birthTime,
           Prakriti: userData.prakriti || '',
