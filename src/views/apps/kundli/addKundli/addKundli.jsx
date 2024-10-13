@@ -75,7 +75,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
             ...prev,
             ["date"]: birthDate,
             ["time"]: birthDate,
-            ["country"]: newCounty[0],
+            ["Country"]: newCounty[0],
         }));
         setCurrentTime(birthDate);
     }
@@ -96,6 +96,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
   }
 
   useEffect(() => {
+    console.log("user data :",userData)
     fetchData()
   }, [])
 
@@ -136,23 +137,24 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
 
     const birthTime = userData.time ? new Date(userData.time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }).replace(/:/g, '') : null;
 
-    const formattedData = {
-      KundaliID : userData.KundaliID,
-      FirstName: userData.FirstName,
-      LastName: userData.LastName,
-      MiddleName: userData.MiddleName,
-      Gender: userData.Gender,
-      Country: userData.Country.name,
-      CityID: userData.CityID?.CityID,
-      BirthDate: birthDate,
-      BirthTime: birthTime,
-      Prakriti: userData.prakriti || '',
-      City: userData.CityID?.City
-    }
+
 
     try {
       setIsDisable(true)
       if (!userData.isUpdate) {
+        const formattedData = {
+          KundaliID : userData.KundaliID,
+          FirstName: userData.FirstName,
+          LastName: userData.LastName,
+          MiddleName: userData.MiddleName,
+          Gender: userData.Gender,
+          Country: userData.Country?.name,
+          CityID: userData.CityID?.CityID,
+          BirthDate: birthDate,
+          BirthTime: birthTime,
+          Prakriti: userData.prakriti || '',
+          City: userData.CityID?.City || ''
+        }
         const response = await CreateKundli(formattedData)
 
         if (response.hasError) {
@@ -166,6 +168,20 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
         toastDisplayer("success", `kundli data is saved successfully.`)
         return kId;
       } else {
+        console.log("user data : ",userData)
+        const formattedData = {
+          KundaliID : userData.KundaliID,
+          FirstName: userData.FirstName,
+          LastName: userData.LastName,
+          MiddleName: userData.MiddleName,
+          Gender: userData.Gender,
+          Country: userData.Country?.name,
+          CityID: userData.CityID,
+          BirthDate: birthDate,
+          BirthTime: birthTime,
+          Prakriti: userData.prakriti || '',
+          City: userData.CityID?.City || ''
+        }
         const response = await UpdateKundli(formattedData)
 
         if (response.hasError) {
@@ -174,7 +190,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
         }
         var kId = response?.responseData?.Result?.KundaliID;
         setIsDisable(false)
-        getAllKundli();
+        getAllKundli(1,"");
         handleAddClose();
         toastDisplayer("success", `Kundli data is updated successfully.`)
         return kId;

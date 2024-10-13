@@ -169,23 +169,25 @@ const LoginV2 = ({ mode }) => {
       const result = await loginData(formData)
       if (result.error) {
         setIsDisable(false);
+        setLoading(false);
         // console.log("Result : ", result.error)
         setIsOtpVerified("pending")
         return toastDisplayer("error", result.message)
       } else {
         // setIsDisable(false);
-        setIsOtpVerified("pending")
-        toastDisplayer('success', `${result.message} \nYou will be redirecting...`)
+        // setIsOtpVerified("pending")
+        // toastDisplayer('success', `${result.message} \nYou will be redirecting...`)
         const storedSessionValue = JSON.parse(Cookies.get('authState'));
         const {  authRule } = storedSessionValue;
         const routePermissions = JSON.parse(authRule);
         const firstAccessibleItem = routePermissions.find(item => item.HasAccess);
-
+        // setLoading(false)
         return router.push(firstAccessibleItem.Href)
       }
     } catch (error) {
       setIsDisable(false);
       setIsOtpVerified("pending")
+      setLoading(false)
       // console.log("error : ", error)
       return toastDisplayer("error", error)
     }
@@ -220,6 +222,7 @@ const LoginV2 = ({ mode }) => {
   useEffect(()=>{
     if(isOtpVerified == "verified"){
       // passwordInputRef.current.focus();
+      setLoading(true);
       handleLogin();
     }
   },[isOtpVerified])
@@ -263,7 +266,7 @@ const LoginV2 = ({ mode }) => {
           <Logo color={hidden ? 'primary' : 'white'} />
           </Link>
           <div className='flex flex-col gap-6 is-full sm:is-auto md:is-full sm:max-is-[400px] md:max-is-[unset] mbs-11 sm:mbs-14 md:mbs-0'>
-            {isOtpVerified == "pending" || isOtpVerified == "verified" ? (
+            {isOtpVerified == "pending" || isOtpVerified == "verifiedd" ? (
               <>
                 <div className='flex flex-col gap-1'>
                   <Typography variant='h4'>{`Welcome to ${themeConfig.templateName}! 👋🏻`}</Typography>
