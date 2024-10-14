@@ -228,9 +228,11 @@ export default function KundliMain() {
     BirthDate: null,
     Country: { iso2: 'IN', name: 'India' },
     BirthTime: null,
-    CityID: { CityID: 'A1AE28185ED49D47211760BF32D40EB742C84998', City: 'Surat, Gujarat' },
+    CityID: { CityID: 'A1AE28185ED49D47211760BF32D40EB742C84998', FormattedCity: 'Surat, Gujarat' },
+    // City:'Surat, Gujarat',
+    // CityID: 'A1AE28185ED49D47211760BF32D40EB742C84998',
     isUpdate: false,
-    City: 'Surat'
+    // City: 'Surat'
   })
   const [totalRowCount, setTotalRowCount] = useState(0);
   const [pageNo, setPageNo] = useState(1);
@@ -248,9 +250,9 @@ export default function KundliMain() {
       BirthDate: null,
       Country: { iso2: 'IN', name: 'India' },
       BirthTime: null,
-      CityID: { CityID: 'A1AE28185ED49D47211760BF32D40EB742C84998', City: 'Surat, Gujarat' },
+      CityID: { CityID: 'A1AE28185ED49D47211760BF32D40EB742C84998', FormattedCity: 'Surat, Gujarat' },
       isUpdate: false,
-      City: 'Surat'
+      // City: 'Surat'
     })
     setOpen(true);
   }
@@ -277,8 +279,13 @@ export default function KundliMain() {
   }
 
   const handleEditClick = (data) => {
+    console.log("edited data :",userData)
     setLoading(true);
     data.isUpdate = true;
+    // data.CityID = {
+    //   CityID: userData.CityID,
+    //   FormattedCity: userData.City
+    // }
     setUserData(data)
     setOpen(true);
     setLoading(false);
@@ -308,17 +315,13 @@ export default function KundliMain() {
       await getAllKundli(pageNo, query);
       setTimeout(() => {
         if (searchInputRef.current) {
-          console.log("in if")
           searchInputRef.current.focus();
-        } else {
-          console.log("in else")
         }
       }, 1000);
     }
   }, 500)
 
   const handleFilterModelChange = (filterModel) => {
-    console.log(filterModel)
     if (filterModel.quickFilterValues.length) {
       const query = filterModel.quickFilterValues.join(' ');
       if (query.length >= 3)

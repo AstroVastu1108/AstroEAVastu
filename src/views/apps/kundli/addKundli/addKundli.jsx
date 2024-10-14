@@ -11,6 +11,22 @@ import "./addKundli.css"
 function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserData }) {
 
   const [isDisable, setIsDisable] = useState(false);
+  const fetchData = async () => {
+    try {
+      const response = await getCountries()
+      if (response.hasError) {
+        return toastDisplayer("error", response.error)
+      }
+      const result = await response.responseData
+      setConutryData(result.Result.Countries)
+    } catch (error) {
+      return toastDisplayer("error", `There was a problem with the fetch operation: ${error}`)
+    }
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
   // const [userData, setUserData] = useState({
   //   FirstName: '',
   //   LastName: '',
@@ -33,9 +49,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
     CityID: false,
     Prakriti: false
   })
-  const [conutryData, setConutryData] = useState([
-    { iso2: 'IN', name: 'India' }
-  ])
+  const [conutryData, setConutryData] = useState([])
   const [cityData, setCityData] = useState([{
     "CityID": "A1AE28185ED49D47211760BF32D40EB742C84998",
     "FormattedCity": "Surat, Gujarat"
@@ -46,59 +60,74 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
 
   useEffect(() => {
     if (!userData.isUpdate) {
-        const now = new Date();
-        setUserData((prev) => ({ ...prev, ["date"]: now, ["time"]: now }));
-        setCurrentTime(now);
+      setCityData([userData.CityID])
+      // console.log(userData.Country)
+      const now = new Date();
+      setUserData((prev) => ({ ...prev, ["date"]: now, ["time"]: now }));
+      setCurrentTime(now);
+      // setConutryData(userData.Country)
+      // var newCounty = conutryData.filter((e) => e.name === userData.Country || e.iso2 === userData.Country);
+
+      // setUserData((prev) => ({
+      //   ...prev,
+      //   ["Country"]: newCounty[0],
+      // }));
     } else {
-        const dateParts = userData.BirthDate.split('-');
-        const timeParts = userData.BirthTime;
+      const dateParts = userData.BirthDate.split('-');
+      const timeParts = userData.BirthTime;
 
-        const day = parseInt(dateParts[0], 10);
-        const month = parseInt(dateParts[1], 10) - 1; // month is 0-indexed in JS
-        const year = parseInt(dateParts[2], 10);
+      const day = parseInt(dateParts[0], 10);
+      const month = parseInt(dateParts[1], 10) - 1; // month is 0-indexed in JS
+      const year = parseInt(dateParts[2], 10);
 
-        let hours, minutes;
-        if (timeParts && timeParts.length === 4 && !isNaN(timeParts)) {
-            hours = parseInt(timeParts.substring(0, 2), 10);
-            minutes = parseInt(timeParts.substring(2, 4), 10);
-        } else {
-            // Use current time if BirthTime is not in the correct format
-            const now = new Date();
-            hours = now.getHours();
-            minutes = now.getMinutes();
-        }
-
-        const birthDate = new Date(year, month, day, hours, minutes);
-        var newCounty = conutryData.filter((e) => e.name === userData.Country || e.iso2 === userData.Country);
-
-        setUserData((prev) => ({
-            ...prev,
-            ["date"]: birthDate,
-            ["time"]: birthDate,
-            ["Country"]: newCounty[0],
-        }));
-        setCurrentTime(birthDate);
-    }
-}, []);
-
-
-  const fetchData = async () => {
-    try {
-      const response = await getCountries()
-      if (response.hasError) {
-        return toastDisplayer("error", response.error)
+      let hours, minutes;
+      if (timeParts && timeParts.length === 4 && !isNaN(timeParts)) {
+        hours = parseInt(timeParts.substring(0, 2), 10);
+        minutes = parseInt(timeParts.substring(2, 4), 10);
+      } else {
+        // Use current time if BirthTime is not in the correct format
+        const now = new Date();
+        hours = now.getHours();
+        minutes = now.getMinutes();
       }
-      const result = await response.responseData
-      setConutryData(result.Result.Countries)
-    } catch (error) {
-      return toastDisplayer("error", `There was a problem with the fetch operation: ${error}`)
-    }
-  }
 
-  useEffect(() => {
-    console.log("user data :",userData)
-    fetchData()
-  }, [])
+      const birthDate = new Date(year, month, day, hours, minutes);
+
+
+      setUserData((prev) => ({
+        ...prev,
+        ["date"]: birthDate,
+        ["time"]: birthDate,
+        ["CityID"]: {
+          CityID: userData.CityID,
+          FormattedCity: userData.City
+        },
+        ["Country"]: {
+          name: userData.Country
+        },
+      }));
+      setCurrentTime(birthDate);
+    }
+  }, []);
+
+  // useEffect(() => {
+  //   if (conutryData.length) {
+  //     var newCounty = conutryData.filter((e) => e.name === userData.Country);
+  //     console.log(newCounty)
+  //     if (newCounty.length) {
+  //       setUserData((prev) => ({
+  //         ...prev,
+  //         ["Country"]: newCounty.name,
+  //       }));
+  //     }
+  //   }
+  //   // }
+  // }, [conutryData])
+
+  // useEffect(()=>{
+
+  // },[])
+
 
   const router = useRouter()
   const [query, setQuery] = useState('')
@@ -124,13 +153,13 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
     fetchCities(query)
   }, [query])
 
-  useEffect(()=>{
+  useEffect(() => {
     setTimeout(() => {
-      if (fnameRef.current){
+      if (fnameRef.current) {
         fnameRef.current.focus();
       }
     }, 500);
-  },[])
+  }, [])
 
   const handleSubmit = async () => {
     const birthDate = userData.date ? new Date(userData.date).toLocaleDateString('en-GB').split('/').join('-') : null
@@ -141,20 +170,24 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
 
     try {
       setIsDisable(true)
+      const formattedData = {
+        KundaliID: userData.KundaliID,
+        FirstName: userData.FirstName,
+        LastName: userData.LastName,
+        MiddleName: userData.MiddleName,
+        Gender: userData.Gender,
+        Country: userData.Country?.name,
+        CityID: userData.CityID?.CityID,
+        BirthDate: birthDate,
+        BirthTime: birthTime,
+        Prakriti: userData.prakriti || '',
+        City: userData.CityID?.FormattedCity
+      }
       if (!userData.isUpdate) {
-        const formattedData = {
-          KundaliID : userData.KundaliID,
-          FirstName: userData.FirstName,
-          LastName: userData.LastName,
-          MiddleName: userData.MiddleName,
-          Gender: userData.Gender,
-          Country: userData.Country?.name,
-          CityID: userData.CityID?.CityID,
-          BirthDate: birthDate,
-          BirthTime: birthTime,
-          Prakriti: userData.prakriti || '',
-          City: userData.CityID?.City || ''
-        }
+        setIsDisable(false);
+        console.log("user data =====> ", userData)
+        console.log("formattedData =====> ", formattedData)
+
         const response = await CreateKundli(formattedData)
 
         if (response.hasError) {
@@ -163,25 +196,27 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
         }
         var kId = response?.responseData?.Result?.KundaliID;
         setIsDisable(false)
-        getAllKundli(1,"");
+        getAllKundli(1, "");
         handleAddClose();
         toastDisplayer("success", `kundli data is saved successfully.`)
         return kId;
       } else {
-        console.log("user data : ",userData)
-        const formattedData = {
-          KundaliID : userData.KundaliID,
-          FirstName: userData.FirstName,
-          LastName: userData.LastName,
-          MiddleName: userData.MiddleName,
-          Gender: userData.Gender,
-          Country: userData.Country?.name,
-          CityID: userData.CityID?.CityID,
-          BirthDate: birthDate,
-          BirthTime: birthTime,
-          Prakriti: userData.prakriti || '',
-          City: userData.CityID?.City || ''
-        }
+        // const formattedData = {
+        //   KundaliID : userData.KundaliID,
+        //   FirstName: userData.FirstName,
+        //   LastName: userData.LastName,
+        //   MiddleName: userData.MiddleName,
+        //   Gender: userData.Gender,
+        //   Country: userData.Country?.name,
+        //   CityID: userData.CityID,
+        //   BirthDate: birthDate,
+        //   BirthTime: birthTime,
+        //   Prakriti: userData.prakriti || '',
+        //   City: userData.City
+        // }
+        setIsDisable(false)
+        console.log("user data =====> ", userData)
+        console.log("formattedData =====> ", formattedData)
         const response = await UpdateKundli(formattedData)
 
         if (response.hasError) {
@@ -190,7 +225,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
         }
         var kId = response?.responseData?.Result?.KundaliID;
         setIsDisable(false)
-        getAllKundli(1,"");
+        getAllKundli(1, "");
         handleAddClose();
         toastDisplayer("success", `Kundli data is updated successfully.`)
         return kId;
@@ -206,6 +241,18 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
   }
 
   const handleInputChange = (field, value, key) => {
+    // if (field == "CityID") {
+    //   console.log(value);
+    //   if (value && value?.FormattedCity) {
+    //     return setUserData(prev => ({
+    //       ...prev,
+    //       ["CityID"]: {
+    //         FormattedCity: value?.FormattedCity,
+    //         CityID: value?.CityID
+    //       }
+    //     }))
+    //   }
+    // }
     setUserData(prev => ({
       ...prev,
       [field]: value
@@ -351,13 +398,10 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
             <Grid item xs={12} sm={8}>
               <Autocomplete
                 id='country-select'
-                options={conutryData}
-                defaultValue={
-                  { iso2: 'IN', name: 'India' }
-                }
-
-                getOptionLabel={(option) => option.name}
-                getOptionKey={(option) => option.iso2}
+                options={conutryData && conutryData}
+                defaultValue={userData && userData.Country}
+                getOptionLabel={(option) => option?.name }
+                getOptionKey={(option) => option?.iso2}
                 onChange={(event, newValue) => handleInputChange('Country', newValue, 'Country')}
                 renderInput={(params) => (
                   <TextField {...params} label='Select Country' variant='outlined'
@@ -367,14 +411,14 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
               />
             </Grid>
             <Grid item xs={12} sm={4}>
-            <TextField
+              <TextField
                 fullWidth
                 label='Timezone'
                 value={"UTC+05:30 > Asia/Kolkata"}
                 InputProps={{
                   readOnly: true, // Makes the TextField read-only
                 }}
-                // onChange={e => handleInputChange('MiddleName', e.target.value, 'MiddleName')}
+              // onChange={e => handleInputChange('MiddleName', e.target.value, 'MiddleName')}
               // onChange={e => setUserData({ ...userData, MiddleName: e.target.value })}
               // {...(errors.MiddleName && { error: true, helperText: 'MiddleName is required.' })}
               />
@@ -383,28 +427,23 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
               <Autocomplete
                 id='city-autocomplete'
                 options={cityData}
-                // value={cityData.find(city => city.CityID === "A1AE28185ED49D47211760BF32D40EB742C84998") || null}
-                defaultValue={{
-                  "CityID": "A1AE28185ED49D47211760BF32D40EB742C84998",
-                  "FormattedCity": "Surat, Gujarat"
-                }}
+                defaultValue={cityData && userData.CityID}
                 getOptionLabel={(option) => option.FormattedCity || ''}
                 onInputChange={(event, newQuery) => setQuery(newQuery)}
                 onChange={(event, newValue) => handleInputChange('CityID', newValue, 'CityID')}
                 renderInput={(params) => (
                   <TextField {...params} label='Select City' variant='outlined'
-                  // {...(errors.CityID && { error: true, helperText: 'City is required.' })}
                   />
                 )}
               />
             </Grid>
             <Grid item xs={12} sm={4}>
-            <TextField
+              <TextField
                 fullWidth
                 label='Lat, Lng '
-                // placeholder='John'
-                // value={userData?.MiddleName}
-                // onChange={e => handleInputChange('MiddleName', e.target.value, 'MiddleName')}
+              // placeholder='John'
+              // value={userData?.MiddleName}
+              // onChange={e => handleInputChange('MiddleName', e.target.value, 'MiddleName')}
               // onChange={e => setUserData({ ...userData, MiddleName: e.target.value })}
               // {...(errors.MiddleName && { error: true, helperText: 'MiddleName is required.' })}
               />
@@ -412,7 +451,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button variant='contained' style={{textWrap:"nowrap"}} disabled={isDisable} onClick={handlePreview} >
+          <Button variant='contained' style={{ textWrap: "nowrap" }} disabled={isDisable} onClick={handlePreview} >
             {isDisable ? <>
               <CircularProgress size={14} aria-label="Wait" />
               <span style={{ marginLeft: 8 }}>Saving</span>
