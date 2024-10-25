@@ -24,13 +24,6 @@ jobs:
         with:
           submodules: true
           lfs: false
-
-      # Load .env variables
-      - name: Load environment variables from .env
-        run: |
-          set -o allexport
-          source .env
-          set +o allexport
           
       - name: Build And Deploy
         id: builddeploy
@@ -45,9 +38,6 @@ jobs:
           api_location: "" # Api source code path - optional
           output_location: "" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
-        env:
-          NEXT_PUBLIC_APIURL: ${{ env.NEXT_PUBLIC_APIURL }}
-          NEXT_PUBLIC_APIURL1: ${{ env.NEXT_PUBLIC_APIURL1 }}
           
 
   close_pull_request_job:
