@@ -9,6 +9,11 @@ on:
     branches:
       - vivek-v07
 
+env:
+  NEXT_PUBLIC_APIURL1: ${{ secrets.NEXT_PUBLIC_APIURL1 }}
+  NEXT_PUBLIC_APIURL: ${{ secrets.NEXT_PUBLIC_APIURL }}
+  WEBAPP_NAME: "AstroEAVastu"
+
 jobs:
   build_and_deploy_job:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
