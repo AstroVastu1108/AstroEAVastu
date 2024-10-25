@@ -9,7 +9,6 @@ on:
 env:
   NEXT_PUBLIC_APIURL1: "https://api.astrovastu.net"
   NEXT_PUBLIC_APIURL: "https://astrovastu-api.astrovastu.net/api"
-  WEBAPP_NAME: "medium-next-app-service-deploy"
 
 jobs:
   build:
