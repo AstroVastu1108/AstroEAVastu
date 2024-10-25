@@ -3,11 +3,11 @@ name: Azure Static Web Apps CI/CD
 on:
   push:
     branches:
-      - Dhruvi-V08
+      - vivek-v07
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
-      - Dhruvi-V08
+      - vivek-v07
 
 jobs:
   build_and_deploy_job:
