@@ -8,8 +8,8 @@ export async function sendSignInRequest(username,password) {
   };
     try {
       const payload = {
-        email:username,
-        password: password
+        email:username
+        // password: password
       }
 
       const response = await axios.post(`${API_URL}/Auth/LoginPost`, payload);
@@ -17,7 +17,7 @@ export async function sendSignInRequest(username,password) {
       if (response.status === 200) {
         return {
           isOk: true,
-          data: response.data.result,
+          data: response.data,
         };
       }else{
         return {

@@ -19,7 +19,7 @@ const themeConfig = {
   templateName: 'AstroVastu',
   homePageUrl: '/kundli',
   settingsCookieName: 'vuexy-mui-next-demo-1',
-  mode: 'system', // 'system', 'light', 'dark'
+  mode: 'light', // 'system', 'light', 'dark'
   skin: 'default', // 'default', 'bordered'
   semiDark: false, // true, false
   layout: 'collapsed', // 'vertical', 'collapsed', 'horizontal'

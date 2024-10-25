@@ -10,7 +10,7 @@ import Link from 'next/link'
 import { styled, useColorScheme, useTheme } from '@mui/material/styles'
 
 // Component Imports
-import VerticalNav, { NavHeader, NavCollapseIcons } from '@menu/vertical-menu'
+import VerticalNav, { NavHeader, NavCollapseIcons, MenuItem } from '@menu/vertical-menu'
 import VerticalMenu from './VerticalMenu'
 import Logo from '@components/layout/shared/Logo'
 
@@ -20,6 +20,9 @@ import { useSettings } from '@core/hooks/useSettings'
 
 // Style Imports
 import navigationCustomStyles from '@core/styles/vertical/navigationCustomStyles'
+import { Box, Button } from '@mui/material'
+import { useAuth } from '@/@core/contexts/authContext'
+import { useRouter } from 'next/navigation'
 
 const StyledBoxForShadow = styled('div')(({ theme }) => ({
   top: 60,
@@ -37,7 +40,29 @@ const StyledBoxForShadow = styled('div')(({ theme }) => ({
   }
 }))
 
+const StyledLogoutButtonContainer = styled(Box)(({ theme }) => ({
+  // position: 'absolute',
+   bottom: 10,
+  width: '100%',
+  padding: theme.spacing(2),
+  color: ` var(--mui-palette-primary-contrastText)`,
+  background: `linear-gradient(270deg, rgb(var(--mui-palette-primary-mainChannel) / 0.7) 0%, var(--mui-palette-primary-main) 100%) !important`,
+  boxShadow: ` var(--mui-customShadows-primary-sm)`,
+  borderTop: `1px solid ${theme.palette.divider}`,
+  textAlign: 'left',
+  display: "flex",
+  borderRadius: ` var(--mui-shape-borderRadius)`,
+  cursor: "pointer",
+  paddingBlock: "8px",
+  paddingInline: "12px",
+  gap:"10px"
+}))
+
+
 const Navigation = props => {
+  // states
+  const { logout } = useAuth();
+
   // Props
   const { mode, systemMode } = props
 
@@ -46,7 +71,7 @@ const Navigation = props => {
   const { updateSettings, settings } = useSettings()
   const { mode: muiMode, systemMode: muiSystemMode } = useColorScheme()
   const theme = useTheme()
-
+  const router = useRouter()
   // Refs
   const shadowRef = useRef(null)
 
@@ -86,6 +111,13 @@ const Navigation = props => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settings.layout])
 
+  const handleUserLogout = async () => {
+    // Redirect to login page
+    console.log("logout")
+    logout();
+    router.push('/login')
+  }
+
   return (
     // eslint-disable-next-line lines-around-comment
     // Sidebar Vertical Menu
@@ -98,8 +130,8 @@ const Navigation = props => {
       // when semiDark is enabled and the mode or systemMode is light
       {...(isSemiDark &&
         !isDark && {
-          'data-mui-color-scheme': 'dark'
-        })}
+        'data-mui-color-scheme': 'dark'
+      })}
     >
       {/* Nav Header including Logo & nav toggle icons  */}
       <NavHeader>
@@ -118,6 +150,19 @@ const Navigation = props => {
       </NavHeader>
       <StyledBoxForShadow ref={shadowRef} />
       <VerticalMenu scrollMenu={scrollMenu} />
+      {/* Logout Button at the bottom */}
+      <div className='p-3'>
+        <StyledLogoutButtonContainer onClick={ handleUserLogout}>
+          {!(isCollapsed && !isHovered) ? (
+            <>
+              <i className='tabler-logout-2' />
+              Logout
+            </>
+          ) : (
+            <i className='tabler-logout-2' />
+          )}
+        </StyledLogoutButtonContainer>
+      </div>
     </VerticalNav>
   )
 }

@@ -308,7 +308,7 @@ export default async function Page({ params }) {
     .filter(item => item.HasAccess)
     .map(item => item.Href);
 
-  if (hrefsWithAccess.includes('/kundlipage')) {
+  if (hrefsWithAccess.includes('/Kundalipage')) {
     hrefsWithAccess.push('/preview');
   }
   if (hrefsWithAccess.includes('/my-clients')) {

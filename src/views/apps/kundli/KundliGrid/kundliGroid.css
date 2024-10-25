@@ -1,0 +1,13 @@
+.KundliList {
+    .MuiDataGrid-toolbarContainer {
+      display: flex;
+      justify-content: end;
+      padding: 12px 0px;
+    }
+  
+    .rowheader {
+      background-color: var(--primary-color);
+      color: #fff;
+    }
+  }
+  

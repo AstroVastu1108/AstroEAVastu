@@ -15,6 +15,8 @@ import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplaye
 import Stepper from '@mui/material/Stepper'
 import Step from '@mui/material/Step'
 import StepButton from '@mui/material/StepButton'
+
+import Cookies from 'js-cookie';
 // import Otp from './Otp'
 
 import { useRouter } from 'next/navigation'
@@ -273,7 +275,12 @@ const RegisterPage = ({ mode }) => {
             businessname: '',
             businesslocation: '',
             profilePicture: null})
-          return router.push('/kundlipage')
+            const storedSessionValue = JSON.parse(Cookies.get('authState'));
+            const {  authRule } = storedSessionValue;
+            const routePermissions = JSON.parse(authRule);
+            const firstAccessibleItem = routePermissions.find(item => item.HasAccess);
+
+            return router.push(firstAccessibleItem.Href);
         }
       } catch (error) {
         setLoading(false);

@@ -4,11 +4,13 @@ import DetailClient from "./app/(dashboard)/Client/detailClient/detailClient";
 import MyCoursePage from "./app/(dashboard)/Courses/course";
 import KundliPage from "./app/(dashboard)/kundli/kundli";
 import PreviewPage from "./app/(dashboard)/kundli/preview/preview";
+import Subscription from "./app/(dashboard)/Subscription/subscription";
+import KundliTasksMain from "./app/(dashboard)/Tasks/kundliTasks";
 import UserConfig from "./app/(dashboard)/userConfig/userConfig";
 
 export const routes = [
     {
-      path: "kundlipage",
+      path: "Kundalipage",
       element: KundliPage,
     },
     {
@@ -34,5 +36,13 @@ export const routes = [
     {
       path: "clientDetails",
       element: DetailClient,
+    },
+    {
+      path: "taskPage",
+      element: KundliTasksMain,
+    },
+    {
+      path: "subscription ",
+      element: Subscription,
     }
   ];

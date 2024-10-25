@@ -159,11 +159,13 @@ export const AuthProvider = ({ children }) => {
 
     const loginData = async (userData) => {
         // console.log("Context is called", userData)
-        const result = await sendSignInRequest(userData.email, userData.password);
+        const result = await sendSignInRequest(userData.email);
+        // const result = await sendSignInRequest(userData.email, userData.password);
         if (result.isOk) {
-            setUser(result.data)
+            const responseData = result.data;
+            setUser(responseData.result)
             // console.log("result.data : ",result.data)
-            const routePermissions = JSON.parse(result.data.authRule);
+            const routePermissions = JSON.parse(responseData.result.authRule);
             // const hrefsWithAccess = routePermissions
             //     .filter(item => item.HasAccess)
             const hrefsWithAccess = routePermissions
@@ -171,8 +173,8 @@ export const AuthProvider = ({ children }) => {
             setAuthRuleContext(hrefsWithAccess);
             // setAuthRuleContext(result.data.authRule);
             const { useremail, authRule, refreshToken, accessToken, userRole, transactionID,
-                userAvatar} = result.data;
-
+                userAvatar} = responseData.result;
+            console.log("statusMsg : ",responseData.statusMsg)
             const expirationTime = new Date().getTime() + 5 * 60 * 1000;
 
             const authData = {
@@ -188,7 +190,7 @@ export const AuthProvider = ({ children }) => {
 
             return {
                 error: false,
-                message: "Loggedin successfully ..!!"
+                message: responseData.statusMsg
             };
 
         } else {

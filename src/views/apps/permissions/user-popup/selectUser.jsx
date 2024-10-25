@@ -114,7 +114,7 @@
 
 // export default UserPopUp
 import React, { useState } from 'react';
-import { Button, Checkbox, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid } from "@mui/material";
+import { Button, Checkbox, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, IconButton } from "@mui/material";
 import { DataGrid, GridToolbarContainer, GridToolbarQuickFilter } from '@mui/x-data-grid';
 
 function UserPopUp({ open, handleAddClose, userData, onSelectUser }) {
@@ -172,11 +172,29 @@ function UserPopUp({ open, handleAddClose, userData, onSelectUser }) {
         },
       }}
     >
-      <DialogTitle className='PopupHeader'>Select User</DialogTitle>
+       <DialogTitle
+        className='PopupHeader bg-primary text-white p-4'
+        style={{ borderTopLeftRadius: '5px', borderTopRightRadius: '5px' }}
+      >
+        <div className='w-100' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span>Select User</span>
+          <IconButton
+            aria-label='close'
+            onClick={handleAddClose}
+            sx={{
+              color: 'white'
+            }}
+          >
+            <i className='tabler-x'></i>
+          </IconButton>
+        </div>
+        <DialogContentText className='text-white'>Select the user to whom you want to give permissions.</DialogContentText>
+      </DialogTitle>
+      {/* <DialogTitle className='PopupHeader'>Select User</DialogTitle> */}
       <DialogContent>
-        <DialogContentText>
+        {/* <DialogContentText>
           Select the user to whom you want to give permissions.
-        </DialogContentText>
+        </DialogContentText> */}
         <Grid className='mt-4 p-3' container spacing={5}>
           <DataGrid
             getRowId={(row) => row.email}

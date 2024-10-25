@@ -40,6 +40,7 @@ import Loader from '@/components/common/Loader/Loader'
 import OTPverify from '@/components/common/OTPVerify/OTPverify'
 import { requestOtp } from '@/app/Server/API/auth'
 import { LoadingButton } from '@mui/lab'
+import Cookies from 'js-cookie';
 
 // Styled Custom Components
 const LoginIllustration = styled('img')(({ theme }) => ({
@@ -96,7 +97,7 @@ const LoginV2 = ({ mode }) => {
 
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
-  const { login, loginData } = useAuth();
+  const { login, loginData, authRuleContext } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: ""
@@ -161,25 +162,32 @@ const LoginV2 = ({ mode }) => {
       if (!formData.email || !emailRegex.test(formData.email)) {
         return toastDisplayer("error", "Invalid email address.")
       }
-      if (formData.password == "") {
-        return toastDisplayer("error", "password is required.")
-      }
+      // if (formData.password == "") {
+      //   return toastDisplayer("error", "password is required.")
+      // }
       setIsDisable(true)
       const result = await loginData(formData)
       if (result.error) {
         setIsDisable(false);
+        setLoading(false);
         // console.log("Result : ", result.error)
         setIsOtpVerified("pending")
         return toastDisplayer("error", result.message)
       } else {
         // setIsDisable(false);
-        setIsOtpVerified("pending")
-        toastDisplayer('success', 'Loggedin successful! \nYou will be redirecting...')
-        return router.push('/kundlipage')
+        // setIsOtpVerified("pending")
+        // toastDisplayer('success', `${result.message} \nYou will be redirecting...`)
+        const storedSessionValue = JSON.parse(Cookies.get('authState'));
+        const {  authRule } = storedSessionValue;
+        const routePermissions = JSON.parse(authRule);
+        const firstAccessibleItem = routePermissions.find(item => item.HasAccess);
+        // setLoading(false)
+        return router.push(firstAccessibleItem.Href)
       }
     } catch (error) {
       setIsDisable(false);
       setIsOtpVerified("pending")
+      setLoading(false)
       // console.log("error : ", error)
       return toastDisplayer("error", error)
     }
@@ -213,9 +221,13 @@ const LoginV2 = ({ mode }) => {
 
   useEffect(()=>{
     if(isOtpVerified == "verified"){
-      passwordInputRef.current.focus();
+      // passwordInputRef.current.focus();
+      setLoading(true);
+      handleLogin();
     }
   },[isOtpVerified])
+
+  // useEffect(()=>{},[is])
   return (
     <>
       {loading && <Loader />}
@@ -254,7 +266,7 @@ const LoginV2 = ({ mode }) => {
           <Logo color={hidden ? 'primary' : 'white'} />
           </Link>
           <div className='flex flex-col gap-6 is-full sm:is-auto md:is-full sm:max-is-[400px] md:max-is-[unset] mbs-11 sm:mbs-14 md:mbs-0'>
-            {isOtpVerified == "pending" || isOtpVerified == "verified" ? (
+            {isOtpVerified == "pending" || isOtpVerified == "verifiedd" ? (
               <>
                 <div className='flex flex-col gap-1'>
                   <Typography variant='h4'>{`Welcome to ${themeConfig.templateName}! 👋🏻`}</Typography>
@@ -278,7 +290,7 @@ const LoginV2 = ({ mode }) => {
                     {...(errors.email && { error: true })}
                   />
                   {
-                    isOtpVerified == "verified" ? <>
+                    isOtpVerified == "verifiedd" ? <>
 
                       <TextField
                         fullWidth
@@ -324,7 +336,7 @@ const LoginV2 = ({ mode }) => {
                     ) : ""
                   }
                   {
-                    isOtpVerified == "verified" ? (
+                    isOtpVerified == "verifiedd" ? (
                       <LoadingButton
                       fullWidth
                       variant='contained'
