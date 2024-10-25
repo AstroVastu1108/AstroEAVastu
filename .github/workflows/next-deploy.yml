@@ -7,8 +7,8 @@ on:
   workflow_dispatch:
 
 env:
-  NEXT_PUBLIC_APIURL1: ${{ secrets.NEXT_PUBLIC_APIURL1 }}
-  NEXT_PUBLIC_APIURL: ${{ secrets.NEXT_PUBLIC_APIURL }}
+  NEXT_PUBLIC_APIURL1: "https://api.astrovastu.net"
+  NEXT_PUBLIC_APIURL: "https://astrovastu-api.astrovastu.net/api"
   WEBAPP_NAME: "medium-next-app-service-deploy"
 
 jobs:
