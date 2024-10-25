@@ -3,11 +3,12 @@ name: Build and deploy Next.js app to Azure Web App
 on:
   push:
     branches:
-      - main
+      - vivek-v07
   workflow_dispatch:
 
 env:
-  APPLICATION_PUBLISH_PROFILE: ${{ secrets.APP_PUBLISH_PROFILE }}
+  NEXT_PUBLIC_APIURL1: ${{ secrets.NEXT_PUBLIC_APIURL1 }}
+  NEXT_PUBLIC_APIURL: ${{ secrets.NEXT_PUBLIC_APIURL }}
   WEBAPP_NAME: "medium-next-app-service-deploy"
 
 jobs:
