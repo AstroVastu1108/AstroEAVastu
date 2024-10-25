@@ -7,8 +7,8 @@ on:
   workflow_dispatch:
 
 env:
-  NEXT_PUBLIC_APIURL1: "https://api.astrovastu.net"
-  NEXT_PUBLIC_APIURL: "https://astrovastu-api.astrovastu.net/api"
+  NEXT_PUBLIC_APIURL1: ${{ secrets.NEXT_PUBLIC_APIURL1 }}
+  NEXT_PUBLIC_APIURL: ${{ secrets.NEXT_PUBLIC_APIURL }}
 
 jobs:
   build:
@@ -33,7 +33,8 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: ${{ env.WEBAPP_NAME }}
+          app-name: "EA"
           slot-name: "Production"
-          publish-profile: ${{ env.APPLICATION_PUBLISH_PROFILE }}
+          publish-profile: "test"
           package: ./build/standalone
+
