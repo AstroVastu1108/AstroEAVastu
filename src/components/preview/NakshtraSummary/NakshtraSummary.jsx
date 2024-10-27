@@ -2,6 +2,7 @@ import { DataGrid } from '@mui/x-data-grid'
 import React from 'react'
 import "./NakshtraSummary.css"
 import { Box, createTheme, ThemeProvider } from '@mui/material';
+import { nonEmpty } from 'valibot';
 
 function NakshtraSummary({ SummaryData, Aspect, symbols }) {
   const columns = [
@@ -22,8 +23,8 @@ function NakshtraSummary({ SummaryData, Aspect, symbols }) {
 
           return (
             <>
-              <div className="rashiMainDiv">
-                <div className='planetN'>{e.value}
+              <div className="planet-col-title">
+                <div className='planet-row'>{e.value}
                 </div>
                 {activeSymbols && <span className='rashiDiv' style={{ fontSize: "16px" }}>{activeSymbols}</span>}
               </div>
@@ -32,12 +33,12 @@ function NakshtraSummary({ SummaryData, Aspect, symbols }) {
         }
       }
       : {
-        field: 'id', headerName: 'House', headerClassName: 'rowheader',width:65, minWidth: 65, align: 'center',
+        field: 'id', headerName: '#', headerClassName: 'rowheader', width: 65, minWidth: 65, align: 'center',headerAlign:'center',
         renderCell: (e) => {
           return (
             <>
-              <div className="plDiv">
-                <div className='planetN'>{e.value}</div>
+              <div className="planet-col-title">
+                <div className='planet-row'>{e.value}</div>
               </div>
             </>
           );
@@ -48,9 +49,10 @@ function NakshtraSummary({ SummaryData, Aspect, symbols }) {
       renderCell: (e) => {
         const Rashi = e?.value.slice(0, 3) || "";
         const Degree = e?.row?.Degree?.split(":")[0] || "";
+        console.log(e?.row?.Degree?.split(":")[0])
         return (
           <>
-            <div className="rashiMainDiv">
+            <div className="planet-col-sign flex justify-between">
               <div className='signDiv'>{Rashi}.</div>
               <span className='degreeDiv'>{Degree}</span>
             </div>
@@ -63,9 +65,9 @@ function NakshtraSummary({ SummaryData, Aspect, symbols }) {
       renderCell: (e) => {
         return (
           <>
-            <div className="NMainDiv">
-              <div className='degreeDiv'>{e.value}</div>
-              <span className='degreeDiv'>{e?.row?.NakshatraPada}</span>
+            <div className="planet-col-nakshatra flex justify-between">
+              <div className=''>{e.value}</div>
+              <span className=''>{e?.row?.NakshatraPada}</span>
             </div>
           </>
         );
@@ -84,15 +86,15 @@ function NakshtraSummary({ SummaryData, Aspect, symbols }) {
       }
     },
     {
-      field: 'PL', headerName: 'PL (Source)', headerClassName: 'rowheader', minWidth: 120, flex: 1,
+      field: 'PL', headerName: <>PL <span className="planet-col-title-small">(Source)</span></>, headerClassName: 'rowheader', minWidth: 120, flex: 1,
       renderCell: (e) => {
         const planetName = e?.row?.PL?.Planet?.slice(0, 3) || "";
         const scriptFull = e?.row?.PL?.ScriptFull || "";
 
         return (
           <>
-            <div className="plDiv">
-              <div className='planetN'>{planetName}</div>
+            <div className="planet-col-script flex justify-between">
+              <div className='planet-col-planet-text'>{planetName}</div>
               <span className='degreeDiv'>{scriptFull}</span>
             </div>
           </>
@@ -100,15 +102,16 @@ function NakshtraSummary({ SummaryData, Aspect, symbols }) {
       }
     },
     {
-      field: 'NL', headerName: 'NL (Result)', headerClassName: 'rowheader', minWidth: 120, flex: 1,
+      field: 'NL', headerName: <>NL <span className="planet-col-title-small">(Result)</span></>, headerClassName: 'rowheader', minWidth: 120, flex: 1,
+      cellClassName: 'nl-column-cell',
       renderCell: (e) => {
         const planetName = e?.row?.NL?.Planet?.slice(0, 3) || "";
         const scriptFull = e?.row?.NL?.ScriptFull || "";
 
         return (
           <>
-            <div className="plDiv">
-              <div className='planetN'>{planetName}</div>
+            <div className="flex justify-between">
+              <div className='planet-col-planet-text'>{planetName}</div>
               <span className='degreeDiv'>{scriptFull}</span>
             </div>
           </>
@@ -116,15 +119,15 @@ function NakshtraSummary({ SummaryData, Aspect, symbols }) {
       }
     },
     {
-      field: 'SL', headerName: 'SL (Verifier)', headerClassName: 'rowheader', minWidth: 120, flex: 1,
+      field: 'SL', headerName: <>SL <span className="planet-col-title-small">(Verifier)</span></>, headerClassName: 'rowheader', minWidth: 120, flex: 1,
       renderCell: (e) => {
         const planetName = e?.row?.SL?.Planet?.slice(0, 3) || "";
         const scriptFull = e?.row?.SL?.ScriptFull || "";
 
         return (
           <>
-            <div className="plDiv">
-              <div className='planetN'>{planetName}</div>
+            <div className="flex justify-between">
+              <div className='planet-col-planet-text'>{planetName}</div>
               <span className='degreeDiv'>{scriptFull}</span>
             </div>
           </>
@@ -132,15 +135,15 @@ function NakshtraSummary({ SummaryData, Aspect, symbols }) {
       }
     },
     {
-      field: 'NLSL', headerName: 'NL-SL (InnerSelf)', headerClassName: 'rowheader', minWidth: 120, flex: 1,
+      field: 'NLSL', headerName: <>NL-SL <span className="planet-col-title-small">(InnerSelf)</span></>, headerClassName: 'rowheader', minWidth: 120, flex: 1,
       renderCell: (e) => {
         const planetName = e?.row?.NLSL?.Planet?.slice(0, 3) || "";
         const scriptFull = e?.row?.NLSL?.ScriptFull || "";
 
         return (
           <>
-            <div className="plDiv">
-              <div className='planetN'>{planetName}</div>
+            <div className="flex justify-between">
+              <div className='planet-col-planet-text'>{planetName}</div>
               <span className='degreeDiv'>{scriptFull}</span>
             </div>
           </>
@@ -150,7 +153,7 @@ function NakshtraSummary({ SummaryData, Aspect, symbols }) {
     {
       field: 'PHScriptFull', headerName: 'PH', headerClassName: 'rowheader', minWidth: 100, with: 100,
       renderCell: (e) => {
-        return <span className='degreeDiv'>{e.value}</span>
+        return <span className='planet-col-ph'>{e.value}</span>
       }
     },
   ];
@@ -183,19 +186,32 @@ function NakshtraSummary({ SummaryData, Aspect, symbols }) {
 
   return (
 
-    <Box width={"100%"} sx={{
-      '& .MuiDataGrid-cell': {
-        fontSize: "14px",
-        borderLeft: '0.5px solid var(--border-color)',
-        borderBottom: '0.5px solid var(--border-color)',
-      },
-      '& .MuiDataGrid-cell:last-child': {
-        borderRight: '0.5px solid var(--border-color)',
-      }
-    }}>
+    <Box width={"100%"}
+      sx={{
+        '& .MuiDataGrid-root': {
+          borderRadius: 0, // Remove border radius
+          borderLeft: '0px',
+          borderRight: '0px',
+        },
+        '& .MuiDataGrid-row:nth-of-type(odd)': {
+          backgroundColor: '#ffffff', // Light color for odd rows
+        },
+        '& .MuiDataGrid-row:nth-of-type(even)': {
+          backgroundColor: '#f5f5f5', // White color for even rows
+        },
+        '& .MuiDataGrid-row:hover': {
+          color: 'var(--primary-color) !important',
+          backgroundColor: 'var(--secondary-soft-color) !important',
+        },
+        '& .MuiDataGrid-columnHeader .MuiDataGrid-sortIcon': {
+          color: 'white', // Change to your desired color
+        },
+      }}
+    >
       <ThemeProvider theme={customTheme}>
 
         <DataGrid
+          showCellVerticalBorder
           rows={rowsSummaryData}
           columns={columns}
           initialState={{

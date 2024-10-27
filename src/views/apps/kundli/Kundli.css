@@ -1,5 +1,5 @@
 .KundliListGrid__highlight-row {
-  background-color: yellow; /* For highlighting rows */
+  background-color: var(--secondary-color); /* For highlighting rows */
 }
 
 .KundliListGrid__row--hover {

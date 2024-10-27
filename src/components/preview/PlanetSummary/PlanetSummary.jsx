@@ -74,18 +74,42 @@ const SummaryAspect = ({ SummaryData, Aspect }) => {
     },
   });
   return (
-    <Box sx={{
-      '& .MuiDataGrid-cell': {
-        borderLeft: '0.5px solid var(--border-color)',
-        borderBottom: '0.5px solid var(--border-color)',
+    <Box
+    // sx={{
+    //   '& .MuiDataGrid-cell': {
+    //     // borderLeft: '0.5px solid var(--border-color)',
+    //     borderBottom: '1px solid var(--border-color)',
+    //     borderTop: '0px solid var(--border-color)',
+    //   },
+    //   '& .MuiDataGrid-cell:last-child': {
+    //     // borderRight: '0.5px solid var(--border-color)',
+    //   }
+    // }}
+    sx={{
+      '& .MuiDataGrid-root': {
+        borderRadius: 0, // Remove border radius
+        borderLeft: '0px',
+        borderRight: '0px',
       },
-      '& .MuiDataGrid-cell:last-child': {
-        borderRight: '0.5px solid var(--border-color)',
-      }
-    }}>
+      '& .MuiDataGrid-row:nth-of-type(odd)': {
+        backgroundColor: '#ffffff', // Light color for odd rows
+      },
+      '& .MuiDataGrid-row:nth-of-type(even)': {
+        backgroundColor: '#f5f5f5', // White color for even rows
+      },
+      '& .MuiDataGrid-row:hover': {
+        color: 'var(--primary-color) !important',
+        backgroundColor: 'var(--secondary-soft-color) !important',
+      },
+      '& .MuiDataGrid-columnHeader .MuiDataGrid-sortIcon': {
+        color: 'white', // Change to your desired color
+      },
+    }}
+    >
       <ThemeProvider theme={customTheme}>
 
         <DataGrid
+          showCellVerticalBorder
           getRowId={(row) => row.id}
           rows={rows}
           columns={columns}
@@ -95,7 +119,7 @@ const SummaryAspect = ({ SummaryData, Aspect }) => {
           disableRowSelectionOnClick
           hideFooterPagination
           hideFooter
-          rowHeight={32}
+          rowHeight={30}
           columnHeaderHeight={44}
         />
       </ThemeProvider>

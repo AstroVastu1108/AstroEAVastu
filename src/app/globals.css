@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-main{
+main {
   font-family: 'Segoe UI' !important;
 }
 
@@ -23,12 +23,14 @@ body {
   /* --secondary-color: #fde457; */
   /* --secondary-color: #f7c243; */
   --secondary-color: #ffe457;
-  --secondary-soft-color: rgb(247, 194, 67,0.4);
-  --mui-palette-divider:rgb(128, 128, 128,0.5);
+  --secondary-soft-color: rgb(247, 194, 67, 0.4);
+  /* --mui-palette-divider:rgb(128, 128, 128,0.5); */
+  --mui-palette-divider: var(--border-color);
 
   /* built in */
   --border-radius: var(--mui-shape-borderRadius);
-  --border-color: var(--mui-palette-divider);
+  --border-color: #d7cddc;
+  /* --border-color: var(--mui-palette-divider); */
   --primary-color: var(--mui-palette-primary-main);
   --background-color: var(--mui-palette-background-default);
   --background-color-rgb: var(--mui-palette-background-paperChannel);
