@@ -147,7 +147,7 @@ function House({ houseArr, Symbols }) {
                     <>
                       <div className='rahi-Div' key={key}>
                         <div className='item-title'>
-                          <div className='rashi-Div1-sub1 cursor-pointer' onClick={() => { handleEvent('house', `House-${(index + 1)}`, `${rashi?.Rashi} ${rashiSymbols[rashi?.Rashi]}`, `${rashi?.RashiDescAstro}`) }}>>{rashi?.RashiRoman}. {rashi?.Rashi}<span className='rashiColor'> {rashiSymbols[rashi?.Rashi]} </span>{rashi?.Degree && formatRashiDescAstro(rashi.Degree)} &gt; {rashi?.RashiLord}</div>
+                          <div className='rashi-Div1-sub1 cursor-pointer' onClick={() => { handleEvent('house', `House-${(index + 1)}`, `${rashi?.Rashi} ${rashiSymbols[rashi?.Rashi]}`, `${rashi?.RashiDescAstro}`) }}>{rashi?.RashiRoman}. {rashi?.Rashi}<span className='rashiColor'> {rashiSymbols[rashi?.Rashi]} </span>{rashi?.Degree && formatRashiDescAstro(rashi.Degree)} &gt; {rashi?.RashiLord}</div>
                           <div className='rashi-Div1-sub2'>✦ {rashi?.RashiDescAstro}</div>
                           <div className='rashi-Div1-sub3'>❖ {rashi?.RashiDescVastu}</div>
 
