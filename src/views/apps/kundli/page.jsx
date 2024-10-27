@@ -458,7 +458,6 @@ export default function KundliMain() {
       <Grid container spacing={6}>
         <Grid item xs={12} md={12}>
           <Card>
-
             <CardContent className='flex flex-col gap-2 p-0'>
               <div className="KundliList">
                 <Box>

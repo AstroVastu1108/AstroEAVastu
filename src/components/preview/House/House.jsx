@@ -1,4 +1,5 @@
-import React from 'react'
+import EventModel from '@/components/EventModel/eventModel';
+import React, { useState } from 'react'
 
 function House({ houseArr, Symbols }) {
   const rashiSymbols = {
@@ -24,6 +25,19 @@ function House({ houseArr, Symbols }) {
     return desc; // Return the original string if it doesn't match the expected format
   }
 
+  const [open, setOpen] = useState(false)
+  const [selectedEvent, setSelectedEvent] = useState([])
+  const [selectedTitle, setSelectedTitle] = useState("")
+  const handleAddClose = () => {
+    setOpen(false)
+  }
+
+  const handleEvent = (type, house, title, data) => {
+    console.log("Data : ", data)
+    setSelectedTitle(house + " 🡒 " + title);
+    setOpen(true)
+    setSelectedEvent(data);
+  }
 
   return (
     <>
@@ -31,9 +45,8 @@ function House({ houseArr, Symbols }) {
         {houseArr.map((e, index) =>
         (
           <>
-
             <div className='house-Div' key={index}>
-              <div className="house-header">
+              <div className="house-header cursor-pointer" onClick={() => { handleEvent('house', `House-${(index + 1)}`, "", `${e?.HouseDescAstro} ${e?.HouseDescVastu}`) }}>
                 <div className='house-header-Div1'>
                   <div className='house-header-text'>House-{(index + 1)}</div>
                   <div>🡒</div>
@@ -49,10 +62,10 @@ function House({ houseArr, Symbols }) {
                 </div>
               </div>
               <div className="house-body">
-                <div className='house-body-Div1'>
+                <div className='house-body-Div1' >
                   {e?.HouseAspectsZero?.length ?
                     <div>{e?.HouseAspectsZero?.map((houseaspect, key) => (
-                      <div key={key} className='house-div-sub'>
+                      <div key={key} className='house-div-sub cursor-pointer' onClick={() => { handleEvent('houseAspect', `House-${(index + 1)}`, "", `${houseaspect?.Aspect}° `) }}>
                         {
                           houseaspect?.IsWithRaKe ?
                             (<div className='sub-div-rake'><div>
@@ -71,7 +84,7 @@ function House({ houseArr, Symbols }) {
                   }
                   {e?.HouseAspectsPositive?.length ?
                     <div>{e?.HouseAspectsPositive?.map((houseaspect, key) => (
-                      <div key={key} className='house-div-sub'>
+                      <div key={key} className='house-div-sub cursor-pointer' onClick={() => { handleEvent('houseAspect', `House-${(index + 1)}`, "", `${houseaspect?.Aspect}° `) }}>
                         {
                           houseaspect?.IsWithRaKe ?
                             (<div className='sub-div-rake'>
@@ -93,7 +106,7 @@ function House({ houseArr, Symbols }) {
                   }
                   {e?.HouseAspectsNegative?.length ?
                     <div>{e?.HouseAspectsNegative?.map((houseaspect, key) => (
-                      <div key={key} className='house-div-sub'>
+                      <div key={key} className='house-div-sub cursor-pointer' onClick={() => { handleEvent('houseAspect', `House-${(index + 1)}`, "", `${houseaspect?.Aspect}° `) }}>
                         {
                           houseaspect?.IsWithRaKe ?
                             (<div className='sub-div-rake'>
@@ -119,7 +132,7 @@ function House({ houseArr, Symbols }) {
                     <>
                       <div className='rahi-Div' key={key}>
                         <div className='rahi-Div1'>
-                          <div className='rashi-Div1-sub1'>{rashi?.RashiRoman}. {rashi?.Rashi}<span className='rashiColor'> {rashiSymbols[rashi?.Rashi]} </span>{rashi?.Degree && formatRashiDescAstro(rashi.Degree)} &gt; {rashi?.RashiLord}</div>
+                          <div className='rashi-Div1-sub1 cursor-pointer' onClick={() => { handleEvent('house', `House-${(index + 1)}`, `${rashi?.Rashi} ${rashiSymbols[rashi?.Rashi]}`, `${rashi?.RashiDescAstro}`) }}>{rashi?.RashiRoman}. {rashi?.Rashi}<span className='rashiColor'> {rashiSymbols[rashi?.Rashi]} </span>{rashi?.Degree && formatRashiDescAstro(rashi.Degree)} &gt; {rashi?.RashiLord}</div>
                           <div className='rashi-Div1-sub2'>{rashi?.RashiDescAstro}</div>
                           <div className='rashi-Div1-sub3'>{rashi?.RashiDescVastu}</div>
                         </div>
@@ -127,7 +140,7 @@ function House({ houseArr, Symbols }) {
                           (<div className='rahi-Div2'>{rashi?.Planets.map((Planet, key) =>
                           (
                             <>
-                              <div className='planet-Div' key={key}>
+                              <div className='planet-Div ' key={key}>
                                 <div className='planet-Div-sub'>
                                   <div className={`planet-Div1 item-title-planet-bg-${Planet?.Planet.toLowerCase()}`}>
                                     <div>{Planet?.Planet} &gt; {Planet?.Degree && formatRashiDescAstro(Planet.Degree)} </div>
@@ -162,21 +175,19 @@ function House({ houseArr, Symbols }) {
                                     <div className="sub-div"> {Planet?.PlanetDescVastu} </div>
                                   </div>
                                 </div>
-                                <div className='rahi-Div3'>
+                                <div className='rahi-Div3 '>
                                   {Planet?.PlanetAspectsZero?.length ?
                                     <div>{Planet?.PlanetAspectsZero?.map((Planetaspect, key) => (
                                       <div className='rashi-div-sub' key={key}>
                                         {
                                           Planetaspect?.IsWithRaKe ?
-                                            // ()
-
                                             (
-                                              <div className='sub-div-rake'><div>
+                                              <div className='sub-div-rake cursor-pointer' onClick={() => { handleEvent('planetAspect', `House-${(index + 1)}`, "", `${Planetaspect?.Aspect}° `) }}><div>
                                                 {Planetaspect?.Aspect}°
                                               </div>
                                                 <span>↠&nbsp;&nbsp;{Planetaspect?.Planet}</span>
                                                 <span className='ps-1'>⦿</span></div>) :
-                                            <div className='sub-div1'>
+                                            <div className='sub-div1 cursor-pointer' onClick={() => { handleEvent('planetAspect', `House-${(index + 1)}`, "", `${Planetaspect?.Aspect}° `) }}>
                                               <div>{Planetaspect?.Aspect}°</div>
                                               <span>↠&nbsp;&nbsp;{Planetaspect?.Planet}</span>
                                             </div>
@@ -190,12 +201,13 @@ function House({ houseArr, Symbols }) {
                                       <div className='rashi-div-sub' key={key}>
                                         {
                                           Planetaspect?.IsWithRaKe ?
-                                            (<div className='sub-div-rake'><div>
+                                            (<div className='sub-div-rake cursor-pointer' onClick={() => { handleEvent('planetAspect', `House-${(index + 1)}`, "", `${Planetaspect?.Aspect}° `) }}>
+                                              <div>
                                               {Planetaspect?.Aspect}°
                                             </div>
                                               <span>↠&nbsp;&nbsp;{Planetaspect?.Planet}</span>
                                               <span className='ps-1'>⦿</span></div>) :
-                                            <div className='sub-div2'>
+                                            <div className='sub-div2 cursor-pointer' onClick={() => { handleEvent('planetAspect', `House-${(index + 1)}`, "", `${Planetaspect?.Aspect}° `) }}>
                                               <div>{Planetaspect?.Aspect}°</div>
                                               <span>↠&nbsp;&nbsp;{Planetaspect?.Planet}</span>
                                             </div>
@@ -209,11 +221,11 @@ function House({ houseArr, Symbols }) {
                                       <div className='rashi-div-sub' key={key}>
                                         {
                                           Planetaspect?.IsWithRaKe ?
-                                            (<div className='sub-div-rake'>
+                                            (<div className='sub-div-rake cursor-pointer' onClick={() => { handleEvent('planetAspect', `House-${(index + 1)}`, "", `${Planetaspect?.Aspect}° `) }}>
                                               <div>{Planetaspect?.Aspect}°</div>
                                               <span>↠&nbsp;&nbsp;{Planetaspect?.Planet}</span>
                                               <span className='ps-1'>⦿</span></div>) :
-                                            <div className='sub-div3'>
+                                            <div className='sub-div3 cursor-pointer' onClick={() => { handleEvent('planetAspect', `House-${(index + 1)}`, "", `${Planetaspect?.Aspect}° `) }}>
                                               <div>{Planetaspect?.Aspect}°</div>
                                               <span>↠&nbsp;&nbsp;{Planetaspect?.Planet}</span>
                                             </div>
@@ -286,7 +298,9 @@ function House({ houseArr, Symbols }) {
         )
         )}
       </div>
-
+      {open && (
+        <EventModel open={open} handleAddClose={handleAddClose} headerTitle={selectedTitle} displayData={selectedEvent} />
+      )}
     </>
   )
 }

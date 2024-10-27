@@ -1,7 +1,9 @@
 import { DataGrid } from '@mui/x-data-grid'
-import React from 'react'
+import React, { useState } from 'react'
 import "./NakshtraSummary.css"
 import { Box, createTheme, ThemeProvider } from '@mui/material';
+import EventModel from '@/components/EventModel/eventModel';
+import { value } from 'valibot';
 
 function NakshtraSummary({ SummaryData, Aspect, symbols }) {
   const columns = [
@@ -22,7 +24,7 @@ function NakshtraSummary({ SummaryData, Aspect, symbols }) {
 
           return (
             <>
-              <div className="rashiMainDiv">
+              <div className="rashiMainDiv cursor-pointer">
                 <div className='planetN'>{e.value}
                 </div>
                 {activeSymbols && <span className='rashiDiv' style={{ fontSize: "16px" }}>{activeSymbols}</span>}
@@ -181,8 +183,27 @@ function NakshtraSummary({ SummaryData, Aspect, symbols }) {
     },
   });
 
-  return (
+  const [selectedRowId, setSelectedRowId] = useState(null);
 
+  const [open, setOpen] = useState(false)
+  const [selectedEvent, setSelectedEvent] = useState([])
+  const [selectedTitle, setSelectedTitle] = useState("")
+  const handleAddClose = () => {
+    setOpen(false)
+  }
+
+  const handleEvent = (type, house, title, data) => {
+    console.log("Data : ", data)
+    setSelectedTitle(house + " 🡒 " + title);
+    setOpen(true)
+    setSelectedEvent(data);
+  }
+
+  return (
+    <>
+    {open && (
+      <EventModel open={open} handleAddClose={handleAddClose} headerTitle={selectedTitle} displayData={selectedEvent} />
+    )}
     <Box width={"100%"} sx={{
       '& .MuiDataGrid-cell': {
         fontSize: "14px",
@@ -191,7 +212,10 @@ function NakshtraSummary({ SummaryData, Aspect, symbols }) {
       },
       '& .MuiDataGrid-cell:last-child': {
         borderRight: '0.5px solid var(--border-color)',
-      }
+      },
+      '& .Mui-selected': {
+        backgroundColor: 'var(--secondary-soft-color) !important',
+      },
     }}>
       <ThemeProvider theme={customTheme}>
 
@@ -209,10 +233,16 @@ function NakshtraSummary({ SummaryData, Aspect, symbols }) {
           disableRowSelectionOnClick
           hideFooterPagination={true}
           hideFooter={true}
+          onRowClick={(params) => setSelectedRowId(params.id)}
+          onCellClick={(params) => handleEvent("cell",params.field,`${params?.value?.Planet ? params?.value?.Planet : ""} ${params?.value?.ScriptFull ?params?.value?.ScriptFull : params?.value}`,`${params?.value?.Planet ? params?.value?.Planet : ""} ${params?.value?.ScriptFull ?params?.value?.ScriptFull : params?.value}` )}
+          // onCellClick={(params) => console.log(`Cell clicked: ${params.field} - Value: ${params.value}`, params)}
+          getRowClassName={(params) => params.id === selectedRowId ? 'Mui-selected' : ''}
+       
         />
       </ThemeProvider>
 
     </Box>
+    </>
   )
 }
 
