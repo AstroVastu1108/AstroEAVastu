@@ -269,7 +269,8 @@ export default function KundliMain() {
       return toastDisplayer("error", res.error);
     } else {
       setKundliData(res?.responseData?.data?.Result?.KundaliList);
-      setTotalRowCount(res?.responseData?.data?.Result?.KundaliCount)
+      console.log(res?.responseData?.data?.Result?.KundaliList.length)
+      setTotalRowCount(res?.responseData?.data?.Result?.KundaliList.length)
       setLoading(false);
     }
   }
@@ -495,9 +496,9 @@ export default function KundliMain() {
                       pageSizeOptions={[10]}
                       initialState={{
                         pagination: { paginationModel: { pageSize: 10 } },
-                        pinnedColumns: {
-                          right: ['iconColumn'],  // iconColumn pinned to the right
-                        }
+                        // pinnedColumns: {
+                        //   right: ['iconColumn'],  // iconColumn pinned to the right
+                        // }
                       }}
                       paginationMode="server"
                       filterMode="server"

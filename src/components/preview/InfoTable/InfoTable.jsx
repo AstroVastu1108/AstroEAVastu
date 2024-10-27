@@ -22,14 +22,14 @@ const InfoTable = ({ InfoTableTextArr, isPrintDiv}) => {
           {InfoTableTextArr.map((details, index) => (
             <tr key={index}>
               <td className="text-label">{details.label}</td>
-              {details.label == "Prakriti" && !isPrintDiv ? <td className="text-Value">{details.value}
+              <td className="text-Value">{details.value}</td>
+              {/* {details.label == "Prakriti" && !isPrintDiv ? <td className="text-Value">{details.value}
                 <IconButton onClick={handleIsPraOpen}>
                   <i
                     className={'tabler-arrow-up-right bg-primary'}
                   />
                 </IconButton>
-              </td> : <td className="text-Value">{details.value}</td>}
-
+              </td> : <td className="text-Value">{details.value}</td>} */}
             </tr>
           ))}
         </tbody>

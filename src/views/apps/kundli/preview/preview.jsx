@@ -131,33 +131,16 @@ const Preview = ({ kundliData, setKundliData }) => {
   return (
     <>
       {loading && <Loader />}
+      {existdownloadLoading && <Loader />}
       <Grid container spacing={6}>
         <Grid item xs={12} md={12}>
           <Card>
-            <CardContent className='flex flex-col gap-2 p-0'>
-              <div className=''>
-              <PageTitle title={"Kundli Preview"} endCmp={
-                <>
-                  <div className='flex justify-end gap-3 sm:flex'>
-                    <PreviewActions value={"Existing"} onButtonClick={handleKundliApi} loading={existdownloadLoading} />
-                    <PreviewActions value={"Download"} onButtonClick={handleButtonClick} loading={downloadLoading} />
-                  </div>
-                </>} />
-              </div>
-              <div>
+            <CardContent className='flex flex-col p-0'>
 
-                <div ref={printRef} className='previewPDFPrint' style={{ width: "1240px" }}>
-                  {kundliData &&
-                    <>
-                      <PreviewCard kundliData={kundliData} isPrintDiv={true} />
-                    </>
-                  }
-                </div>
-              </div>
               <div className='previewPDF'>
                 {kundliData &&
                   <>
-                    <PreviewCard kundliData={kundliData} isPrintDiv={false} />
+                    <PreviewCard kundliData={kundliData} handleDownload={handleKundliApi} isPrintDiv={false} loading={existdownloadLoading} />
                   </>
                 }
               </div>
