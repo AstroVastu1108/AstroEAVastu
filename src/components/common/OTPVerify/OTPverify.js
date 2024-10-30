@@ -75,7 +75,7 @@ function OTPverify({ email,role,setIsOtpVerified }) {
         setIsOtpVerified("verified")
       }
       // console.log("API Response:", response); // Log the response
-      toastDisplayer('success', 'OTP verified successfully');
+      // toastDisplayer('success', 'OTP verified successfully');
       // onSuccess(otpCode); // Pass OTP to the next step
     } catch (error) {
       // console.log("Error Response:", error); // Log the error response

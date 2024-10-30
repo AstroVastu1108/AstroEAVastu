@@ -2,13 +2,15 @@
 
 // React Imports
 import { useContext, useEffect, useRef, useState } from 'react'
-
+import ReCAPTCHA from 'react-google-recaptcha';
 // Next Imports
 import { useRouter } from 'next/navigation'
 
 // MUI Imports
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { styled, useTheme } from '@mui/material/styles'
+
+import { createTheme, ThemeProvider } from '@mui/material';
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -38,24 +40,10 @@ import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplaye
 import { TextField } from '@mui/material'
 import Loader from '@/components/common/Loader/Loader'
 import OTPverify from '@/components/common/OTPVerify/OTPverify'
-import { requestOtp } from '@/app/Server/API/auth'
+import { requestOtp, validateCaptcha } from '@/app/Server/API/auth'
 import { LoadingButton } from '@mui/lab'
 import Cookies from 'js-cookie';
 
-// Styled Custom Components
-const LoginIllustration = styled('img')(({ theme }) => ({
-  zIndex: 2,
-  blockSize: 'auto',
-  maxBlockSize: 680,
-  maxInlineSize: '100%',
-  margin: theme.spacing(12),
-  [theme.breakpoints.down(1536)]: {
-    maxBlockSize: 550
-  },
-  [theme.breakpoints.down('lg')]: {
-    maxBlockSize: 450
-  }
-}))
 
 const MaskImg = styled('img')({
   blockSize: 'auto',
@@ -69,15 +57,7 @@ const MaskImg = styled('img')({
 const LoginV2 = ({ mode }) => {
   // States
   const [isPasswordShown, setIsPasswordShown] = useState(false)
-
-  // Vars
-  const darkImg = '/images/pages/auth-mask-dark.png'
-  const starImg = '/images/pages/stars.png'
-  const lightImg = '/images/pages/auth-mask-light.png'
-  const darkIllustration = '/images/illustrations/auth/sign-picture.png'
-  const lightIllustration = '/images/illustrations/auth/sign-picture.png'
-  const borderedDarkIllustration = '/images/illustrations/auth/v2-login-dark-border.png'
-  const borderedLightIllustration = '/images/illustrations/auth/v2-login-light-border.png'
+  const lightIllustration = '/images/illustrations/auth/web-bkg.jpg'
 
   // Hooks
   const router = useRouter()
@@ -86,18 +66,11 @@ const LoginV2 = ({ mode }) => {
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
   const authBackground = useImageVariant(mode)
 
-  const characterIllustration = useImageVariant(
-    mode,
-    lightIllustration,
-    // darkIllustration,
-    // borderedLightIllustration,
-    // borderedDarkIllustration
-  )
   const passwordInputRef = useRef(null);
 
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
-  const { login, loginData, authRuleContext } = useAuth();
+  const { loginData } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: ""
@@ -110,10 +83,47 @@ const LoginV2 = ({ mode }) => {
     password: false
   })
 
+  const recaptchaRef = useRef(null);
+
+
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+      if (formData.email == "") {
+        toastDisplayer("error", "Email is required.")
+        setIsDisable(false)
+        return setErrors(prev => ({
+          ...prev,
+          email: true
+        }));
+      }
+      setIsDisable(true)
+      const token = await recaptchaRef.current.executeAsync();
+      recaptchaRef.current.reset();
+      const recaptchaResponse = await fetch('/api/verifyRecaptcha', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token }),
+      });
+
+      const recaptchaData = await recaptchaResponse.json();
+      if (recaptchaData.success) {
+        handleVerifyEmail();
+      } else {
+        setIsDisable(false)
+        recaptchaRef.current.reset();
+      }
+    } catch (error) {
+      setIsDisable(false)
+      return toastDisplayer('error', 'Server error. Please try again later.');
+    }
+  };
+
   const handleVerifyEmail = async () => {
     try {
       if (formData.email == "") {
         toastDisplayer("error", "Email is required.")
+        setIsDisable(false)
         return setErrors(prev => ({
           ...prev,
           email: true
@@ -178,7 +188,7 @@ const LoginV2 = ({ mode }) => {
         // setIsOtpVerified("pending")
         // toastDisplayer('success', `${result.message} \nYou will be redirecting...`)
         const storedSessionValue = JSON.parse(Cookies.get('authState'));
-        const {  authRule } = storedSessionValue;
+        const { authRule } = storedSessionValue;
         const routePermissions = JSON.parse(authRule);
         const firstAccessibleItem = routePermissions.find(item => item.HasAccess);
         // setLoading(false)
@@ -199,198 +209,195 @@ const LoginV2 = ({ mode }) => {
       [fieldName]: e.target.value
     }));
   }
-  const spinAnimation = {
-    animation: 'spin 50s linear infinite'
-  };
-  useEffect(() => {
-    const keyframes = `
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-    `;
-    const styleSheet = document.createElement("style");
-    styleSheet.type = "text/css";
-    styleSheet.innerText = keyframes;
-    document.head.appendChild(styleSheet);
-  }, []);
 
-  useEffect(()=>{
-    if(isOtpVerified == "verified"){
+  useEffect(() => {
+    if (isOtpVerified == "verified") {
       // passwordInputRef.current.focus();
       setLoading(true);
       handleLogin();
     }
-  },[isOtpVerified])
+  }, [isOtpVerified])
 
-  // useEffect(()=>{},[is])
+  const customtheme = createTheme({
+    typography: {
+      fontFamily: 'Segoe UI, sans-serif',
+    },
+  });
+
   return (
     <>
       {loading && <Loader />}
-      <div className='flex bs-full justify-center'>
-        <div
-          className={classnames(
-            'flex bs-full items-center justify-center flex-1 min-bs-[100dvh] relative p-6 max-md:hidden',
-            {
-              'border-ie': settings.skin === 'bordered'
-            }
-          )}
-          style={{
-            background: "#45163a",
-            backgroundImage: 'url("/images/illustrations/auth/stars.png")',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            minHeight: '100vh',
-            position: 'relative'
-          }}
-          // style={{ background: "#45163a", backgroundImage: 'url("../../public/images/illustrations/auth/stars.png")' }}
-        >
-          <div >
-            <LoginIllustration src={characterIllustration} alt='character-illustration' style={{ ...spinAnimation, width: '80%', height: '80%' }} />
+      <ThemeProvider theme={customtheme}>
+        <div className='flex bs-full justify-center' >
+          <div
+            className={classnames(
+              'flex bs-full items-center justify-center flex-1 min-bs-[100dvh] relative p-6 max-md:hidden',
+              {
+                'border-ie': settings.skin === 'bordered'
+              }
+            )}
+            style={{
+              // background: "#4d0a72",
+              backgroundImage: 'url("/images/illustrations/auth/web-bkg.jpg")',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+              minHeight: '100vh',
+              position: 'relative',
+              // width:150
+            }}
+          >
+            {!hidden && (
+              <MaskImg
+                alt='mask'
+                src={authBackground}
+                className={classnames({ 'scale-x-[-1]': theme.direction === 'rtl' })}
+              />
+            )}
           </div>
-          {!hidden && (
-            <MaskImg
-              alt='mask'
-              src={authBackground}
-              className={classnames({ 'scale-x-[-1]': theme.direction === 'rtl' })}
-            />
-          )}
-        </div>
-        <div className='flex justify-center items-center bs-full bg-backgroundPaper !min-is-full p-6 md:!min-is-[unset] md:p-12 md:is-[480px]'>
-          <Link className='absolute block-start-5 sm:block-start-[33px] inline-start-6 sm:inline-start-[38px]'>
+          <div className='flex justify-center items-center bs-full bg-backgroundPaper !min-is-full p-6 md:!min-is-[unset] md:p-12 md:is-[480px]'>
+            {/* <Link className=' block-start-5 sm:block-start-[33px] inline-start-6 sm:inline-start-[38px]'>
           <Logo color={hidden ? 'primary' : 'white'} />
-          </Link>
-          <div className='flex flex-col gap-6 is-full sm:is-auto md:is-full sm:max-is-[400px] md:max-is-[unset] mbs-11 sm:mbs-14 md:mbs-0'>
-            {isOtpVerified == "pending" || isOtpVerified == "verifiedd" ? (
-              <>
-                <div className='flex flex-col gap-1'>
-                  <Typography variant='h4'>{`Welcome to ${themeConfig.templateName}! 👋🏻`}</Typography>
-                  <Typography>Please sign-in to your account and start the adventure</Typography>
-                </div>
-                <form
-                  noValidate
-                  autoComplete='off'
-                  onSubmit={e => {
-                    e.preventDefault()
-                  }}
-                  className='flex flex-col gap-5'
-                >
-                  <TextField
-                    fullWidth
-                    autoFocus
-                    label='Email'
-                    placeholder='Enter your email'
-                    onChange={(e) => { handleInput("email", e); }}
-                    value={formData.email}
-                    {...(errors.email && { error: true })}
-                  />
-                  {
-                    isOtpVerified == "verifiedd" ? <>
-
-                      <TextField
-                        fullWidth
-                        label='Password'
-                        placeholder='············'
-                        id='outlined-adornment-password'
-                        type={isPasswordShown ? 'text' : 'password'}
-                        value={formData.password}
-                        inputRef={passwordInputRef}
-                        InputProps={{
-                          endAdornment: (
-                            <InputAdornment position='end'>
-                              <IconButton edge='end' onClick={handleClickShowPassword} onMouseDown={e => e.preventDefault()}>
-                                <i className={isPasswordShown ? 'tabler-eye-off' : 'tabler-eye'} />
-                              </IconButton>
-                            </InputAdornment>
-                          )
-                        }}
-                        onChange={(e) => { handleInput("password", e); }}
-                        {...(errors.password && { error: true })}
-                      />
-                    <div className='flex justify-between items-center gap-x-3 gap-y-1 flex-wrap'>
-                      <FormControlLabel control={<Checkbox />} label='Remember me' />
-                      <Typography className='text-end' color='primary' component={Link}>
-                        Forgot password?
-                      </Typography>
-                    </div>
-                  </> : ""}
-
-
-                  {
-                    isOtpVerified == "pending" ? (
-                      <LoadingButton
+          </Link> */}
+            <div className='flex flex-col gap-6 is-full sm:is-auto md:is-full sm:max-is-[400px] md:max-is-[unset] mbs-11 sm:mbs-14 md:mbs-0'>
+              {isOtpVerified == "pending" || isOtpVerified == "verifiedd" ? (
+                <>
+                  <Link href="#" onClick={(e) => e.preventDefault()} className='block-start-5 sm:block-start-[33px] inline-start-6 sm:inline-start-[38px]'>
+                    <Logo color={'primary'} />
+                  </Link>
+                  <div className='flex flex-col gap-1'>
+                    <Typography variant='h5'>{`Continue to use ${themeConfig.templateName}.Net`}</Typography>
+                    <Typography>Please sign-in to enhance life experiences !!!</Typography>
+                  </div>
+                  <form
+                    noValidate
+                    autoComplete='off'
+                    onSubmit={e => {
+                      e.preventDefault()
+                    }}
+                    className='flex flex-col gap-5'
+                  >
+                    <TextField
                       fullWidth
-                      variant='contained'
-                      onClick={handleVerifyEmail}
-                      loading={isDisable}
-                      loadingPosition="start"
-                      type='submit'
-                    >
-                       {isDisable ? "Loading ...": "Verify Email"}
-                    </LoadingButton>
-                    ) : ""
-                  }
-                  {
-                    isOtpVerified == "verifiedd" ? (
-                      <LoadingButton
-                      fullWidth
-                      variant='contained'
-                      onClick={handleLogin}
-                      loading={isDisable}
-                      loadingPosition="start"
-                      type='submit'
-                    >
-                       {isDisable ? "Loading ...": "Login"}
-                    </LoadingButton>
-                    ) : ""
-                  }
+                      autoFocus
+                      label='Email or Phone'
+                      // placeholder='Enter your email'
+                      onChange={(e) => { handleInput("email", e); }}
+                      value={formData.email}
+                      {...(errors.email && { error: true })}
+                    />
+                    {
+                      isOtpVerified == "verifiedd" ? <>
 
-                  {/* <Button fullWidth variant='contained' type='submit' disabled={isDisable} onClick={handleLogin}>
+                        <TextField
+                          fullWidth
+                          label='Password'
+                          placeholder='············'
+                          id='outlined-adornment-password'
+                          type={isPasswordShown ? 'text' : 'password'}
+                          value={formData.password}
+                          inputRef={passwordInputRef}
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position='end'>
+                                <IconButton edge='end' onClick={handleClickShowPassword} onMouseDown={e => e.preventDefault()}>
+                                  <i className={isPasswordShown ? 'tabler-eye-off' : 'tabler-eye'} />
+                                </IconButton>
+                              </InputAdornment>
+                            )
+                          }}
+                          onChange={(e) => { handleInput("password", e); }}
+                          {...(errors.password && { error: true })}
+                        />
+                        <div className='flex justify-between items-center gap-x-3 gap-y-1 flex-wrap'>
+                          <FormControlLabel control={<Checkbox />} label='Remember me' />
+                          <Typography className='text-end' color='primary' component={Link}>
+                            Forgot password?
+                          </Typography>
+                        </div>
+                      </> : ""}
+                    {
+                      isOtpVerified == "pending" ? (
+                        <LoadingButton
+                          fullWidth
+                          variant='contained'
+                          onClick={handleSubmit}
+                          // onClick={handleVerifyEmail}
+                          loading={isDisable}
+                          loadingPosition="start"
+                          type='submit'
+                          sx={{
+                            backgroundColor: "#590A73", // Your custom color
+                            "&:hover": {
+                              backgroundColor: "#4a055b", // Optional hover color
+                            },
+                          }}
+                        >
+                          {isDisable ? "Loading ..." : "Next"}
+                        </LoadingButton>
+                      ) : ""
+                    }
+                    {
+                      isOtpVerified == "verifiedd" ? (
+                        <LoadingButton
+                          fullWidth
+                          variant='contained'
+                          onClick={handleLogin}
+                          loading={isDisable}
+                          loadingPosition="start"
+                          type='submit'
+                        >
+                          {isDisable ? "Loading ..." : "Login"}
+                        </LoadingButton>
+                      ) : ""
+                    }
+
+                    {/* <Button fullWidth variant='contained' type='submit' disabled={isDisable} onClick={handleLogin}>
                   {isDisable ? <CircularProgress size={24} value={"Loading"} /> : 'Login'}
                 </Button> */}
 
-                  <div className='flex justify-center items-center flex-wrap gap-2'>
-                    <Typography>New on our platform?</Typography>
-                    <Typography color='primary' style={{ cursor: 'pointer' }} onClick={()=>{
-                      router.push('/register')
-                    }}>
-                      Create an account
-                    </Typography>
+                    <div className='flex justify-center items-center flex-wrap gap-2'>
+                      <Typography>No Account?</Typography>
+                      <Typography color='primary' style={{ cursor: 'pointer' }} onClick={() => {
+                        router.push('/register')
+                      }}>
+                        Create New Account
+                      </Typography>
+                    </div>
+                  </form>
+                </>
+              ) :
+                <>
+                  <div className="backbtn">
+                    <i
+                      className="tabler-arrow-left"
+                      style={{
+                        fontSize: "20px",
+                        cursor: "pointer",
+                      }}
+                      onClick={handlePreviousBtn}
+                    ></i>
+                    <div className="step-text">Go Back</div>
                   </div>
-                </form>
-              </>
-            ) :
-              <>
-                <div className="backbtn">
-                  <i
-                    className="tabler-arrow-left"
-                    style={{
-                      fontSize: "20px",
-                      cursor: "pointer",
-                    }}
-                    onClick={handlePreviousBtn}
-                  ></i>
-                  <div className="step-text">Go Back</div>
-                </div>
-                <div className='flex flex-col gap-1'>
-                  <Typography variant='h4'>{`OTP Verification`}</Typography>
-                  <Typography>Please enter the 6 digit code sent to {formData?.email}.</Typography>
-                </div>
-                <OTPverify email={formData?.email} role={"login"} setIsOtpVerified={setIsOtpVerified} />
-              </>
+                  <div className='flex flex-col gap-1'>
+                    <Typography variant='h4'>{`OTP Verification`}</Typography>
+                    <Typography>Please enter the 6 digit code sent to {formData?.email}.</Typography>
+                  </div>
+                  <OTPverify email={formData?.email} role={"login"} setIsOtpVerified={setIsOtpVerified} />
+                </>
 
-            }
+              }
+              <ReCAPTCHA
+                ref={recaptchaRef}
+                sitekey={process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_SITE_KEY}
+                size="invisible"
+              />
 
 
-
+            </div>
           </div>
         </div>
-      </div>
+      </ThemeProvider>
     </>
   )
 }
