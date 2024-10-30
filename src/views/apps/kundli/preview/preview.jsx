@@ -158,7 +158,7 @@ const Preview = ({ kundliData, setKundliData }) => {
         <i className='tabler-calendar-share' />
       </Button> */}
 
-      {timeToolPopUp && <TimeTool handleDateChange={handleDateChange} kundliBirthData={kundliBirthData} />}
+      {timeToolPopUp && <TimeTool handleTimeTool={handleTimeTool} handleDateChange={handleDateChange} kundliBirthData={kundliBirthData} />}
     </>
   )
 }

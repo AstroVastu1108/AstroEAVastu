@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import './preview.css';
 
-function TimeTool({ handleDateChange, kundliBirthData }) {
+function TimeTool({ handleDateChange, kundliBirthData, handleTimeTool }) {
   const [datePicker, setDatePicker] = useState(dayjs());
   const [timeValue, setTimeValue] = useState("Y"); // "Y" for year, "M" for month, etc.
 
@@ -72,92 +72,117 @@ function TimeTool({ handleDateChange, kundliBirthData }) {
 
   return (
     <>
-      <Box className="timeTool-div w-[calc(100%-150px)] mx-4" sx={{ boxShadow: 3 }} >
-        {/* <Typography variant="h6">Time Tool</Typography> */}
-        <div className="flex items-center">
-          <div className='w-[30%]'>
+      <Box className="timeTool-div" sx={{ boxShadow: 3 }}>
+        <div className='w-full flex justify-end '>
+
+        <IconButton
+          aria-label="close"
+          onClick={handleTimeTool} // Replace with your close handler function
+          className='text-inherit'
+        >
+          <i className='tabler-x text-primary'></i>
+        </IconButton>
+        </div>
+        <div className="flex items-center gap-3 flex-wrap lg:flex-nowrap md:flex-nowrap">
+          <div className="w-full sm:w-[30%] md:w-[20%] lg:w-[15%]">
             <Select
               id="time-select"
-              // value={timeValue}
               fullWidth
               defaultValue={"T"}
-              // onChange={handleTimeValueChange}
-              sx={{ height: '2.9rem !important', minHeight: '1rem !important' }}
+              sx={{
+                height: '2.9rem',
+                minHeight: '2.9rem',
+              }}
             >
               <MenuItem value="T">Transient</MenuItem>
               <MenuItem value="D">Dasha</MenuItem>
-              {/* <MenuItem value="S">Second</MenuItem> */}
             </Select>
           </div>
-          {/* <div className='w-[30%]'>
-            <Select
-              id="time-select"
-              value={timeValue}
-              fullWidth
-              onChange={handleTimeValueChange}
-              sx={{ height: '2.9rem !important', minHeight: '1rem !important' }}
-            >
-              <MenuItem value="Y">Year</MenuItem>
-              <MenuItem value="M">Month</MenuItem>
-              <MenuItem value="D">Day</MenuItem>
-              <MenuItem value="H">Hour</MenuItem>
-              <MenuItem value="Min">Minute</MenuItem>
-            </Select>
-          </div> */}
 
-          <div>
-            <Button variant='outlined' onClick={()=>setTimeValue("D")}>Date</Button>
-            <Button variant='outlined' onClick={()=>setTimeValue("M")}>Month</Button>
-            <Button variant='outlined' onClick={()=>setTimeValue("Y")}>Year</Button>
-            <Button variant='outlined' onClick={()=>setTimeValue("H")}>Hour</Button>
-            <Button variant='outlined' onClick={()=>setTimeValue("Min")}>Minute</Button>
-          </div>
-
-
-
-          <LocalizationProvider dateAdapter={AdapterDayjs}
-            sx={{ height: '2.9rem !important', minHeight: '1rem !important' }}
+          <Button
+            variant={timeValue === "D" ? "contained" : "outlined"}
+            onClick={() => setTimeValue("D")}
+            sx={{
+              height: '2.9rem',
+              minWidth: 'fit-content',
+            }}
           >
+            Date
+          </Button>
+          <Button
+            variant={timeValue === "M" ? "contained" : "outlined"}
+            onClick={() => setTimeValue("M")}
+            sx={{
+              height: '2.9rem',
+              minWidth: 'fit-content',
+            }}
+          >
+            Month
+          </Button>
+          <Button
+            variant={timeValue === "Y" ? "contained" : "outlined"}
+            onClick={() => setTimeValue("Y")}
+            sx={{
+              height: '2.9rem',
+              minWidth: 'fit-content',
+            }}
+          >
+            Year
+          </Button>
+          <Button
+            variant={timeValue === "H" ? "contained" : "outlined"}
+            onClick={() => setTimeValue("H")}
+            sx={{
+              height: '2.9rem',
+              minWidth: 'fit-content',
+            }}
+          >
+            Hour
+          </Button>
+          <Button
+            variant={timeValue === "Min" ? "contained" : "outlined"}
+            onClick={() => setTimeValue("Min")}
+            sx={{
+              height: '2.9rem',
+              minWidth: 'fit-content',
+            }}
+          >
+            Minute
+          </Button>
+
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DateTimePicker
-              // disableFuture
               openTo="day"
               views={["year", "month", "day", "hours", "minutes"]}
               value={datePicker}
-              // maxDate={dayjs(new Date())}
-              onChange={(newDate) => {
-                setDatePicker(newDate);
-              }}
+              onChange={(newDate) => setDatePicker(newDate)}
               inputFormat="DD-MM-YYYY HH:mm"
               format='DD-MM-YYYY HH:mm'
               ampm={false}
-              renderInput={(params) => <TextField {...params} />}
-              sx={{ height: '2.9rem !important', minHeight: '1rem !important' }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  sx={{
+                    height: '2.5rem',
+                    minHeight: '2.5rem',
+                    '& .MuiInputBase-root': { height: '2.5rem' },
+                  }}
+                />
+              )}
             />
           </LocalizationProvider>
 
+          <IconButton onClick={() => handleArrows("I")} >
+            <i className={'tabler-plus bg-primary'} />
+          </IconButton>
 
-          <div>
-            <IconButton onClick={() => handleArrows("I")}>
-              <i className={'tabler-plus bg-primary'} />
-            </IconButton>
-          </div>
-
-          <div>
-            <IconButton onClick={() => handleArrows("D")}>
-              <i className={'tabler-minus bg-primary'} />
-            </IconButton>
-          </div>
-
-
+          <IconButton onClick={() => handleArrows("D")} >
+            <i className={'tabler-minus bg-primary'} />
+          </IconButton>
 
         </div>
-
-        {/* <div className="flex flex-row items-center">
-          <div className="date-field">
-
-          </div>
-        </div> */}
       </Box>
+
     </>
   );
 }
