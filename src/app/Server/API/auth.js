@@ -1,5 +1,29 @@
 import axios from "axios";
 const API_URL = process.env.NEXT_PUBLIC_APIURL1;
+
+export async function validateCaptcha(token){
+  try {
+    const response = await axios.post(`https://localhost:7025/api/Auth/verify`,{
+      token:token
+    });
+
+    // const response = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    //   body: new URLSearchParams({
+    //     secret: process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_SECRET_KEY,
+    //     response: token,
+    //   }).toString(),
+    // });
+    // console.log("NEXT_PUBLIC_GOOGLE_RECAPTCHA_SECRET_KEY : ",NEXT_PUBLIC_GOOGLE_RECAPTCHA_SECRET_KEY)
+    console.log("Response : ",response)
+    const data = response.data;
+    return data.success ? { success: true } : { success: false, error: 'reCAPTCHA verification failed' };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+
 export async function sendSignInRequest(username,password) {
   const responseBody = {
     responseData: null,
@@ -47,7 +71,9 @@ export async function registerCompnay(company) {
       const payload = {
         userType: "CompanyMaster",
         email:company.email,
-        password: company.password,
+        firstName:company.fname,
+        lastName:company.lname,
+        // password: company.password,
         businessName:company.businessname,
         businessLocation:company.businesslocation,
         userAvatar:company.profilePicture,
