@@ -37,14 +37,17 @@ function DashaDetails({ title, DashaData }) {
   const columns = [
     {
       field: 'Planet', headerName: 'Planet', headerClassName: 'rowheader', flex: 1,
+      // minWidth: 80
       // headerAlign: 'center', textAlign:'center'
     },
     {
       field: 'StartDt', headerName: 'Beginning', headerClassName: 'rowheader', flex: 1,
+      // minWidth: 100
       // headerAlign: 'center'
     },
     {
       field: 'EndDt', headerName: 'Ending', headerClassName: 'rowheader', flex: 1,
+      // minWidth: 100
       // headerAlign: 'center'
     },
   ];
@@ -80,6 +83,21 @@ function DashaDetails({ title, DashaData }) {
           '& .MuiDataGrid-cell': {
             lineHeight: '30px !important'
           },
+          '& .MuiDataGrid-columnHeader--withRightBorder': {
+            borderRightWidth: '0px !important'
+          },
+          '& .MuiDataGrid-columnSeparator': {
+            display: 'none !important'
+          },
+          '& .MuiDataGrid-columnHeader': {
+            cursor: 'default !important', // Change to your desired color
+          },
+          '& .MuiDataGrid-columnHeader:focus':{
+            outline: 'none !important'
+          },
+          '& .MuiDataGrid-scrollbar--vertical':{
+            display:'none'
+          }
         }}
       >
         <ThemeProvider theme={customTheme}>
@@ -93,13 +111,13 @@ function DashaDetails({ title, DashaData }) {
             }
             disableColumnSorting
             disableColumnMenu
-            rowHeight={30}
+            rowHeight={29}
             columnHeaderHeight={38}
             disableColumnResize
             disableRowSelectionOnClick
             hideFooterPagination={true}
             hideFooter={true}
-            slots={{ toolbar: () => <CustomToolbar title={title} /> }}
+            // slots={{ toolbar: () => <CustomToolbar title={title} /> }}
           />
 
         </ThemeProvider>

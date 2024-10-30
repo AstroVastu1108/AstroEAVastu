@@ -143,10 +143,11 @@ function RahuKetu({ RahuData, KetuData }) {
 
   return (
     <>
-      <div className='flex flex-col md:flex-row gap-5 w-[100%]'>
+      {/* <div className='flex flex-col md:flex-row sm:flex-row gap-5 lg:w-[100%] md:w-[calc(100%-20px)] sm:w-[100%]'> */}
 
         <Box
-          className="  w-[100%] md:w-[50%]"
+          className="w-[100%] md:w-[calc(50%-8px)] sm:w-[calc(50%-8px)]"
+          // className="w-[100%] md:w-[50%] sm:w-[50%-10px]"
           // width={"50%"}
           sx={{
             '& .MuiDataGrid-root': {
@@ -160,6 +161,9 @@ function RahuKetu({ RahuData, KetuData }) {
             '& .MuiDataGrid-row:nth-of-type(even)': {
               backgroundColor: '#f5f5f5', // White color for even rows
             },
+            '& .MuiDataGrid-row:nth-of-type(3)': {
+              backgroundColor: '#daffaf45',
+            },
             '& .MuiDataGrid-row:hover': {
               color: 'var(--primary-color) !important',
               backgroundColor: 'var(--secondary-soft-color) !important',
@@ -169,6 +173,18 @@ function RahuKetu({ RahuData, KetuData }) {
             },
             '& .MuiDataGrid-cell': {
               lineHeight: '30px !important'
+            },
+            '& .MuiDataGrid-columnHeader--withRightBorder': {
+              borderRightWidth: '0px !important'
+            },
+            '& .MuiDataGrid-columnSeparator': {
+              display: 'none !important'
+            },
+            '& .MuiDataGrid-columnHeader': {
+              cursor: 'default !important', // Change to your desired color
+            },
+            '& .MuiDataGrid-columnHeader:focus':{
+              outline: 'none !important'
             },
           }}
         >
@@ -192,8 +208,9 @@ function RahuKetu({ RahuData, KetuData }) {
 
         </Box>
         <Box
+          className="w-[100%] md:w-[calc(50%-8px)] sm:w-[calc(50%-8px)]"
           // width={"50%"}
-          className="  w-[100%] md:w-[50%]"
+          // className="w-[100%] md:w-[50%] sm:w-[50%-10px]"
           sx={{
             '& .MuiDataGrid-root': {
               borderRadius: 0, // Remove border radius
@@ -206,6 +223,9 @@ function RahuKetu({ RahuData, KetuData }) {
             '& .MuiDataGrid-row:nth-of-type(even)': {
               backgroundColor: '#f5f5f5', // White color for even rows
             },
+            '& .MuiDataGrid-row:nth-of-type(3)': {
+              backgroundColor: '#daffaf45',
+            },
             '& .MuiDataGrid-row:hover': {
               color: 'var(--primary-color) !important',
               backgroundColor: 'var(--secondary-soft-color) !important',
@@ -215,6 +235,18 @@ function RahuKetu({ RahuData, KetuData }) {
             },
             '& .MuiDataGrid-cell': {
               lineHeight: '30px !important'
+            },
+            '& .MuiDataGrid-columnHeader--withRightBorder': {
+              borderRightWidth: '0px !important'
+            },
+            '& .MuiDataGrid-columnSeparator': {
+              display: 'none !important'
+            },
+            '& .MuiDataGrid-columnHeader': {
+              cursor: 'default !important', // Change to your desired color
+            },
+            '& .MuiDataGrid-columnHeader:focus':{
+              outline: 'none !important'
             },
           }}
         >
@@ -237,7 +269,7 @@ function RahuKetu({ RahuData, KetuData }) {
           </ThemeProvider>
 
         </Box>
-      </div>
+      {/* </div> */}
     </>
   )
 }

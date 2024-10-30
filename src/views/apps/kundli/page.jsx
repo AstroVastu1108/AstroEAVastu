@@ -270,7 +270,8 @@ export default function KundliMain() {
     } else {
       setKundliData(res?.responseData?.data?.Result?.KundaliList);
       console.log(res?.responseData?.data?.Result?.KundaliList.length)
-      setTotalRowCount(res?.responseData?.data?.Result?.KundaliList.length)
+      // setTotalRowCount(res?.responseData?.data?.Result?.KundaliList.length)
+      setTotalRowCount(res?.responseData?.data?.Result?.KundaliCount)
       setLoading(false);
     }
   }

@@ -12,10 +12,11 @@ import NakshtraSummary from '@/components/preview/NakshtraSummary/NakshtraSummar
 import RahuKetu from '@/components/preview/RahuKetu/RahuKetu';
 import DashaDetails from '@/components/preview/DashaDetails/DashaDetails';
 import LoardPlanet from '@/components/preview/LoardPlanet/LoardPlanet'
-import { IconButton, Menu, MenuItem } from '@mui/material'
+import { FormControl, IconButton, InputLabel, Menu, MenuItem, Select } from '@mui/material'
 import { useState } from 'react'
+import Event from '@/components/preview/Event/Event'
 
-const PreviewCard = ({ kundliData, isPrintDiv, handleDownload }) => {
+const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool }) => {
   // var
   const BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
   const AstroDetails = kundliData?.AstroVastuReport?.AstroDetails;
@@ -34,6 +35,8 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload }) => {
   const KetuData = kundliData?.AstroVastuReport?.KetuSpecial;
 
   const [anchorEl, setAnchorEl] = useState(null);
+  const [chartValue, setChartValue] = useState("D");
+  const [eventValue, setEventValue] = useState("E1");
   const open = Boolean(anchorEl);
 
   const handleClick = (event) => {
@@ -44,13 +47,22 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload }) => {
     setAnchorEl(null);
   };
 
+  const handleMenuDownload=()=>{
+    handleClose();
+    handleDownload();
+  }
+  const handleMenuTimeTool=()=>{
+    handleClose();
+    handleTimeTool();
+  }
+
   return (
     <>
       <Grid className='previewCard' item xs={12} md={12}>
         <Grid item xs={12} className='pdf-Div'>
           <div className={`chart-name rounded-t flex justify-between md:items-center gap-y-2 lg:flex-row ${!isPrintDiv ? 'sm:flex-row flex-col' : "items-center"}`}>
             {BirthDetails?.FirstName ? `${BirthDetails.FirstName} ${BirthDetails.MiddleName} ${BirthDetails.LastName}` : 'Prashna Kundli'}
-            <div className={`flex justify-between md-items-center lg:gap-4 lg:flex-row md:flex-row ${!isPrintDiv ? 'sm:flex-col flex-col sm:gap-1' : "gap-5"} birthDateTime-Div`} >
+            <div className={`flex justify-between md-items-center lg:gap-1 lg:flex-row md:flex-row ${!isPrintDiv ? 'sm:flex-row sm:gap-1 flex-col' : "gap-5"} birthDateTime-Div`} >
               <div className='flex flex-row gap-1 chart-date items-center'>
                 <span className='label'>Birth Date & Time: </span>
                 <span className='value font-medium'>{BirthDetails?.Date} {BirthDetails?.Time.substring(0, 2)}:{BirthDetails?.Time.substring(2, 4)}</span>
@@ -59,7 +71,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload }) => {
                 <span className='label'>Place: </span>
                 <span className='value font-medium'>{BirthDetails?.FormattedCity}</span>
               </div>
-              <div>
+              <div className='flex justify-end'>
                 <>
                   <IconButton onClick={handleClick}>
                     <i className={'tabler-dots-vertical bg-white'} />
@@ -77,7 +89,8 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload }) => {
                       horizontal: 'right',
                     }}
                   >
-                    <MenuItem onClick={handleDownload} className="flex gap-1"><i className={'tabler-download bg-danger'} />Download</MenuItem>
+                    <MenuItem onClick={handleMenuDownload} className="flex gap-1"><i className={'tabler-download me-2'} />Download</MenuItem>
+                    <MenuItem onClick={handleMenuTimeTool} className="flex gap-1"><i className={'tabler-calendar-share me-2'} />TimeTool</MenuItem>
                   </Menu>
                 </>
               </div>
@@ -110,46 +123,104 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload }) => {
               ]} isPrintDiv={isPrintDiv} />
             </div>
           </div>
-          <div className={`flex lg:flex-row gap-5 pt-8 px-4 ${!isPrintDiv ? 'sm:flex-row sm:justify-start  flex-col md:justify-start sm:overflow-auto' : ""} `}>
-            <div className='w-auto flex-1 flex flex-col birth-chart'>
+          <div className={`flex flex-wrap lg:flex-nowrap gap-5 px-4 pt-4 ${!isPrintDiv ? 'sm:flex-row sm:justify-start flex-col md:justify-start sm:overflow-auto' : ""}`}>
+            <div className='lg:w-1/4 md:w-1/4 sm:w-[calc(50%-10px)] md:flex-grow flex flex-col birth-chart pt-5 w-[100%]'>
               <div className='chart-title'>❋ Birth Chart / Lagna Kundali ❋</div>
               <img src={`data:image/svg+xml;base64,${ChartSVG?.BirthChart}`} alt="birthChart" />
             </div>
-            <div className='w-[100%] flex-1 flex flex-col birth-chart'>
+            <div className='lg:w-1/4 md:w-1/4 sm:w-[calc(50%-10px)] md:flex-grow flex flex-col birth-chart pt-5 w-[100%]'>
               <div className='chart-title'>❋ House Chart / Bhav Chalit Kundali ❋</div>
               <img src={`data:image/svg+xml;base64,${ChartSVG?.HouseChart}`} alt="birthChart" />
             </div>
-            {!isPrintDiv &&
-              <div className='w-auto flex-1 flex flex-col birth-chart'>
-                {/* <div className='chart-title'>❋ House Chart / Bhav Chalit Kundali ❋</div> */}
-                <div className='flex flex-col flex-1'  >
-                  <DashaDetails title={"MahaDashas"} DashaData={MahaDasha} />
-                </div>
+            {/* {!isPrintDiv && */}
+            <div className='lg:w-1/4 md:w-1/4 sm:w-[calc(50%-10px)] md:flex-grow flex flex-col birth-chart w-[100%] gap-2'>
+              <div className='mt-1'>
+                <FormControl fullWidth>
+                  <InputLabel id="test">Select option</InputLabel>
+                  <Select
+                    labelId="test"
+                    id="test"
+                    label="Select option"
+                    // value={"D"}
+                    onChange={(e) => { setChartValue(e.target.value) }}
+                    defaultValue={chartValue}
+                    sx={{ height: '2.9rem !important', minHeight: '1rem !important' }}
+                  >
+                    <MenuItem value="T">Transient</MenuItem>
+                    <MenuItem value="D">Dasha</MenuItem>
+                  </Select>
+                </FormControl>
               </div>
-            }
+              {chartValue && chartValue == "D" ?
+                <DashaDetails title={"MahaDashas"} DashaData={MahaDasha} />
+                :
+                <img src={`data:image/svg+xml;base64,${ChartSVG?.HouseChart}`} alt="birthChart" />
+              }
+            </div>
+            {/* } */}
           </div>
-          <div className='main-MahaDasha-Div pt-8'>
-            <div className='chart-title'>❋ Nakshatra Astrology ↠ Planet Script ❋</div>
+
+
+          <div className='main-MahaDasha-Div pt-4'>
+            <div className='flex px-4 w-[100%] justify-between'>
+              <div className=' w-[30%]'></div>
+              <div className='chart-title w-[40%] pt-5'>
+                <span>
+                  ❋ Nakshatra Astrology ↠ Planet Script ❋
+                </span>
+              </div>
+              <Event eventValue={eventValue} setEventValue={setEventValue} />
+            </div>
             <div className='planet-table'>
               <NakshtraSummary SummaryData={PlaneNSummaryData} Aspect={"P"} symbols={Symbols} />
             </div>
+            <div className='Nakshatra-Legend mt-2 px-2'>
+              <p class="arrow-info flex flex-col lg:flex-row md:flex-row sm:flex-row">
+                <div>Legend:</div>
+                <div>🡑 Exalted</div>
+                <div>🡓 Debilitated</div>
+                <div>☀ Combust</div>
+                <div>⮂ Exchange Sign or Nakshatra</div>
+                <div>★ Untenanted</div>
+                <div>✪ SelfStar</div>
+                <div>⮌ Retro</div></p>
+            </div>
           </div>
-          <div className='main-MahaDasha-Div pt-8'>
-            <div className='chart-title'>❋ Nakshatra Astrology ↠ House Script ❋</div>
+          <div className='main-MahaDasha-Div pt-4'>
+            {/* <div className='chart-title'>❋ Nakshatra Astrology ↠ House Script ❋</div> */}
+            <div className='flex px-4 w-[100%] justify-between'>
+              <div className=' w-[30%]'></div>
+              <div className='chart-title w-[40%] pt-5'>
+                <span>
+                  ❋ Nakshatra Astrology ↠ House Script ❋
+                </span>
+              </div>
+              <Event eventValue={eventValue} setEventValue={setEventValue} />
+
+            </div>
             <div className='planet-table'>
               <NakshtraSummary SummaryData={HouseNSummaryData} Aspect={"H"} symbols={Symbols} />
             </div>
           </div>
 
-          <div className='main-RahuKetu-Div pt-8'>
-            <div className='chart-title'>❋ Planet Script with Nakshatra Lord & Sub Lord ❋</div>
+          <div className='main-RahuKetu-Div pt-4'>
+            {/* <div className='chart-title'>❋ Planet Script with Nakshatra Lord & Sub Lord ❋</div> */}
+            <div className='flex px-4 w-[100%] justify-between'>
+              <div className=' w-[20%]'></div>
+              <div className='chart-title w-[50%] pt-5'>
+                <span>
+                  ❋ Planet Script with Nakshatra Lord & Sub Lord ❋
+                </span>
+              </div>
+              <Event eventValue={eventValue} setEventValue={setEventValue} />
+
+            </div>
             <div
-              className={`Loard-Div grid md:grid-flow-col gap-5`}
-              style={{ gridTemplateRows: 'repeat(3, auto)' }} // each column gets 3 items
+              className="Loard-Div sm:grid md:grid-rows-3 md:grid-cols-3 sm:grid-rows-5 sm:grid-cols-2 xs:flex xs:flex-col grid-flow-col gap-3 auto-rows-auto"
             >
               {PlaneNSummaryData.length
                 ? PlaneNSummaryData.slice(0, 9).map((element, index) => ( // only display first 9 elements
-                  <div key={index}>
+                  <div key={index} className=''>
                     <LoardPlanet LoardData={element} />
                   </div>
                 ))
@@ -158,16 +229,12 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload }) => {
             </div>
           </div>
 
-
-
-
           <div className='main-RahuKetu-Div pt-8'>
             <div className='chart-title'>❋ Rahu & Ketu Special Significators ❋</div>
-            <div className='RahuKetu-Div flex gap-4 w-100'>
+            <div className='RahuKetu-Div flex gap-4 flex-col sm:flex-row'>
               <RahuKetu RahuData={RahuData} KetuData={KetuData} Significators={"R"} />
             </div>
           </div>
-
 
           <div className='main-AstroVastuScript-Div pt-8'>
             <div className='chart-title'>❋ Planet ↠ Planet Aspects Summary ❋</div>
@@ -182,38 +249,6 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload }) => {
             </div>
           </div>
 
-          {/* <div className='main-MahaDasha-Div pt-8'>
-            <div className='chart-title'>❋ Current Vimshottari Dasha / Current Planetary Periods ❋</div>
-            <div className={`planet-table flex lg:flex-row ${!isPrintDiv ? 'sm:flex-row  flex-col sm:overflow-auto' : ""}`}>
-              <div className='flex flex-col lg:w-1/3 flex-1'  >
-                <DashaDetails title={"MahaDashas"} DashaData={MahaDasha} />
-              </div>
-              <div className='flex flex-col lg:w-1/3 flex-1'>
-                <DashaDetails title={`Moon (${kundliData?.AstroVastuReport?.DashaDetails?.CurrentMDYears} Years) > AntarDashas`} DashaData={AntarDasha} />
-              </div>
-              <div className='flex flex-col lg:w-1/3 flex-1'>
-                <DashaDetails title={"Mercury > PratyantarDashas"} DashaData={PratyantarDasha} />
-              </div>
-            </div>
-          </div> */}
-
-          {/* <div className='main-MahaDasha-Div pt-8'>
-            <div className='chart-title'>❋ Vimshottari AntarDasha / Sub-Planetary Periods of Life ❋</div>
-            <div className={`flex lg:flex-wrap ${!isPrintDiv ? 'sm:flex-wrap flex-wrap xs:flex xs:flex-col ' : "flex-wrap"}`}>
-              {LifeAntarDasha.length ? (
-                LifeAntarDasha.map((element, index) => (
-                  <div className={`flex flex-col lg:basis-[calc(33.33%-12px)]  ${!isPrintDiv ? 'sm:basis-[calc(50%-12px)] basis-[calc(100%-0px)] xs:flex-1' : " basis-[calc(33.33%-12px)] "}`} key={index}>
-                    <DashaDetails title={`${element.Planet} (${element.Years} Years)`} DashaData={element.AntarDasha} />
-                  </div>
-                ))
-              ) : (
-                ""
-              )}
-            </div>
-          </div> */}
-
-
-
           <div className='main-AstroVastuScript-Div pt-8'>
             <div className='chart-title'>❋ Astro Vastu Insights ❋</div>
             <div className='AstroVastuScript-Div'>
@@ -222,8 +257,6 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload }) => {
           </div>
         </Grid>
       </Grid>
-      {/* </CardContent>
-    </Card> */}
     </>
   )
 }

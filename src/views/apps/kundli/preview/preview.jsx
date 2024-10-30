@@ -140,7 +140,7 @@ const Preview = ({ kundliData, setKundliData }) => {
               <div className='previewPDF'>
                 {kundliData &&
                   <>
-                    <PreviewCard kundliData={kundliData} handleDownload={handleKundliApi} isPrintDiv={false} loading={existdownloadLoading} />
+                    <PreviewCard kundliData={kundliData} handleDownload={handleKundliApi} isPrintDiv={false} loading={existdownloadLoading} handleTimeTool={handleTimeTool} />
                   </>
                 }
               </div>
@@ -148,7 +148,7 @@ const Preview = ({ kundliData, setKundliData }) => {
           </Card>
         </Grid>
       </Grid>
-      <Button variant='contained' sx={{
+      {/* <Button variant='contained' sx={{
         position: 'fixed',
         insetInlineEnd: '2.5rem',
         insetBlockEnd: '6.5rem',
@@ -156,7 +156,7 @@ const Preview = ({ kundliData, setKundliData }) => {
       }} className='is-10 bs-10 rounded-full p-0 min-is-0 flex items-center justify-center'
         onClick={handleTimeTool}>
         <i className='tabler-calendar-share' />
-      </Button>
+      </Button> */}
 
       {timeToolPopUp && <TimeTool handleDateChange={handleDateChange} kundliBirthData={kundliBirthData} />}
     </>

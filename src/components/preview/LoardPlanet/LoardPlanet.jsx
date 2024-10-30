@@ -3,6 +3,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import React from 'react'
 
 function LoardPlanet({ LoardData }) {
+  console.log(LoardData)
   const customTheme = createTheme({
     components: {
       MuiDataGrid: {
@@ -25,50 +26,17 @@ function LoardPlanet({ LoardData }) {
   });
   const columns1 = [
     {
-      field: 'rahuId', headerName: LoardData.Planet, width: 140, headerClassName: 'rowheader',
+      field: 'rahuId', headerName: LoardData.Planet, width: 100, headerClassName: 'rowheader',
       renderCell: (params) => {
         return <div className='rahuHeader'>{params.value}</div>
       }
     },
     {
       field: 'rahuScriptFull', headerClassName: 'rowheader',
-      headerName: LoardData.ScriptFull,
-      width: 200,
-      minWidth: 200,
+      headerName: <div className='valueHeader'><div className='me-1'>{LoardData.Nakshatra}</div> / <div className='ms-1'>{LoardData.NakshatraPada}</div></div> ,
+      width: 10,
+      // minWidth: 10,
       flex: 1,
-      // renderCell: (params) => {
-      //   const dataValue = params.value;
-
-      //   // If the value is an array, use map to render multiple elements
-      //   if (Array.isArray(dataValue)) {
-      //     return (
-      //       <>
-      //         {dataValue.map((element, index) => (
-      //           <div className='valueData' key={index}>
-      //             <div className='planetName'>
-      //               {element?.Planet}
-      //             </div>
-      //             <div className='sf'>
-      //               {element?.ScriptFull}
-      //             </div>
-      //           </div>
-      //         ))}
-      //       </>
-      //     );
-      //   } else {
-      //     return (
-      //       <div className='valueData'>
-      //         <div className='planetName'>
-      //           {dataValue?.Planet}
-      //         </div>
-      //         <div className='sf'>
-      //           {dataValue?.ScriptFull}
-      //         </div>
-      //       </div>
-      //     );
-      //   }
-      // }
-
     }
   ];
 
@@ -80,9 +48,8 @@ function LoardPlanet({ LoardData }) {
   ];
 
   return (
-    <div>
       <Box
-        width={"100%"}
+        // width={"100%"}
         sx={{
           '& .MuiDataGrid-root': {
             borderRadius: 0, // Remove border radius
@@ -90,10 +57,10 @@ function LoardPlanet({ LoardData }) {
             borderRight: '0px',
           },
           '& .MuiDataGrid-row:nth-of-type(odd)': {
-            backgroundColor: '#ffffff', // Light color for odd rows
+            backgroundColor: '#ffffff',
           },
           '& .MuiDataGrid-row:nth-of-type(even)': {
-            backgroundColor: '#f5f5f5', // White color for even rows
+            backgroundColor: '#daffaf45',
           },
           '& .MuiDataGrid-row:hover': {
             color: 'var(--primary-color) !important',
@@ -104,6 +71,24 @@ function LoardPlanet({ LoardData }) {
           },
           '& .MuiDataGrid-cell': {
             lineHeight: '30px !important'
+          },
+          // '& .MuiDataGrid-columnHeaderTitleContainerContent':{
+          //   width: '100% !important'
+          // },
+          // '& .MuiDataGrid-columnHeaderTitle':{
+          //   width: '100% !important'
+          // },
+          '& .MuiDataGrid-columnHeader--withRightBorder':{
+            borderRightWidth:'0px !important'
+          },
+          '& .MuiDataGrid-columnSeparator':{
+            display:'none !important'
+          },
+          '& .MuiDataGrid-columnHeader': {
+            cursor: 'default !important', // Change to your desired color
+          },
+          '& .MuiDataGrid-columnHeader:focus':{
+            outline: 'none !important'
           },
         }}
       >
@@ -126,7 +111,6 @@ function LoardPlanet({ LoardData }) {
         </ThemeProvider>
 
       </Box>
-    </div>
   )
 }
 

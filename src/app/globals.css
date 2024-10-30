@@ -17,12 +17,14 @@ body {
   /* --primary-soft-color: rgba(102, 34, 148, 0.2); */
   /* --primary-soft-color: #4c0473; */
   --primary-soft-color: #590a73;
+  /* --primary-soft-color: #4d0a72; */
   /* --primary-soft-color: #662294; */
   /* --secondary-color: rgb(255, 196, 1); */
   /* --secondary-color: #FFCB04; */
   /* --secondary-color: #fde457; */
   /* --secondary-color: #f7c243; */
-  --secondary-color: #ffe457;
+  /* --secondary-color: #ffe457; */
+  --secondary-color: #f4cf6b;
   --secondary-soft-color: rgb(247, 194, 67, 0.4);
   /* --mui-palette-divider:rgb(128, 128, 128,0.5); */
   --mui-palette-divider: var(--border-color);

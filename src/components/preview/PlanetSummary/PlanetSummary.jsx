@@ -104,6 +104,18 @@ const SummaryAspect = ({ SummaryData, Aspect }) => {
       '& .MuiDataGrid-columnHeader .MuiDataGrid-sortIcon': {
         color: 'white', // Change to your desired color
       },
+      '& .MuiDataGrid-columnHeader--withRightBorder':{
+        borderRightWidth:'0px !important'
+      },
+      '& .MuiDataGrid-columnSeparator':{
+        display:'none !important'
+      },
+      '& .MuiDataGrid-columnHeader': {
+        cursor: 'default !important', // Change to your desired color
+      },
+      '& .MuiDataGrid-columnHeader:focus':{
+        outline: 'none !important'
+      },
     }}
     >
       <ThemeProvider theme={customTheme}>

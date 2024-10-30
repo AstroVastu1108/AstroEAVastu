@@ -1,12 +1,12 @@
-import { Box, IconButton, MenuItem, Select, Typography, TextField, debounce } from '@mui/material';
+import { Box, IconButton, MenuItem, Select, Typography, TextField, debounce, Button } from '@mui/material';
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import './preview.css';
 
-function TimeTool({handleDateChange, kundliBirthData}) {
-  const [datePicker, setDatePicker] = useState(dayjs(new Date()));
+function TimeTool({ handleDateChange, kundliBirthData }) {
+  const [datePicker, setDatePicker] = useState(dayjs());
   const [timeValue, setTimeValue] = useState("Y"); // "Y" for year, "M" for month, etc.
 
   useEffect(() => {
@@ -72,22 +72,69 @@ function TimeTool({handleDateChange, kundliBirthData}) {
 
   return (
     <>
-      <Box className="timeTool-div" sx={{ boxShadow: 3 }}>
-        <Typography variant="h6">Time Tool</Typography>
+      <Box className="timeTool-div w-[calc(100%-150px)] mx-4" sx={{ boxShadow: 3 }} >
+        {/* <Typography variant="h6">Time Tool</Typography> */}
         <div className="flex items-center">
-          <Select
-            id="time-select"
-            value={timeValue}
-            fullWidth
-            onChange={handleTimeValueChange}
+          <div className='w-[30%]'>
+            <Select
+              id="time-select"
+              // value={timeValue}
+              fullWidth
+              defaultValue={"T"}
+              // onChange={handleTimeValueChange}
+              sx={{ height: '2.9rem !important', minHeight: '1rem !important' }}
+            >
+              <MenuItem value="T">Transient</MenuItem>
+              <MenuItem value="D">Dasha</MenuItem>
+              {/* <MenuItem value="S">Second</MenuItem> */}
+            </Select>
+          </div>
+          {/* <div className='w-[30%]'>
+            <Select
+              id="time-select"
+              value={timeValue}
+              fullWidth
+              onChange={handleTimeValueChange}
+              sx={{ height: '2.9rem !important', minHeight: '1rem !important' }}
+            >
+              <MenuItem value="Y">Year</MenuItem>
+              <MenuItem value="M">Month</MenuItem>
+              <MenuItem value="D">Day</MenuItem>
+              <MenuItem value="H">Hour</MenuItem>
+              <MenuItem value="Min">Minute</MenuItem>
+            </Select>
+          </div> */}
+
+          <div>
+            <Button variant='outlined' onClick={()=>setTimeValue("D")}>Date</Button>
+            <Button variant='outlined' onClick={()=>setTimeValue("M")}>Month</Button>
+            <Button variant='outlined' onClick={()=>setTimeValue("Y")}>Year</Button>
+            <Button variant='outlined' onClick={()=>setTimeValue("H")}>Hour</Button>
+            <Button variant='outlined' onClick={()=>setTimeValue("Min")}>Minute</Button>
+          </div>
+
+
+
+          <LocalizationProvider dateAdapter={AdapterDayjs}
+            sx={{ height: '2.9rem !important', minHeight: '1rem !important' }}
           >
-            <MenuItem value="Y">Year</MenuItem>
-            <MenuItem value="M">Month</MenuItem>
-            <MenuItem value="D">Day</MenuItem>
-            <MenuItem value="H">Hour</MenuItem>
-            <MenuItem value="Min">Minute</MenuItem>
-            {/* <MenuItem value="S">Second</MenuItem> */}
-          </Select>
+            <DateTimePicker
+              // disableFuture
+              openTo="day"
+              views={["year", "month", "day", "hours", "minutes"]}
+              value={datePicker}
+              // maxDate={dayjs(new Date())}
+              onChange={(newDate) => {
+                setDatePicker(newDate);
+              }}
+              inputFormat="DD-MM-YYYY HH:mm"
+              format='DD-MM-YYYY HH:mm'
+              ampm={false}
+              renderInput={(params) => <TextField {...params} />}
+              sx={{ height: '2.9rem !important', minHeight: '1rem !important' }}
+            />
+          </LocalizationProvider>
+
 
           <div>
             <IconButton onClick={() => handleArrows("I")}>
@@ -100,27 +147,16 @@ function TimeTool({handleDateChange, kundliBirthData}) {
               <i className={'tabler-minus bg-primary'} />
             </IconButton>
           </div>
+
+
+
         </div>
 
-        <div className="flex flex-row items-center">
+        {/* <div className="flex flex-row items-center">
           <div className="date-field">
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DateTimePicker
-                // disableFuture
-                openTo="day"
-                views={["year", "month", "day", "hours", "minutes"]}
-                value={datePicker}
-                // maxDate={dayjs(new Date())}
-                onChange={(newDate) => {
-                  setDatePicker(newDate);
-                }}
-                inputFormat="DD-MM-YYYY HH:mm"
-                ampm={false}
-                renderInput={(params) => <TextField {...params} />}
-              />
-            </LocalizationProvider>
+
           </div>
-        </div>
+        </div> */}
       </Box>
     </>
   );
