@@ -30,13 +30,13 @@ const PreviewPage = () => {
       const res = await GetKundliIDDataAPI(kId);
       setLoading(false);
       if (res.hasError) {
-        router.push('/kundlipage')
+        router.push('/Kundalipage')
         return toastDisplayer("error", res.error);
       } else {
         SetKundliData(res?.responseData?.data?.Result)
       }
     } else {
-      router.push('/kundlipage')
+      router.push('/Kundalipage')
       return toastDisplayer("error", "Kundli Id not found.");
     }
 

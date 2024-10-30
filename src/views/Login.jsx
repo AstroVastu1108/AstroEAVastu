@@ -260,11 +260,12 @@ const LoginV2 = ({ mode }) => {
           <Logo color={hidden ? 'primary' : 'white'} />
           </Link> */}
             <div className='flex flex-col gap-6 is-full sm:is-auto md:is-full sm:max-is-[400px] md:max-is-[unset] mbs-11 sm:mbs-14 md:mbs-0'>
+              <Link href="#" onClick={(e) => e.preventDefault()} className='block-start-5 sm:block-start-[33px] inline-start-6 sm:inline-start-[38px]'>
+                <Logo color={'primary'} />
+              </Link>
               {isOtpVerified == "pending" || isOtpVerified == "verifiedd" ? (
                 <>
-                  <Link href="#" onClick={(e) => e.preventDefault()} className='block-start-5 sm:block-start-[33px] inline-start-6 sm:inline-start-[38px]'>
-                    <Logo color={'primary'} />
-                  </Link>
+
                   <div className='flex flex-col gap-1'>
                     <Typography variant='h5'>{`Continue to use ${themeConfig.templateName}.Net`}</Typography>
                     <Typography>Please sign-in to enhance life experiences !!!</Typography>
@@ -368,20 +369,11 @@ const LoginV2 = ({ mode }) => {
                 </>
               ) :
                 <>
-                  <div className="backbtn">
-                    <i
-                      className="tabler-arrow-left"
-                      style={{
-                        fontSize: "20px",
-                        cursor: "pointer",
-                      }}
-                      onClick={handlePreviousBtn}
-                    ></i>
-                    <div className="step-text">Go Back</div>
-                  </div>
-                  <div className='flex flex-col gap-1'>
-                    <Typography variant='h4'>{`OTP Verification`}</Typography>
-                    <Typography>Please enter the 6 digit code sent to {formData?.email}.</Typography>
+                  <div className='flex flex-col gap-4'>
+                    <div className='flex flex-col gap-1'>
+                      <Typography variant='h5'>{`OTP Verification`}</Typography>
+                      <Typography>Please enter the 6 digit code sent to <span style={{ fontWeight: "600", color: "#590a73" }}>{formData?.email}</span></Typography>
+                    </div>
                   </div>
                   <OTPverify email={formData?.email} role={"login"} setIsOtpVerified={setIsOtpVerified} />
                 </>

@@ -277,7 +277,7 @@ export default function KundliMain() {
   }
 
   const handlePreviewClick = (event, kid) => {
-    window.open(`preview?kid=${kid}`, '_blank');
+    window.open(`kundali?kid=${kid}`, '_blank');
   }
 
   const handleEditClick = (data) => {

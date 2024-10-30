@@ -309,7 +309,7 @@ export default async function Page({ params }) {
     .map(item => item.Href);
 
   if (hrefsWithAccess.includes('/Kundalipage')) {
-    hrefsWithAccess.push('/preview');
+    hrefsWithAccess.push('/kundali');
   }
   if (hrefsWithAccess.includes('/my-clients')) {
     hrefsWithAccess.push('/clientDetails');
