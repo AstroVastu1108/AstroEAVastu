@@ -113,7 +113,6 @@ const Navigation = props => {
 
   const handleUserLogout = async () => {
     // Redirect to login page
-    console.log("logout")
     logout();
     router.push('/login')
   }

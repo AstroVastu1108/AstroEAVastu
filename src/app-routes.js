@@ -18,7 +18,7 @@ export const routes = [
       element: UserConfig,
     },
     {
-      path: "kundali",
+      path: "kundali/:id",
       element: PreviewPage,
     },
     {

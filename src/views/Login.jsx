@@ -86,6 +86,21 @@ const LoginV2 = ({ mode }) => {
   const recaptchaRef = useRef(null);
 
 
+  useEffect(() => {
+    const authState = Cookies.get('authState'); 
+    if (authState) {
+      try {
+        const storedSessionValue = JSON.parse(authState);
+        const { authRule } = storedSessionValue; 
+        const routePermissions = JSON.parse(authRule);
+        const firstAccessibleItem = routePermissions.find(item => item.HasAccess);
+        return router.push(firstAccessibleItem.Href)
+      } catch (error) {
+        console.error('Failed to parse authState:', error);
+      }
+    }
+  }, []);
+
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();

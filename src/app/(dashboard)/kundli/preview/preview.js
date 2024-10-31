@@ -8,7 +8,7 @@ import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplaye
 import Loader from '@/components/common/Loader/Loader';
 import Preview from '@/views/apps/kundli/preview/preview';
 
-const PreviewPage = () => {
+const PreviewPage = ({id}) => {
   // var
   const searchParams = useSearchParams();
   const [kundliData, SetKundliData] = useState(null);
@@ -17,9 +17,9 @@ const PreviewPage = () => {
 
   // Hooks
   useEffect(() => {
-    const kidValue = searchParams.get('kid');
+    // const kidValue = searchParams.get('kid');
     // console.log("Kid : ",kidValue)
-    getKundliData(kidValue);
+    getKundliData(id);
 
   }, [searchParams]);
 

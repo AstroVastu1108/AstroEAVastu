@@ -16,7 +16,6 @@ export async function validateCaptcha(token){
     //   }).toString(),
     // });
     // console.log("NEXT_PUBLIC_GOOGLE_RECAPTCHA_SECRET_KEY : ",NEXT_PUBLIC_GOOGLE_RECAPTCHA_SECRET_KEY)
-    console.log("Response : ",response)
     const data = response.data;
     return data.success ? { success: true } : { success: false, error: 'reCAPTCHA verification failed' };
   } catch (error) {

@@ -140,8 +140,6 @@ function PrakritiPopUp({ open, handlePraClose }) {
       headerClassName: 'rowheader',
       flex:1,
       renderCell: (params) => {
-
-        console.log(params)
         return(
         <FormControlLabel
           label={params.row.vata}
@@ -224,7 +222,7 @@ function PrakritiPopUp({ open, handlePraClose }) {
   // Function to handle form submission
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("Selected options:", selectedOptions);
+    // console.log("Selected options:", selectedOptions);
     // Submit the selectedOptions to wherever you need
   };
 
@@ -240,7 +238,7 @@ function PrakritiPopUp({ open, handlePraClose }) {
           component: 'form',
           onSubmit: (event) => {
             event.preventDefault();
-            console.log("submit")
+            // console.log("submit")
             // handleSubmit();
           },
           // sx: {

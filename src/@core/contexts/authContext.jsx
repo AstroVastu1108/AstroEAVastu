@@ -174,7 +174,6 @@ export const AuthProvider = ({ children }) => {
             // setAuthRuleContext(result.data.authRule);
             const { useremail, authRule, refreshToken, accessToken, userRole, transactionID,
                 userAvatar} = responseData.result;
-            console.log("statusMsg : ",responseData.statusMsg)
             const expirationTime = new Date().getTime() + 5 * 60 * 1000;
 
             const authData = {

@@ -210,7 +210,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
   const handlePreview = async () => {
     const kid = await handleSubmit();
     if(kid)
-      router.push(`kundali?kid=${kid}`)
+      router.push(`kundali/${kid}`)
   }
 
   const handleInputChange = (field, value, key, isRequired = false) => {

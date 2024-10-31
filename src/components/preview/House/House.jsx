@@ -33,7 +33,6 @@ function House({ houseArr, Symbols }) {
   }
 
   const handleEvent = (type, house, title, data) => {
-    console.log("Data : ", data)
     setSelectedTitle(house + " 🡒 " + title);
     setOpen(true)
     setSelectedEvent(data);
