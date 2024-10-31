@@ -75,6 +75,7 @@ const LoginV2 = ({ mode }) => {
     email: "",
     password: ""
   });
+  const emailRef = useRef();
   const [isDisable, setIsDisable] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isOtpVerified, setIsOtpVerified] = useState("pending");
@@ -105,6 +106,7 @@ const LoginV2 = ({ mode }) => {
     try {
       e.preventDefault();
       if (formData.email == "") {
+       emailRef.current.focus();
         toastDisplayer("error", "Email is required.")
         setIsDisable(false)
         return setErrors(prev => ({
@@ -138,6 +140,7 @@ const LoginV2 = ({ mode }) => {
     try {
       if (formData.email == "") {
         toastDisplayer("error", "Email is required.")
+        emailRef.current.focus();
         setIsDisable(false)
         return setErrors(prev => ({
           ...prev,
@@ -181,6 +184,7 @@ const LoginV2 = ({ mode }) => {
   const handleLogin = async () => {
     try {
       if (formData.email == "") {
+        emailRef.current.focus();
         return toastDisplayer("error", "Email is required.")
       }
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -276,7 +280,7 @@ const LoginV2 = ({ mode }) => {
           </Link> */}
             <div className='flex flex-col gap-6 is-full sm:is-auto md:is-full sm:max-is-[400px] md:max-is-[unset] mbs-11 sm:mbs-14 md:mbs-0'>
               <Link href="#" onClick={(e) => e.preventDefault()} className='block-start-5 sm:block-start-[33px] inline-start-6 sm:inline-start-[38px]'>
-                <Logo color={'primary'} />
+                <Logo color={'primary'} isSmall={false}/>
               </Link>
               {isOtpVerified == "pending" || isOtpVerified == "verifiedd" ? (
                 <>
@@ -300,6 +304,7 @@ const LoginV2 = ({ mode }) => {
                       // placeholder='Enter your email'
                       onChange={(e) => { handleInput("email", e); }}
                       value={formData.email}
+                      inputRef={emailRef} 
                       {...(errors.email && { error: true })}
                     />
                     {
@@ -349,7 +354,7 @@ const LoginV2 = ({ mode }) => {
                             },
                           }}
                         >
-                          {isDisable ? "Loading ..." : "Next"}
+                          {isDisable ? "Sending OTP..." : "Next"}
                         </LoadingButton>
                       ) : ""
                     }
@@ -375,7 +380,7 @@ const LoginV2 = ({ mode }) => {
                     <div className='flex justify-center items-center flex-wrap gap-2'>
                       <Typography>No Account?</Typography>
                       <Typography color='primary' style={{ cursor: 'pointer' }} onClick={() => {
-                        router.push('/register')
+                        router.push('/sign-up')
                       }}>
                         Create New Account
                       </Typography>

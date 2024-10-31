@@ -58,11 +58,30 @@ const StyledLogoutButtonContainer = styled(Box)(({ theme }) => ({
   gap:"10px"
 }))
 
+const StyledLoggedInUserContainer = styled(Box)(({ theme }) => ({
+  bottom: 10,
+  width: '100%',
+  padding: theme.spacing(2),
+  color: ` var(--primary-soft-color)`,
+  // background: `linear-gradient(270deg, rgb(var(--mui-palette-primary-mainChannel) / 0.7) 0%, var(--mui-palette-primary-main) 100%) !important`,
+  // boxShadow: ` var(--mui-customShadows-primary-sm)`,
+  // borderTop: `1px solid ${theme.palette.divider}`,
+  textAlign: 'left',
+  display: "flex",
+  flexDirection:"row",
+  alignItems:"center",
+  fontSize:"18px",
+  // borderRadius: ` var(--mui-shape-borderRadius)`,
+  // cursor: "pointer",
+  paddingBlock: "8px",
+  paddingInline: "12px",
+  gap:"10px"
+}))
 
 const Navigation = props => {
   // states
-  const { logout } = useAuth();
-
+  const { logout, user } = useAuth();
+// console.log("user : ",)
   // Props
   const { mode, systemMode } = props
 
@@ -132,11 +151,16 @@ const Navigation = props => {
         'data-mui-color-scheme': 'dark'
       })}
     >
-      {/* Nav Header including Logo & nav toggle icons  */}
       <NavHeader>
         <Link href='/'>
-          {/* <Logo /> */}
-          <Logo color={'primary'} />
+        {!(isCollapsed && !isHovered) ? (
+            <>
+               <Logo color={'primary'} isSmall={false}/>
+            </>
+          ) : (
+            <Logo color={'primary'} isSmall={true}/>
+          )}
+         
         </Link>
         {!(isCollapsed && !isHovered) && (
           <NavCollapseIcons
@@ -149,7 +173,18 @@ const Navigation = props => {
       </NavHeader>
       <StyledBoxForShadow ref={shadowRef} />
       <VerticalMenu scrollMenu={scrollMenu} />
-      {/* Logout Button at the bottom */}
+      <div className='p-3'>
+      <StyledLoggedInUserContainer>
+      {!(isCollapsed && !isHovered) ? (
+            <>
+              <i className='text-primary text-xl tabler-user-square-rounded' />
+              {user?.useremail}
+            </>
+          ) : (
+            <i className='text-primary text-xl tabler-user-square-rounded' />
+          )}
+      </StyledLoggedInUserContainer>
+      </div>
       <div className='p-3'>
         <StyledLogoutButtonContainer onClick={ handleUserLogout}>
           {!(isCollapsed && !isHovered) ? (

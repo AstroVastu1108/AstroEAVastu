@@ -64,7 +64,10 @@ const RegisterPage = ({ mode }) => {
   const [loading, setLoading] = useState(false);
   const [isOtpVerified, setIsOtpVerified] = useState("pending");
   const router = useRouter()
-  
+  const fnameRef = useRef();
+  const lnameRef = useRef();
+  const emailRef = useRef();
+
   const recaptchaRef = useRef(null);
   const totalSteps = () => steps.length
   const completedSteps = () => Object.keys(completed).length
@@ -111,31 +114,31 @@ const RegisterPage = ({ mode }) => {
         }
         setIsDisable(true)
         const token = await recaptchaRef.current.executeAsync();
-      recaptchaRef.current.reset();
-      const recaptchaResponse = await fetch('/api/verifyRecaptcha', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token }),
-      });
-
-      const recaptchaData = await recaptchaResponse.json();
-      if (recaptchaData.success) {
-        setIsDisable(true)
-        const result = await requestOtp(userData?.email, "register")
-        if (result.hasError) {
-          setIsDisable(false);
-          setIsOtpVerified("pending")
-          return toastDisplayer("error", result.error)
-        } else {
-          setIsDisable(false);
-          setIsOtpVerified("sent")
-          // handleNext()
-        }
-      } else {
-        setIsDisable(false)
         recaptchaRef.current.reset();
-      }
-        
+        const recaptchaResponse = await fetch('/api/verifyRecaptcha', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token }),
+        });
+
+        const recaptchaData = await recaptchaResponse.json();
+        if (recaptchaData.success) {
+          setIsDisable(true)
+          const result = await requestOtp(userData?.email, "register")
+          if (result.hasError) {
+            setIsDisable(false);
+            setIsOtpVerified("pending")
+            return toastDisplayer("error", result.error)
+          } else {
+            setIsDisable(false);
+            setIsOtpVerified("sent")
+            // handleNext()
+          }
+        } else {
+          setIsDisable(false)
+          recaptchaRef.current.reset();
+        }
+
       } catch (error) {
         setIsDisable(false);
         setIsOtpVerified("pending")
@@ -192,24 +195,17 @@ const RegisterPage = ({ mode }) => {
     let newErrors = {}
 
     // if (activeStep === 0) {
-      // Validate Personal Details
-      newErrors = {
-        fname: !userData.fname.trim(),
-        lname: !userData.lname.trim(),
-        email: !userData.email.trim() || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(userData.email),
-        // password: !userData.password.trim() || userData.password.length < 7,
-        // phone: !userData.phone.trim() || !/^\d{10}$/.test(userData.phone)
-      }
-    // }
-    //  else if (activeStep === 1) {
-    //   // Validate Business Details
-    //   newErrors = {
-    //     businessname: !userData.businessname.trim(),
-    //     businesslocation: !userData.businesslocation.trim(),
-    //     // profilePicture: !file || !['image/jpeg', 'image/png', 'image/jpg'].includes(file.type)
-    //   }
-    // }
-
+    // Validate Personal Details
+    newErrors = {
+      fname: !userData.fname.trim(),
+      lname: !userData.lname.trim(),
+      email: !userData.email.trim() || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(userData.email),
+      // password: !userData.password.trim() || userData.password.length < 7,
+      // phone: !userData.phone.trim() || !/^\d{10}$/.test(userData.phone)
+    }
+     if (newErrors.fname) fnameRef.current.focus();
+    else if (newErrors.lname) lnameRef.current.focus();
+    else if (newErrors.email) emailRef.current.focus();
     setErrors(newErrors)
     return !Object.values(newErrors).some(error => error)
   }
@@ -367,19 +363,19 @@ const RegisterPage = ({ mode }) => {
           <div className='flex justify-center items-center bs-full bg-backgroundPaper !min-is-full p-6 md:!min-is-[unset] md:px-12 md:py-7 md:is-[480px]'>
             <div className='flex flex-col gap-5 is-full sm:is-auto md:is-full sm:max-is-[400px] md:max-is-[unset] mbs-11 sm:mbs-14 md:mbs-0'>
               <Link href="#" onClick={(e) => e.preventDefault()} className='block-start-5 sm:block-start-[33px] inline-start-6 sm:inline-start-[38px]'>
-                <Logo color={'primary'} />
+                <Logo color={'primary'} isSmall={false} />
               </Link>
-             
-              {isOtpVerified == "pending" || isOtpVerified == "verifiedd" &&
 
+              {isOtpVerified == "pending" || isOtpVerified == "verifiedd" ? (
                 <div className='flex flex-col gap-1'>
-                  <Typography variant='h5'>{`Welcome! First things first...`}</Typography>
-                  {/* <Typography>You can always change them later.</Typography> */}
+                  <Typography variant='h5'>{`Welcome! Let's get you started...`}</Typography>
+                  <Typography>Ready to discover new possibilities?</Typography>
                 </div>
+              ) : ""
               }
 
               <div className='flex flex-col gap-2'>
-              {isOtpVerified == "pending" || isOtpVerified == "verifiedd" ? (
+                {isOtpVerified == "pending" || isOtpVerified == "verifiedd" ? (
                   <>
                     <div style={{ display: "flex", flexDirection: "row", gap: "6px" }}>
                       <TextField
@@ -391,6 +387,7 @@ const RegisterPage = ({ mode }) => {
                         value={userData.fname}
                         onChange={e => handleInputChange('fname', e.target.value)}
                         error={Boolean(errors.fname)}
+                        inputRef={fnameRef} 
                       // helperText={errors.email && 'Enter a valid email address.'}
                       />
                       <TextField
@@ -401,6 +398,7 @@ const RegisterPage = ({ mode }) => {
                         value={userData.lname}
                         onChange={e => handleInputChange('lname', e.target.value)}
                         error={Boolean(errors.lname)}
+                        inputRef={lnameRef} 
                       // helperText={errors.email && 'Enter a valid email address.'}
                       />
                     </div>
@@ -412,9 +410,10 @@ const RegisterPage = ({ mode }) => {
                       value={userData.email}
                       onChange={e => handleInputChange('email', e.target.value)}
                       error={Boolean(errors.email)}
+                      inputRef={emailRef} 
                     // helperText={errors.email && 'Enter a valid email address.'}
                     />
-                    
+
                     {/* <TextField
                     fullWidth
                     label='Password'
@@ -449,18 +448,18 @@ const RegisterPage = ({ mode }) => {
                   </>
                 ) : (
                   <>
-                      <div className='flex flex-col gap-4'>
-                        <div className='flex flex-col gap-1'>
-                          <Typography variant='h5'>{`OTP Verification`}</Typography>
-                          <Typography>Please enter the 6 digit code sent to <span style={{ fontWeight: "600", color: "#590a73" }}>{userData?.email}</span></Typography>
-                        </div>
-                        <OTPverify email={userData?.email} role={"register"} setIsOtpVerified={setIsOtpVerified} />
+                    <div className='flex flex-col gap-4'>
+                      <div className='flex flex-col gap-1'>
+                        <Typography variant='h5'>{`OTP Verification`}</Typography>
+                        <Typography>Please enter the 6 digit code sent to <span style={{ fontWeight: "600", color: "#590a73" }}>{userData?.email}</span></Typography>
                       </div>
+                      <OTPverify email={userData?.email} role={"register"} setIsOtpVerified={setIsOtpVerified} />
+                    </div>
                   </>)
                 }
-                    {/* // : (
+                {/* // : (
                     //   <React.Fragment> */}
-                        {/* <TextField
+                {/* <TextField
                         fullWidth
                         label='Business Name'
                         placeholder='Enter your business name'
@@ -479,7 +478,7 @@ const RegisterPage = ({ mode }) => {
                         error={Boolean(errors.businesslocation)}
                       // helperText={errors.businesslocation && 'Business Location is required.'}
                       /> */}
-                        {/* <Box
+                {/* <Box
                         display='flex'
                         flexDirection='column'
                         alignItems='center'
@@ -524,14 +523,14 @@ const RegisterPage = ({ mode }) => {
                         </label>
                       </Box> */}
 
-                        {/* {errors.profilePicture && (
+                {/* {errors.profilePicture && (
                       <Typography variant='body2' color='error'>
                         Profile picture is required and must be in JPG, JPEG, or PNG format.
                       </Typography>
                     )} */}
-                    {/* //   </React.Fragment>
+                {/* //   </React.Fragment>
                     // )} */}
-                  
+
                 {/* )} */}
                 <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
 
@@ -589,7 +588,14 @@ const RegisterPage = ({ mode }) => {
                     </Typography>
                   </div>
 
-                  <Typography style={{ fontSize: "10px" }}>By clicking <span style={{ fontWeight: "600" }}>‘Get started’</span> you are agreeing to our <span style={{ fontWeight: "600" }}>Terms of Use</span> and <span style={{ fontWeight: "600" }}>Privacy Policy.</span></Typography>
+                  <Typography style={{ fontSize: "10px" }}>By clicking
+                  <Link href="#" onClick={(e) => e.preventDefault()} style={{ fontWeight: "600" }}> ‘Get started’ </Link>
+                    you are agreeing to our
+                    <Link href="#" onClick={(e) => e.preventDefault()} style={{ fontWeight: "600" }}> Terms of Use </Link>
+                    and
+                    <Link href="#" onClick={(e) => e.preventDefault()} style={{ fontWeight: "600" }}> Privacy Policy.
+                    </Link>
+                  </Typography>
                   <ReCAPTCHA
                     ref={recaptchaRef}
                     sitekey={process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_SITE_KEY}
