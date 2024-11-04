@@ -211,6 +211,11 @@ const LoginV2 = ({ mode }) => {
         const routePermissions = JSON.parse(authRule);
         const firstAccessibleItem = routePermissions.find(item => item.HasAccess);
         // setLoading(false)
+        const prevPath = Cookies.get("prevPath")
+        if(prevPath){
+          Cookies.remove("prevPath");
+          return window.location.href = prevPath;
+        }
         return router.push(firstAccessibleItem.Href)
       }
     } catch (error) {

@@ -14,7 +14,9 @@ import classnames from 'classnames'
 
 // Hook Imports
 import { useImageVariant } from '@core/hooks/useImageVariant'
-
+import { useEffect } from 'react'
+// import { useRouter } from 'next/router'
+import Cookies from 'js-cookie';
 // Styled Components
 const MaskImg = styled('img')({
   blockSize: 'auto',
@@ -29,7 +31,19 @@ const NotFound = ({ mode }) => {
   // Vars
   const darkImg = '/images/pages/misc-mask-dark.png'
   const lightImg = '/images/pages/misc-mask-light.png'
+  // const router = useRouter();
 
+  // Getting the full URL
+  // console.log("currentPageUrl : ",window.location.href)
+  useEffect(() => {
+    // Ensure this runs only on the client side
+    if (typeof window !== 'undefined') {
+      const fullUrl = `${window.location.pathname}`;
+      // setCurrentPageUrl(fullUrl);
+      Cookies.set('prevPath', fullUrl, { expires: 1, path: '/' });
+      console.log("currentPageUrl : ", fullUrl); // Log the current page URLs
+    }
+  }, []);
   // Hooks
   const theme = useTheme()
   const hidden = useMediaQuery(theme.breakpoints.down('md'))

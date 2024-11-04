@@ -155,7 +155,7 @@ const Navigation = props => {
         <Link href='/'>
         {!(isCollapsed && !isHovered) ? (
             <>
-               <Logo color={'primary'} isSmall={false}/>
+               <Logo color={'primary'} isSmall={false}  width="25mm"/>
             </>
           ) : (
             <Logo color={'primary'} isSmall={true}/>

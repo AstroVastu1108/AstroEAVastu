@@ -10,7 +10,7 @@ import UserConfig from "./app/(dashboard)/userConfig/userConfig";
 
 export const routes = [
     {
-      path: "Kundalipage",
+      path: "kundali-list",
       element: KundliPage,
     },
     {

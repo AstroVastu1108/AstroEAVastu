@@ -33,7 +33,7 @@ const LogoText = styled.span`
       : 'opacity: 1; margin-inline-start: 12px;'}
 `
 
-const Logo = ({ color ,isSmall}) => {
+const Logo = ({ color ,isSmall,width}) => {
   // Refs
   const logoTextRef = useRef(null)
 
@@ -58,13 +58,13 @@ const Logo = ({ color ,isSmall}) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isHovered, layout, isBreakpointReached])
-
+  console.log("width : ",width)
   return (
     <div className='flex items-center'>
       {isSmall ?
          (<SmallLogo className={`text-2xl text-${color}`} />)
        : (
-      <AstroVastuLogo className={`text-2xl text-${color}`} />
+      <AstroVastuLogo className={`text-2xl text-${color}`} width={width ? width : "65mm"}/>
       )}
       <LogoText
         color={color}
@@ -74,7 +74,7 @@ const Logo = ({ color ,isSmall}) => {
         transitionDuration={transitionDuration}
         isBreakpointReached={isBreakpointReached}
       >
-        {themeConfig.templateName}
+        {/* {themeConfig.templateName} */}
       </LogoText>
     </div>
   )
