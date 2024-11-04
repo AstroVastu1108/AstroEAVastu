@@ -15,6 +15,7 @@ import PreviewCard from "./preview/PreviewCard";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { getKundliPdf } from "@/app/Server/API/common";
+import { toastDisplayer } from "@/@core/components/toast-displayer/toastdisplayer";
 
 
 export default function KundliMain() {

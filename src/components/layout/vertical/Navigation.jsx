@@ -23,6 +23,7 @@ import navigationCustomStyles from '@core/styles/vertical/navigationCustomStyles
 import { Box, Button } from '@mui/material'
 import { useAuth } from '@/@core/contexts/authContext'
 import { useRouter } from 'next/navigation'
+import useSingleSessionSSE from '@/@core/hooks/useSingleSessionSSE'
 
 const StyledBoxForShadow = styled('div')(({ theme }) => ({
   top: 60,
@@ -135,6 +136,12 @@ const Navigation = props => {
     logout();
     router.push('/login')
   }
+
+  // useEffect(() => {
+  //   if (user?.transactionID) {
+  //     useSingleSessionSSE(user?.transactionID);
+  //   }
+  // }, [user])
 
   return (
     // eslint-disable-next-line lines-around-comment

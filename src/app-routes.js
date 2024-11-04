@@ -42,7 +42,7 @@ export const routes = [
       element: KundliTasksMain,
     },
     {
-      path: "subscription ",
+      path: "subscription",
       element: Subscription,
     }
   ];
