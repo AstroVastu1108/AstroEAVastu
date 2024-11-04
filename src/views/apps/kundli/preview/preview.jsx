@@ -95,7 +95,7 @@ const Preview = ({ kundliData, setKundliData }) => {
   const handleDateChange = async (datePicker) => {
     var kdata = kundliData?.AstroVastuReport?.BirthDetails;
     const formattedDate = datePicker.format('DD-MM-YYYY');
-    const formattedTime = datePicker.format('HHmm'); // 24-hour format without colon
+    const formattedTime = datePicker.format('HHmmss'); // 24-hour format without colon
     const formattedData = {
       KundaliID: kdata.KundaliID,
       FirstName: kdata.FirstName,
@@ -137,13 +137,17 @@ const Preview = ({ kundliData, setKundliData }) => {
           <Card>
             <CardContent className='flex flex-col p-0'>
 
-              <div className='previewPDF'>
+              <div className='previewPDF flex justify-center'>
                 {kundliData &&
                   <>
                     <PreviewCard kundliData={kundliData} handleDownload={handleKundliApi} isPrintDiv={false} loading={existdownloadLoading} handleTimeTool={handleTimeTool} />
                   </>
                 }
+                {timeToolPopUp &&
+                  <TimeTool handleTimeTool={handleTimeTool} handleDateChange={handleDateChange} kundliBirthData={kundliBirthData} />
+                }
               </div>
+
             </CardContent>
           </Card>
         </Grid>
@@ -158,7 +162,6 @@ const Preview = ({ kundliData, setKundliData }) => {
         <i className='tabler-calendar-share' />
       </Button> */}
 
-      {timeToolPopUp && <TimeTool handleTimeTool={handleTimeTool} handleDateChange={handleDateChange} kundliBirthData={kundliBirthData} />}
     </>
   )
 }

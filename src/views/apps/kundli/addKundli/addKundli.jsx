@@ -152,9 +152,9 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
     }
     const birthDate = userData.date ? new Date(userData.date).toLocaleDateString('en-GB').split('/').join('-') : null
 
-    const birthTime = userData.time ? new Date(userData.time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }).replace(/:/g, '') : null;
+    const birthTime = userData.time ? new Date(userData.time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit',second: '2-digit', hour12: false }).replace(/:/g, '') : null;
 
-
+    console.log("birth time : ",birthTime)
 
     try {
       setIsDisable(true)
@@ -368,8 +368,8 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
               <AppReactDatepicker
                 showTimeSelect
                 showTimeSelectOnly
-                timeFormat="HH:mm"
-                dateFormat="HH:mm"
+                timeFormat="HH:mm:ss"
+                dateFormat="HH:mm:ss"
                 timeIntervals={1}
                 id="time-only-picker"
                 selected={userData.time}
@@ -381,7 +381,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                     label="Birth Time"
                     fullWidth
                     readOnly
-                    value={userData.time ? userData.time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                    value={userData.time ? userData.time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : ''}
                     onChange={date => handleInputChange('time', date, 'BirthTime')}
                     {...(errors.BirthTime && { error: true })}
                   />

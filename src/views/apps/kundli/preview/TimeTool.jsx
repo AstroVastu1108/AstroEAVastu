@@ -1,4 +1,4 @@
-import { Box, IconButton, MenuItem, Select, Typography, TextField, debounce, Button } from '@mui/material';
+import { Box, IconButton, MenuItem, Select, Typography, TextField, debounce, Button, Grid } from '@mui/material';
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
@@ -72,116 +72,143 @@ function TimeTool({ handleDateChange, kundliBirthData, handleTimeTool }) {
 
   return (
     <>
-      <Box className="timeTool-div" sx={{ boxShadow: 3 }}>
-        <div className='w-full flex justify-end '>
 
-        <IconButton
-          aria-label="close"
-          onClick={handleTimeTool} // Replace with your close handler function
-          className='text-inherit'
-        >
-          <i className='tabler-x text-primary'></i>
-        </IconButton>
-        </div>
-        <div className="flex items-center gap-3 flex-wrap lg:flex-nowrap md:flex-nowrap">
-          <div className="w-full sm:w-[30%] md:w-[20%] lg:w-[15%]">
-            <Select
-              id="time-select"
-              fullWidth
-              defaultValue={"T"}
+        <Box className="timeTool-div bg-[var(--secondary-color)]  lg:w-[calc(100%-150px)] md:w-[calc(100%-100px)] sm:w-[calc(100%-50px)]">
+          <div className='w-full flex justify-between items-center'>
+            <div>
+              <span className='text-primary text-sm font-medium'>Time Tool</span>
+            </div>
+            <IconButton
+              aria-label="close"
+              onClick={handleTimeTool} // Replace with your close handler function
+              className='text-inherit'
+            >
+              <i className='tabler-x text-primary'></i>
+            </IconButton>
+          </div>
+          <div className="flex items-center gap-3 flex-wrap lg:flex-nowrap">
+            <div className="w-full sm:w-[25%] md:w-[30%] lg:w-[15%]">
+              <Select
+                id="time-select"
+                fullWidth
+                defaultValue={"B"}
+                sx={{
+                  height: '2.5rem',
+                  minHeight: '2.5rem',
+                }}
+              >
+                <MenuItem value="B">Birth Chart</MenuItem>
+                <MenuItem value="T">Transit</MenuItem>
+              </Select>
+            </div>
+
+            <Button
+              variant={timeValue === "Y" ? "contained" : "outlined"}
+              onClick={() => setTimeValue("Y")}
               sx={{
-                height: '2.9rem',
-                minHeight: '2.9rem',
+                height: '2.5rem',
+                minWidth: 'fit-content',
               }}
             >
-              <MenuItem value="T">Transient</MenuItem>
-              <MenuItem value="D">Dasha</MenuItem>
-            </Select>
+              Year
+            </Button>
+
+
+            <Button
+              variant={timeValue === "M" ? "contained" : "outlined"}
+              onClick={() => setTimeValue("M")}
+              sx={{
+                height: '2.5rem',
+                minWidth: 'fit-content',
+              }}
+            >
+              Month
+            </Button>
+
+            <Button
+              variant={timeValue === "D" ? "contained" : "outlined"}
+              onClick={() => setTimeValue("D")}
+              sx={{
+                height: '2.5rem',
+                minWidth: 'fit-content',
+              }}
+            >
+              Date
+            </Button>
+
+            <Button
+              variant={timeValue === "H" ? "contained" : "outlined"}
+              onClick={() => setTimeValue("H")}
+              sx={{
+                height: '2.5rem',
+                minWidth: 'fit-content',
+              }}
+            >
+              Hour
+            </Button>
+            <Button
+              variant={timeValue === "Min" ? "contained" : "outlined"}
+              onClick={() => setTimeValue("Min")}
+              sx={{
+                height: '2.5rem',
+                minWidth: 'fit-content',
+              }}
+            >
+              Minute
+            </Button>
+
+            <Button
+              variant={timeValue === "S" ? "contained" : "outlined"}
+              onClick={() => setTimeValue("S")}
+              sx={{
+                height: '2.5rem',
+                minWidth: 'fit-content',
+              }}
+            >
+              Second
+            </Button>
+
+            <LocalizationProvider dateAdapter={AdapterDayjs} className="w-full sm:w-[25%] md:w-[40%] lg:w-[18%]">
+              <DateTimePicker
+                openTo="day"
+                className="w-[225px]"
+                // className="w-full sm:w-[25%] md:w-[40%] lg:w-[18%]"
+                views={["year", "month", "day", "hours", "minutes"]}
+                value={datePicker}
+                onChange={(newDate) => setDatePicker(newDate)}
+                inputFormat="DD-MM-YYYY HH:mm:ss"
+                format='DD-MM-YYYY HH:mm:ss'
+                ampm={false}
+                sx={{
+                  height: '2.5rem',
+                  minHeight: '2.5rem',
+                  '& .MuiInputBase-root': { height: '2.5rem' },
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    sx={{
+                      height: '2.5rem',
+                      minHeight: '2.5rem',
+                      '& .MuiInputBase-root': { height: '2.5rem' },
+                    }}
+                className="w-[225px]"
+                // className="w-full sm:w-[25%] md:w-[40%] lg:w-[18%]"
+                  />
+                )}
+              />
+            </LocalizationProvider>
+
+            <IconButton onClick={() => handleArrows("I")} >
+              <i className={'tabler-plus bg-primary'} />
+            </IconButton>
+
+            <IconButton onClick={() => handleArrows("D")} >
+              <i className={'tabler-minus bg-primary'} />
+            </IconButton>
+
           </div>
-
-          <Button
-            variant={timeValue === "D" ? "contained" : "outlined"}
-            onClick={() => setTimeValue("D")}
-            sx={{
-              height: '2.9rem',
-              minWidth: 'fit-content',
-            }}
-          >
-            Date
-          </Button>
-          <Button
-            variant={timeValue === "M" ? "contained" : "outlined"}
-            onClick={() => setTimeValue("M")}
-            sx={{
-              height: '2.9rem',
-              minWidth: 'fit-content',
-            }}
-          >
-            Month
-          </Button>
-          <Button
-            variant={timeValue === "Y" ? "contained" : "outlined"}
-            onClick={() => setTimeValue("Y")}
-            sx={{
-              height: '2.9rem',
-              minWidth: 'fit-content',
-            }}
-          >
-            Year
-          </Button>
-          <Button
-            variant={timeValue === "H" ? "contained" : "outlined"}
-            onClick={() => setTimeValue("H")}
-            sx={{
-              height: '2.9rem',
-              minWidth: 'fit-content',
-            }}
-          >
-            Hour
-          </Button>
-          <Button
-            variant={timeValue === "Min" ? "contained" : "outlined"}
-            onClick={() => setTimeValue("Min")}
-            sx={{
-              height: '2.9rem',
-              minWidth: 'fit-content',
-            }}
-          >
-            Minute
-          </Button>
-
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateTimePicker
-              openTo="day"
-              views={["year", "month", "day", "hours", "minutes"]}
-              value={datePicker}
-              onChange={(newDate) => setDatePicker(newDate)}
-              inputFormat="DD-MM-YYYY HH:mm"
-              format='DD-MM-YYYY HH:mm'
-              ampm={false}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  sx={{
-                    height: '2.5rem',
-                    minHeight: '2.5rem',
-                    '& .MuiInputBase-root': { height: '2.5rem' },
-                  }}
-                />
-              )}
-            />
-          </LocalizationProvider>
-
-          <IconButton onClick={() => handleArrows("I")} >
-            <i className={'tabler-plus bg-primary'} />
-          </IconButton>
-
-          <IconButton onClick={() => handleArrows("D")} >
-            <i className={'tabler-minus bg-primary'} />
-          </IconButton>
-
-        </div>
-      </Box>
+        </Box>
 
     </>
   );
