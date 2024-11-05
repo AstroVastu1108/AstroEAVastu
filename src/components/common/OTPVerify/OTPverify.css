@@ -8,7 +8,8 @@
     border-radius: 10px;
     /* box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); */
     max-width: 800px;
-    margin: 0 auto;
+    /* margin: 0 auto; */
+    gap: 18px;
 
     .emailIcon{
         background-color: rgba(63, 82, 137, 0.1);
@@ -23,8 +24,7 @@
             font-size: 45px;
         }
     }
-    .resend-button {
-        /* background-color: #fff; */
+    /* .resend-button {
         color: #4b37b3;
         border: none;
         padding: 0.5rem 1rem;
@@ -40,7 +40,7 @@
           color: #878a99;
           cursor: not-allowed;
         }
-      }
+      } */
   
     h2 {
       font-size: 1.2rem;
@@ -62,7 +62,7 @@
   
     .otp-input-container {
       display: flex;
-      gap: 1rem;
+      gap: 1.2rem;
     }
   
     .otp-input {

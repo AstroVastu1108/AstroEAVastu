@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "./OTPverify.css";
 import { toastDisplayer } from "@/@core/components/toast-displayer/toastdisplayer";
 import { requestOtp, VerifyOtp } from "@/app/Server/API/auth";
+import { LoadingButton } from "@mui/lab";
 
 function OTPverify({ email,role,setIsOtpVerified }) {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -91,26 +92,23 @@ function OTPverify({ email,role,setIsOtpVerified }) {
   }, [otp]);
 
   const handleResend = async () => {
-    setIsResendDisabled(true);
+    setIsResendDisabled(false);
     setTimer(60);
     try {
       const result = await requestOtp(email,role);
       if (result.hasError) {
         return toastDisplayer("error", result.error)
       }
+      setIsResendDisabled(true);
       setOtp(["", "", "", "", "", ""])
       toastDisplayer('success', 'OTP sent successfully');
     } catch (error) {
-      // console.log("Error Resending OTP:", error); // Log the error response
       toastDisplayer('error', error.error || 'Failed to resend OTP');
     }
   };
 
   return (
     <div className="otp-form">
-      {/* <div className="emailIcon">
-        <i className="material-symbols-outlined mailIcon">mail</i>
-      </div> */}
       <div className="otp-input-container">
         {otp.map((digit, index) => (
           <input
@@ -127,16 +125,23 @@ function OTPverify({ email,role,setIsOtpVerified }) {
           />
         ))}
       </div>
-      <div className="resendOTP">
-
-        <button
-          onClick={handleResend}
-          disabled={isResendDisabled}
-          className={`resend-button ${isResendDisabled ? "disabled" : ""}`}
-        >
-          Resend OTP {isResendDisabled && `(${timer}s)`}
-        </button>
-      </div>
+      <LoadingButton
+        fullWidth
+        variant='contained'
+        disabled={isResendDisabled}
+        onClick={handleResend}
+        loading={isResendDisabled}
+        loadingPosition="start"
+        type='submit'
+        sx={{
+          backgroundColor: "#590A73",
+          "&:hover": {
+            backgroundColor: "#4a055b", 
+          }
+        }}
+      >
+         Resend OTP {isResendDisabled && `(${timer}s)`}
+      </LoadingButton>
     </div>
   );
 }

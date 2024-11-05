@@ -133,7 +133,6 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
 
         (async function () {
-
             const result = await getUser();
 
             if (result.isOk) {
@@ -153,8 +152,38 @@ export const AuthProvider = ({ children }) => {
 
                 // setUser(data);
             }
+
         })();
     }, []);
+
+    useEffect(() => {
+        if (!user) return;
+        console.log("Data : ",user)
+
+        const encodedUserId = encodeURIComponent(user?.transactionID);
+
+        const eventSource = new EventSource(`${process.env.NEXT_PUBLIC_APIURL1}/Auth/sse?userId=${encodedUserId}`);
+
+        eventSource.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            if (data.action === "logout") {
+                console.log("logout called")
+                // Logout the user immediately
+                eventSource.close();
+
+                // Clear session data and redirect to login
+                // localStorage.removeItem("sessionToken");
+                logout();
+                window.location.href = '/login';
+            }
+        };
+
+        // Clean up the SSE connection when component unmounts
+        return () => {
+            eventSource.close();
+        };
+    }, [user]);
+
 
 
     const loginData = async (userData) => {
