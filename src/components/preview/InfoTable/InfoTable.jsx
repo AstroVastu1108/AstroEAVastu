@@ -6,14 +6,6 @@ import { useState } from "react"
 import PrakritiPopUp from "./PrakritiPopUp"
 const InfoTable = ({ InfoTableTextArr, isPrintDiv}) => {
 
-  const [isPrakritiVisible, setIsPrakritiVisible]=useState(false);
-
-  const handleIsPraOpen=()=>{
-    setIsPrakritiVisible(true)
-  }
-  const handleIsPraClose=()=>{
-    setIsPrakritiVisible(false)
-  }
 
   return (
     <div className='flex flex-col pe-2 '>
@@ -34,7 +26,6 @@ const InfoTable = ({ InfoTableTextArr, isPrintDiv}) => {
           ))}
         </tbody>
       </table>
-      {isPrakritiVisible && <PrakritiPopUp open={isPrakritiVisible} handlePraClose={handleIsPraClose} />}
     </div>
   )
 }

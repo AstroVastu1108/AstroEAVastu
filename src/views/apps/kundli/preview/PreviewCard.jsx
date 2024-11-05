@@ -12,9 +12,10 @@ import NakshtraSummary from '@/components/preview/NakshtraSummary/NakshtraSummar
 import RahuKetu from '@/components/preview/RahuKetu/RahuKetu';
 import DashaDetails from '@/components/preview/DashaDetails/DashaDetails';
 import LoardPlanet from '@/components/preview/LoardPlanet/LoardPlanet'
-import { FormControl, IconButton, InputLabel, Menu, MenuItem, Select } from '@mui/material'
+import { Divider, FormControl, IconButton, InputLabel, Menu, MenuItem, Select } from '@mui/material'
 import { useState } from 'react'
 import Event from '@/components/preview/Event/Event'
+import PrakritiPopUp from '@/components/preview/InfoTable/PrakritiPopUp'
 
 const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool }) => {
   // var
@@ -37,7 +38,16 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool })
   const [anchorEl, setAnchorEl] = useState(null);
   const [chartValue, setChartValue] = useState("D");
   const [eventValue, setEventValue] = useState("E1");
+  const [isPrakritiVisible, setIsPrakritiVisible]=useState(false);
   const open = Boolean(anchorEl);
+
+  const handleIsPraOpen=()=>{
+    handleClose();
+    setIsPrakritiVisible(true)
+  }
+  const handleIsPraClose=()=>{
+    setIsPrakritiVisible(false)
+  }
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -65,7 +75,8 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool })
             <div className={`flex justify-between md-items-center lg:gap-1 lg:flex-row md:flex-row ${!isPrintDiv ? 'sm:flex-row sm:gap-1 flex-col' : "gap-5"} birthDateTime-Div`} >
               <div className='flex flex-row gap-1 chart-date items-center'>
                 <span className='label'>Birth Date & Time: </span>
-                <span className='value font-medium'>{BirthDetails?.Date} {BirthDetails?.Time.substring(0, 2)}:{BirthDetails?.Time.substring(2, 4)}</span>
+                <span className='value font-medium'>{BirthDetails?.Date} {BirthDetails?.Time.substring(0, 2)}:{BirthDetails?.Time.substring(2, 4)}:{(BirthDetails?.Time.substring(4, 6) ? BirthDetails?.Time.substring(4, 6) : '00')}
+                </span>
               </div>
               <div className='flex flex-row gap-1 chart-date items-center'>
                 <span className='label'>Place: </span>
@@ -89,8 +100,11 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool })
                       horizontal: 'right',
                     }}
                   >
-                    <MenuItem onClick={handleMenuDownload} className="flex gap-1"><i className={'tabler-download me-2'} />Download</MenuItem>
+                    <MenuItem className="flex gap-1"><i className={'tabler-browser-check me-2'} />Events</MenuItem>
+                    <MenuItem onClick={handleIsPraOpen} className="flex gap-1"><i className={'tabler-arrow-up-right me-2'} />Prakriti</MenuItem>
                     <MenuItem onClick={handleMenuTimeTool} className="flex gap-1"><i className={'tabler-calendar-share me-2'} />TimeTool</MenuItem>
+                    <Divider />
+                    <MenuItem onClick={handleMenuDownload} className="flex gap-1"><i className={'tabler-download me-2'} />Download</MenuItem>
                   </Menu>
                 </>
               </div>
@@ -257,6 +271,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool })
           </div>
         </Grid>
       </Grid>
+      {isPrakritiVisible && <PrakritiPopUp open={isPrakritiVisible} handlePraClose={handleIsPraClose} />}
     </>
   )
 }

@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardContent, createTheme, debounce, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, IconButton, Menu, MenuItem, TextField, ThemeProvider } from "@mui/material";
+import { Box, Button, Card, CardContent, createTheme, debounce, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid, IconButton, Menu, MenuItem, TextField, ThemeProvider } from "@mui/material";
 import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarQuickFilter } from "@mui/x-data-grid"
 import PreviewActions from "./preview/PreviewActions";
 import { useEffect, useRef, useState } from "react";
@@ -15,7 +15,11 @@ import PreviewCard from "./preview/PreviewCard";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { getKundliPdf } from "@/app/Server/API/common";
+
+import RemoveKundli from "./removeKundli/RemoveKundli";
+
 import { toastDisplayer } from "@/@core/components/toast-displayer/toastdisplayer";
+
 
 
 export default function KundliMain() {
@@ -75,12 +79,12 @@ export default function KundliMain() {
       minWidth: 100,
       headerName: 'Birth Date & Time',
       headerClassName: 'rowheader',
-      width: 150,
+      width: 170,
       headerAlign: 'left',
       renderCell: (params) => {
         const dateValue = params.row.BirthDate;
         const timeValue = params.value.toString();
-        const formattedTime = timeValue.slice(0, 2) + ':' + timeValue.slice(2, 4);
+        const formattedTime = timeValue?.slice(0, 2) + ':' + timeValue?.slice(2, 4) + ':' + (timeValue?.slice(4, 6) ? timeValue?.slice(4, 6) : '00');
         const searchText = searchInputRef.current.value;
 
         const fullValue = `${dateValue} ${formattedTime}`;
@@ -155,6 +159,13 @@ export default function KundliMain() {
           handleClose();
         };
 
+
+        const handleRemoveOpen = () => {
+          setUserData(params?.row)
+          setSetRemovePopUp(true)
+          handleClose();
+        }
+
         // const handleDownload = () => {
         //   getAKundliData(params?.row?.KundaliID)
         //   handleClose();
@@ -205,9 +216,11 @@ export default function KundliMain() {
                 horizontal: 'right',
               }}
             >
-              <MenuItem onClick={handlePreview} className="flex gap-1"><i className={'tabler-arrow-up-right bg-primary'}/>Open</MenuItem>
-              <MenuItem onClick={handleEdit}  className="flex gap-1"><i className={'tabler-edit bg-secondary'}/>Edit</MenuItem>
-              <MenuItem onClick={handleDownload}  className="flex gap-1"><i className={'tabler-download bg-danger'}/>Download</MenuItem>
+              <MenuItem onClick={handleRemoveOpen} className="flex gap-1"><i className={'tabler-trash me-2'} />Delete</MenuItem>
+              <MenuItem onClick={handleEdit} className="flex gap-1"><i className={'tabler-edit me-2'} />Edit</MenuItem>
+              <MenuItem onClick={handlePreview} className="flex gap-1"><i className={'tabler-arrow-up-right me-2'} />Open</MenuItem>
+              <Divider />
+              <MenuItem onClick={handleDownload} className="flex gap-1"><i className={'tabler-download me-2'} />Download</MenuItem>
             </Menu>
           </>
         );
@@ -217,6 +230,7 @@ export default function KundliMain() {
 
 
   const [open, setOpen] = useState(false);
+  const [removePopUp, setSetRemovePopUp] = useState(false);
   const [kundliData, setKundliData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [AKundliData, setAKundliData] = useState(false);
@@ -262,6 +276,11 @@ export default function KundliMain() {
     setOpen(false)
   }
 
+  const handleRemoveClose = () => {
+    setSetRemovePopUp(false)
+  }
+
+
   const getAllKundli = async (pageNo, searchValue) => {
     // setLoading(true);
     const res = await GetKundliDataAPI(10, pageNo, searchValue);
@@ -270,7 +289,6 @@ export default function KundliMain() {
       return toastDisplayer("error", res.error);
     } else {
       setKundliData(res?.responseData?.data?.Result?.KundaliList);
-      console.log(res?.responseData?.data?.Result?.KundaliList.length)
       // setTotalRowCount(res?.responseData?.data?.Result?.KundaliList.length)
       setTotalRowCount(res?.responseData?.data?.Result?.KundaliCount)
       setLoading(false);
@@ -282,7 +300,6 @@ export default function KundliMain() {
   }
 
   const handleEditClick = (data) => {
-    console.log("edited data :",userData)
     setLoading(true);
     data.isUpdate = true;
     // data.CityID = {
@@ -316,11 +333,11 @@ export default function KundliMain() {
   const fetchData = debounce(async (query) => {
     if (query.length > 0 || query.length == 0) {
       await getAllKundli(pageNo, query);
-      setTimeout(() => {
-        if (searchInputRef.current) {
-          searchInputRef.current.focus();
-        }
-      }, 1000);
+      // setTimeout(() => {
+      //   if (searchInputRef.current) {
+      //     searchInputRef.current.focus();
+      //   }
+      // }, 1000);
     }
   }, 500)
 
@@ -361,41 +378,41 @@ export default function KundliMain() {
   });
 
   // Func
-  const getAKundliData = async (kId,cname) => {
-    if (kId) {
-      try {
-        setLoading(true);
-        const response = await getKundliPdf(kId);
-        console.log(response);
+  // const getAKundliData = async (kId,cname) => {
+  //   if (kId) {
+  //     try {
+  //       setLoading(true);
+  //       const response = await getKundliPdf(kId);
+  //       console.log(response);
 
-        if (response.hasError) {
-          setLoading(false);
-          return toastDisplayer("error", response.error);
-        }
+  //       if (response.hasError) {
+  //         setLoading(false);
+  //         return toastDisplayer("error", response.error);
+  //       }
 
-        // Create a Blob from the PDF
-        const pdfBlob = new Blob([response.responseData.data], { type: 'application/pdf' });
+  //       // Create a Blob from the PDF
+  //       const pdfBlob = new Blob([response.responseData.data], { type: 'application/pdf' });
 
-        // Create a URL for the Blob
-        const pdfURL = URL.createObjectURL(pdfBlob);
+  //       // Create a URL for the Blob
+  //       const pdfURL = URL.createObjectURL(pdfBlob);
 
-        // Create an anchor element and simulate a click to download the file
-        const link = document.createElement('a');
-        link.href = pdfURL;
-        link.setAttribute('download', `kundli_${cname}.pdf`); // Set the file name
-        document.body.appendChild(link);
-        link.click(); // Simulate the click
-        document.body.removeChild(link); // Clean up
+  //       // Create an anchor element and simulate a click to download the file
+  //       const link = document.createElement('a');
+  //       link.href = pdfURL;
+  //       link.setAttribute('download', `kundli_${cname}.pdf`); // Set the file name
+  //       document.body.appendChild(link);
+  //       link.click(); // Simulate the click
+  //       document.body.removeChild(link); // Clean up
 
-        setLoading(false);
-      } catch (error) {
-        console.error("Error downloading PDF:", error);
-        setLoading(false);
-      }
-    } else {
-      return toastDisplayer("error", "Kundli ID not found.");
-    }
-  };
+  //       setLoading(false);
+  //     } catch (error) {
+  //       console.error("Error downloading PDF:", error);
+  //       setLoading(false);
+  //     }
+  //   } else {
+  //     return toastDisplayer("error", "Kundli ID not found.");
+  //   }
+  // };
   // const getAKundliData = async (kId) => {
   //   if (kId != "undefined" && kId != null) {
   //     setLoading(true);
@@ -415,7 +432,7 @@ export default function KundliMain() {
   // }
 
   useEffect(() => {
-    if(AKundliData!=null){
+    if (AKundliData != null) {
       if (printRef.current) {
         setLoading(true)
         setTimeout(() => {
@@ -524,6 +541,9 @@ export default function KundliMain() {
       </Grid>
       {open && (
         <AddKundliPopUp open={open} handleAddClose={handleAddClose} getAllKundli={getAllKundli} setUserData={setUserData} userData={userData} />
+      )}
+      {removePopUp && (
+        <RemoveKundli open={removePopUp} handleClose={handleRemoveClose} userData={userData} />
       )}
 
     </>

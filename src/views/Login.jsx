@@ -88,11 +88,11 @@ const LoginV2 = ({ mode }) => {
 
 
   useEffect(() => {
-    const authState = Cookies.get('authState'); 
+    const authState = Cookies.get('authState');
     if (authState) {
       try {
         const storedSessionValue = JSON.parse(authState);
-        const { authRule } = storedSessionValue; 
+        const { authRule } = storedSessionValue;
         const routePermissions = JSON.parse(authRule);
         const firstAccessibleItem = routePermissions.find(item => item.HasAccess);
         return router.push(firstAccessibleItem.Href)
@@ -316,6 +316,7 @@ const LoginV2 = ({ mode }) => {
                       isOtpVerified == "verifiedd" ? <>
 
                         <TextField
+                          autoFocus
                           fullWidth
                           label='Password'
                           placeholder='············'
