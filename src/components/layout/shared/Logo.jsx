@@ -58,7 +58,6 @@ const Logo = ({ color ,isSmall,width}) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isHovered, layout, isBreakpointReached])
-  console.log("width : ",width)
   return (
     <div className='flex items-center'>
       {isSmall ?

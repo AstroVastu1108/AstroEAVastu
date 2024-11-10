@@ -1,17 +1,42 @@
 export const navigation = [
   {
-    label: 'Kundli',
-    href: '/kundlipage',
+    label: 'Kundali',
+    href: '/kundali-list',
     icon: 'tabler-smart-home'
   },
   {
-    label: 'User Config',
-    href: '/user',
-    icon: 'tabler-smart-home'
+    label: 'Tasks',
+    href: '/task-list',
+    icon: 'tabler-checklist'
   },
   {
-    label: 'About',
-    href: '/about',
-    icon: 'tabler-info-circle'
+    label: 'Client',
+    href: '/my-clients',
+    icon: 'tabler-users-group'
+  },
+  {
+    label: 'Subscription',
+    href: '/subscription',
+    icon: 'tabler-tag'
+  },
+  // {
+  //   label: 'User',
+  //   href: '/user',
+  //   icon: 'tabler-user-pentagon'
+  // },
+  // {
+  //   label: 'Permision',
+  //   href: '/permission',
+  //   icon: 'tabler-lock'
+  // },
+  {
+    label: 'Settings',
+    href: '/settings',
+    icon: 'tabler-settings'
+  },
+  {
+    label: 'Courses',
+    href: '/my-courses',
+    icon: 'tabler-school'
   }
-];
+]

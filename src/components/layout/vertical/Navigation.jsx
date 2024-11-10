@@ -133,8 +133,8 @@ const Navigation = props => {
 
   const handleUserLogout = async () => {
     // Redirect to login page
-    logout();
-    router.push('/login')
+    // logout();
+    router.push('/logout')
   }
 
   // useEffect(() => {
@@ -193,7 +193,7 @@ const Navigation = props => {
       </StyledLoggedInUserContainer>
       </div>
       <div className='p-3'>
-        <StyledLogoutButtonContainer onClick={ handleUserLogout}>
+        <StyledLogoutButtonContainer onClick={ handleUserLogout} >
           {!(isCollapsed && !isHovered) ? (
             <>
               <i className='tabler-logout-2' />

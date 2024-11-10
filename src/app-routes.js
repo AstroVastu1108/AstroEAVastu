@@ -1,4 +1,5 @@
 import UserAuthorization from "./app/(dashboard)/Authorization/authorization";
+import MainSettings from "./app/(dashboard)/Settings/main-settings";
 import ClientPage from "./app/(dashboard)/Client/client";
 import DetailClient from "./app/(dashboard)/Client/detailClient/detailClient";
 import MyCoursePage from "./app/(dashboard)/Courses/course";
@@ -7,6 +8,7 @@ import PreviewPage from "./app/(dashboard)/kundli/preview/preview";
 import Subscription from "./app/(dashboard)/Subscription/subscription";
 import KundliTasksMain from "./app/(dashboard)/Tasks/kundliTasks";
 import UserConfig from "./app/(dashboard)/userConfig/userConfig";
+import Logout from "./views/Logout";
 
 export const routes = [
     {
@@ -34,15 +36,23 @@ export const routes = [
       element: ClientPage,
     },
     {
-      path: "clientDetails",
+      path: "clientDetail/:id",
       element: DetailClient,
     },
     {
-      path: "taskPage",
+      path: "task-list",
       element: KundliTasksMain,
     },
     {
       path: "subscription",
       element: Subscription,
+    },
+    {
+      path: "settings",
+      element: MainSettings,
+    },
+    {
+      path: "Logout",
+      element: Logout,
     }
   ];

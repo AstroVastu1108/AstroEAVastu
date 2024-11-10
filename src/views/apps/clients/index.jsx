@@ -16,7 +16,7 @@ export default function ClientMain() {
   const router = useRouter()
 
   const handleClientDetail = (data)=>{
-    router.push(`clientDetails?cid=${data.clientID}`)
+    router.push(`clientDetail/${data.clientID}`)
   }
 
   // vars

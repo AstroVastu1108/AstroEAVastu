@@ -6,7 +6,7 @@ import NotFound from '@views/NotFound'
 // Util Imports
 import { getServerMode, getSystemMode } from '@core/utils/serverHelpers'
 
-const NotFoundPage = () => {
+const NotFoundPage = ({type}) => {
   // Vars
   const direction = 'ltr'
   const mode = getServerMode()
@@ -15,7 +15,7 @@ const NotFoundPage = () => {
   return (
     <Providers direction={direction}>
       <BlankLayout systemMode={systemMode}>
-        <NotFound mode={mode} />
+        <NotFound mode={mode} type={type} />
       </BlankLayout>
     </Providers>
   )

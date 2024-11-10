@@ -1,14 +1,9 @@
 .otp-form {
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
-    /* padding: 2rem;s */
-    /* background-color: #ffffff; */
     border-radius: 10px;
-    /* box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); */
     max-width: 800px;
-    /* margin: 0 auto; */
     gap: 18px;
 
     .emailIcon{
@@ -24,24 +19,7 @@
             font-size: 45px;
         }
     }
-    /* .resend-button {
-        color: #4b37b3;
-        border: none;
-        padding: 0.5rem 1rem;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 15px;
-        transition: background-color 0.3s ease;
-        font-weight: 600;
-        margin-top: 10px;
-    
-    
-        &.disabled {
-          color: #878a99;
-          cursor: not-allowed;
-        }
-      } */
-  
+   
     h2 {
       font-size: 1.2rem;
       color: #333;
@@ -76,8 +54,7 @@
       transition: border-color 0.3s ease;
   
       &:focus {
-        border-color: #3F5289;
-        border: 1.5px solid;
+        border: 2px solid  var(--primary-soft-color);
       }
     }
   }

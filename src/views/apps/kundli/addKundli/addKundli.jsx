@@ -9,6 +9,7 @@ import { CreateKundli, UpdateKundli } from '@/app/Server/API/kundliAPI';
 import "./addKundli.css"
 
 function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserData }) {
+  console.log("userData : ",userData)
 
   const [isDisable, setIsDisable] = useState(false);
   const fetchData = async () => {
