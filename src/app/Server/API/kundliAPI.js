@@ -97,7 +97,7 @@ export async function ChangeDateTimeKundli(payload) {
   }
 }
 
-// search kundli data 
+// search kundli data
 export async function SearchKundli(searchText) {
   const responseBody = {
     responseData: null,
@@ -106,6 +106,66 @@ export async function SearchKundli(searchText) {
   }
   try {
     const response = await axios.get(`${API_URL}/astro/kundali-list/5/1/${searchText}`)
+    responseBody.responseData = response.data
+    return responseBody
+  } catch (error) {
+    responseBody.hasError = true
+    responseBody.errorMessage = responseBody.errorMessage =
+      error.response?.data?.statusMsg || error.response?.data?.errors
+    return responseBody
+  }
+}
+
+
+// Get Event Options Selection
+export async function EventOptionsData() {
+  const responseBody = {
+    responseData: null,
+    hasError: false,
+    error: null
+  }
+  try {
+    const response = await axios.get(`${API_URL}/kundali-options-event`)
+    responseBody.responseData = response.data
+    return responseBody
+  } catch (error) {
+    responseBody.hasError = true
+    responseBody.errorMessage = responseBody.errorMessage =
+      error.response?.data?.statusMsg || error.response?.data?.errors
+    return responseBody
+  }
+}
+
+
+// Get Kundli Options Selection
+export async function KundliOptionsData() {
+  const responseBody = {
+    responseData: null,
+    hasError: false,
+    error: null
+  }
+  try {
+    const response = await axios.get(`${API_URL}/kundali-options`)
+    responseBody.responseData = response.data
+    return responseBody
+  } catch (error) {
+    responseBody.hasError = true
+    responseBody.errorMessage = responseBody.errorMessage =
+      error.response?.data?.statusMsg || error.response?.data?.errors
+    return responseBody
+  }
+}
+
+
+// For Dasha Click Event
+export async function DashaClickEvent(payload) {
+  const responseBody = {
+    responseData: null,
+    hasError: false,
+    error: null
+  }
+  try {
+    const response = await axios.post(`${API_URL}/kundali-dasha`,payload)
     responseBody.responseData = response.data
     return responseBody
   } catch (error) {

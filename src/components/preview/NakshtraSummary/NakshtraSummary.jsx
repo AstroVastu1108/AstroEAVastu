@@ -6,7 +6,21 @@ import { nonEmpty } from 'valibot';
 import EventModel from '@/components/EventModel/eventModel';
 import { value } from 'valibot';
 
-function NakshtraSummary({ SummaryData, Aspect, symbols }) {
+function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
+  const applyOccupancyColor = (Occupancy) => {
+    if (SelectedEventVal) {
+      const positive = SelectedEventVal.Positive?.split(", ").map(Number) || [];
+      const negative = SelectedEventVal.Negative?.split(", ").map(Number) || [];
+      const occupancyNumber = Number(Occupancy);
+
+      if (positive.includes(occupancyNumber)) {
+        return <span className="text-[var(--green-text-color)] font-semibold">{occupancyNumber}</span>;
+      } else if (negative.includes(occupancyNumber)) {
+        return <span className="text-[var(--red-text-color)] font-semibold">{occupancyNumber}</span>;
+      }
+    }
+    return Occupancy;
+  };
   const columns = [
     Aspect === 'P'
       ? {
@@ -35,7 +49,7 @@ function NakshtraSummary({ SummaryData, Aspect, symbols }) {
         }
       }
       : {
-        field: 'id', headerName: '#', headerClassName: 'rowheader', width: 65, minWidth: 65, align: 'center',headerAlign:'center',
+        field: 'id', headerName: '#', headerClassName: 'rowheader', width: 65, minWidth: 65, align: 'center', headerAlign: 'center',
         renderCell: (e) => {
           return (
             <>
@@ -87,72 +101,105 @@ function NakshtraSummary({ SummaryData, Aspect, symbols }) {
       }
     },
     {
-      field: 'PL', headerName: <>PL <span className="planet-col-title-small">(Source)</span></>, headerClassName: 'rowheader', minWidth: 120, flex: 1,
+      field: 'PL',
+      headerName: (
+        <>
+          PL <span className="planet-col-title-small">(Source)</span>
+        </>
+      ),
+      headerClassName: 'rowheader',
+      minWidth: 120,
+      flex: 1,
       renderCell: (e) => {
         const planetName = e?.row?.PL?.Planet?.slice(0, 3) || "";
-        // const scriptFull = e?.row?.PL?.ScriptFull || "";
         const Occupancy = e?.row?.PL?.Occupancy || "";
-        const Ownership = e?.row?.PL?.Ownership.join(" ,") || "";
+        const Ownership = e?.row?.PL?.Ownership?.join(", ") || "";
 
         return (
-          <>
-            <div className="planet-col-script flex justify-between cursor-pointer">
-              <div className='planet-col-planet-text'>{planetName}</div>
-              {/* <span className='degreeDiv'>{scriptFull}</span> */}
-              <div className='degreeDiv'> <span>{Occupancy}</span> / {Ownership} </div>
+          <div className="planet-col-script flex justify-between cursor-pointer">
+            <div className="planet-col-planet-text">{planetName}</div>
+            <div className="degreeDiv">
+              {applyOccupancyColor(Occupancy)} / {Ownership}
             </div>
-          </>
+          </div>
         );
-      }
+      },
     },
     {
-      field: 'NL', headerName: <>NL <span className="planet-col-title-small">(Result)</span></>, headerClassName: 'rowheader', minWidth: 120, flex: 1,
+      field: 'NL',
+      headerName: (
+        <>
+          NL <span className="planet-col-title-small">(Result)</span>
+        </>
+      ),
+      headerClassName: 'rowheader',
+      minWidth: 120,
+      flex: 1,
       cellClassName: 'nl-column-cell',
       renderCell: (e) => {
         const planetName = e?.row?.NL?.Planet?.slice(0, 3) || "";
+        const Occupancy = e?.row?.NL?.Occupancy || "";
         const scriptFull = e?.row?.NL?.ScriptFull || "";
 
         return (
-          <>
-            <div className="flex justify-between cursor-pointer">
-              <div className='planet-col-planet-text'>{planetName}</div>
-              <span className='degreeDiv'>{scriptFull}</span>
-            </div>
-          </>
+          <div className="flex justify-between cursor-pointer">
+            <div className="planet-col-planet-text">{planetName}</div>
+            <span className="degreeDiv">
+              {applyOccupancyColor(Occupancy)} / {scriptFull}
+            </span>
+          </div>
         );
-      }
+      },
     },
     {
-      field: 'SL', headerName: <>SL <span className="planet-col-title-small">(Verifier)</span></>, headerClassName: 'rowheader', minWidth: 120, flex: 1,
+      field: 'SL',
+      headerName: (
+        <>
+          SL <span className="planet-col-title-small">(Verifier)</span>
+        </>
+      ),
+      headerClassName: 'rowheader',
+      minWidth: 120,
+      flex: 1,
       renderCell: (e) => {
         const planetName = e?.row?.SL?.Planet?.slice(0, 3) || "";
+        const Occupancy = e?.row?.SL?.Occupancy || "";
         const scriptFull = e?.row?.SL?.ScriptFull || "";
 
         return (
-          <>
-            <div className="flex justify-between cursor-pointer">
-              <div className='planet-col-planet-text'>{planetName}</div>
-              <span className='degreeDiv'>{scriptFull}</span>
-            </div>
-          </>
+          <div className="flex justify-between cursor-pointer">
+            <div className="planet-col-planet-text">{planetName}</div>
+            <span className="degreeDiv">
+              {applyOccupancyColor(Occupancy)} / {scriptFull}
+            </span>
+          </div>
         );
-      }
+      },
     },
     {
-      field: 'NLSL', headerName: <>NL-SL <span className="planet-col-title-small">(InnerSelf)</span></>, headerClassName: 'rowheader', minWidth: 120, flex: 1,
+      field: 'NLSL',
+      headerName: (
+        <>
+          NL-SL <span className="planet-col-title-small">(InnerSelf)</span>
+        </>
+      ),
+      headerClassName: 'rowheader',
+      minWidth: 120,
+      flex: 1,
       renderCell: (e) => {
         const planetName = e?.row?.NLSL?.Planet?.slice(0, 3) || "";
+        const Occupancy = e?.row?.NLSL?.Occupancy || "";
         const scriptFull = e?.row?.NLSL?.ScriptFull || "";
 
         return (
-          <>
-            <div className="flex justify-between cursor-pointer">
-              <div className='planet-col-planet-text'>{planetName}</div>
-              <span className='degreeDiv'>{scriptFull}</span>
-            </div>
-          </>
+          <div className="flex justify-between cursor-pointer">
+            <div className="planet-col-planet-text">{planetName}</div>
+            <span className="degreeDiv">
+              {applyOccupancyColor(Occupancy)} / {scriptFull}
+            </span>
+          </div>
         );
-      }
+      },
     },
     {
       field: 'PHScriptFull', headerName: 'PH', headerClassName: 'rowheader', minWidth: 100, with: 100,
@@ -205,79 +252,78 @@ function NakshtraSummary({ SummaryData, Aspect, symbols }) {
 
   return (
     <>
-    {open && (
-      <EventModel open={open} handleAddClose={handleAddClose} headerTitle={selectedTitle} displayData={selectedEvent} />
-    )}
-    <Box width={"100%"}
-     sx={{
-        '& .MuiDataGrid-root': {
-          borderRadius: 0, // Remove border radius
-          borderLeft: '0px',
-          borderRight: '0px',
-        },
-        '& .MuiDataGrid-row:nth-of-type(odd)': {
-          backgroundColor: '#ffffff', // Light color for odd rows
-        },
-        '& .MuiDataGrid-row:nth-of-type(even)': {
-          backgroundColor: '#f5f5f5', // White color for even rows
-        },
-        '& .MuiDataGrid-row:hover': {
-          color: 'var(--primary-color) !important',
-          backgroundColor: 'var(--secondary-soft-color) !important',
-        },
-        '& .MuiDataGrid-columnHeader .MuiDataGrid-sortIcon': {
-          color: 'white', // Change to your desired color
-        },
-        '& .MuiDataGrid-columnHeader--withRightBorder':{
-          borderRightWidth:'0px !important'
-        },
-        '& .MuiDataGrid-columnSeparator':{
-          display:'none !important'
-        },
-        '& .Mui-selected':{
-          backgroundColor:'var(--secondary-color) !important'
-        },
-        '& .MuiDataGrid-columnHeader': {
-          cursor: 'default !important', // Change to your desired color
-        },
-        '& .MuiDataGrid-columnHeader:focus':{
-          outline: 'none !important'
-        },
-        '& .MuiDataGrid-scrollbar--vertical':{
-          display:'none'
-        },
-        '& .MuiDataGrid-scrollbarFiller--header':{
-          display:'none'
-        }
-      }}
-    >
+      {open && (
+        <EventModel open={open} handleAddClose={handleAddClose} headerTitle={selectedTitle} displayData={selectedEvent} />
+      )}
+      <Box width={"100%"}
+        sx={{
+          '& .MuiDataGrid-root': {
+            borderRadius: 0, // Remove border radius
+            borderLeft: '0px',
+            borderRight: '0px',
+          },
+          '& .MuiDataGrid-row:nth-of-type(odd)': {
+            backgroundColor: '#ffffff', // Light color for odd rows
+          },
+          '& .MuiDataGrid-row:nth-of-type(even)': {
+            backgroundColor: '#f5f5f5', // White color for even rows
+          },
+          '& .MuiDataGrid-row:hover': {
+            color: 'var(--primary-color) !important',
+            backgroundColor: 'var(--secondary-soft-color) !important',
+          },
+          '& .MuiDataGrid-columnHeader .MuiDataGrid-sortIcon': {
+            color: 'white', // Change to your desired color
+          },
+          '& .MuiDataGrid-columnHeader--withRightBorder': {
+            borderRightWidth: '0px !important'
+          },
+          '& .MuiDataGrid-columnSeparator': {
+            display: 'none !important'
+          },
+          '& .Mui-selected': {
+            backgroundColor: 'var(--secondary-color) !important'
+          },
+          '& .MuiDataGrid-columnHeader': {
+            cursor: 'default !important', // Change to your desired color
+          },
+          '& .MuiDataGrid-columnHeader:focus': {
+            outline: 'none !important'
+          },
+          '& .MuiDataGrid-scrollbar--vertical': {
+            display: 'none'
+          },
+          '& .MuiDataGrid-scrollbarFiller--header': {
+            display: 'none'
+          }
+        }}
+      >
 
-      <ThemeProvider theme={customTheme}>
+        <ThemeProvider theme={customTheme}>
 
-        <DataGrid
-          showCellVerticalBorder
-          rows={rowsSummaryData}
-          columns={columns}
-          initialState={{
-            pinnedColumns: { left: ['id', 'Planet'] } // Combine both columns here
-          }}
-          disableColumnSorting
-          disableColumnMenu
-          rowHeight={30}
-          columnHeaderHeight={38}
-          disableColumnResize
-          disableRowSelectionOnClick
-          hideFooterPagination={true}
-          hideFooter={true}
-          onRowClick={(params) => setSelectedRowId(params.id)}
-          onCellDoubleClick={(params) => handleEvent("cell",params.field,`${params?.value?.Planet ? params?.value?.Planet : ""} ${params?.value?.ScriptFull ?params?.value?.ScriptFull : params?.value}`,`${params?.value?.Planet ? params?.value?.Planet : ""} ${params?.value?.ScriptFull ?params?.value?.ScriptFull : params?.value}` )}
-          // onCellClick={(params) => console.log(`Cell clicked: ${params.field} - Value: ${params.value}`, params)}
-          getRowClassName={(params) => params.id === selectedRowId ? 'Mui-selected' : ''}
+          <DataGrid
+            showCellVerticalBorder
+            rows={rowsSummaryData}
+            columns={columns}
+            initialState={{
+              pinnedColumns: { left: ['id', 'Planet'] } // Combine both columns here
+            }}
+            disableColumnSorting
+            disableColumnMenu
+            rowHeight={30}
+            columnHeaderHeight={38}
+            disableColumnResize
+            disableRowSelectionOnClick
+            hideFooterPagination={true}
+            hideFooter={true}
+            onRowClick={(params) => setSelectedRowId(params.id)}
+            onCellDoubleClick={(params) => handleEvent("cell", params.field, `${params?.value?.Planet ? params?.value?.Planet : ""} ${params?.value?.ScriptFull ? params?.value?.ScriptFull : params?.value}`, `${params?.value?.Planet ? params?.value?.Planet : ""} ${params?.value?.ScriptFull ? params?.value?.ScriptFull : params?.value}`)}
+            // onCellClick={(params) => console.log(`Cell clicked: ${params.field} - Value: ${params.value}`, params)}
+            getRowClassName={(params) => params.id === selectedRowId ? 'Mui-selected' : ''}
+          />
+        </ThemeProvider>
 
-        />
-      </ThemeProvider>
-
-    </Box>
+      </Box>
     </>
   )
 }

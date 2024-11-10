@@ -1,0 +1,19 @@
+.list-text{
+  .MuiTypography-root{
+    /* color: var(--primary-color); */
+    color: #000;
+    font-size: 16px;
+  }
+}
+
+.event-list-item{
+  div{
+    padding: 4px 12px 4px 6px;
+    min-width: 10rem;
+    border-radius: 6px;
+  }
+}
+
+/* .list-container{
+  border: 2px solid red;
+} */

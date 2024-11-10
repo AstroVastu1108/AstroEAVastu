@@ -18,6 +18,7 @@ import menuItemStyles from '@core/styles/vertical/menuItemStyles'
 import menuSectionStyles from '@core/styles/vertical/menuSectionStyles'
 import { navigation } from '@/app-navigation'
 import { useAuth } from '@/@core/contexts/authContext'
+import { Divider } from '@mui/material'
 
 const RenderExpandIcon = ({ open, transitionDuration }) => (
   <StyledVerticalNavExpandIcon open={open} transitionDuration={transitionDuration}>
@@ -59,11 +60,27 @@ const VerticalMenu = ({ scrollMenu }) => {
         renderExpandedMenuItemIcon={{ icon: <i className='tabler-circle text-xs' /> }}
         menuSectionStyles={menuSectionStyles(verticalNavOptions, theme)}
       >
-       {authRuleContext.map((item, index) => (
+        {/* {authRuleContext.map((item, index) => (
           <MenuItem key={index} href={item.Href} icon={<i className={item.Icon} />}>
             {item.Label}
           </MenuItem>
-        ))}
+        ))} */}
+        {authRuleContext.map((item, index) => {
+          // console.log(item)
+          return (
+            <>
+            {item.Label == "Courses" &&
+              <div className='pt-2'>
+                <Divider />
+              </div>
+            }
+            <MenuItem key={index} href={item.Href} icon={<i className={item.Icon} />}>
+              {item.Label}
+            </MenuItem>
+            </>
+          )
+        }
+        )}
       </Menu>
     </ScrollWrapper>
   )

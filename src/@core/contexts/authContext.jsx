@@ -156,33 +156,31 @@ export const AuthProvider = ({ children }) => {
         })();
     }, []);
 
-    useEffect(() => {
-        if (!user) return;
-        console.log("Data : ",user)
+    // useEffect(() => {
+    //     if (!user) return;
 
-        const encodedUserId = encodeURIComponent(user?.transactionID);
+    //     const encodedUserId = encodeURIComponent(user?.transactionID);
 
-        const eventSource = new EventSource(`${process.env.NEXT_PUBLIC_APIURL1}/Auth/sse?userId=${encodedUserId}`);
+    //     const eventSource = new EventSource(`${process.env.NEXT_PUBLIC_APIURL1}/Auth/sse?userId=${encodedUserId}`);
 
-        eventSource.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            if (data.action === "logout") {
-                console.log("logout called")
-                // Logout the user immediately
-                eventSource.close();
+    //     eventSource.onmessage = (event) => {
+    //         const data = JSON.parse(event.data);
+    //         if (data.action === "logout") {
+    //             // Logout the user immediately
+    //             eventSource.close();
 
-                // Clear session data and redirect to login
-                // localStorage.removeItem("sessionToken");
-                logout();
-                window.location.href = '/login';
-            }
-        };
+    //             // Clear session data and redirect to login
+    //             // localStorage.removeItem("sessionToken");
+    //             logout();
+    //             window.location.href = '/login';
+    //         }
+    //     };
 
-        // Clean up the SSE connection when component unmounts
-        return () => {
-            eventSource.close();
-        };
-    }, [user]);
+    //     // Clean up the SSE connection when component unmounts
+    //     return () => {
+    //         eventSource.close();
+    //     };
+    // }, [user]);
 
 
 
