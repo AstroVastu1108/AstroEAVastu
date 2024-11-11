@@ -1,7 +1,7 @@
 'use client'
 
 // React Imports
-import { useContext, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import ReCAPTCHA from 'react-google-recaptcha';
 // Next Imports
 import { useRouter } from 'next/navigation'
@@ -10,14 +10,8 @@ import { useRouter } from 'next/navigation'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { styled, useTheme } from '@mui/material/styles'
 
-import { createTheme, ThemeProvider } from '@mui/material';
+import { Alert, createTheme, ThemeProvider } from '@mui/material';
 import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
-import InputAdornment from '@mui/material/InputAdornment'
-import Checkbox from '@mui/material/Checkbox'
-import Button from '@mui/material/Button'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import Divider from '@mui/material/Divider'
 
 // Third-party Imports
 import classnames from 'classnames'
@@ -25,7 +19,6 @@ import classnames from 'classnames'
 // Component Imports
 import Link from '@components/Link'
 import Logo from '@components/layout/shared/Logo'
-import CustomTextField from '@core/components/mui/TextField'
 
 // Config Imports
 import themeConfig from '@configs/themeConfig'
@@ -34,8 +27,6 @@ import themeConfig from '@configs/themeConfig'
 import { useImageVariant } from '@core/hooks/useImageVariant'
 import { useSettings } from '@core/hooks/useSettings'
 import { useAuth } from '@/@core/contexts/authContext'
-import FloatingTextField from '@/components/common/FloatingTextField'
-import CircularProgress from '@mui/material/CircularProgress';
 import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
 import { TextField } from '@mui/material'
 import Loader from '@/components/common/Loader/Loader'
@@ -43,6 +34,7 @@ import OTPverify from '@/components/common/OTPVerify/OTPverify'
 import { requestOtp, validateCaptcha } from '@/app/Server/API/auth'
 import { LoadingButton } from '@mui/lab'
 import Cookies from 'js-cookie';
+import { navigation } from '@/app-navigation';
 
 
 const MaskImg = styled('img')({
@@ -55,60 +47,56 @@ const MaskImg = styled('img')({
 })
 
 const LoginV2 = ({ mode }) => {
-  // States
-  const [isPasswordShown, setIsPasswordShown] = useState(false)
-  const lightIllustration = '/images/illustrations/auth/web-bkg.jpg'
-
-  // Hooks
   const router = useRouter()
   const { settings } = useSettings()
   const theme = useTheme()
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
   const authBackground = useImageVariant(mode)
 
-  const passwordInputRef = useRef(null);
-
-  const handleClickShowPassword = () => setIsPasswordShown(show => !show)
-
   const { loginData } = useAuth();
   const [formData, setFormData] = useState({
-    email: "",
-    password: ""
+    email: ""
   });
   const emailRef = useRef();
   const [isDisable, setIsDisable] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isOtpVerified, setIsOtpVerified] = useState("pending");
-  const [errors, setErrors] = useState({
-    email: false,
-    password: false
-  })
+  const [errors, setErrors] = useState(false)
+  const [errorMessage, setErrorMessage] = useState(null)
+
 
   const recaptchaRef = useRef(null);
 
-
   useEffect(() => {
-    const authState = Cookies.get('authState');
-    if (authState) {
+    const authData = {
+      useremail: Cookies.get('astrovastu_auth_useremail'),
+      accessToken: Cookies.get('astrovastu_auth_accessToken'), 
+      userRole: Cookies.get('astrovastu_auth_userRole'),
+      expirationTime: Cookies.get('astrovastu_auth_expirationTime'), 
+      refreshToken: Cookies.get('astrovastu_auth_refreshToken')
+    };
+  
+    if (authData.useremail && authData.accessToken && authData.userRole) {
       try {
-        const storedSessionValue = JSON.parse(authState);
-        const { authRule } = storedSessionValue;
-        const routePermissions = JSON.parse(authRule);
-        const firstAccessibleItem = routePermissions.find(item => item.HasAccess);
-        return router.push(firstAccessibleItem.Href)
+        const firstAccessibleItem = navigation.find(item => item);
+        if (firstAccessibleItem) {
+          router.push(firstAccessibleItem.href);
+        }
       } catch (error) {
-        console.error('Failed to parse authState:', error);
+        console.error('Failed to parse authData:', error);
       }
     }
   }, []);
+  
 
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
       if (formData.email == "") {
-       emailRef.current.focus();
-        toastDisplayer("error", "Email is required.")
+        emailRef.current.focus();
         setIsDisable(false)
+        setErrors(true)
+        setErrorMessage("Email is required.")
         return setErrors(prev => ({
           ...prev,
           email: true
@@ -132,16 +120,19 @@ const LoginV2 = ({ mode }) => {
       }
     } catch (error) {
       setIsDisable(false)
-      return toastDisplayer('error', 'Server error. Please try again later.');
+      return setErrorMessage('Server error. Please try again later.')
+      // return toastDisplayer('error', 'Server error. Please try again later.');
     }
   };
 
   const handleVerifyEmail = async () => {
     try {
       if (formData.email == "") {
-        toastDisplayer("error", "Email is required.")
+        // toastDisplayer("error", "Email is required.")
         emailRef.current.focus();
+        setErrors(true)
         setIsDisable(false)
+        setErrorMessage("Email is required.")
         return setErrors(prev => ({
           ...prev,
           email: true
@@ -149,23 +140,24 @@ const LoginV2 = ({ mode }) => {
       }
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!formData.email || !emailRegex.test(formData.email)) {
-        toastDisplayer("error", "Invalid Email address.")
+        setIsDisable(false)
+        setErrors(true)
+        emailRef.current.focus();
+        setErrorMessage("Invalid email address.")
+        // toastDisplayer("error", "Invalid Email address.")
         return setErrors(prev => ({
           ...prev,
           email: true
         }));
       }
-      setErrors(prev => ({
-        ...prev,
-        email: false
-      }));
-
       setIsDisable(true)
       const result = await requestOtp(formData?.email, "login")
       if (result.hasError) {
         setIsDisable(false);
         setIsOtpVerified("pending")
-        return toastDisplayer("error", result.error)
+        setErrors(true)
+        return setErrorMessage(result.error)
+        // return toastDisplayer("error", result.error)
       } else {
         setIsDisable(false);
         setIsOtpVerified("sent")
@@ -173,61 +165,55 @@ const LoginV2 = ({ mode }) => {
     } catch (error) {
       setIsDisable(false);
       setIsOtpVerified("pending")
-      return toastDisplayer("error", error)
+      setErrors(true)
+      return setErrorMessage(result.error)
     }
-  }
-
-  const handlePreviousBtn = () => {
-    setIsOtpVerified("pending")
   }
 
   const handleLogin = async () => {
     try {
       if (formData.email == "") {
+        setErrors(true)
         emailRef.current.focus();
+        setErrorMessage("Email is required.")
         return toastDisplayer("error", "Email is required.")
       }
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!formData.email || !emailRegex.test(formData.email)) {
-        return toastDisplayer("error", "Invalid email address.")
+        setIsDisable(false)
+        setErrorMessage("Invalid email address.")
+        setErrors(true)
+        return setErrorMessage("Invalid email address.")
       }
-      // if (formData.password == "") {
-      //   return toastDisplayer("error", "password is required.")
-      // }
+      setErrors(false)
       setIsDisable(true)
       const result = await loginData(formData)
       if (result.error) {
         setIsDisable(false);
         setLoading(false);
-        // console.log("Result : ", result.error)
         setIsOtpVerified("pending")
-        return toastDisplayer("error", result.message)
+        setErrors(true)
+        return setErrorMessage(result.message)
       } else {
-        // setIsDisable(false);
-        // setIsOtpVerified("pending")
-        // toastDisplayer('success', `${result.message} \nYou will be redirecting...`)
-        const storedSessionValue = JSON.parse(Cookies.get('authState'));
-        const { authRule } = storedSessionValue;
-        const routePermissions = JSON.parse(authRule);
-        const firstAccessibleItem = routePermissions.find(item => item.HasAccess);
-        // setLoading(false)
+        const firstAccessibleItem = navigation.find(item => item);
         const prevPath = Cookies.get("prevPath")
-        if(prevPath){
+        if (prevPath) {
           Cookies.remove("prevPath");
           return window.location.href = prevPath;
         }
-        return router.push(firstAccessibleItem.Href)
+        return router.push(firstAccessibleItem.href)
       }
     } catch (error) {
       setIsDisable(false);
       setIsOtpVerified("pending")
       setLoading(false)
-      // console.log("error : ", error)
-      return toastDisplayer("error", error)
+      setErrors(true)
+      return setErrorMessage(error)
     }
   };
 
   const handleInput = (fieldName, e) => {
+    setErrors(false);
     setFormData((prevData) => ({
       ...prevData,
       [fieldName]: e.target.value
@@ -280,12 +266,9 @@ const LoginV2 = ({ mode }) => {
             )}
           </div>
           <div className='flex justify-center items-center bs-full bg-backgroundPaper !min-is-full p-6 md:!min-is-[unset] md:p-12 md:is-[480px]'>
-            {/* <Link className=' block-start-5 sm:block-start-[33px] inline-start-6 sm:inline-start-[38px]'>
-          <Logo color={hidden ? 'primary' : 'white'} />
-          </Link> */}
-            <div className='flex flex-col gap-6 is-full sm:is-auto md:is-full sm:max-is-[400px] md:max-is-[unset] mbs-11 sm:mbs-14 md:mbs-0'>
+            <div className='flex flex-col gap-5 is-full sm:is-auto md:is-full sm:max-is-[400px] md:max-is-[unset] mbs-11 sm:mbs-14 md:mbs-0'>
               <Link href="#" onClick={(e) => e.preventDefault()} className='block-start-5 sm:block-start-[33px] inline-start-6 sm:inline-start-[38px]'>
-                <Logo color={'primary'} isSmall={false}/>
+                <Logo color={'primary'} isSmall={false} width={hidden ? "65mm" : "45mm"} />
               </Link>
               {isOtpVerified == "pending" || isOtpVerified == "verifiedd" ? (
                 <>
@@ -305,44 +288,24 @@ const LoginV2 = ({ mode }) => {
                     <TextField
                       fullWidth
                       autoFocus
-                      label='Email or Phone'
+                      label='Email'
                       // placeholder='Enter your email'
                       onChange={(e) => { handleInput("email", e); }}
                       value={formData.email}
                       inputRef={emailRef}
-                      {...(errors.email && { error: true })}
-                    />
-                    {
-                      isOtpVerified == "verifiedd" ? <>
 
-                        <TextField
-                          autoFocus
-                          fullWidth
-                          label='Password'
-                          placeholder='············'
-                          id='outlined-adornment-password'
-                          type={isPasswordShown ? 'text' : 'password'}
-                          value={formData.password}
-                          inputRef={passwordInputRef}
-                          InputProps={{
-                            endAdornment: (
-                              <InputAdornment position='end'>
-                                <IconButton edge='end' onClick={handleClickShowPassword} onMouseDown={e => e.preventDefault()}>
-                                  <i className={isPasswordShown ? 'tabler-eye-off' : 'tabler-eye'} />
-                                </IconButton>
-                              </InputAdornment>
-                            )
-                          }}
-                          onChange={(e) => { handleInput("password", e); }}
-                          {...(errors.password && { error: true })}
-                        />
-                        <div className='flex justify-between items-center gap-x-3 gap-y-1 flex-wrap'>
-                          <FormControlLabel control={<Checkbox />} label='Remember me' />
-                          <Typography className='text-end' color='primary' component={Link}>
-                            Forgot password?
-                          </Typography>
-                        </div>
-                      </> : ""}
+                      {...(errors && { error: true })}
+
+                    />
+
+                    {(errors && errorMessage) ?
+                      (
+                        <Alert severity='error' onClose={() => { setErrors(false)}}>
+                          {errorMessage}
+                        </Alert>
+                      )
+                      : ""}
+
                     {
                       isOtpVerified == "pending" ? (
                         <LoadingButton
@@ -365,24 +328,7 @@ const LoginV2 = ({ mode }) => {
                         </LoadingButton>
                       ) : ""
                     }
-                    {
-                      isOtpVerified == "verifiedd" ? (
-                        <LoadingButton
-                          fullWidth
-                          variant='contained'
-                          onClick={handleLogin}
-                          loading={isDisable}
-                          loadingPosition="start"
-                          type='submit'
-                        >
-                          {isDisable ? "Loading ..." : "Login"}
-                        </LoadingButton>
-                      ) : ""
-                    }
 
-                    {/* <Button fullWidth variant='contained' type='submit' disabled={isDisable} onClick={handleLogin}>
-                  {isDisable ? <CircularProgress size={24} value={"Loading"} /> : 'Login'}
-                </Button> */}
 
                     <div className='flex justify-center items-center flex-wrap gap-2'>
                       <Typography>No Account?</Typography>
@@ -398,14 +344,22 @@ const LoginV2 = ({ mode }) => {
                 <>
                   <div className='flex flex-col gap-4'>
                     <div className='flex flex-col gap-1'>
-                      <Typography variant='h5'>{`OTP Verification`}</Typography>
-                      <Typography>Please enter the 6 digit code sent to <span style={{ fontWeight: "600", color: "#590a73" }}>{formData?.email}</span></Typography>
+                      <Typography variant='h5'>{`One Time Security`}</Typography>
+                      <Typography>Please enter the verification code sent to <span style={{ fontWeight: "600", color: "#590a73" }}>{formData?.email}</span></Typography>
                     </div>
                   </div>
                   <OTPverify email={formData?.email} role={"login"} setIsOtpVerified={setIsOtpVerified} />
                 </>
 
               }
+              <Typography style={{ fontSize: "10px", display: "flex", justifyContent: "center", gap: "10px" }}>
+                <Link href="#" onClick={(e) => e.preventDefault()} style={{ fontWeight: "600" }}> Terms of Use </Link>
+                |
+                <Link href="#" onClick={(e) => e.preventDefault()} style={{ fontWeight: "600" }}>Privacy Policy</Link>
+                |
+                <Link href="#" onClick={(e) => e.preventDefault()} style={{ fontWeight: "600" }}> Help Centre
+                </Link>
+              </Typography>
               <ReCAPTCHA
                 ref={recaptchaRef}
                 sitekey={process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_SITE_KEY}

@@ -32,7 +32,8 @@ const VerticalMenu = ({ scrollMenu }) => {
   const verticalNavOptions = useVerticalNav()
 
   const { authRuleContext } = useAuth()
-
+  // console.log("Navigation : ",navigation)
+  // console.log("authRuleContext : ",authRuleContext)
   // Vars
   const { isBreakpointReached, transitionDuration } = verticalNavOptions
   const ScrollWrapper = isBreakpointReached ? 'div' : PerfectScrollbar
@@ -60,27 +61,21 @@ const VerticalMenu = ({ scrollMenu }) => {
         renderExpandedMenuItemIcon={{ icon: <i className='tabler-circle text-xs' /> }}
         menuSectionStyles={menuSectionStyles(verticalNavOptions, theme)}
       >
-        {/* {authRuleContext.map((item, index) => (
-          <MenuItem key={index} href={item.Href} icon={<i className={item.Icon} />}>
-            {item.Label}
-          </MenuItem>
-        ))} */}
-        {authRuleContext.map((item, index) => {
-          // console.log(item)
-          return (
+ {navigation.map((item, index) => {
+           return (
             <>
-            {item.Label == "Courses" &&
+            {item.label == "Courses" &&
               <div className='pt-2'>
                 <Divider />
               </div>
             }
-            <MenuItem key={index} href={item.Href} icon={<i className={item.Icon} />}>
-              {item.Label}
+            <MenuItem key={index} href={item.href} icon={<i className={item.icon} />}>
+              {item.label}
             </MenuItem>
-            </>
-          )
-        }
-        )}
+            </> 
+	   )
+          }
+       )}  
       </Menu>
     </ScrollWrapper>
   )

@@ -1,0 +1,101 @@
+import axios from 'axios'
+import Cookies from 'js-cookie'
+
+const API_URL = process.env.NEXT_PUBLIC_APIURL1
+
+// Create an axios instance
+const axiosInstance = axios.create({
+  baseURL: `${API_URL}`,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+})
+
+// Function to refresh the token
+async function refreshTokenGet() {
+  try {
+    // Get the token from cookies
+    const authData = {
+      useremail: Cookies.get('astrovastu_auth_useremail'),
+      accessToken: Cookies.get('astrovastu_auth_accessToken'), 
+      userRole: Cookies.get('astrovastu_auth_userRole'),
+      expirationTime: Cookies.get('astrovastu_auth_expirationTime'), 
+      refreshToken: Cookies.get('astrovastu_auth_refreshToken')
+  };
+
+    if (authData) {
+      const { refreshToken, accessToken, useremail, userRole, expirationTime, transactionID } = authData
+
+      // Send a request to refresh the token
+      const response = await axios.post(`${API_URL}/Auth/refresh`, {
+        accessToken,
+        refreshToken
+      })
+
+      // If the response contains a new access token, return it
+      if (response.data && response.data.result && response.data.result.accessToken) {
+        Cookies.set('astrovastu_auth_accessToken', response.data.result.accessToken, { expires: 1 });
+        return response.data.result.accessToken
+      }
+
+      throw new Error('No new access token returned')
+    }
+
+    throw new Error('No token found')
+  } catch (error) {
+    throw new Error('Token refresh failed')
+  }
+}
+
+// Request interceptor to add access token to request headers
+axiosInstance.interceptors.request.use(
+  async config => {
+    const authData = {
+      useremail: Cookies.get('astrovastu_auth_useremail'),
+      accessToken: Cookies.get('astrovastu_auth_accessToken'), 
+      userRole: Cookies.get('astrovastu_auth_userRole'),
+      expirationTime: Cookies.get('astrovastu_auth_expirationTime'), 
+      refreshToken: Cookies.get('astrovastu_auth_refreshToken')
+  };
+    if (authData) {
+      const { accessToken } = authData // Get access token from parsed cookie
+      config.headers.Authorization = `Bearer ${accessToken}` // Attach access token to request headers
+    }
+    return config
+  },
+  error => Promise.reject(error)
+)
+
+// Response interceptor to handle token refresh
+axiosInstance.interceptors.response.use(
+  response => {
+    return response
+  },
+  async error => {
+    const originalRequest = error.config
+
+    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true
+
+      try {
+        const newAccessToken = await refreshTokenGet()
+
+        // Set the new access token in the headers of the original request
+        originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`
+        return axiosInstance(originalRequest) // Retry with updated headers
+      } catch (refreshError) {
+        Cookies.remove('astrovastu_auth_useremail')
+        Cookies.remove('astrovastu_auth_accessToken') 
+        Cookies.remove('astrovastu_auth_userRole')
+        Cookies.remove('astrovastu_auth_expirationTime')
+        Cookies.remove('astrovastu_auth_refreshToken')
+        Cookies.remove('astrovastu_auth_transactionID')
+        window.location.href = '/login'
+        return Promise.reject(refreshError)
+      }
+    }
+    return Promise.reject(error)
+  }
+)
+
+export default axiosInstance

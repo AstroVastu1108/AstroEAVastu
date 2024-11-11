@@ -1,23 +1,16 @@
 'use client'
 
-// Next Imports
 import Link from 'next/link'
-
-// MUI Imports
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { styled, useTheme } from '@mui/material/styles'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-
-// Third-party Imports
 import classnames from 'classnames'
-
-// Hook Imports
 import { useImageVariant } from '@core/hooks/useImageVariant'
 import { useEffect } from 'react'
-// import { useRouter } from 'next/router'
 import Cookies from 'js-cookie';
-// Styled Components
+import { useAuth } from '@/@core/contexts/authContext'
+
 const MaskImg = styled('img')({
   blockSize: 'auto',
   maxBlockSize: 355,
@@ -27,21 +20,17 @@ const MaskImg = styled('img')({
   zIndex: -1
 })
 
-const NotFound = ({ mode }) => {
+const NotFound = ({ mode,type }) => {
+  const { logout } =useAuth();
   // Vars
   const darkImg = '/images/pages/misc-mask-dark.png'
   const lightImg = '/images/pages/misc-mask-light.png'
-  // const router = useRouter();
-
-  // Getting the full URL
-  // console.log("currentPageUrl : ",window.location.href)
   useEffect(() => {
-    // Ensure this runs only on the client side
     if (typeof window !== 'undefined') {
       const fullUrl = `${window.location.pathname}`;
-      // setCurrentPageUrl(fullUrl);
-      Cookies.set('prevPath', fullUrl, { expires: 1, path: '/' });
-      console.log("currentPageUrl : ", fullUrl); // Log the current page URLs
+      if (fullUrl !== '/logout') {
+        Cookies.set('prevPath', fullUrl, { expires: 1, path: '/' });
+      }     
     }
   }, []);
   // Hooks
@@ -51,23 +40,38 @@ const NotFound = ({ mode }) => {
 
   return (
     <div className='flex items-center justify-center min-bs-[100dvh] relative p-6 overflow-x-hidden'>
-      <div className='flex items-center flex-col text-center'>
+      {type == "not found" ? (
+         <div className='flex items-center flex-col text-center'>
+         <div className='flex flex-col gap-2 is-[90vw] sm:is-[unset] mbe-6'>
+           <Typography className='font-medium text-8xl' color='text.primary'>
+             404
+           </Typography>
+           <Typography variant='h4'>Page Not Found ⚠️</Typography>
+           <Typography>we couldn&#39;t find the page you are looking for.</Typography>
+         </div>
+         <Button href='/' component={Link} variant='contained' onClick={()=>{window.history.back();}}>
+           Go Back
+         </Button>
+ 
+       </div>
+      ) : 
+      (
+        <div className='flex items-center flex-col text-center'>
         <div className='flex flex-col gap-2 is-[90vw] sm:is-[unset] mbe-6'>
           <Typography className='font-medium text-8xl' color='text.primary'>
-            404
+            403
           </Typography>
-          <Typography variant='h4'>Page Not Found ⚠️</Typography>
-          <Typography>we couldn&#39;t find the page you are looking for.</Typography>
+          <Typography variant='h4'>You are not authorized ⚠️</Typography>
+          <Typography>You tried to access a page you did not have prior authorization for.</Typography>
         </div>
-        <Button href='/' component={Link} variant='contained'>
-          Back To Home
+        <Button href='/' component={Link} variant='contained' onClick={()=>{window.history.back();}}>
+          Go Back
         </Button>
-        <img
-          alt='error-404-illustration'
-          src='/images/illustrations/characters/1.png'
-          className='object-cover bs-[400px] md:bs-[450px] lg:bs-[500px] mbs-10 md:mbs-14 lg:mbs-20'
-        />
+
       </div>
+      )
+      }
+     
       {!hidden && (
         <MaskImg
           alt='mask'

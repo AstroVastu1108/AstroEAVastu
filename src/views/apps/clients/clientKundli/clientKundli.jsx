@@ -93,15 +93,16 @@ export default function ClientKundli({ cid }) {
   };
 
   const handleEdit = (item) => {
-    setEditItem(item.id);
+    setEditItem(item.clientKundaliId);
     setEditText(item.name);
   };
 
   const handleSaveEdit = async () => {
-    const item = clientKundliList.find((item) => item.id === editItem);
+    const item = clientKundliList.find((item) => item.clientKundaliId === editItem);
     if (!item) return;
     const payload = {
       id: editItem,
+      clientKundaliId : item.clientKundaliId,
       name: editText,
       kundaliId: item.kundaliId,
       clientId: cid,
@@ -112,7 +113,7 @@ export default function ClientKundli({ cid }) {
       if (response.hasError) throw new Error(response.errorMessage);
       if(!kundliType){
         setClientKundliList((prevList) =>
-          prevList.map((item) => (item.id === editItem ? { ...item, name: editText } : item))
+          prevList.map((item) => (item.clientKundaliId === editItem ? { ...item, name: editText } : item))
         );
       }
       setEditItem(null);
@@ -135,6 +136,7 @@ export default function ClientKundli({ cid }) {
     if (!selectedData) return toastDisplayer("error", "Select the kundli to add client.");
     const payload = {
       id: kundliType ? selectedKundliClient?.id : undefined,
+      clientKundaliId: kundliType ? selectedKundliClient?.clientKundaliId : undefined,
       name: client.name,
       kundaliId: selectedData.KundaliID,
       clientId: cid,
@@ -214,7 +216,7 @@ export default function ClientKundli({ cid }) {
                     inputProps={{ "aria-labelledby": `checkbox-list-label-${item.id}` }}
                   />
                 </ListItemIcon>
-                {editItem === item.id ? (
+                {editItem === item.clientKundaliId ? (
                   <TextField
                     value={editText}
                     onChange={(e) => setEditText(e.target.value)}
@@ -230,18 +232,18 @@ export default function ClientKundli({ cid }) {
                 <IconButton
                   edge="end"
                   aria-label="preview"
-                  onClick={() => router.push(`preview?kid=${item.kundaliId}`)}
+                  onClick={() => router.push(`kundali/${item.kundaliId}`)}
                 >
                   <i className="tabler-arrow-up-right" />
                 </IconButton>
-                <IconButton edge="end" aria-label="edit" onClick={() => (editItem === item.id ? handleSaveEdit() : handleEdit(item))}>
-                  {editItem === item.id ? (
+                <IconButton edge="end" aria-label="edit" onClick={() => (editItem === item.clientKundaliId ? handleSaveEdit() : handleEdit(item))}>
+                  {editItem === item.clientKundaliId ? (
                     <Button variant="contained">Save</Button>
                   ) : (
                     <i className="tabler-edit" />
                   )}
                 </IconButton>
-                <IconButton edge="end" aria-label="delete" onClick={() => handleDelete(item.id)}>
+                <IconButton edge="end" aria-label="delete" onClick={() => handleDelete(item.clientKundaliId)}>
                   <i className="tabler-trash" />
                 </IconButton>
               </ListItemButton>

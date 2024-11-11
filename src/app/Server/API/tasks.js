@@ -1,4 +1,5 @@
 import axios from 'axios'
+import axiosInstance from './axiosInstance'
 const API_URL = process.env.NEXT_PUBLIC_APIURL1
 // save column data
 // export async function CreateColumn(payload) {
@@ -70,7 +71,7 @@ export async function GetTasks(TransactionID,ClientId) {
     error: null
   }
   try {
-    const response = await axios.post(`${API_URL}/KundaliTask/task/getClientTasks`,{
+    const response = await axiosInstance.post(`/KundaliTask/task/getClientTasks`,{
         "cmpTransId": TransactionID,
         "CmpClientId":ClientId
       })
@@ -92,7 +93,7 @@ export async function GetCompanyTasks(TransactionID) {
     error: null
   }
   try {
-    const response = await axios.post(`${API_URL}/KundaliTask/task/getTasks`,{
+    const response = await axiosInstance.post(`/KundaliTask/task/getTasks`,{
         "cmpTransId": TransactionID
       })
     responseBody.responseData = response.data.result

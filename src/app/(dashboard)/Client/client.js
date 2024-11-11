@@ -21,25 +21,25 @@ export default function ClientPage() {
   const [kundliData, setKundliData] = useState([]);
 
   // func
-  const getAllKundli = async () => {
-    setLoading(true);
-    const res = await GetKundliDataAPI(1000, 1);
-    setLoading(false);
-    if (res.hasError) {
-      return toastDisplayer("error", res.error);
-    } else {
-      setKundliData(res?.responseData?.data?.Result?.KundaliList);
-    }
-  }
+  // const getAllKundli = async () => {
+  //   setLoading(true);
+  //   const res = await GetKundliDataAPI(1000, 1);
+  //   setLoading(false);
+  //   if (res.hasError) {
+  //     return toastDisplayer("error", res.error);
+  //   } else {
+  //     setKundliData(res?.responseData?.data?.Result?.KundaliList);
+  //   }
+  // }
 
 
   // Hooks
-  useEffect(() => {
-    getAllKundli();
-  }, [])
+  // useEffect(() => {
+  //   getAllKundli();
+  // }, [])
 
   return (<>
     {loading && <Loader />}
-    <ClientMain kundliData={kundliData} />
+    <ClientMain />
   </>)
 }

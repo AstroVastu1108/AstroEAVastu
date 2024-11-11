@@ -19,6 +19,8 @@ import { getKundliPdf } from "@/app/Server/API/common";
 import RemoveKundli from "./removeKundli/RemoveKundli";
 
 import { toastDisplayer } from "@/@core/components/toast-displayer/toastdisplayer";
+import { useAuth } from "@/@core/contexts/authContext";
+import { GetConfig } from "@/app/Server/API/configuration";
 
 
 
@@ -230,7 +232,7 @@ export default function KundliMain() {
     },
   ];
 
-
+  const { user } = useAuth()
   const [open, setOpen] = useState(false);
   const [removePopUp, setSetRemovePopUp] = useState(false);
   const [kundliData, setKundliData] = useState([]);
@@ -255,22 +257,48 @@ export default function KundliMain() {
   const [pageNo, setPageNo] = useState(1);
   const searchInputRef = useRef(null);
   const printRef = useRef(null);
-
+  const fetchConfig = async (id) => {
+    const res = await GetConfig(id);
+    if (res.hasError) {
+      setLoading(false);
+      return toastDisplayer("error", res.error);
+    } else {
+      setLoading(false);
+      const response = await res.responseData
+      setUserData((prev) => ({
+        ...prev,
+        CityID: {
+            CityID: response.city?.cityID, // Set correct property name
+            FormattedCity: response.city?.formattedCity // Set correct property name
+        },
+        Country: {
+            iso2: response.country?.iso2,
+            name: response.country?.name
+        }
+    }));
+    }
+  }
+  useEffect(() => {
+    if (user && user?.transactionID) {
+      fetchConfig(user?.transactionID)
+    }
+  }, [user])
   // func
   const handleAddClick = () => {
-    setUserData({
-      KundaliID: '',
-      FirstName: '',
-      LastName: '',
-      MiddleName: '',
-      Gender: 'Male',
-      BirthDate: null,
-      Country: { iso2: 'IN', name: 'India' },
-      BirthTime: null,
-      CityID: { CityID: 'A1AE28185ED49D47211760BF32D40EB742C84998', FormattedCity: 'Surat, Gujarat' },
-      isUpdate: false,
-      // City: 'Surat'
-    })
+    // setUserData({
+    //   KundaliID: '',
+    //   FirstName: '',
+    //   LastName: '',
+    //   MiddleName: '',
+    //   Gender: 'Male',
+    //   BirthDate: null,
+    //   Country: { iso2: 'IN', name: 'India' },
+    //   BirthTime: null,
+    //   CityID: { CityID: 'A1AE28185ED49D47211760BF32D40EB742C84998', FormattedCity: 'Surat, Gujarat' },
+    //   isUpdate: false,
+    //   // City: 'Surat'
+    // })
+    setUserData(userData)
     setOpen(true);
   }
 

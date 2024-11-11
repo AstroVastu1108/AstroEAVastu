@@ -1,124 +1,7 @@
-// 'use client';
-// import { LoginFormSchema } from '@/app/Server/auth/definition';
-// import Cookies from 'js-cookie';
-// import { createContext, useContext, useEffect, useLayoutEffect, useState } from 'react';
-
-
-// const AuthContext = createContext();
-
-// export const AuthProvider = ({ children }) => {
-//     const [user, setUser] = useState(null);
-//     const [kundliData, setKundliData] = useState(null);
-//     const [isloggedIn, setIsLoggedIn] = useState();
-
-//     useEffect(() => {
-
-//         (async function () {
-
-//             const result = await getUser();
-
-//             if (result.isOk) {
-
-//                 setIsLoggedIn(true);
-
-//                 const data = {
-//                     email:process.env.NEXT_PUBLIC_USERNAME,
-//                     username:process.env.NEXT_PUBLIC_USER
-//                 }
-
-//                 setUser(data);
-//             }
-//         })();
-//     }, []);
-
-//     const login = (userData) => {
-
-//         const validatedFields = LoginFormSchema.safeParse({
-//             email: userData.email,
-//             password: userData.password
-//         })
-
-//         const errorMessage = { message: 'Invalid login credentials.' }
-
-//         if (!validatedFields.success) {
-
-//             setIsLoggedIn(false);
-
-//             return {
-//                 error: true,
-//                 message: validatedFields.error.flatten().fieldErrors
-//             }
-//         }
-//         if (userData.email == process.env.NEXT_PUBLIC_USERNAME && userData.password == process.env.NEXT_PUBLIC_PASSWORD) {
-//             const data = {
-//                 email:userData.email,
-//                 username:process.env.NEXT_PUBLIC_USER
-//             }
-//             setUser(data);
-//             const expirationTime = new Date().getTime() + 5 * 60 * 1000;
-//             sessionStorage.setItem("authState", JSON.stringify(userData));
-//             Cookies.set('authToken', userData.email, { expires: 1 }); // Expires in 1 day
-
-//             setIsLoggedIn(true);
-
-//             return {
-//                 error: false,
-//                 message: "Loggedin successfully ..!!"
-//             };
-
-//         } else {
-
-//             setIsLoggedIn(false);
-//             return {
-//                 error: true,
-//                 message: errorMessage
-//             };
-
-//         }
-//     };
-
-//     function getUser() {
-//         try {
-//             const storedSessionValue = JSON.parse(sessionStorage.getItem("authState"));
-//             if (storedSessionValue) {
-//                 return {
-//                     isOk: true,
-//                     data: storedSessionValue,
-//                 };
-//             } else {
-//                 return {
-//                     isOk: false,
-//                     data: storedSessionValue,
-//                 };
-//             }
-//         } catch {
-//             return {
-//                 isOk: false,
-//             };
-//         }
-//     }
-//     const logout = () => {
-//         setIsLoggedIn(false);
-//         sessionStorage.removeItem("authState");
-//         Cookies.remove('authToken');
-//         setUser(null);
-//     };
-
-//     return (
-//         <AuthContext.Provider value={{kundliData,setKundliData, isloggedIn, user, login, logout }}>
-//             {children}
-//         </AuthContext.Provider>
-//     );
-// };
-
-// export const useAuth = () => useContext(AuthContext);
 'use client';
 import { registerCompnay, sendSignInRequest } from '@/app/Server/API/auth';
-import { LoginFormSchema } from '@/app/Server/auth/definition';
 import Cookies from 'js-cookie';
-import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useState } from 'react';
-// import { createSession } from '../../app/lib/session';
-
+import { createContext, useContext, useEffect, useState } from 'react';
 
 const AuthContext = createContext();
 
@@ -126,7 +9,6 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState([]);
     const [kundliData, setKundliData] = useState(null);
     const [isloggedIn, setIsLoggedIn] = useState();
-    const [loading, setLoading] = useState(true);
     const [authRuleContext, setAuthRuleContext] = useState([]);
 
 
@@ -136,50 +18,42 @@ export const AuthProvider = ({ children }) => {
             const result = await getUser();
 
             if (result.isOk) {
-                const { useremail, authRule, refreshToken, accessToken, userRole, TransactionID,userAvatar } = result.data;
-
                 setUser(result.data);
-                const authRuleData = JSON.parse(authRule)
-                const hrefsWithAccess = authRuleData
-                    .filter(item => item.HasAccess);
-                setAuthRuleContext(hrefsWithAccess);
                 setIsLoggedIn(true);
-
-                // const data = {
-                //     email: process.env.NEXT_PUBLIC_USERNAME,
-                //     username: process.env.NEXT_PUBLIC_USER
-                // }
-
-                // setUser(data);
             }
 
         })();
     }, []);
 
+
+    // SSE code
     // useEffect(() => {
-    //     if (!user) return;
+    //     if(user?.transactionID){
+    //         console.log("Data : ",user?.transactionID)
 
-    //     const encodedUserId = encodeURIComponent(user?.transactionID);
+    //         const encodedUserId = encodeURIComponent(user?.transactionID);
 
-    //     const eventSource = new EventSource(`${process.env.NEXT_PUBLIC_APIURL1}/Auth/sse?userId=${encodedUserId}`);
+    //         const eventSource = new EventSource(`${process.env.NEXT_PUBLIC_APIURL1}/Auth/sse?userId=${encodedUserId}`);
 
-    //     eventSource.onmessage = (event) => {
-    //         const data = JSON.parse(event.data);
-    //         if (data.action === "logout") {
-    //             // Logout the user immediately
+    //         eventSource.onmessage = (event) => {
+    //             const data = JSON.parse(event.data);
+    //             if (data.action === "logout") {
+    //                 console.log("logout called")
+    //                 // Logout the user immediately
+    //                 eventSource.close();
+
+    //                 // Clear session data and redirect to login
+    //                 // localStorage.removeItem("sessionToken");
+    //                 logout();
+    //                 window.location.href = '/login';
+    //             }
+    //         };
+
+    //         // Clean up the SSE connection when component unmounts
+    //         return () => {
     //             eventSource.close();
-
-    //             // Clear session data and redirect to login
-    //             // localStorage.removeItem("sessionToken");
-    //             logout();
-    //             window.location.href = '/login';
-    //         }
-    //     };
-
-    //     // Clean up the SSE connection when component unmounts
-    //     return () => {
-    //         eventSource.close();
-    //     };
+    //         };
+    //     }
     // }, [user]);
 
 
@@ -191,34 +65,24 @@ export const AuthProvider = ({ children }) => {
         if (result.isOk) {
             const responseData = result.data;
             setUser(responseData.result)
-            // console.log("result.data : ",result.data)
-            const routePermissions = JSON.parse(responseData.result.authRule);
-            // const hrefsWithAccess = routePermissions
-            //     .filter(item => item.HasAccess)
-            const hrefsWithAccess = routePermissions
-                .filter(item => item.HasAccess);
-            setAuthRuleContext(hrefsWithAccess);
-            // setAuthRuleContext(result.data.authRule);
-            const { useremail, authRule, refreshToken, accessToken, userRole, transactionID,
-                userAvatar} = responseData.result;
+            const { useremail, refreshToken, accessToken, userRole, transactionID,
+                userAvatar } = responseData.result;
             const expirationTime = new Date().getTime() + 5 * 60 * 1000;
-
             const authData = {
-                useremail, authRule, refreshToken, accessToken, userRole, expirationTime, transactionID
+                useremail, refreshToken, accessToken, userRole, expirationTime, transactionID
             };
-            // setUser(username);
-            sessionStorage.setItem("userAvtarState", userAvatar);
-            sessionStorage.setItem("authState", JSON.stringify(authData));
-            Cookies.set('authState', JSON.stringify(authData), { expires: 1 }); // Expires in 1 day
-
-
+            Object.entries(authData).map(([key, value]) => {
+                try {
+                    Cookies.set(`astrovastu_auth_${key}`, value, { expires: 1 });
+                } catch (error) {
+                    console.error("error: ", error);
+                }
+            });
             setIsLoggedIn(true);
-
             return {
                 error: false,
                 message: responseData.statusMsg
             };
-
         } else {
             setIsLoggedIn(false);
             return {
@@ -230,66 +94,57 @@ export const AuthProvider = ({ children }) => {
     }
 
     const companyRegistration = async (userData) => {
-        // console.log("Context is called", userData)
         const result = await registerCompnay(userData);
         if (result.isOk) {
             setUser(result.data)
-            // console.log("result.data : ",result.data)
-            const routePermissions = JSON.parse(result.data.authRule);
-            // const hrefsWithAccess = routePermissions
-            //     .filter(item => item.HasAccess)
-            const hrefsWithAccess = routePermissions
-                .filter(item => item.HasAccess);
-            setAuthRuleContext(hrefsWithAccess);
-            // setAuthRuleContext(result.data.authRule);
-            // console.log("result.data===============>", result.data)
-            const { useremail, authRule, refreshToken, accessToken, userRole, transactionID } = result.data;
+            const { useremail, refreshToken, accessToken, userRole, transactionID } = result.data;
             const expirationTime = new Date().getTime() + 5 * 60 * 1000;
-
+            
             const authData = {
-                useremail, authRule, refreshToken, accessToken, userRole, expirationTime, transactionID
+                useremail, refreshToken, accessToken, userRole, expirationTime, transactionID
             };
-            // setUser(username);
-            sessionStorage.setItem("authState", JSON.stringify(authData));
-            Cookies.set('authState', JSON.stringify(authData), { expires: 1 }); // Expires in 1 day
 
+            Object.entries(authData).map(([key, value]) => {
+                try {
+                    Cookies.set(`astrovastu_auth_${key}`, value, { expires: 1 });
+                } catch (error) {
+                    console.error("error: ", error);
+                }
+            });
             setIsLoggedIn(true);
-
             return {
                 error: false,
                 message: "Registration successfully ..!!"
             };
-
         } else {
             setIsLoggedIn(false);
             return {
                 error: true,
                 message: result.data
             };
-
         }
     }
 
 
-    function getUser() {
+    async function getUser() {
         try {
-            const storedSessionValue = JSON.parse(Cookies.get('authState'));
-            const userAvatar = sessionStorage.getItem("userAvtarState");
-            if (typeof storedSessionValue === 'object' && storedSessionValue !== null) {
-                storedSessionValue.userAvatar = userAvatar; // Add or update the userAvatar property
-            } else {
-                // console.error('Stored session value is not an object');
-            }
-            // console.log("Called");
-            if (storedSessionValue) {
+            const decryptedAuthData = {
+                useremail: Cookies.get('astrovastu_auth_useremail'),
+                accessToken: Cookies.get('astrovastu_auth_accessToken'), 
+                userRole: Cookies.get('astrovastu_auth_userRole'),
+                expirationTime: Cookies.get('astrovastu_auth_expirationTime'), 
+                refreshToken: Cookies.get('astrovastu_auth_refreshToken'),
+                transactionID: Cookies.get('astrovastu_auth_transactionID')
+            };
+            
+            if (decryptedAuthData) {
                 return {
                     isOk: true,
-                    data: storedSessionValue,
+                    data: decryptedAuthData,
                 };
             } else {
                 return {
                     isOk: false,
-                    data: storedSessionValue,
                 };
             }
         } catch {
@@ -301,13 +156,17 @@ export const AuthProvider = ({ children }) => {
 
     const logout = () => {
         setIsLoggedIn(false);
-        sessionStorage.removeItem("authState");
-        Cookies.remove('authState');
+        Cookies.remove('astrovastu_auth_useremail'),
+        Cookies.remove('astrovastu_auth_accessToken'), 
+        Cookies.remove('astrovastu_auth_userRole'),
+        Cookies.remove('astrovastu_auth_expirationTime'), 
+        Cookies.remove('astrovastu_auth_refreshToken')
+        Cookies.remove('astrovastu_auth_transactionID')
         setUser(null);
     };
 
     return (
-        <AuthContext.Provider value={{ kundliData, setKundliData, authRuleContext, isloggedIn, user, logout, loginData,companyRegistration }}>
+        <AuthContext.Provider value={{ kundliData, setKundliData, authRuleContext, isloggedIn, user, logout, loginData, companyRegistration }}>
             {children}
         </AuthContext.Provider>
     );
