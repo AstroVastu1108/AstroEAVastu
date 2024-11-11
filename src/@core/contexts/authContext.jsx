@@ -25,6 +25,7 @@ export const AuthProvider = ({ children }) => {
         })();
     }, []);
 
+
     // SSE code
     // useEffect(() => {
     //     if(user?.transactionID){

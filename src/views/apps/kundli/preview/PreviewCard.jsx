@@ -12,20 +12,24 @@ import NakshtraSummary from '@/components/preview/NakshtraSummary/NakshtraSummar
 import RahuKetu from '@/components/preview/RahuKetu/RahuKetu';
 import DashaDetails from '@/components/preview/DashaDetails/DashaDetails';
 import LoardPlanet from '@/components/preview/LoardPlanet/LoardPlanet'
-import { Divider, FormControl, IconButton, InputLabel, Menu, MenuItem, Select } from '@mui/material'
-import { useState } from 'react'
+import { Button, Divider, FormControl, IconButton, InputLabel, Menu, MenuItem, Select } from '@mui/material'
+import { useEffect, useState } from 'react'
 import Event from '@/components/preview/Event/Event'
 import PrakritiPopUp from '@/components/preview/InfoTable/PrakritiPopUp'
+import KundliOption from '@/components/preview/KundliOption/KundliOption'
+import { DashaClickEvent, KundliOptionsData } from '@/app/Server/API/kundliAPI'
+import JaiminiCharKarakasPopUp from '@/components/preview/JaiminiCharKarakas/JaiminiCharKarakas'
+import NavTaraChakra from '@/components/preview/NavTaraChakra/NavTaraChakra'
 
 const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool }) => {
   // var
   const BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
   const AstroDetails = kundliData?.AstroVastuReport?.AstroDetails;
   const ChartSVG = kundliData?.AstroVastuReport?.ChartSVG;
-  const MahaDasha = kundliData?.AstroVastuReport?.DashaDetails?.MahaDasha;
-  const AntarDasha = kundliData?.AstroVastuReport?.DashaDetails?.AntarDasha;
-  const PratyantarDasha = kundliData?.AstroVastuReport?.DashaDetails?.PratyantarDasha;
-  const LifeAntarDasha = kundliData?.AstroVastuReport?.DashaDetails?.LifeAntarDasha;
+  // const MahaDasha = kundliData?.AstroVastuReport?.DashaDetails?.MahaDasha;
+  // const AntarDasha = kundliData?.AstroVastuReport?.DashaDetails?.AntarDasha;
+  // const PratyantarDasha = kundliData?.AstroVastuReport?.DashaDetails?.PratyantarDasha;
+  // const LifeAntarDasha = kundliData?.AstroVastuReport?.DashaDetails?.LifeAntarDasha;
   const AstroVastuHouseScript = kundliData?.AstroVastuReport?.AstroVastuHouseScript;
   const Symbols = kundliData?.AstroVastuReport?.Symbols;
   const PlanetSummaryData = kundliData?.AstroVastuReport?.AsperctSummaryPlanet;
@@ -34,18 +38,33 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool })
   const HouseNSummaryData = kundliData?.AstroVastuReport?.HouseScript;
   const RahuData = kundliData?.AstroVastuReport?.RahuSpecial;
   const KetuData = kundliData?.AstroVastuReport?.KetuSpecial;
+  const DashaDetailData = kundliData?.AstroVastuReport?.DashaDetails;
+  const JaiminiCharKarakas = kundliData?.AstroVastuReport?.JaiminiCharKarakas;
+  const NavTaraChakraData = kundliData?.AstroVastuReport?.NavTaraChakra;
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [chartValue, setChartValue] = useState("D");
-  const [eventValue, setEventValue] = useState("E1");
-  const [isPrakritiVisible, setIsPrakritiVisible]=useState(false);
+  const [eventValue, setEventValue] = useState(null);
+  const [kundliOptValue, setKundliOptValue] = useState("V");
+  const [isPrakritiVisible, setIsPrakritiVisible] = useState(false);
+  const [openEvent, setOpenEvent] = useState(false);
+  const [openKundli, setOpenKundli] = useState(false);
+  const [openJCK, setJCK] = useState(false);
+  const [openNTC, setNTC] = useState(false);
+  const [allKundliOpt, setAllKundliOpt] = useState(false);
+  const [Loading, setLoading] = useState(false);
+  const [DashaValue, setDashaValue] = useState("PratyantarDasha");
+  const [DashaTitle, setDashaTitle] = useState(`${DashaDetailData?.CurrentMD} > ${DashaDetailData?.CurrentAD} > PratyantarDashas`);
+  const [DashaGridData, setDashaGridData] = useState(kundliData?.AstroVastuReport?.DashaDetails?.PratyantarDasha);
+  const [DashaDate, setDashaDate] = useState(DashaDetailData.MahaDasha.filter((e) => e.IsCurrent == true)[0].StartDt);
   const open = Boolean(anchorEl);
 
-  const handleIsPraOpen=()=>{
+
+  const handleIsPraOpen = () => {
     handleClose();
     setIsPrakritiVisible(true)
   }
-  const handleIsPraClose=()=>{
+  const handleIsPraClose = () => {
     setIsPrakritiVisible(false)
   }
 
@@ -57,13 +76,175 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool })
     setAnchorEl(null);
   };
 
-  const handleMenuDownload=()=>{
+  const handleMenuDownload = () => {
     handleClose();
     handleDownload();
   }
-  const handleMenuTimeTool=()=>{
+  const handleMenuTimeTool = () => {
     handleClose();
     handleTimeTool();
+  }
+
+  const handleOpenClose = () => {
+    setOpenEvent(false);
+  }
+
+  const handleOpen = () => {
+    setOpenEvent(true);
+  }
+
+  const handleKundliOpt = () => {
+    setOpenKundli(true);
+  }
+
+  const handleOpenKundliClose = () => {
+    setOpenKundli(false);
+  }
+  const handleJCK = () => {
+    handleClose();
+    setJCK(!openJCK);
+  }
+  const handleNTC = () => {
+    handleClose();
+    setNTC(!openNTC);
+  }
+
+  const getKundliOpions = async () => {
+    const response = await KundliOptionsData();
+    if (response.hasError) {
+      setLoading(false);
+      return toastDisplayer("error", response.error);
+    } else {
+      const data = response?.responseData?.Result?.Options;
+      setAllKundliOpt(data);
+      setKundliOptValue(data?.filter(e => e.Option == "V")[0])
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    getKundliOpions();
+  }, [])
+
+  const handleDashaChange = async () => {
+    // const DashaDate = DashaDetailData.MahaDasha.filter((e) => e.IsCurrent == true)[0].StartDt;
+    const titleArr = DashaTitle.split(" > ");
+    if (DashaValue == "PranDasha") {
+      const payload = {
+        "BirthDate": BirthDetails?.Date,
+        "BirthTime": BirthDetails?.Time,
+        "DashaStartDate": DashaDate,
+        "Planet": `${titleArr[0]}-${titleArr[1]}-${titleArr[2]}`
+      }
+      const response = await DashaClickEvent(payload);
+      if (!response.hasError) {
+        setDashaTitle(`${titleArr[0]} > ${titleArr[1]} > ${titleArr[2]} > SookshmaDasha`);
+        setDashaValue("SookshmaDasha");
+        setDashaGridData(response?.responseData)
+      }
+    }
+    else if (DashaValue == "SookshmaDasha") {
+      const payload = {
+        "BirthDate": BirthDetails?.Date,
+        "BirthTime": BirthDetails?.Time,
+        "DashaStartDate": DashaDate,
+        "Planet": `${titleArr[0]}-${titleArr[1]}`
+      }
+      const response = await DashaClickEvent(payload);
+      if (!response.hasError) {
+        setDashaTitle(`${titleArr[0]} > ${titleArr[1]} > PratyantarDasha`);
+        setDashaValue("PratyantarDasha");
+        setDashaGridData(response?.responseData)
+      }
+    }
+    else if (DashaValue == "PratyantarDasha") {
+      const payload = {
+        "BirthDate": BirthDetails?.Date,
+        "BirthTime": BirthDetails?.Time,
+        "DashaStartDate": DashaDate,
+        "Planet": `${titleArr[0]}`
+      }
+      const response = await DashaClickEvent(payload);
+      if (!response.hasError) {
+        setDashaTitle(`${titleArr[0]} > AntarDashas`);
+        setDashaValue("AntarDasha");
+        setDashaGridData(response?.responseData)
+      }
+    }
+    else if (DashaValue == "AntarDasha") {
+      setDashaTitle(`MahaDashas`);
+      setDashaValue("MahaDasha");
+      setDashaGridData(DashaDetailData?.MahaDasha)
+    }
+  }
+
+  const handleDashaDoubleClick = async (row) => {
+    // const DashaDate = DashaDetailData.MahaDasha.filter((e) => e.IsCurrent == true)[0].StartDt;
+    const titleArr = DashaTitle.split(" > ");
+    if (DashaValue == "MahaDasha") {
+      setDashaDate(row?.StartDt)
+      const payload = {
+        "BirthDate": BirthDetails?.Date,
+        "BirthTime": BirthDetails?.Time,
+        "DashaStartDate": row?.StartDt,
+        "Planet": row?.Planet
+      }
+      const response = await DashaClickEvent(payload);
+      if (!response.hasError) {
+        const data = response?.responseData;
+        const ADDasha = data.filter((e) => e.IsCurrent == true)[0]
+        setDashaTitle(`${row?.Planet} > AntarDasha`);
+        setDashaValue("AntarDasha");
+        setDashaGridData(response?.responseData)
+      }
+    }
+    else if (DashaValue == "AntarDasha") {
+      const payload = {
+        "BirthDate": BirthDetails?.Date,
+        "BirthTime": BirthDetails?.Time,
+        "DashaStartDate": DashaDate,
+        "Planet": `${titleArr[0]}-${row?.Planet}`
+      }
+      const response = await DashaClickEvent(payload);
+      if (!response.hasError) {
+        const data = response?.responseData;
+        const ADDasha = data.filter((e) => e.IsCurrent == true)[0]
+        setDashaTitle(`${titleArr[0]} > ${row?.Planet} > PratyantarDasha`);
+        setDashaValue("PratyantarDasha");
+        setDashaGridData(response?.responseData)
+      }
+    }
+    else if (DashaValue == "PratyantarDasha") {
+      const payload = {
+        "BirthDate": BirthDetails?.Date,
+        "BirthTime": BirthDetails?.Time,
+        "DashaStartDate": DashaDate,
+        "Planet": `${titleArr[0]}-${titleArr[1]}-${row?.Planet}`
+      }
+      const response = await DashaClickEvent(payload);
+      if (!response.hasError) {
+        const data = response?.responseData;
+        const ADDasha = data.filter((e) => e.IsCurrent == true)[0]
+        setDashaTitle(`${titleArr[0]} > ${titleArr[1]} > ${row?.Planet} > SookshmaDasha`);
+        setDashaValue("SookshmaDasha");
+        setDashaGridData(response?.responseData)
+      }
+    } else if (DashaValue == "SookshmaDasha") {
+      const payload = {
+        "BirthDate": BirthDetails?.Date,
+        "BirthTime": BirthDetails?.Time,
+        "DashaStartDate": DashaDate,
+        "Planet": `${titleArr[0]}-${titleArr[1]}-${titleArr[2]}-${row?.Planet}`
+      }
+      const response = await DashaClickEvent(payload);
+      if (!response.hasError) {
+        const data = response?.responseData;
+        const ADDasha = data.filter((e) => e.IsCurrent == true)[0]
+        setDashaTitle(`${titleArr[0]} > ${titleArr[1]} > ${titleArr[2]} > ${row?.Planet} > PranDasha`);
+        setDashaValue("PranDasha");
+        setDashaGridData(response?.responseData)
+      }
+    }
   }
 
   return (
@@ -101,6 +282,8 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool })
                     }}
                   >
                     <MenuItem className="flex gap-1"><i className={'tabler-browser-check me-2'} />Events</MenuItem>
+                    <MenuItem onClick={handleJCK} className="flex gap-1"><i className={'tabler-aspect-ratio me-2'} />Jaimini Char Karakas</MenuItem>
+                    <MenuItem onClick={handleNTC} className="flex gap-1"><i className={'tabler-aspect-ratio me-2'} />NavTara Chakra</MenuItem>
                     <MenuItem onClick={handleIsPraOpen} className="flex gap-1"><i className={'tabler-arrow-up-right me-2'} />Prakriti</MenuItem>
                     <MenuItem onClick={handleMenuTimeTool} className="flex gap-1"><i className={'tabler-calendar-share me-2'} />TimeTool</MenuItem>
                     <Divider />
@@ -146,47 +329,59 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool })
               <div className='chart-title'>❋ House Chart / Bhav Chalit Kundali ❋</div>
               <img src={`data:image/svg+xml;base64,${ChartSVG?.HouseChart}`} alt="birthChart" />
             </div>
-            {/* {!isPrintDiv && */}
-            <div className='lg:w-1/4 md:w-1/4 sm:w-[calc(50%-10px)] md:flex-grow flex flex-col birth-chart w-[100%] gap-2'>
-              <div className='mt-1'>
-                <FormControl fullWidth>
-                  <InputLabel id="test">Select option</InputLabel>
-                  <Select
-                    labelId="test"
-                    id="test"
-                    label="Select option"
-                    // value={"D"}
-                    onChange={(e) => { setChartValue(e.target.value) }}
-                    defaultValue={chartValue}
-                    sx={{ height: '2.9rem !important', minHeight: '1rem !important' }}
-                  >
-                    <MenuItem value="T">Transient</MenuItem>
-                    <MenuItem value="D">Dasha</MenuItem>
-                  </Select>
-                </FormControl>
+            <div className='lg:w-1/4 md:w-1/4 sm:w-[calc(50%-10px)] md:flex-grow flex flex-col birth-chart pt-3 w-[100%]'>
+              <div className='flex justify-center pb-1'>
+                {DashaValue != "MahaDasha" && kundliOptValue && kundliOptValue.Option == "V" &&
+                  <>
+                    <IconButton className='' onClick={handleDashaChange}>
+                      <i className='tabler-arrow-big-left text-primary'></i>
+                    </IconButton>
+                  </>}
+                <Button variant='text' className='' onClick={handleKundliOpt}>
+                  <span className='text-xl'>
+                    ❋ {kundliOptValue && kundliOptValue.Option == "V" ? DashaTitle : kundliOptValue.OptionName} ❋
+                  </span>
+                </Button>
               </div>
-              {chartValue && chartValue == "D" ?
-                <DashaDetails title={"MahaDashas"} DashaData={MahaDasha} />
+              {kundliOptValue && kundliOptValue.Option == "V" ?
+                <>
+                  <DashaDetails title={DashaTitle} DashaData={DashaGridData} handleDashadbClick={handleDashaDoubleClick} />
+                </>
                 :
                 <img src={`data:image/svg+xml;base64,${ChartSVG?.HouseChart}`} alt="birthChart" />
               }
+              {openKundli &&
+                <KundliOption KundliData={allKundliOpt} setKundliValue={setKundliOptValue} open={openKundli} handleClose={handleOpenKundliClose} />
+              }
             </div>
-            {/* } */}
           </div>
 
 
-          <div className='main-MahaDasha-Div pt-4'>
+          <div className='main-MahaDasha-Div pt-5'>
             <div className='flex px-4 w-[100%] justify-between'>
               <div className=' w-[30%]'></div>
-              <div className='chart-title w-[40%] pt-5'>
+              <div className='chart-title w-[40%] pt-4'>
                 <span>
                   ❋ Nakshatra Astrology ↠ Planet Script ❋
                 </span>
               </div>
-              <Event eventValue={eventValue} setEventValue={setEventValue} />
+              <div className='mb-1 w-[30%] flex justify-end pt-4'>
+                <Button variant='text' className='' onClick={handleOpen}>
+                  <span className='text-[var(--green-color)]'>Life Event</span>
+                  <span className='arrow text-black'>🡒</span>
+                  <span>
+                    {eventValue ? `${eventValue.EventName}` : "NA"}
+                  </span>
+                </Button>
+              </div>
+              {openEvent &&
+                <Event setEventValue={setEventValue} open={openEvent} handleClose={handleOpenClose} />
+              }
             </div>
             <div className='planet-table'>
-              <NakshtraSummary SummaryData={PlaneNSummaryData} Aspect={"P"} symbols={Symbols} />
+
+                <NakshtraSummary SummaryData={PlaneNSummaryData} Aspect={"P"} symbols={Symbols} SelectedEventVal={eventValue} />
+
             </div>
             <div className='Nakshatra-Legend mt-2 px-2'>
               <p class="arrow-info flex flex-col lg:flex-row md:flex-row sm:flex-row">
@@ -209,33 +404,47 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool })
                   ❋ Nakshatra Astrology ↠ House Script ❋
                 </span>
               </div>
-              <Event eventValue={eventValue} setEventValue={setEventValue} />
-
+              <div className='mb-1 w-[30%] flex justify-end pt-4'>
+                <Button variant='text' className='' onClick={handleOpen}>
+                  <span className='text-[var(--green-color)]'>Life Event</span>
+                  <span className='arrow text-black'>🡒</span>
+                  <span>
+                    {eventValue ? `${eventValue.EventName}` : "NA"}
+                  </span>
+                </Button>
+              </div>
             </div>
             <div className='planet-table'>
-              <NakshtraSummary SummaryData={HouseNSummaryData} Aspect={"H"} symbols={Symbols} />
+              <NakshtraSummary SummaryData={HouseNSummaryData} Aspect={"H"} symbols={Symbols}  SelectedEventVal={eventValue} />
             </div>
           </div>
 
           <div className='main-RahuKetu-Div pt-4'>
             {/* <div className='chart-title'>❋ Planet Script with Nakshatra Lord & Sub Lord ❋</div> */}
             <div className='flex px-4 w-[100%] justify-between'>
-              <div className=' w-[20%]'></div>
+              <div className=' w-[25%]'></div>
               <div className='chart-title w-[50%] pt-5'>
                 <span>
                   ❋ Planet Script with Nakshatra Lord & Sub Lord ❋
                 </span>
               </div>
-              <Event eventValue={eventValue} setEventValue={setEventValue} />
-
+              <div className='mb-1 w-[25%] flex justify-end pt-4'>
+                <Button variant='text' className='' onClick={handleOpen}>
+                  <span className='text-[var(--green-color)]'>Life Event</span>
+                  <span className='arrow text-black'>🡒</span>
+                  <span>
+                    {eventValue ? `${eventValue.EventName}` : "NA"}
+                  </span>
+                </Button>
+              </div>
             </div>
             <div
-              className="Loard-Div sm:grid md:grid-rows-3 md:grid-cols-3 sm:grid-rows-5 sm:grid-cols-2 xs:flex xs:flex-col grid-flow-col gap-3 auto-rows-auto"
+              className="Loard-Div sm:grid md:grid-rows-3 md:grid-cols-3 sm:grid-rows-5 sm:grid-cols-2 xs:flex xs:flex-col grid-flow-col gap-8 auto-rows-auto"
             >
               {PlaneNSummaryData.length
                 ? PlaneNSummaryData.slice(0, 9).map((element, index) => ( // only display first 9 elements
                   <div key={index} className=''>
-                    <LoardPlanet LoardData={element} />
+                    <LoardPlanet LoardData={element}  SelectedEventVal={eventValue} />
                   </div>
                 ))
                 : null
@@ -272,6 +481,8 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool })
         </Grid>
       </Grid>
       {isPrakritiVisible && <PrakritiPopUp open={isPrakritiVisible} handlePraClose={handleIsPraClose} />}
+      {openJCK && <JaiminiCharKarakasPopUp open={openJCK} handleClose={handleJCK} JaiminiCharKarakasData={JaiminiCharKarakas} />}
+      {openNTC && <NavTaraChakra open={openNTC} handleClose={handleNTC} NavTaraChakraData={NavTaraChakraData} />}
     </>
   )
 }

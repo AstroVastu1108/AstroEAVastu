@@ -293,7 +293,9 @@ const LoginV2 = ({ mode }) => {
                       onChange={(e) => { handleInput("email", e); }}
                       value={formData.email}
                       inputRef={emailRef}
+
                       {...(errors && { error: true })}
+
                     />
 
                     {(errors && errorMessage) ?
@@ -308,6 +310,7 @@ const LoginV2 = ({ mode }) => {
                       isOtpVerified == "pending" ? (
                         <LoadingButton
                           fullWidth
+                          autoFocus
                           variant='contained'
                           onClick={handleSubmit}
                           // onClick={handleVerifyEmail}

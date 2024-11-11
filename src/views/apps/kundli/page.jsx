@@ -26,6 +26,8 @@ import { GetConfig } from "@/app/Server/API/configuration";
 
 export default function KundliMain() {
 
+  const router = useRouter();
+
   const highlightText = (text, searchText) => {
     if (!searchText) return text;
 
@@ -36,7 +38,7 @@ export default function KundliMain() {
       <>
         {parts.map((part, index) =>
           part.toLowerCase() === searchText.toLowerCase() ? (
-            <span className="font-semibold" key={index} style={{ color: '#00a75a' }}>
+            <span className="font-semibold text-[var(--green-color)]" key={index}>
               {part}
             </span>
           ) : (
@@ -325,7 +327,11 @@ export default function KundliMain() {
 
   const handlePreviewClick = (event, kid) => {
     window.open(`kundali/${kid}`, '_blank');
+    // router.push(`kundali/${kid}`)
   }
+  // const handlePreviewClick = (event, kid) => {
+  //   window.open(`kundali/${kid}`, '_blank');
+  // }
 
   const handleEditClick = (data) => {
     setLoading(true);

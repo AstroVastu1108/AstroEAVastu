@@ -16,7 +16,7 @@ body {
   /* --mui-palette-primary-mainChannel: 120 38 148; */
   /* --primary-soft-color: rgba(102, 34, 148, 0.2); */
   /* --primary-soft-color: #4c0473; */
-  --primary-soft-color: #590a73;
+  --primary-soft-color: rgb(89, 10, 115, 0.1);
   /* --primary-soft-color: #4d0a72; */
   /* --primary-soft-color: #662294; */
   /* --secondary-color: rgb(255, 196, 1); */
@@ -26,6 +26,9 @@ body {
   /* --secondary-color: #ffe457; */
   --secondary-color: #f4cf6b;
   --secondary-soft-color: rgb(247, 194, 67, 0.4);
+  --green-color: #00a75a;
+  --green-text-color: #057143;
+  --red-text-color: #cc1616;
   /* --mui-palette-divider:rgb(128, 128, 128,0.5); */
   --mui-palette-divider: var(--border-color);
 

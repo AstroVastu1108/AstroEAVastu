@@ -264,13 +264,7 @@ function PrakritiPopUp({ open, handlePraClose }) {
           component: 'form',
           onSubmit: (event) => {
             event.preventDefault();
-            // console.log("submit")
-            // handleSubmit();
           },
-          // sx: {
-          //   width: '650px', // Custom width
-          //   maxWidth: '100%', // Ensures it doesn't exceed the viewport width
-          // },
           sx: {
             '& .MuiDialogActions-root': {
               padding: '0px'
@@ -334,13 +328,7 @@ function PrakritiPopUp({ open, handlePraClose }) {
               },
               '& .MuiDataGrid-columnHeader:focus': {
                 outline: 'none !important'
-              },
-              // '& .MuiDataGrid-scrollbar--vertical': {
-              //   display: 'none'
-              // },
-              // '& .MuiDataGrid-scrollbarFiller--header': {
-              //   display: 'none'
-              // }
+              }
             }}
           >
             <ThemeProvider theme={customTheme}>

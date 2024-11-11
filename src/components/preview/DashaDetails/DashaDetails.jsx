@@ -2,7 +2,7 @@ import { Box, createTheme, ThemeProvider } from '@mui/material';
 import { DataGrid, GridToolbarContainer } from '@mui/x-data-grid'
 import React from 'react'
 
-function DashaDetails({ title, DashaData }) {
+function DashaDetails({ title, DashaData, handleDashadbClick }) {
 
   const customTheme = createTheme({
     components: {
@@ -57,6 +57,12 @@ function DashaDetails({ title, DashaData }) {
     ...item
   }));
 
+  const handleDashaClick = (e) => {
+    // console.log(e);
+    // if(e.row?.IsCurrent)
+      handleDashadbClick(e.row);
+  }
+
   return (
     <>
       <Box
@@ -92,11 +98,11 @@ function DashaDetails({ title, DashaData }) {
           '& .MuiDataGrid-columnHeader': {
             cursor: 'default !important', // Change to your desired color
           },
-          '& .MuiDataGrid-columnHeader:focus':{
+          '& .MuiDataGrid-columnHeader:focus': {
             outline: 'none !important'
           },
-          '& .MuiDataGrid-scrollbar--vertical':{
-            display:'none'
+          '& .MuiDataGrid-scrollbar--vertical': {
+            display: 'none'
           }
         }}
       >
@@ -107,17 +113,18 @@ function DashaDetails({ title, DashaData }) {
             columns={columns}
             pageSize={rowsDasha.length} // Show all rows
             getRowClassName={(params) =>
-              params.row.IsCurrent ? 'highlight-row' : ''
+              params.row.IsCurrent ? 'highlight-row cursor-pointer select-none' : ''
             }
+            onRowDoubleClick={handleDashaClick}
             disableColumnSorting
             disableColumnMenu
-            rowHeight={29}
+            rowHeight={30}
             columnHeaderHeight={38}
             disableColumnResize
             disableRowSelectionOnClick
             hideFooterPagination={true}
             hideFooter={true}
-            // slots={{ toolbar: () => <CustomToolbar title={title} /> }}
+          // slots={{ toolbar: () => <CustomToolbar title={title} /> }}
           />
 
         </ThemeProvider>

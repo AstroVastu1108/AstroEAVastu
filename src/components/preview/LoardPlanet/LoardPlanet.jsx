@@ -2,8 +2,7 @@ import { Box, createTheme, ThemeProvider } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import React from 'react'
 
-function LoardPlanet({ LoardData }) {
-  console.log(LoardData)
+function LoardPlanet({ LoardData,  SelectedEventVal}) {
   const customTheme = createTheme({
     components: {
       MuiDataGrid: {
@@ -24,20 +23,70 @@ function LoardPlanet({ LoardData }) {
       },
     },
   });
+  // const columns1 = [
+  //   {
+  //     field: 'rahuId', headerName: LoardData.Planet, width: 100, headerClassName: 'rowheader',
+  //     renderCell: (params) => {
+  //       return <div className='rahuHeader'>{params.value}</div>
+  //     }
+  //   },
+  //   {
+  //     field: 'rahuScriptFull', headerClassName: 'rowheader',
+  //     headerName: <div className='valueHeader'><div className='me-1'>{LoardData.Nakshatra}</div> / <div className='ms-1'>{LoardData.NakshatraPada}</div></div> ,
+  //     width: 10,
+  //     // minWidth: 10,
+  //     flex: 1,
+  //   }
+  // ];
+
+
   const columns1 = [
     {
-      field: 'rahuId', headerName: LoardData.Planet, width: 100, headerClassName: 'rowheader',
+      field: 'rahuId',
+      headerName: LoardData.Planet,
+      width: 100,
+      headerClassName: 'rowheader',
       renderCell: (params) => {
-        return <div className='rahuHeader'>{params.value}</div>
-      }
+        return <div className='rahuHeader'>{params.value}</div>;
+      },
     },
     {
-      field: 'rahuScriptFull', headerClassName: 'rowheader',
-      headerName: <div className='valueHeader'><div className='me-1'>{LoardData.Nakshatra}</div> / <div className='ms-1'>{LoardData.NakshatraPada}</div></div> ,
+      field: 'rahuScriptFull',
+      headerClassName: 'rowheader',
+      headerName: (
+        <div className='valueHeader'>
+          <div className='me-1'>{LoardData.Nakshatra}</div> /{' '}
+          <div className='ms-1'>{LoardData.NakshatraPada}</div>
+        </div>
+      ),
       width: 10,
-      // minWidth: 10,
       flex: 1,
-    }
+      renderCell: (params) => {
+        console.log(params)
+        const scriptFull = params.value || '';
+        let formattedScript = scriptFull;
+
+        if (SelectedEventVal) {
+          const positiveValues = SelectedEventVal.Positive.split(', ').map(Number);
+          const negativeValues = SelectedEventVal.Negative.split(', ').map(Number);
+
+          // Check if scriptFull is included in Positive or Negative lists
+          const scriptFullNumber = Number(scriptFull);
+
+          if (positiveValues.includes(scriptFullNumber)) {
+            formattedScript = (
+              <span className="text-[var(--green-text-color)]">{scriptFull}</span>
+            );
+          } else if (negativeValues.includes(scriptFullNumber)) {
+            formattedScript = (
+              <span className="text-[var(--red-text-color)]">{scriptFull}</span>
+            );
+          }
+        }
+
+        return <div className='degreeDiv'>{formattedScript}</div>;
+      },
+    },
   ];
 
   const rows = [
