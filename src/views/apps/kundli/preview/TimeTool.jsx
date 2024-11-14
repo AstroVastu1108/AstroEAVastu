@@ -5,20 +5,21 @@ import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import './preview.css';
 
-function TimeTool({ handleDateChange, kundliBirthData, handleTimeTool }) {
-  const [datePicker, setDatePicker] = useState(dayjs());
+function TimeTool({ handleDateChange, kundliBirthData, handleTimeTool, handleTimeToolOptChange, datePicker, setDatePicker,TimeToolOpt }) {
   const [timeValue, setTimeValue] = useState("Y"); // "Y" for year, "M" for month, etc.
 
   useEffect(() => {
-    if (kundliBirthData?.Date && kundliBirthData?.Time) {
-      // Extract date and time from the object
-      const { Date: birthDate, Time: birthTime } = kundliBirthData;
+    if(TimeToolOpt=="B"){
+      if (kundliBirthData?.Date && kundliBirthData?.Time) {
+        // Extract date and time from the object
+        const { Date: birthDate, Time: birthTime } = kundliBirthData;
 
-      // Convert date and time into a format that dayjs can understand
-      const formattedDate = dayjs(`${birthDate} ${birthTime}`, 'DD-MM-YYYY HHmm');
+        // Convert date and time into a format that dayjs can understand
+        const formattedDate = dayjs(`${birthDate} ${birthTime}`, 'DD-MM-YYYY HHmm');
 
-      // Set the datePicker state with the parsed date and time
-      setDatePicker(formattedDate);
+        // Set the datePicker state with the parsed date and time
+        setDatePicker(formattedDate);
+      }
     }
   }, [kundliBirthData]);
 
@@ -73,7 +74,7 @@ function TimeTool({ handleDateChange, kundliBirthData, handleTimeTool }) {
   return (
     <>
 
-        <Box className="timeTool-div bg-[var(--secondary-color)]  lg:w-[calc(100%-150px)] md:w-[calc(100%-100px)] sm:w-[calc(100%-50px)]">
+        <Box className="timeTool-div bg-[var(--secondary-color)]  lg:w-[calc(100%-125px)] md:w-[calc(100%-100px)] sm:w-[calc(100%-50px)]">
           <div className='w-full flex justify-between items-center'>
             <div>
               <span className='text-primary text-sm font-medium'>Time Tool</span>
@@ -96,6 +97,8 @@ function TimeTool({ handleDateChange, kundliBirthData, handleTimeTool }) {
                   height: '2.5rem',
                   minHeight: '2.5rem',
                 }}
+                onChange={handleTimeToolOptChange}
+                value={TimeToolOpt}
               >
                 <MenuItem value="B">Birth Chart</MenuItem>
                 <MenuItem value="T">Transit</MenuItem>
@@ -133,7 +136,7 @@ function TimeTool({ handleDateChange, kundliBirthData, handleTimeTool }) {
                 minWidth: 'fit-content',
               }}
             >
-              Date
+              Day
             </Button>
 
             <Button

@@ -175,3 +175,23 @@ export async function DashaClickEvent(payload) {
     return responseBody
   }
 }
+
+
+// For Transit Click Event
+export async function TransitClickEvent(payload) {
+  const responseBody = {
+    responseData: null,
+    hasError: false,
+    error: null
+  }
+  try {
+    const response = await axios.post(`${API_URL}/astro/chart/transit`,payload)
+    responseBody.responseData = response.data
+    return responseBody
+  } catch (error) {
+    responseBody.hasError = true
+    responseBody.errorMessage = responseBody.errorMessage =
+      error.response?.data?.statusMsg || error.response?.data?.errors
+    return responseBody
+  }
+}

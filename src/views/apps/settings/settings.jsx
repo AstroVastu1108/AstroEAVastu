@@ -79,7 +79,6 @@ function Settings() {
                 "FormattedCity": response.city?.formattedCity,
                 "CityID": response.city?.cityID
             })
-            console.log("res : ", res.responseData.country)
         }
     }
     useEffect(() => {

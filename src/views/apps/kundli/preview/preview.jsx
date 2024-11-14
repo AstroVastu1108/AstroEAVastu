@@ -15,8 +15,9 @@ import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplaye
 import { Box, Button, Card, CardContent, Grid } from '@mui/material'
 import PageTitle from '@/components/common/PageTitle/PageTitle'
 import TimeTool from './TimeTool'
-import { ChangeDateTimeKundli } from '@/app/Server/API/kundliAPI'
+import { ChangeDateTimeKundli, TransitClickEvent } from '@/app/Server/API/kundliAPI'
 import Loader from '@/components/common/Loader/Loader'
+import dayjs from 'dayjs'
 
 const Preview = ({ kundliData, setKundliData }) => {
   const printRef = useRef()
@@ -25,7 +26,11 @@ const Preview = ({ kundliData, setKundliData }) => {
   const [existdownloadLoading, setExistDownloadLoading] = useState(false);
   const [timeToolPopUp, setTimeToolPopUp] = useState(false);
   const [kundliBirthData, setKundliBirthData] = useState(kundliData?.AstroVastuReport?.BirthDetails);
+  const [TimeToolOpt, setTimeToolOpt] = useState("B");
+  const [TransiteTime, setTransiteTime] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [TransitData, setTransitData] = useState(null);
+  const [datePicker, setDatePicker] = useState(dayjs());
 
   const handleKundliApi = async () => {
     if (kundliData) {
@@ -92,41 +97,157 @@ const Preview = ({ kundliData, setKundliData }) => {
     setTimeToolPopUp(!timeToolPopUp)
   }
 
+  const getTransitData = async (fdate, ftime, option) => {
+    var BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
+    var date = "";
+    var time = "";
+    if (fdate && ftime) {
+      date = fdate;
+      time = ftime;
+    } else {
+      if (TransiteTime != null) {
+        // Parse the custom date format
+        const datePicker = dayjs(TransiteTime, 'DD-MM-YYYY HH:mm:ss');
+
+        if (datePicker.isValid()) {
+          date = datePicker.format('DD-MM-YYYY');
+          time = datePicker.format('HHmmss');
+        } else {
+          // console.log('Invalid Date');
+        }
+      }
+    }
+    const payload = {
+      "KundaliID": BirthDetails.KundaliID,
+      "FirstName": BirthDetails.FirstName,
+      "MiddleName": BirthDetails.MiddleName,
+      "LastName": BirthDetails.LastName,
+      "Gender": BirthDetails.Gender,
+      "Prakriti": BirthDetails.Prakriti,
+      "BirthDate": BirthDetails.Date,
+      "BirthTime": BirthDetails.Time,
+      "Country": BirthDetails.Country,
+      "CityID": BirthDetails.CityID,
+      "TransitTime": time,
+      "TransitDate": date
+    }
+    const response = await TransitClickEvent(payload);
+    if (response.hasError) {
+      // setLoading(false);
+      return toastDisplayer("error", response.error);
+    } else {
+      const data = response?.responseData?.Result?.Transit;
+      setTransiteTime(data?.TransitDateTime)
+      if (TimeToolOpt == "T" || option == "T") {
+        setDatePicker(dayjs(data?.TransitDateTime, 'DD-MM-YYYY HH:mm:ss'))
+      } else {
+        const { Date: birthDate, Time: birthTime } = kundliData?.AstroVastuReport?.BirthDetails;
+        const formattedDate = dayjs(`${birthDate} ${birthTime}`, 'DD-MM-YYYY HHmmss');
+      }
+      setTransitData(data);
+    }
+  }
+  // const getTransitData = async (date, time, option) => {
+  //   var BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
+  //   const payload = {
+  //     "KundaliID": BirthDetails.KundaliID,
+  //     "FirstName": BirthDetails.FirstName,
+  //     "MiddleName": BirthDetails.MiddleName,
+  //     "LastName": BirthDetails.LastName,
+  //     "Gender": BirthDetails.Gender,
+  //     "Prakriti": BirthDetails.Prakriti,
+  //     "BirthDate": BirthDetails.Date,
+  //     "BirthTime": BirthDetails.Time,
+  //     "Country": BirthDetails.Country,
+  //     "CityID": BirthDetails.CityID,
+  //     "TransitTime": time,
+  //     "TransitDate": date
+  //   }
+  //   const response = await TransitClickEvent(payload);
+  //   if (response.hasError) {
+  //     // setLoading(false);
+  //     return toastDisplayer("error", response.error);
+  //   } else {
+  //     const data = response?.responseData?.Result?.Transit;
+  //     setTransiteTime(dayjs(data?.TransitDateTime, 'DD-MM-YYYY HH:mm:ss'))
+  //     console.log("time tool opt : ", option)
+  //     if (TimeToolOpt != "T") {
+  //       if (option == "T")
+  //         setDatePicker(dayjs(data?.TransitDateTime, 'DD-MM-YYYY HH:mm:ss'))
+  //     } else {
+  //       setDatePicker(dayjs(data?.TransitDateTime, 'DD-MM-YYYY HH:mm:ss'))
+  //     }
+  //     setTransitData(data);
+  //   }
+  // }
+
   const handleDateChange = async (datePicker) => {
     var kdata = kundliData?.AstroVastuReport?.BirthDetails;
     const formattedDate = datePicker.format('DD-MM-YYYY');
     const formattedTime = datePicker.format('HHmmss'); // 24-hour format without colon
-    const formattedData = {
-      KundaliID: kdata.KundaliID,
-      FirstName: kdata.FirstName,
-      LastName: kdata.LastName,
-      MiddleName: kdata.MiddleName,
-      Gender: kdata.Gender,
-      Country: kdata.Country,
-      CityID: "A1AE28185ED49D47211760BF32D40EB742C84998",
-      City: "A1AE28185ED49D47211760BF32D40EB742C84998",
-      BirthDate: formattedDate,
-      BirthTime: formattedTime,
-      Prakriti: kdata.prakriti || ''
-    }
-    try {
-      // setLoading(true);
-      const response = await ChangeDateTimeKundli(formattedData)
+    if (TimeToolOpt == "B") {
+      var date = "";
+      var time = "";
+      if (TransiteTime != null) {
+        const datePicker = dayjs(TransiteTime, 'DD-MM-YYYY HH:mm:ss');
 
-      if (response.hasError) {
-        setIsDisable(false)
-        return toastDisplayer("error", response.error)
+        if (datePicker.isValid()) {
+          date = datePicker.format('DD-MM-YYYY');
+          time = datePicker.format('HHmmss');
+        }
       }
-      setKundliData(response?.responseData?.Result)
-      // return setLoading(false);
-    } catch (error) {
-      setLoading(false)
+      const formattedData = {
+        KundaliID: kdata.KundaliID,
+        FirstName: kdata.FirstName,
+        LastName: kdata.LastName,
+        MiddleName: kdata.MiddleName,
+        Gender: kdata.Gender,
+        Country: kdata.Country,
+        CityID: kdata.CityID,
+        City: kdata.CityID,
+        BirthDate: formattedDate,
+        BirthTime: formattedTime,
+        Prakriti: kdata.prakriti || '',
+        TransitTime: time,
+        TransitDate: date
+      }
+      try {
+        // setLoading(true);
+        const response = await ChangeDateTimeKundli(formattedData)
+
+        if (response.hasError) {
+          setIsDisable(false)
+          return toastDisplayer("error", response.error)
+        }
+        setKundliData(response?.responseData?.Result)
+        // return setLoading(false);
+      } catch (error) {
+        setLoading(false)
+      }
+    } else {
+      if (TransiteTime) {
+        const formatedString = dayjs(TransiteTime, 'DD-MM-YYYY HHmm');
+        if (!formatedString.isSame(datePicker, 'second')) {
+          getTransitData(formattedDate, formattedTime);
+        }
+      }
     }
   }
 
-  // useEffect(()=>{
-  //   console.log("==>",kundliData)
-  // },[kundliData])
+  const handleTimeToolOptChange = (e) => {
+    setTimeToolOpt(e.target.value);
+    if (e.target.value == "T") {
+      if (!TransiteTime) {
+        getTransitData(null, null, "T");
+      } else {
+        setDatePicker(dayjs(TransiteTime, 'DD-MM-YYYY HHmm'));
+      }
+    } else {
+      const { Date: birthDate, Time: birthTime } = kundliData?.AstroVastuReport?.BirthDetails;
+      const formattedDate = dayjs(`${birthDate} ${birthTime}`, 'DD-MM-YYYY HHmm');
+      setDatePicker(formattedDate);
+    }
+  }
 
   return (
     <>
@@ -140,11 +261,11 @@ const Preview = ({ kundliData, setKundliData }) => {
               <div className='previewPDF flex justify-center'>
                 {kundliData &&
                   <>
-                    <PreviewCard kundliData={kundliData} handleDownload={handleKundliApi} isPrintDiv={false} loading={existdownloadLoading} handleTimeTool={handleTimeTool} />
+                    <PreviewCard kundliData={kundliData} handleDownload={handleKundliApi} isPrintDiv={false} loading={existdownloadLoading} handleTimeTool={handleTimeTool} setTransitData={setTransitData} TransitData={TransitData} getTransitData={getTransitData} />
                   </>
                 }
                 {timeToolPopUp &&
-                  <TimeTool handleTimeTool={handleTimeTool} handleDateChange={handleDateChange} kundliBirthData={kundliBirthData} />
+                  <TimeTool handleTimeTool={handleTimeTool} handleDateChange={handleDateChange} kundliBirthData={kundliData?.AstroVastuReport?.BirthDetails} handleTimeToolOptChange={handleTimeToolOptChange} setDatePicker={setDatePicker} datePicker={datePicker} TimeToolOpt={TimeToolOpt} />
                 }
               </div>
 

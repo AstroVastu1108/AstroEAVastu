@@ -1,9 +1,8 @@
-import { Box, Button, Checkbox, createTheme, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControlLabel, Grid, IconButton, Table, TableBody, TableCell, TableHead, TableRow, ThemeProvider, Typography } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Button, Checkbox, createTheme, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControlLabel, IconButton, ThemeProvider } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import React, { useState } from 'react'
 
 function PrakritiPopUp({ open, handlePraClose }) {
-
   const customTheme = createTheme({
     components: {
       MuiDataGrid: {
@@ -17,14 +16,10 @@ function PrakritiPopUp({ open, handlePraClose }) {
           columnHeaders: {
             fontFamily: 'Segoe UI, Arial, sans-serif',
           },
-          toolbar: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
         },
       },
     },
   });
-
 
   const prakritiData = {
     "observations": [
@@ -143,78 +138,74 @@ function PrakritiPopUp({ open, handlePraClose }) {
     ]
   };
 
+  // State to track checkbox selections
+  const [selectedOptions, setSelectedOptions] = useState({});
+
+  const handleCheck = (name, optionType) => (event) => {
+    const { checked } = event.target;
+    setSelectedOptions((prev) => ({
+      ...prev,
+      [name]: { ...prev[name], [optionType]: checked },
+    }));
+  };
+
   const columns = [
     {
-      field: 'name',
-      headerName: '',
-      width: 150,
-      minWidth: 150,
-      align: "end",
+      field: 'name', headerName: '', width: 150, align: 'end',
       headerClassName: 'rowheader',
-      renderCell: (params) => (
-        <span variant="h6">{params.value}</span>
-      )
+
     },
     {
       field: 'vata',
       headerName: 'Vata',
-      // width: 150,
-      minWidth: 150,
-      headerClassName: 'rowheader',
       flex: 1,
-      renderCell: (params) => {
-        return (
-          <FormControlLabel
-            label={params.row.vata}
-            control={
-              <Checkbox
-                // value={observation.options.vata}
-                onChange={(event) => handleCheck(event, params.row.namee, 'vata')}
-              />
-            }
-          />
-
-        )
-      }
+      headerClassName: 'rowheader',
+      renderCell: (params) => (
+        <FormControlLabel
+          label={params.row.vata}
+          control={
+            <Checkbox
+              checked={selectedOptions[params.row.name]?.vata || false}
+              onChange={handleCheck(params.row.name, 'vata')}
+            />
+          }
+        />
+      ),
     },
     {
       field: 'pitta',
       headerName: 'Pitta',
       flex: 1,
-      // width: 150,
-      minWidth: 150,
       headerClassName: 'rowheader',
       renderCell: (params) => (
         <FormControlLabel
           label={params.row.pitta}
           control={
             <Checkbox
-              // value={observation.options.vata}
-              onChange={(event) => handleCheck(event, params.row.namee, 'pitta')}
+              checked={selectedOptions[params.row.name]?.pitta || false}
+              onChange={handleCheck(params.row.name, 'pitta')}
             />
           }
         />
-      )
+      ),
     },
     {
       field: 'kapha',
       headerName: 'Kapha',
       flex: 1,
-      // width: 150,
-      minWidth: 150,
       headerClassName: 'rowheader',
       renderCell: (params) => (
         <FormControlLabel
           label={params.row.kapha}
           control={
             <Checkbox
-              // value={observation.options.vata}
-              onChange={(event) => handleCheck(event, params.row.namee, 'kapha')}
+              checked={selectedOptions[params.row.name]?.kapha || false}
+              onChange={handleCheck(params.row.name, 'kapha')}
             />
           }
         />
-      )
-    }
+      ),
+    },
   ];
 
   const rows = prakritiData.observations.map((observation, index) => ({
@@ -222,146 +213,99 @@ function PrakritiPopUp({ open, handlePraClose }) {
     name: observation.name,
     vata: observation.options.vata,
     pitta: observation.options.pitta,
-    kapha: observation.options.kapha
+    kapha: observation.options.kapha,
   }));
 
-  // State to track the checked items
-  const [selectedOptions, setSelectedOptions] = useState({});
-
-  // Function to handle checkbox toggle
-  const handleCheck = (observation, optionType) => (event) => {
-    const { checked } = event.target;
-
-    // Update the selected options based on the checked state
-    setSelectedOptions((prevState) => {
-      const currentSelection = { ...prevState };
-      if (!currentSelection[observation.name]) {
-        currentSelection[observation.name] = {};
-      }
-
-      currentSelection[observation.name][optionType] = checked;
-
-      return currentSelection;
-    });
-  };
-
-  // Function to handle form submission
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // console.log("Selected options:", selectedOptions);
-    // Submit the selectedOptions to wherever you need
-  };
-
-
   return (
-    <>
-      <Dialog
-        open={open}
-        onClose={handlePraClose}
-        maxWidth="md"   // 'xs', 'sm', 'md', 'lg', 'xl' or false for custom width
-        fullWidth={true}  // Ensures the dialog takes up full width of the container
-        PaperProps={{
-          component: 'form',
-          onSubmit: (event) => {
-            event.preventDefault();
-          },
-          sx: {
-            '& .MuiDialogActions-root': {
-              padding: '0px'
-            },
-            '& .MuiDialogContent-root': {
-              padding: '0px'
-            }
-          }
-        }}
-      >
-        <DialogTitle className="PopupHeader bg-[var(--secondary-color)] text-primary p-4">
-          <div className='w-100' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span>
-              Prakriti Assessment Questions
-            </span>
-            <IconButton
-              aria-label="close"
-              onClick={handlePraClose} // Replace with your close handler function
-              className='text-primary'
-            >
-              <i className='tabler-x'></i>
-            </IconButton>
-          </div>
-          <DialogContentText className="text-primary">
-            Enter the required information for prakriti.
-          </DialogContentText>
-        </DialogTitle>
-        <DialogContent className=' flex justify-center'>
-          <Box width={"100%"}
-            className="py-4"
+    <Dialog open={open} onClose={handlePraClose} maxWidth="md" fullWidth>
+      <DialogTitle className="PopupHeader text-white p-3">
+        <div className='w-100' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span className='text-primary text-2xl font-semibold !pl-3'>
+            Prakriti Assessment Questions
+          </span>
+          <IconButton
+            aria-label="close"
+            onClick={handlePraClose} // Replace with your close handler function
             sx={{
-              '& .MuiDataGrid-root': {
-                borderRadius: 0, // Remove border radius
-                borderLeft: '0px',
-                borderRight: '0px',
-              },
-              '& .MuiDataGrid-row:nth-of-type(odd)': {
-                backgroundColor: '#ffffff', // Light color for odd rows
-              },
-              '& .MuiDataGrid-row:nth-of-type(even)': {
-                backgroundColor: '#f5f5f5', // White color for even rows
-              },
-              '& .MuiDataGrid-row:hover': {
-                color: 'var(--primary-color) !important',
-                backgroundColor: 'var(--secondary-soft-color) !important',
-              },
-              '& .MuiDataGrid-columnHeader .MuiDataGrid-sortIcon': {
-                color: 'white', // Change to your desired color
-              },
-              '& .MuiDataGrid-columnHeader--withRightBorder': {
-                borderRightWidth: '0px !important'
-              },
-              '& .MuiDataGrid-columnSeparator': {
-                display: 'none !important'
-              },
-              '& .Mui-selected': {
-                backgroundColor: 'var(--secondary-color) !important'
-              },
-              '& .MuiDataGrid-columnHeader': {
-                cursor: 'default !important', // Change to your desired color
-              },
-              '& .MuiDataGrid-columnHeader:focus': {
-                outline: 'none !important'
-              }
+              color: 'white',
             }}
           >
-            <ThemeProvider theme={customTheme}>
-              <DataGrid
-                showCellVerticalBorder
-                rows={rows}
-                columns={columns}
-                pageSize={5}
-                checkboxSelection={false}
-                disableSelectionOnClick
-                hideFooter={true}
-                disableColumnSorting
-                disableColumnMenu
-                rowHeight={45}
-                columnHeaderHeight={45}
-                disableColumnResize
-                disableRowSelectionOnClick
-                hideFooterPagination={true}
-              />
-            </ThemeProvider>
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <div className='p-4'>
-          <Button variant='contained' type='submit' disabled={false} >
+            <i className='tabler-x text-primary'></i>
+          </IconButton>
+        </div>
+      </DialogTitle>
+      <DialogContent className='p-0'>
+        <Box sx={{
+          '& .MuiDataGrid-columnHeaderTitleContainer': {
+            background: 'var(--primary-color)'
+          },
+          '& .MuiDataGrid-root': {
+            borderRadius: 0, // Remove border radius
+            border: '0px'
+          },
+          '& .MuiDataGrid-row:nth-of-type(odd)': {
+            backgroundColor: '#ffffff', // Light color for odd rows
+          },
+          '& .MuiDataGrid-row:nth-of-type(even)': {
+            backgroundColor: '#f5f5f5', // White color for even rows
+          },
+          '& .MuiDataGrid-row:hover': {
+            color: 'var(--primary-color) !important',
+            backgroundColor: 'var(--secondary-soft-color) !important',
+          },
+          '& .MuiDataGrid-columnHeader .MuiDataGrid-sortIcon': {
+            color: 'white', // Change to your desired color
+          },
+          '& .MuiDataGrid-columnHeader--withRightBorder': {
+            borderRightWidth: '0px !important'
+          },
+          '& .MuiDataGrid-columnSeparator': {
+            display: 'none !important'
+          },
+          '& .Mui-selected': {
+            backgroundColor: 'var(--secondary-color) !important'
+          },
+          '& .MuiDataGrid-columnHeader': {
+            cursor: 'default !important', // Change to your desired color
+          },
+          '& .MuiDataGrid-columnHeader:focus': {
+            outline: 'none !important'
+          },
+          '& .MuiSvgIcon-root':{
+            height:"0.7em !important",
+            width:"0.7em !important"
+          },
+          '& .MuiFormControlLabel-label':{
+            fontFamily: 'Segoe UI, Arial, sans-serif',
+            fontSize: '14px'
+          }
+        }}>
+          <ThemeProvider theme={customTheme}>
+            <DataGrid
+              rows={rows}
+              columns={columns}
+              pageSize={5}
+              disableSelectionOnClick
+              hideFooter
+              rowHeight={30}
+              columnHeaderHeight={38}
+              disableColumnSorting
+              disableColumnMenu
+              showCellVerticalBorder
+            />
+          </ThemeProvider>
+        </Box>
+      </DialogContent>
+      <DialogActions>
+        <div className='p-4'>
+          <Button variant='contained' type='submit' disabled={false} onClick={() => console.log(selectedOptions)} >
             Save
           </Button>
           <Button variant='contained' className='bg-secondary' onClick={handlePraClose}>Cancel</Button>
-          </div>
-        </DialogActions>
-      </Dialog>
-    </>
-  )
+        </div>
+      </DialogActions>
+    </Dialog>
+  );
 }
 
-export default PrakritiPopUp
+export default PrakritiPopUp;

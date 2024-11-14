@@ -91,7 +91,7 @@ export default function EnhancedTable() {
         setUsersData(response.responseData);
       }
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     } finally {
       setLoading(false);
     }
@@ -113,7 +113,7 @@ export default function EnhancedTable() {
         setRows(updatedRows);
       }
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     } finally {
       setLoading(false);
     }
@@ -144,7 +144,7 @@ export default function EnhancedTable() {
         toastDisplayer("success", response.responseData.statusMsg);
       }
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     } finally {
       setLoading(false);
     }
