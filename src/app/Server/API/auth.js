@@ -60,7 +60,7 @@ export async function sendSignInRequest(payload,did) {
     }
   }
 
-export async function registerCompnay(company) {
+export async function registerCompnay(payload,did) {
   const responseBody = {
     responseData: null,
     hasError: false,
@@ -68,24 +68,29 @@ export async function registerCompnay(company) {
   };
     try {
       // console.log("Data compnay : ",company)
-      const payload = {
-        userType: "CompanyMaster",
-        email:company.email,
-        firstName:company.fname,
-        lastName:company.lname,
-        // password: company.password,
-        businessName:company.businessname,
-        businessLocation:company.businesslocation,
-        userAvatar:company.profilePicture,
-        phone:company.phone
-      }
+      // const payload = {
+      //   userType: "CompanyMaster",
+      //   email:company.email,
+      //   firstName:company.fname,
+      //   lastName:company.lname,
+      //   // password: company.password,
+      //   businessName:company.businessname,
+      //   businessLocation:company.businesslocation,
+      //   userAvatar:company.profilePicture,
+      //   phone:company.phone,
 
-      const response = await axios.post(`${API_URL}/Auth/Registration`, payload);
+      // }
+
+      const response = await axios.post(`${API_URL}/Auth/Registration`, payload,{
+        headers: {
+            "M-DID": did  
+        }});
+      console.log("response : ",response)
       responseBody.responseData = response.data;
       if (response.status === 200) {
         return {
           isOk: true,
-          data: response.data.result,
+          data: response.data.Result,
         };
       }else{
         return {
@@ -110,6 +115,37 @@ export const requestOtp = async (email, role) => {
   var payload = {
     eMail: email,
     userType: role
+    }
+
+  const responseBody = {
+    responseData: null,
+    hasError: false,
+    error: null,
+  };
+  try {
+    const response = await axios.post(
+      `${API_URL}/Otp/GenerateOTP`,
+      payload
+    );
+    responseBody.response = response.data;
+
+    return responseBody;
+  } catch (error) {
+    responseBody.error =
+      error.response?.data?.statusMsg ||
+      error.message ||
+      error.response?.data?.errors;
+    responseBody.hasError = true;
+    return responseBody;
+  }
+};
+
+export const requestOtpNewUser = async (email,firstName,lastname, role) => {
+  var payload = {
+    eMail: email,
+    userType:role,
+    LastName:lastname,
+    FirstName:firstName
     }
 
   const responseBody = {

@@ -296,7 +296,7 @@ function PrakritiPopUp({ open, handlePraClose }) {
           </ThemeProvider>
         </Box>
       </DialogContent>
-      <DialogActions>
+      <DialogActions className='p-0'>
         <div className='p-4'>
           <Button variant='contained' type='submit' disabled={false} onClick={() => console.log(selectedOptions)} >
             Save
