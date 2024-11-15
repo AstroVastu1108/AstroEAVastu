@@ -17,11 +17,6 @@ async function fetchSecureData(DID,SecureRoute,ClientID,InstanceID) {
     console.log("Called this")
     const response = await axios.get(`${API_URL}/Auth/ServerTest`, {
       // headers: {
-      //    "M-DID": "D7FB56B5-4B94-4998-186D-4C4F83998F60", 
-      //    "M-CID": "C4Zb/JWAYgrdoXmjz91hJcNc5A36kfKUkTAy9u03hqA~*4", 
-      //    "M-IID": "IC985A0C-37AA-463C-B5FC-8EFF76AE8707", 
-      //    "M-SECURE-ROUTE":  "MAYCOMS~7627B486352603545533B645F65366C6C424D4F6F287A5F644A724A4F43346F28743931527677587E4F656B636877323A425B224665317246427140553873373M~P2HgnME2h0nkDkOy1321ThXaYkN/EzMq5+pWHf/W5nCEE/qS31xFL6d709W1Kgoz"
-      //   },
       headers: {
          "M-DID": DID, 
          "M-CID": ClientID, 
@@ -56,7 +51,7 @@ async function refreshTokenGet(refreshToken, accessToken) {
 }
 
 export default async function Page({ params }) {
-  
+
   const cookieStore = cookies();
   const authData = {
     useremail: cookieStore.get('astrovastu_auth_useremail')?.value,
@@ -100,29 +95,29 @@ export default async function Page({ params }) {
 
         if (route.path.startsWith("kundali/")) {
           const basePath = "kundali";
-          const idSegment = slug.split('/')[1]; 
+          const idSegment = slug.split('/')[1];
           return slug.startsWith(basePath) && idSegment;
         }
 
         if (route.path.startsWith("clientDetail/")) {
           const basePath = "clientDetail";
-          const idSegment = slug.split('/')[1]; 
+          const idSegment = slug.split('/')[1];
           return slug.startsWith(basePath) && idSegment;
         }
         return false;
       });
-    
+
       if (matchingRoute) {
         const Element = matchingRoute.element;
-    
+
         let id = null;
         if (matchingRoute.path.includes(':id')) {
           id = slug.split('/')[1];
         }
-    
+
         return (
           <Layout>
-            <Element id={id} /> 
+            <Element id={id} />
           </Layout>
         );
       } else {
