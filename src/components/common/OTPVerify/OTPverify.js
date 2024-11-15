@@ -203,27 +203,33 @@
 
 // export default OTPverify
 
-
 import React, { useState, useEffect, useRef } from 'react'
 import './OTPverify.css'
 import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
 import { requestOtp, VerifyOtp } from '@/app/Server/API/auth'
 import { Alert, Button } from '@mui/material'
 
-function OTPverify({ email, role, setIsOtpVerified,handleVerifyOtp }) {
+function OTPverify({ email, role, setIsOtpVerified, handleVerifyOtp, ErrorMessageLogin, Errors }) {
   const [otp, setOtp] = useState(['', '', '', '', '', ''])
   const [isResendDisabled, setIsResendDisabled] = useState(true)
   const [timer, setTimer] = useState(60)
   const inputRefs = useRef([])
   const hiddenInputRef = useRef(null)
-  const [errors, setErrors] = useState(false)
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [errors, setErrors] = useState(Errors)
+  const [errorMessage, setErrorMessage] = useState(ErrorMessageLogin)
+
+  useEffect(()=>{
+    console.log("here error : ",Errors)
+    console.log("here error : ",ErrorMessageLogin)
+    setErrors(Errors);
+    setErrorMessage(ErrorMessageLogin);
+  },[Errors, ErrorMessageLogin])
 
   useEffect(() => {
     // Timer countdown for resend OTP button
     if (isResendDisabled) {
       const interval = setInterval(() => {
-        setTimer((prev) => {
+        setTimer(prev => {
           if (prev === 1) {
             setIsResendDisabled(false)
             clearInterval(interval)
@@ -284,7 +290,7 @@ function OTPverify({ email, role, setIsOtpVerified,handleVerifyOtp }) {
   //   }
   // }
 
-    useEffect(() => {
+  useEffect(() => {
     if (otp.every(digit => digit.length === 1)) {
       const otpCode = otp.join('')
       handleVerifyOtp(otpCode) // Call the verify method when OTP is complete
@@ -292,7 +298,7 @@ function OTPverify({ email, role, setIsOtpVerified,handleVerifyOtp }) {
     }
   }, [otp])
 
-  const handlePaste = (e) => {
+  const handlePaste = e => {
     const pastedData = e.clipboardData.getData('Text')
     if (pastedData.length === otp.length && /^\d+$/.test(pastedData)) {
       setErrors(false)
@@ -308,7 +314,7 @@ function OTPverify({ email, role, setIsOtpVerified,handleVerifyOtp }) {
     }
   }
 
-  const handleHiddenInputChange = (e) => {
+  const handleHiddenInputChange = e => {
     const pastedData = e.target.value
     if (pastedData.length === otp.length && /^\d+$/.test(pastedData)) {
       const newOtp = pastedData.split('')
@@ -322,9 +328,12 @@ function OTPverify({ email, role, setIsOtpVerified,handleVerifyOtp }) {
     setTimer(60)
     try {
       const result = await requestOtp(email, role)
-      if (result.hasError) {
-        return toastDisplayer('error', result.error)
+      if (!result?.Status) {
+        return toastDisplayer('error', result?.Error)
       }
+      // if (result.hasError) {
+      //   return toastDisplayer('error', result.error)
+      // }
       setOtp(['', '', '', '', '', ''])
       toastDisplayer('success', 'OTP sent successfully')
     } catch (error) {
@@ -334,13 +343,12 @@ function OTPverify({ email, role, setIsOtpVerified,handleVerifyOtp }) {
     }
   }
 
-
   return (
     <div className='otp-form'>
       <div
         className='otp-input-container'
         // onClick={handleFocusOnContainerClick}
-        onClick={(e) => {
+        onClick={e => {
           if (e.target === e.currentTarget) hiddenInputRef.current.focus()
         }}
       >
@@ -349,17 +357,16 @@ function OTPverify({ email, role, setIsOtpVerified,handleVerifyOtp }) {
             key={index}
             type='text'
             value={digit}
-            onChange={(e) => handleChange(e, index)}
-            onKeyDown={(e) => handleKeyDown(e, index)}
+            onChange={e => handleChange(e, index)}
+            onKeyDown={e => handleKeyDown(e, index)}
             onPaste={handlePaste}
             maxLength={1}
             className='otp-input'
-            ref={(el) => (inputRefs.current[index] = el)}
+            ref={el => (inputRefs.current[index] = el)}
             inputMode='numeric'
           />
         ))}
 
-       
         {/* Hidden input for mobile OTP paste */}
         <input
           ref={hiddenInputRef}
@@ -371,18 +378,25 @@ function OTPverify({ email, role, setIsOtpVerified,handleVerifyOtp }) {
             opacity: 0,
             pointerEvents: 'none',
             width: 0,
-            height: 0,
+            height: 0
           }}
           maxLength={otp.length}
         />
       </div>
-      {(errors && errorMessage) ?
-        (
-          <Alert fullWidth icon={false} severity='error' onClose={() => { setErrors(false)}}>
-            {errorMessage}
-          </Alert>
-        )
-        : "" }
+      {errors && errorMessage ? (
+        <Alert
+          fullWidth
+          icon={false}
+          severity='error'
+          onClose={() => {
+            setErrors(false)
+          }}
+        >
+          {errorMessage}
+        </Alert>
+      ) : (
+        ''
+      )}
 
       <Button
         fullWidth
@@ -392,9 +406,9 @@ function OTPverify({ email, role, setIsOtpVerified,handleVerifyOtp }) {
         sx={{
           backgroundColor: '#590A73',
           '&:hover': {
-            backgroundColor: '#4a055b',
+            backgroundColor: '#4a055b'
           },
-          textTransform: 'none',
+          textTransform: 'none'
         }}
       >
         Resend OTP {isResendDisabled && `(${timer}s)`}

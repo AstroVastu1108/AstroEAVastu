@@ -1,11 +1,12 @@
-import axios from "axios";
-const API_URL = process.env.NEXT_PUBLIC_APIURL1;
+import axios from 'axios'
+import axiosInstance from './axiosInstance'
+const API_URL = process.env.NEXT_PUBLIC_APIURL1
 
-export async function validateCaptcha(token){
+export async function validateCaptcha(token) {
   try {
-    const response = await axios.post(`https://localhost:7025/api/Auth/verify`,{
-      token:token
-    });
+    const response = await axios.post(`https://localhost:7025/api/Auth/verify`, {
+      token: token
+    })
 
     // const response = await fetch('https://www.google.com/recaptcha/api/siteverify', {
     //   method: 'POST',
@@ -16,189 +17,181 @@ export async function validateCaptcha(token){
     //   }).toString(),
     // });
     // console.log("NEXT_PUBLIC_GOOGLE_RECAPTCHA_SECRET_KEY : ",NEXT_PUBLIC_GOOGLE_RECAPTCHA_SECRET_KEY)
-    const data = response.data;
-    return data.success ? { success: true } : { success: false, error: 'reCAPTCHA verification failed' };
+    const data = response.data
+    return data.success ? { success: true } : { success: false, error: 'reCAPTCHA verification failed' }
   } catch (error) {
-    return { success: false, error: error.message };
+    return { success: false, error: error.message }
   }
 }
 
-export async function sendSignInRequest(payload,did) {
+export async function sendSignInRequest(payload, did) {
+  // const responseBody = {
+  //   responseData: null,
+  //   hasError: false,
+  //   error: null,
+  // };
+  try {
+
+
+    const response = await axiosInstance.post(`/Auth/LoginPost`,payload);
+    console.log(response.data.Status)
+    return {
+      isOk: response.data.Status,
+      data: response.data
+    }
+    // const response = await axios.post(`${API_URL}/Auth/LoginPost`, payload, {
+    //   headers: {
+    //     'M-DID': did
+    //   }
+    // })
+    // responseBody.responseData = response.data
+    if (response?.Status === true) {
+      return {
+        isOk: response.data.Status,
+        data: response.data
+      }
+    } else {
+      return {
+        isOk: false,
+        data: response.data
+      }
+    }
+  } catch (error) {
+    return {
+      isOk: false,
+      data: (responseBody.errorMessage =
+        error.response?.data?.statusMsg || error.message || error.response?.data?.errors)
+    }
+  }
+}
+
+export async function registerCompnay(payload, did) {
   const responseBody = {
     responseData: null,
     hasError: false,
-    error: null,
-  };
-    try {
-     
+    error: null
+  }
+  try {
+    // console.log("Data compnay : ",company)
+    // const payload = {
+    //   userType: "CompanyMaster",
+    //   email:company.email,
+    //   firstName:company.fname,
+    //   lastName:company.lname,
+    //   // password: company.password,
+    //   businessName:company.businessname,
+    //   businessLocation:company.businesslocation,
+    //   userAvatar:company.profilePicture,
+    //   phone:company.phone,
 
-      const response = await axios.post(`${API_URL}/Auth/LoginPost`, payload,{
-        headers: {
-            "M-DID": did  
-        }
-    });
-      responseBody.responseData = response.data;
-      if (response.status === 200) {
-        return {
-          isOk: true,
-          data: response.data,
-        };
-      }else{
-        return {
-          isOk: false,
-          data: response.data,
-        };
+    // }
+
+    // const response = await axios.post(`${API_URL}/Auth/Registration`, payload, {
+    //   headers: {
+    //     'M-DID': did
+    //   }
+    // })
+    const response = await axiosInstance.post(`Auth/Registration`,payload);
+    console.log('response : ', response)
+    return {
+      isOk: response.data.Status,
+      data: response.data
+    }
+    responseBody.responseData = response.data
+    if (response.status === 200) {
+      return {
+        isOk: true,
+        data: response.data.Result
       }
-    } catch (error) {
+    } else {
       return {
         isOk: false,
-        data: responseBody.errorMessage =
-        error.response?.data?.statusMsg ||
-        error.message ||
-        error.response?.data?.errors
-      };
-    }
-  }
-
-export async function registerCompnay(payload,did) {
-  const responseBody = {
-    responseData: null,
-    hasError: false,
-    error: null,
-  };
-    try {
-      // console.log("Data compnay : ",company)
-      // const payload = {
-      //   userType: "CompanyMaster",
-      //   email:company.email,
-      //   firstName:company.fname,
-      //   lastName:company.lname,
-      //   // password: company.password,
-      //   businessName:company.businessname,
-      //   businessLocation:company.businesslocation,
-      //   userAvatar:company.profilePicture,
-      //   phone:company.phone,
-
-      // }
-
-      const response = await axios.post(`${API_URL}/Auth/Registration`, payload,{
-        headers: {
-            "M-DID": did  
-        }});
-      console.log("response : ",response)
-      responseBody.responseData = response.data;
-      if (response.status === 200) {
-        return {
-          isOk: true,
-          data: response.data.Result,
-        };
-      }else{
-        return {
-          isOk: false,
-          data: response.data,
-        };
+        data: response.data
       }
-    } catch (error) {
-      return {
-        isOk: false,
-        data: responseBody.errorMessage =
-        error.response?.data?.statusMsg ||
-        error.message ||
-        error.response?.data?.errors
-      };
+    }
+  } catch (error) {
+    return {
+      isOk: false,
+      data: (responseBody.errorMessage =
+        error.response?.data?.statusMsg || error.message || error.response?.data?.errors)
     }
   }
-
-
+}
 
 export const requestOtp = async (email, role) => {
   var payload = {
     eMail: email,
     userType: role
-    }
-
-  const responseBody = {
-    responseData: null,
-    hasError: false,
-    error: null,
-  };
-  try {
-    const response = await axios.post(
-      `${API_URL}/Otp/GenerateOTP`,
-      payload
-    );
-    responseBody.response = response.data;
-
-    return responseBody;
-  } catch (error) {
-    responseBody.error =
-      error.response?.data?.statusMsg ||
-      error.message ||
-      error.response?.data?.errors;
-    responseBody.hasError = true;
-    return responseBody;
   }
-};
 
-export const requestOtpNewUser = async (email,firstName,lastname, role) => {
+  // const responseBody = {
+  //   responseData: null,
+  //   hasError: false,
+  //   error: null,
+  // };
+  try {
+    const response = await axios.post(`${API_URL}/Otp/GenerateOTP`, payload)
+    console.log('====>', response.data)
+    // responseBody.response = response.data;
+
+    return response.data
+  } catch (error) {
+    responseBody.error = error.response?.data?.statusMsg || error.message || error.response?.data?.errors
+    responseBody.hasError = true
+    return responseBody
+  }
+}
+
+export const requestOtpNewUser = async (email, firstName, lastname, role) => {
   var payload = {
     eMail: email,
-    userType:role,
-    LastName:lastname,
-    FirstName:firstName
-    }
-
-  const responseBody = {
-    responseData: null,
-    hasError: false,
-    error: null,
-  };
-  try {
-    const response = await axios.post(
-      `${API_URL}/Otp/GenerateOTP`,
-      payload
-    );
-    responseBody.response = response.data;
-
-    return responseBody;
-  } catch (error) {
-    responseBody.error =
-      error.response?.data?.statusMsg ||
-      error.message ||
-      error.response?.data?.errors;
-    responseBody.hasError = true;
-    return responseBody;
+    userType: role,
+    LastName: lastname,
+    FirstName: firstName
   }
-};
+
+  // const responseBody = {
+  //   responseData: null,
+  //   hasError: false,
+  //   error: null
+  // }
+  try {
+    const response = await axiosInstance.post(`/Otp/GenerateOTP`,payload);
+    // responseBody.response = response.data
+
+    return response.data
+  } catch (error) {
+    responseBody.error = error.response?.data?.statusMsg || error.message || error.response?.data?.errors
+    responseBody.hasError = true
+    return responseBody
+  }
+}
 
 export const VerifyOtp = async (email, otp, role) => {
   const responseBody = {
     responseData: null,
     hasError: false,
-    errorMessage: null,
-  };
+    errorMessage: null
+  }
 
   const payload = {
     email: email,
     verifyOTP: otp,
-    userType: role,
-  };
+    userType: role
+  }
 
   try {
-    const response = await axios.post(`${API_URL}/Otp/VerifyOTP`, payload);
-    responseBody.responseData = response.data;
+    const response = await axios.post(`${API_URL}/Otp/VerifyOTP`, payload)
+    responseBody.responseData = response.data
 
     if (response.data.Status === 400) {
-      responseBody.hasError = true;
-      responseBody.errorMessage = response.data.statusMsg;
+      responseBody.hasError = true
+      responseBody.errorMessage = response.data.statusMsg
     }
-    return responseBody;
+    return responseBody
   } catch (error) {
-    responseBody.hasError = true;
-    responseBody.errorMessage =
-      error.response?.data?.statusMsg ||
-      error.response?.data?.errors ||
-      error.message;
-    return responseBody;
+    responseBody.hasError = true
+    responseBody.errorMessage = error.response?.data?.statusMsg || error.response?.data?.errors || error.message
+    return responseBody
   }
-};
+}

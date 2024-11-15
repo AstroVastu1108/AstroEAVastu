@@ -72,11 +72,11 @@ const RegisterPage = ({ mode }) => {
         const recaptchaData = await recaptchaResponse.json();
         if (recaptchaData.success) {
           setIsDisable(true)
-          const result = await requestOtpNewUser(userData?.email,userData?.fname,userData?.lname, "register")
-          if (result.hasError) {
+          const result = await requestOtpNewUser(userData?.email, userData?.fname, userData?.lname, "register")
+          if (!result?.Status) {
             setIsDisable(false);
             setIsOtpVerified("pending")
-            return setErrorMessage(result.error || "An error occurred.");
+            return setErrorMessage(result?.Error || "An error occurred.");
           } else {
             setIsDisable(false);
             setIsOtpVerified("sent")
@@ -153,7 +153,7 @@ const RegisterPage = ({ mode }) => {
       // setErrorMessage("Last name is required.");
     } else if (newErrors.email) {
       emailRef.current.focus();
-      if(userData.email.trim() != ""){
+      if (userData.email.trim() != "") {
         setErrorMessage("Enter a valid email address.");
       }
     } else {
@@ -189,7 +189,7 @@ const RegisterPage = ({ mode }) => {
 
           // setActiveStep(0)
           setIsOtpVerified("pending")
-          return setErrorMessage(result.message)
+          return setErrorMessage(result?.Error)
         } else {
           setIsDisable(false);
           setUserData({
@@ -225,9 +225,9 @@ const RegisterPage = ({ mode }) => {
     },
   });
 
-  const handleVerifyOtp = async (otp)=>{
+  const handleVerifyOtp = async (otp) => {
     try {
-      console.log("OTP : ",otp)
+      console.log("OTP : ", otp)
       if (userData.email == "") {
         setErrors(true)
         emailRef.current.focus();
@@ -244,27 +244,32 @@ const RegisterPage = ({ mode }) => {
       setErrors(false)
       setIsDisable(true)
       const payload = {
-        FirstName : userData?.fname,
-        LastName : userData?.lname,
+        FirstName: userData?.fname,
+        LastName: userData?.lname,
         email: userData?.email,
         password: userData?.password,
         phone: userData?.phone,
         businessname: userData?.businessname,
         businesslocation: userData?.businesslocation,
-        UserAvatar : userData?.profilePicture,
-        userType  : "CompanyMaster",
+        UserAvatar: userData?.profilePicture,
+        userType: "CompanyMaster",
         "verifyoTP": otp
       }
       setLoading(true);
-      const result = await companyRegistration(payload)
-      if (result.error) {
+      // const result = await companyRegistration(payload)
+      const result = await registerCompnay(payload)
+      if (!result?.Status) {
         setLoading(false);
         setIsDisable(false);
 
         // setActiveStep(0)
-        setIsOtpVerified("pending")
-        return setErrorMessage(result.message)
+        setIsOtpVerified("error")
+        setErrors(true);
+        console.log(result)
+        console.log(result?.data?.Error)
+        return setErrorMessage(result?.data?.Error)
       } else {
+        companyRegistration(result);
         setIsDisable(false);
         setUserData({
           email: '',
@@ -275,6 +280,7 @@ const RegisterPage = ({ mode }) => {
           profilePicture: null
         })
         const firstAccessibleItem = navigation.find(item => item);
+        console.log(firstAccessibleItem)
         return router.push(firstAccessibleItem.href);
       }
     } catch (error) {
@@ -335,113 +341,119 @@ const RegisterPage = ({ mode }) => {
               ) : ""
               }
 
-              <div className='flex flex-col gap-2'>
-                {isOtpVerified == "pending" || isOtpVerified == "verifiedd" ? (
-                  <>
-                    <div style={{ display: "flex", flexDirection: "row", gap: "6px" }}>
-                      <TextField
-                        fullWidth
-                        autoFocus
-                        label='First Name'
-                        // placeholder='Enter your email'
-                        name='firstname'
-                        value={userData.fname}
-                        onChange={e => handleInputChange('fname', e.target.value)}
-                        error={Boolean(errors.fname)}
-                        inputRef={fnameRef}
-                      // helperText={errors.email && 'Enter a valid email address.'}
-                      />
-                      <TextField
-                        fullWidth
-                        label='Last Name'
-                        // placeholder='Enter your email'
-                        name='lastname'
-                        value={userData.lname}
-                        onChange={e => handleInputChange('lname', e.target.value)}
-                        error={Boolean(errors.lname)}
-                        inputRef={lnameRef}
-                      // helperText={errors.email && 'Enter a valid email address.'}
-                      />
-                    </div>
-                    <TextField
-                      fullWidth
-                      label='Email'
-                      // placeholder='Enter your email'
-                      name='email'
-                      value={userData.email}
-                      onChange={e => handleInputChange('email', e.target.value.toLowerCase())}
-                      error={Boolean(errors.email)}
-                      inputRef={emailRef}
-                    // helperText={errors.email && 'Enter a valid email address.'}
-                    />
-
-                  </>
-                ) : (
-                  <>
-                    <div className='flex flex-col gap-4'>
-                      <div className='flex flex-col gap-1'>
-                        <Typography variant='h5'>{`One Time Security`}</Typography>
-                        <Typography>Please enter the verification code sent to <span style={{ fontWeight: "600", color: "#590a73" }}>{userData?.email}</span></Typography>
-                      </div>
-                      <OTPverify email={userData?.email} role={"register"} setIsOtpVerified={setIsOtpVerified} handleVerifyOtp={handleVerifyOtp}/>
-                    </div>
-                  </>)
-                }
-
-                {errorMessage && (
-                  <Alert severity='error'
-                    onClose={() => setErrorMessage(null)}
-                  >
-                    {errorMessage}
-                  </Alert>
-                )}
-                <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-
-                  <Box sx={{ flex: '1 1 auto' }} />
+              <form>
+                <div className='flex flex-col gap-2'>
                   {isOtpVerified == "pending" || isOtpVerified == "verifiedd" ? (
-                    <LoadingButton
-                      fullWidth
-                      variant='contained'
-                      onClick={handleComplete}
-                      //  sx={{ width: '132px' }}
-                      loading={isDisable}
-                      loadingPosition="start"
-                      type='submit'
-                    >
-                      {isDisable ? "Loading..." : "Get Started"}
-                    </LoadingButton>
-                  ) :
-                    ""
+                    <>
+                      <div style={{ display: "flex", flexDirection: "row", gap: "6px" }}>
+                        <TextField
+                          fullWidth
+                          autoFocus
+                          label='First Name'
+                          // placeholder='Enter your email'
+                          name='firstname'
+                          value={userData.fname}
+                          onChange={e => handleInputChange('fname', e.target.value)}
+                          // error={Boolean(errors.fname)}
+                          error={userData.fname.length > 0 && userData.fname.length < 3}
+                          inputRef={fnameRef}
+                        // helperText={errors.email && 'Enter a valid email address.'}
+                        />
+                        <TextField
+                          fullWidth
+                          label='Last Name'
+                          // placeholder='Enter your email'
+                          name='lastname'
+                          value={userData.lname}
+                          onChange={e => handleInputChange('lname', e.target.value)}
+                          // error={Boolean(errors.lname)}
+                          error={userData.lname.length > 0 && userData.lname.length < 3}
+                          inputRef={lnameRef}
+                        // helperText={errors.email && 'Enter a valid email address.'}
+                        />
+                      </div>
+                      <TextField
+                        style={{ paddingTop: "8px" }}
+                        fullWidth
+                        label='Email'
+                        // placeholder='Enter your email'
+                        name='email'
+                        value={userData.email}
+                        onChange={e => handleInputChange('email', e.target.value.toLowerCase())}
+                        error={Boolean(errors.email)}
+                        inputRef={emailRef}
+                      // helperText={errors.email && 'Enter a valid email address.'}
+                      />
+
+                    </>
+                  ) : (
+                    <>
+                      <div className='flex flex-col gap-4'>
+                        <div className='flex flex-col gap-1'>
+                          <Typography variant='h5'>{`One Time Security`}</Typography>
+                          <Typography>Please enter the verification code sent to <span style={{ fontWeight: "600", color: "#590a73" }}>{userData?.email}</span></Typography>
+                        </div>
+                        <OTPverify email={userData?.email} role={"register"} setIsOtpVerified={setIsOtpVerified} handleVerifyOtp={handleVerifyOtp} Errors={errors} ErrorMessageLogin={errorMessage} />
+                      </div>
+                    </>)
                   }
-                </Box>
-                <div className='flex justify-center items-center flex-wrap' style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
-                  <div className='flex flex-wrap gap-2'>
-                    <Typography>Already have an account? </Typography>
-                    <Typography color='primary' style={{ cursor: 'pointer' }} onClick={() => {
-                      router.push('/login')
-                    }}>
-                      Login
+
+                  {/* {errorMessage && (
+                    <Alert severity='error'
+                      onClose={() => setErrorMessage(null)}
+                    >
+                      {errorMessage}
+                    </Alert>
+                  )} */}
+                  <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+
+                    <Box sx={{ flex: '1 1 auto' }} />
+                    {isOtpVerified == "pending" || isOtpVerified == "verifiedd" ? (
+                      <LoadingButton
+                        fullWidth
+                        variant='contained'
+                        onClick={handleComplete}
+                        //  sx={{ width: '132px' }}
+                        loading={isDisable}
+                        loadingPosition="start"
+                        type='submit'
+                      >
+                        {isDisable ? "Loading..." : "Get Started"}
+                      </LoadingButton>
+                    ) :
+                      ""
+                    }
+                  </Box>
+                  <div className='flex justify-center items-center flex-wrap' style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
+                    <div className='flex flex-wrap gap-2'>
+                      <Typography>Already have an account? </Typography>
+                      <Typography color='primary' style={{ cursor: 'pointer' }} onClick={() => {
+                        router.push('/login')
+                      }}>
+                        Login
+                      </Typography>
+                    </div>
+
+                    <Typography style={{ fontSize: "10px" }}>By clicking
+                      <Link href="#" onClick={(e) => e.preventDefault()} style={{ fontWeight: "600", color: "#590a73" }}> ‘Get started’ </Link>
+                      you are agreeing to our
+                      <Link href="#" onClick={(e) => e.preventDefault()} style={{ fontWeight: "600", color: "#590a73" }}> Terms of Use </Link>
+                      and
+                      <Link href="#" onClick={(e) => e.preventDefault()} style={{ fontWeight: "600", color: "#590a73" }}> Privacy Policy.
+                      </Link>
                     </Typography>
-                  </div>
+                    <div style={{ display: 'none' }}>
+                      <ReCAPTCHA
+                        ref={recaptchaRef}
+                        sitekey={process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_SITE_KEY}
+                        size="invisible"
+                      />
+                    </div>
 
-                  <Typography style={{ fontSize: "10px" }}>By clicking
-                    <Link href="#" onClick={(e) => e.preventDefault()} style={{ fontWeight: "600", color: "#590a73" }}> ‘Get started’ </Link>
-                    you are agreeing to our
-                    <Link href="#" onClick={(e) => e.preventDefault()} style={{ fontWeight: "600", color: "#590a73" }}> Terms of Use </Link>
-                    and
-                    <Link href="#" onClick={(e) => e.preventDefault()} style={{ fontWeight: "600", color: "#590a73" }}> Privacy Policy.
-                    </Link>
-                  </Typography>
-                  <div style={{ display: 'none' }}>
-                    <ReCAPTCHA
-                      ref={recaptchaRef}
-                      sitekey={process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_SITE_KEY}
-                      size="invisible"
-                    />
                   </div>
-
                 </div>
-              </div>
+              </form>
+
             </div>
           </div>
         </div>

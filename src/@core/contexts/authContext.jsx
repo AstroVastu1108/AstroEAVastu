@@ -20,7 +20,6 @@ const getDID = () => {
         .then(result => {
             // This is the visitor identifier:
             const UniqueId = result.visitorId
-            console.log(UniqueId)
             Cookies.set('M-DID', transformString(UniqueId), { expires: 1 });
             // alert(UniqueId)
         })
@@ -108,23 +107,17 @@ export const AuthProvider = ({ children }) => {
 
 
 
-    const loginData = async (userData) => {
+    const loginData = async (result) => {
         // console.log("Context is called", userData)
-        const result = await sendSignInRequest(userData,Cookies.get('M-DID'));
-        console.log("result : ",result)
+        // const result = await sendSignInRequest(userData,Cookies.get('M-DID'));
         // const result = await sendSignInRequest(userData.email, userData.password);
         if (result.isOk) {
             const responseData = result.data;
-            console.log("responseData : ",responseData)
-            console.log("responseData : ",responseData.Result)
-            console.log("responseData : ",responseData["Result"])
             setUser(responseData.Result)
             const { useremail, userRole,ClientID,InstanceID,SecureRoute,userAvatar } = responseData.Result;
-            console.log("responseData.result : ",responseData.Result)
             const authData = {
                 useremail, userRole,ClientID,InstanceID,SecureRoute
             };
-            console.log("AuthData : ",authData)
             Cookies.set(`astrovastu_auth_useremail`, useremail, { expires: 1 });
             Cookies.set(`astrovastu_auth_userRole`, userRole, { expires: 1 });
             Cookies.set(`astrovastu_auth_ClientID`, ClientID, { expires: 1 });
@@ -145,9 +138,9 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
-    const companyRegistration = async (userData) => {
-        const result = await registerCompnay(userData,Cookies.get('M-DID'));
-        console.log("result : ",result)
+    const companyRegistration = async (result) => {
+        // const result = await registerCompnay(userData,Cookies.get('M-DID'));
+        // console.log("================> result: ", result)
         if (result.isOk) {
             setUser(result.data)
             const { useremail, userRole,ClientID,InstanceID,SecureRoute,userAvatar } = result.data;

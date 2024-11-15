@@ -31,7 +31,7 @@ import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplaye
 import { TextField } from '@mui/material'
 import Loader from '@/components/common/Loader/Loader'
 import OTPverify from '@/components/common/OTPVerify/OTPverify'
-import { requestOtp, validateCaptcha } from '@/app/Server/API/auth'
+import { requestOtp, sendSignInRequest, validateCaptcha } from '@/app/Server/API/auth'
 import { LoadingButton } from '@mui/lab'
 import Cookies from 'js-cookie';
 import { navigation } from '@/app-navigation';
@@ -87,7 +87,6 @@ const LoginV2 = ({ mode }) => {
           router.push(firstAccessibleItem.href);
         }
       } catch (error) {
-        // console.error('Failed to parse authData:', error);
       }
     }
   }, []);
@@ -167,12 +166,12 @@ const LoginV2 = ({ mode }) => {
         }));
       }
       setIsDisable(true)
-      const result = await requestOtp(formData?.email, "login")
-      if (result.hasError) {
+      const result = await requestOtp(formData?.email, "login");
+      if (!result?.Status) {
         setIsDisable(false);
         setIsOtpVerified("pending")
         setErrors(true)
-        return setErrorMessage(result.error)
+        return setErrorMessage(result?.Error)
         // return toastDisplayer("error", result.error)
       } else {
         setIsDisable(false);
@@ -260,15 +259,16 @@ const LoginV2 = ({ mode }) => {
         "email": formData.email,
         "verifyoTP": otp
       }
-      const result = await loginData(payload)
-      console.log("result : ",result)
-      if (result.error) {
+      const result = await sendSignInRequest(payload);
+      if (!result?.data?.Status) {
         setIsDisable(false);
         setLoading(false);
-        setIsOtpVerified("pending")
-        setErrors(true)
-        return setErrorMessage(result.message)
+        setIsOtpVerified("error")
+        setErrors(true);
+        return setErrorMessage(result?.data?.Error)
       } else {
+        loginData(result);
+        // setIsOtpVerified("verifiedd")
         const firstAccessibleItem = navigation.find(item => item);
         const prevPath = Cookies.get("prevPath")
         if (prevPath) {
@@ -335,6 +335,7 @@ const LoginV2 = ({ mode }) => {
               <Link href="#" onClick={(e) => e.preventDefault()} className='block-start-5 sm:block-start-[33px] inline-start-6 sm:inline-start-[38px]'>
                 <Logo color={'primary'} isSmall={false} width={hidden ? "65mm" : "45mm"} />
               </Link>
+              {/* {isOtpVerified == "pending" || isOtpVerified == "verifiedd" ? ( */}
               {isOtpVerified == "pending" || isOtpVerified == "verifiedd" ? (
                 <>
 
@@ -425,7 +426,7 @@ const LoginV2 = ({ mode }) => {
                       <Typography>Please enter the verification code sent to <span style={{ fontWeight: "600", color: "#590a73" }}>{formData?.email}</span></Typography>
                     </div>
                   </div>
-                  <OTPverify email={formData?.email} role={"login"} setIsOtpVerified={setIsOtpVerified} handleVerifyOtp={handleVerifyOtp} />
+                  <OTPverify email={formData?.email} role={"login"} setIsOtpVerified={setIsOtpVerified} handleVerifyOtp={handleVerifyOtp} Errors={errors} ErrorMessageLogin={errorMessage}/>
                 </>
 
               }
