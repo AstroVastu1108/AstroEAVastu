@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import AppReactDatepicker from '@/components/datePicker/AppReactDatepicker';
 import { CreateKundli, UpdateKundli } from '@/app/Server/API/kundliAPI';
 import "./addKundli.css"
+import { convertIconSetInfo } from '@iconify/utils';
 
 function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserData }) {
 
@@ -169,8 +170,11 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
         BirthDate: birthDate,
         BirthTime: birthTime,
         Prakriti: userData.prakriti || '',
-        City: userData.CityID?.FormattedCity
+        City: userData.CityID?.FormattedCity,
+        TransitTime: "",
+        TransitDate: ""
       }
+      console.log(formattedData);
       if (!userData.isUpdate) {
         setIsDisable(false);
         const response = await CreateKundli(formattedData)

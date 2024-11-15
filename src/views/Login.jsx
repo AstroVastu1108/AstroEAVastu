@@ -74,7 +74,7 @@ const LoginV2 = ({ mode }) => {
 
       // accessToken: Cookies.get('astrovastu_auth_accessToken'),
       userRole: Cookies.get('astrovastu_auth_userRole'),
-      DID: Cookies.get('DID'),
+      DID: Cookies.get('M-DID'),
       // expirationTime: Cookies.get('astrovastu_auth_expirationTime'),
       // refreshToken: Cookies.get('astrovastu_auth_refreshToken')
     };

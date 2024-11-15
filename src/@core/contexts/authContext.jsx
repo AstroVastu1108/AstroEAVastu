@@ -118,23 +118,19 @@ export const AuthProvider = ({ children }) => {
             console.log("responseData : ",responseData)
             console.log("responseData : ",responseData.Result)
             console.log("responseData : ",responseData["Result"])
-            setUser(responseData.result)
-            const { useremail, userRole, transactionID,ClientID,InstanceID,SecureRoute,userAvatar } = responseData.Result;
+            setUser(responseData.Result)
+            const { useremail, userRole,ClientID,InstanceID,SecureRoute,userAvatar } = responseData.Result;
             console.log("responseData.result : ",responseData.Result)
             const authData = {
-                useremail, userRole, transactionID,ClientID,InstanceID,SecureRoute
+                useremail, userRole,ClientID,InstanceID,SecureRoute
             };
             console.log("AuthData : ",authData)
-            Object.entries(authData).map(([key, value]) => {
-                console.log("AuthData key: ",key)
-                console.log("AuthData value: ",value)
-
-                try {
-                    Cookies.set(`astrovastu_auth_${key}`, value, { expires: 1 });
-                } catch (error) {
-                    // console.error("error: ", error);
-                }
-            });
+            Cookies.set(`astrovastu_auth_useremail`, useremail, { expires: 1 });
+            Cookies.set(`astrovastu_auth_userRole`, userRole, { expires: 1 });
+            Cookies.set(`astrovastu_auth_ClientID`, ClientID, { expires: 1 });
+            Cookies.set(`astrovastu_auth_InstanceID`, InstanceID, { expires: 1 });
+            Cookies.set(`astrovastu_auth_SecureRoute`, SecureRoute, { expires: 1 });
+            Cookies.set(`astrovastu_auth_userAvatar`, userAvatar, { expires: 1 });
             setIsLoggedIn(true);
             return {
                 error: false,
