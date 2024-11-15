@@ -49,6 +49,7 @@ const RegisterPage = ({ mode }) => {
   const authBackground = useImageVariant(mode)
 
   const handleComplete = async () => {
+    console.log("validateFields : ",validateFields())
     if (validateFields()) {
 
       try {
@@ -139,8 +140,8 @@ const RegisterPage = ({ mode }) => {
     let newErrors = {};
 
     newErrors = {
-      fname: !userData.fname.trim(),
-      lname: !userData.lname.trim(),
+      fname: !userData.fname.trim() || (userData.fname.length > 0 && userData.fname.length < 3),
+      lname: !userData.lname.trim() || (userData.lname.length > 0 && userData.lname.length < 3),
       email: !userData.email.trim() || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(userData.email),
       // Add other validations here, such as password and phone if needed
     };
@@ -258,7 +259,8 @@ const RegisterPage = ({ mode }) => {
       setLoading(true);
       // const result = await companyRegistration(payload)
       const result = await registerCompnay(payload)
-      if (!result?.Status) {
+      console.log("result : ",result)
+      if (!result?.isOk) {
         setLoading(false);
         setIsDisable(false);
 
@@ -341,7 +343,9 @@ const RegisterPage = ({ mode }) => {
               ) : ""
               }
 
-              <form>
+              <form onSubmit={e => {
+                      e.preventDefault()
+                    }}>
                 <div className='flex flex-col gap-2'>
                   {isOtpVerified == "pending" || isOtpVerified == "verifiedd" ? (
                     <>
@@ -355,7 +359,9 @@ const RegisterPage = ({ mode }) => {
                           value={userData.fname}
                           onChange={e => handleInputChange('fname', e.target.value)}
                           // error={Boolean(errors.fname)}
-                          error={userData.fname.length > 0 && userData.fname.length < 3}
+                          error={Boolean(errors.fname) || (userData.fname.length > 0 && userData.fname.length < 3)}
+
+                          // error={userData.fname.length > 0 && userData.fname.length < 3}
                           inputRef={fnameRef}
                         // helperText={errors.email && 'Enter a valid email address.'}
                         />
@@ -366,14 +372,18 @@ const RegisterPage = ({ mode }) => {
                           name='lastname'
                           value={userData.lname}
                           onChange={e => handleInputChange('lname', e.target.value)}
-                          // error={Boolean(errors.lname)}
-                          error={userData.lname.length > 0 && userData.lname.length < 3}
+                          error={Boolean(errors.lname) || (userData.lname.length > 0 && userData.lname.length < 3)}
+                          // error={Boolean(errors.fname) || (userData.fname.length > 0 && userData.fname.length < 3)}
+
+                          // error={userData.lname.length > 0 && userData.lname.length < 3}
                           inputRef={lnameRef}
                         // helperText={errors.email && 'Enter a valid email address.'}
                         />
                       </div>
+                      <div className='pt-2'>
+
                       <TextField
-                        style={{ paddingTop: "8px" }}
+
                         fullWidth
                         label='Email'
                         // placeholder='Enter your email'
@@ -384,7 +394,14 @@ const RegisterPage = ({ mode }) => {
                         inputRef={emailRef}
                       // helperText={errors.email && 'Enter a valid email address.'}
                       />
-
+                      </div>
+                       {errorMessage && (
+                    <Alert severity='error'
+                      onClose={() => setErrorMessage(null)}
+                    >
+                      {errorMessage}
+                    </Alert>
+                  )}
                     </>
                   ) : (
                     <>
@@ -398,13 +415,7 @@ const RegisterPage = ({ mode }) => {
                     </>)
                   }
 
-                  {/* {errorMessage && (
-                    <Alert severity='error'
-                      onClose={() => setErrorMessage(null)}
-                    >
-                      {errorMessage}
-                    </Alert>
-                  )} */}
+
                   <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
 
                     <Box sx={{ flex: '1 1 auto' }} />

@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }) => {
     },[])
 
     const intervalDID = () => {
-        const DID = Cookies.get('DID');
+        const DID = Cookies.get('M-DID');
         const DID_INCR = Cookies.get('DID-INCR');
         if (DID) {
             getDID();
@@ -114,16 +114,16 @@ export const AuthProvider = ({ children }) => {
         if (result.isOk) {
             const responseData = result.data;
             setUser(responseData.Result)
-            const { useremail, userRole,ClientID,InstanceID,SecureRoute,userAvatar } = responseData.Result;
+            const { useremail, userRole,ClientID,InstanceID,SecureRoute } = responseData.Result;
             const authData = {
                 useremail, userRole,ClientID,InstanceID,SecureRoute
             };
             Cookies.set(`astrovastu_auth_useremail`, useremail, { expires: 1 });
-            Cookies.set(`astrovastu_auth_userRole`, userRole, { expires: 1 });
+            // Cookies.set(`astrovastu_auth_userRole`, userRole, { expires: 1 });
             Cookies.set(`astrovastu_auth_ClientID`, ClientID, { expires: 1 });
             Cookies.set(`astrovastu_auth_InstanceID`, InstanceID, { expires: 1 });
             Cookies.set(`astrovastu_auth_SecureRoute`, SecureRoute, { expires: 1 });
-            Cookies.set(`astrovastu_auth_userAvatar`, userAvatar, { expires: 1 });
+            // Cookies.set(`astrovastu_auth_userAvatar`, userAvatar, { expires: 1 });
             setIsLoggedIn(true);
             return {
                 error: false,
@@ -142,16 +142,15 @@ export const AuthProvider = ({ children }) => {
         // const result = await registerCompnay(userData,Cookies.get('M-DID'));
         // console.log("================> result: ", result)
         if (result.isOk) {
-            setUser(result.data)
-            const { useremail, userRole,ClientID,InstanceID,SecureRoute,userAvatar } = result.data;
+            setUser(result.data.Result)
+            const { useremail,ClientID,InstanceID,SecureRoute } = result.data.Result;
             const expirationTime = new Date().getTime() + 5 * 60 * 1000;
 
             const authData = {
-                useremail, userRole,ClientID,InstanceID,SecureRoute,userAvatar
+                useremail,ClientID,InstanceID,SecureRoute
             };
 
             Cookies.set(`astrovastu_auth_useremail`, useremail, { expires: 1 });
-            Cookies.set(`astrovastu_auth_userRole`, userRole, { expires: 1 });
             Cookies.set(`astrovastu_auth_ClientID`, ClientID, { expires: 1 });
             Cookies.set(`astrovastu_auth_InstanceID`, InstanceID, { expires: 1 });
             Cookies.set(`astrovastu_auth_SecureRoute`, SecureRoute, { expires: 1 });
@@ -174,12 +173,6 @@ export const AuthProvider = ({ children }) => {
         try {
             const decryptedAuthData = {
                 useremail: Cookies.get('astrovastu_auth_useremail'),
-
-                // accessToken: Cookies.get('astrovastu_auth_accessToken'),
-                userRole: Cookies.get('astrovastu_auth_userRole'),
-                // expirationTime: Cookies.get('astrovastu_auth_expirationTime'),
-                // refreshToken: Cookies.get('astrovastu_auth_refreshToken'),
-                transactionID: Cookies.get('astrovastu_auth_transactionID')
             };
 
             if (decryptedAuthData) {
@@ -211,7 +204,7 @@ export const AuthProvider = ({ children }) => {
             // Cookies.remove('astrovastu_auth_expirationTime'),
             // Cookies.remove('astrovastu_auth_refreshToken')
 
-        Cookies.remove('astrovastu_auth_transactionID')
+        // Cookies.remove('astrovastu_auth_transactionID')
         setUser(null);
     };
 
