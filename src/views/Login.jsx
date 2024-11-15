@@ -71,6 +71,7 @@ const LoginV2 = ({ mode }) => {
   useEffect(() => {
     const authData = {
       useremail: Cookies.get('astrovastu_auth_useremail'),
+
       // accessToken: Cookies.get('astrovastu_auth_accessToken'),
       userRole: Cookies.get('astrovastu_auth_userRole'),
       DID: Cookies.get('DID'),
@@ -79,13 +80,14 @@ const LoginV2 = ({ mode }) => {
     };
 
     if (authData.useremail && authData.DID && authData.userRole) {
+
       try {
         const firstAccessibleItem = navigation.find(item => item);
         if (firstAccessibleItem) {
           router.push(firstAccessibleItem.href);
         }
       } catch (error) {
-        console.error('Failed to parse authData:', error);
+        // console.error('Failed to parse authData:', error);
       }
     }
   }, []);

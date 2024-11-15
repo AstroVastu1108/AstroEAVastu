@@ -2,7 +2,7 @@ import { Box, createTheme, ThemeProvider } from '@mui/material';
 import { DataGrid, GridToolbarContainer } from '@mui/x-data-grid'
 import React from 'react'
 
-function DashaDetails({ title, DashaData, handleDashadbClick }) {
+function DashaDetails({ title, DashaData, handleDashadbClick, divref }) {
 
   const customTheme = createTheme({
     components: {
@@ -37,17 +37,17 @@ function DashaDetails({ title, DashaData, handleDashadbClick }) {
   const columns = [
     {
       field: 'Planet', headerName: 'Planet', headerClassName: 'rowheader', flex: 1,
-      // minWidth: 80
+      minWidth: 80
       // headerAlign: 'center', textAlign:'center'
     },
     {
       field: 'StartDt', headerName: 'Beginning', headerClassName: 'rowheader', flex: 1,
-      // minWidth: 100
+      minWidth: 100
       // headerAlign: 'center'
     },
     {
       field: 'EndDt', headerName: 'Ending', headerClassName: 'rowheader', flex: 1,
-      // minWidth: 100
+      minWidth: 100
       // headerAlign: 'center'
     },
   ];
@@ -63,10 +63,21 @@ function DashaDetails({ title, DashaData, handleDashadbClick }) {
       handleDashadbClick(e.row);
   }
 
+  const rowHeight = ()=>
+  {
+    if (divref.current) {
+      const height = ((divref.current.offsetHeight)-30)/9;
+      return height;
+    }
+    return 25
+  }
+
+
+
   return (
     <>
       <Box
-        width={"100%"}
+        // width={"30%"}
         sx={{
           '& .MuiDataGrid-root': {
             borderRadius: 0, // Remove border radius
@@ -103,12 +114,18 @@ function DashaDetails({ title, DashaData, handleDashadbClick }) {
           },
           '& .MuiDataGrid-scrollbar--vertical': {
             display: 'none'
+          },
+          '& .MuiDataGrid-filler':{
+            display:'none'
           }
         }}
       >
         <ThemeProvider theme={customTheme}>
 
           <DataGrid
+              getRowHeight={rowHeight}
+
+          //  rowHeight={rowHeight}
             rows={rowsDasha}
             columns={columns}
             pageSize={rowsDasha.length} // Show all rows
@@ -118,8 +135,8 @@ function DashaDetails({ title, DashaData, handleDashadbClick }) {
             onRowDoubleClick={handleDashaClick}
             disableColumnSorting
             disableColumnMenu
-            rowHeight={30}
-            columnHeaderHeight={38}
+            // rowHeight={25}
+            columnHeaderHeight={30}
             disableColumnResize
             disableRowSelectionOnClick
             hideFooterPagination={true}

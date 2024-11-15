@@ -3,8 +3,6 @@ import React, { useEffect, useRef } from 'react'
 
 function RemoveKundli({ open, handleClose, userData }) {
 
-  console.log("user data : ", userData)
-
   const theme = createTheme({
     typography: {
       fontFamily: 'Segoe UI, Arial, sans-serif',
@@ -36,14 +34,11 @@ function RemoveKundli({ open, handleClose, userData }) {
             // className:'rounded',
             onSubmit: (e) => {
               e.preventDefault();
-              console.log(inputRef?.current?.value);
               const newData = inputRef?.current?.value;
               const prevData = `${userData?.FirstName} ${userData?.MiddleName} ${userData?.LastName}`;
               if(newData && prevData && newData == prevData){
-                console.log("delete data");
-              }else{
-                console.log("both are not same")
               }
+
               // handleClose();
             },
           }}

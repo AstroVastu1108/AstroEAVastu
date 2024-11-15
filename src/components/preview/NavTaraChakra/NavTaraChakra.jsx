@@ -121,33 +121,47 @@ function NavTaraChakra({ open, handleClose, NavTaraChakraData }) {
             className=""
             sx={{
               '& .MuiDataGrid-root': {
-                borderRadius: '0px !important', // Removes the outer border radius
-              },
-              '& .MuiDataGrid-columnHeaders': {
-                borderTopLeftRadius: '0px !important',
-                borderTopRightRadius: '0px !important',
-              },
-              '& .MuiDataGrid-cell': {
-                borderRadius: '0px !important', // Removes the cell border radius
-              },
-              '& .MuiDataGrid-columnHeaderTitleContainer': {
-                background: 'var(--primary-color)'
+                borderRadius: 0, // Remove border radius
+                borderLeft: '0px',
+                borderRight: '0px',
+                borderTop: '0px !important',
+                borderBottom: '0px !important'
               },
               '& .MuiDataGrid-row:nth-of-type(odd)': {
                 backgroundColor: '#ffffff',
               },
               '& .MuiDataGrid-row:nth-of-type(even)': {
-                backgroundColor: '#f5f5f5',
+                backgroundColor: '#daffaf45',
               },
               '& .MuiDataGrid-row:hover': {
                 color: 'var(--primary-color) !important',
                 backgroundColor: 'var(--secondary-soft-color) !important',
               },
               '& .MuiDataGrid-columnHeader .MuiDataGrid-sortIcon': {
-                color: 'white',
+                color: 'white', // Change to your desired color
+              },
+              '& .MuiDataGrid-cell': {
+                lineHeight: '30px !important'
+              },
+              // '& .MuiDataGrid-columnHeaderTitleContainerContent':{
+              //   width: '100% !important'
+              // },
+              // '& .MuiDataGrid-columnHeaderTitle':{
+              //   width: '100% !important'
+              // },
+              '& .MuiDataGrid-columnHeader--withRightBorder': {
+                borderRightWidth: '0px !important'
               },
               '& .MuiDataGrid-columnSeparator': {
                 display: 'none !important'
+              },
+              '& .MuiDataGrid-columnHeader': {
+                cursor: 'default !important', // Change to your desired color
+                borderBottom:'none !important',
+                borderTop:'none !important'
+              },
+              '& .MuiDataGrid-columnHeader:focus': {
+                outline: 'none !important'
               },
             }}
           >
@@ -169,11 +183,11 @@ function NavTaraChakra({ open, handleClose, NavTaraChakraData }) {
             </ThemeProvider>
           </Box>
         </DialogContent>
-        <DialogActions>
+        {/* <DialogActions>
           <div className='p-4'>
             <Button variant='contained' className='bg-secondary' onClick={handleClose}>Cancel</Button>
           </div>
-        </DialogActions>
+        </DialogActions> */}
       </Dialog>
     </>
   );

@@ -150,7 +150,7 @@ export default function UserListing({mode}) {
   }
 
   const handleFilterModelChange = (e) => {
-    console.log(e?.quickFilterValues[0])
+    // console.log(e?.quickFilterValues[0])
   }
 
   const customTheme = createTheme({

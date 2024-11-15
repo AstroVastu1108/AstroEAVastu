@@ -132,7 +132,7 @@ export const AuthProvider = ({ children }) => {
                 try {
                     Cookies.set(`astrovastu_auth_${key}`, value, { expires: 1 });
                 } catch (error) {
-                    console.error("error: ", error);
+                    // console.error("error: ", error);
                 }
             });
             setIsLoggedIn(true);
@@ -164,7 +164,7 @@ export const AuthProvider = ({ children }) => {
                 try {
                     Cookies.set(`astrovastu_auth_${key}`, value, { expires: 1 });
                 } catch (error) {
-                    console.error("error: ", error);
+                    // console.error("error: ", error);
                 }
             });
             setIsLoggedIn(true);
@@ -186,6 +186,7 @@ export const AuthProvider = ({ children }) => {
         try {
             const decryptedAuthData = {
                 useremail: Cookies.get('astrovastu_auth_useremail'),
+
                 // accessToken: Cookies.get('astrovastu_auth_accessToken'),
                 userRole: Cookies.get('astrovastu_auth_userRole'),
                 // expirationTime: Cookies.get('astrovastu_auth_expirationTime'),
@@ -213,6 +214,7 @@ export const AuthProvider = ({ children }) => {
     const logout = () => {
         setIsLoggedIn(false);
         Cookies.remove('astrovastu_auth_useremail'),
+
             // Cookies.remove('astrovastu_auth_accessToken'),
             Cookies.remove('astrovastu_auth_userRole'),
             Cookies.remove('astrovastu_auth_SecureRoute'),
@@ -220,6 +222,7 @@ export const AuthProvider = ({ children }) => {
             Cookies.remove('astrovastu_auth_ClientID'),
             // Cookies.remove('astrovastu_auth_expirationTime'),
             // Cookies.remove('astrovastu_auth_refreshToken')
+
         Cookies.remove('astrovastu_auth_transactionID')
         setUser(null);
     };

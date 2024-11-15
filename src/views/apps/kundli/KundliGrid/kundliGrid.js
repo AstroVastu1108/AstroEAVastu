@@ -271,7 +271,7 @@ function KundliDataGrid({ columns, pageSize = 5, checkboxSelection = false, onRo
   })
 
   const handleSearch = (e) => {
-      console.log('Searched Data : ', e.target.value)
+      // console.log('Searched Data : ', e.target.value)
     //   setQuery(e.target.value)
   }
 

@@ -16,14 +16,13 @@ function DetailClientData({ cid }) {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  console.log("user : ", user?.transactionID)
+
   const getClientData = async (transactionID, cid) => {
     try {
       const response = await GetClientById(transactionID, cid);
       if (response.hasError) {
         return toastDisplayer("error", response.errorMessage);
       }
-      console.log("response : ", response)
       setClient(response.responseData)
     } catch (error) {
       return toastDisplayer("error", error);
@@ -33,7 +32,6 @@ function DetailClientData({ cid }) {
 
   useEffect(() => {
     if (user?.transactionID) {
-      console.log("================")
       getClientData(user?.transactionID, cid)
     }
   }, [user])

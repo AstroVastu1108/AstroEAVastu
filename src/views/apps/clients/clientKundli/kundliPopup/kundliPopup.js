@@ -24,7 +24,7 @@
 //     { field: 'BirthTime', flex: 1, headerName: 'BirthTime', headerClassName: 'rowheader', headerAlign: 'left' }
 //   ]
 
- 
+
 
 
 
@@ -34,7 +34,7 @@
 //     setSelectedData(e.row)
 //   }
 
- 
+
 //   const handleSelectedSubmit = () => {
 //     return handleSubmit(selectedData, client, setSelectedData)
 //   }
@@ -75,7 +75,7 @@
 //         <KundliDataGrid
 //           columns={columns}
 //           pageSize={5}
-//           checkboxSelection={true} 
+//           checkboxSelection={true}
 //           onRowClick={handleRowClick}
 //         />
 //       </DialogContent>
@@ -129,13 +129,11 @@ function KundliPopUp({ open, handleAddClose, onSelectKundli, client, handleSubmi
 
   // Handle row click to select kundli
   const handleRowClick = e => {
-    console.log("e==>",e)
     setSelectedData(e.row)
   }
 
   const handleSelection = (rows) => {
     setSelectedData(rows);
-    console.log('Selected rows: ', rows);
   };
   // Submit selected kundli data
   const handleSelectedSubmit = () => {
@@ -180,7 +178,7 @@ function KundliPopUp({ open, handleAddClose, onSelectKundli, client, handleSubmi
           pageSize={5}
           checkboxSelection={true}
           onRowClick={handleRowClick}
-          // onSelectionModelChange={handleSelection} 
+          // onSelectionModelChange={handleSelection}
         />
       </DialogContent>
 

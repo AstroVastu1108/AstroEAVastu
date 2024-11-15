@@ -9,7 +9,7 @@ import { CreateKundli, UpdateKundli } from '@/app/Server/API/kundliAPI';
 import "./addKundli.css"
 
 function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserData }) {
-  console.log("userData : ",userData)
+
 
   const [isDisable, setIsDisable] = useState(false);
   const fetchData = async () => {
@@ -155,7 +155,6 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
 
     const birthTime = userData.time ? new Date(userData.time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit',second: '2-digit', hour12: false }).replace(/:/g, '') : null;
 
-    console.log("birth time : ",birthTime)
 
     try {
       setIsDisable(true)
@@ -188,8 +187,6 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
         return kId;
       } else {
         setIsDisable(false)
-        console.log("user data =====> ", userData)
-        console.log("formattedData =====> ", formattedData)
         const response = await UpdateKundli(formattedData)
 
         if (response.hasError) {

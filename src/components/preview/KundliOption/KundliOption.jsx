@@ -48,7 +48,6 @@ function KundliOption({ setKundliValue, open, handleClose, KundliData }) {
 
 
   const handleSelect = () => {
-    console.log("selectedRow : ",selectedRow)
     setKundliValue(selectedRow);
     handleClose(); // Close the dialog after selecting an item
   };
@@ -97,12 +96,8 @@ function KundliOption({ setKundliValue, open, handleClose, KundliData }) {
         </DialogTitle>
         <DialogContent className=' flex justify-center'>
           <Box width={"100%"}
-            className="py-4"
+            className=""
             sx={{
-
-              // '& .MuiDataGrid-container--top': {
-              //   background:'var(--primary-color)'
-              // },
               '& .MuiDataGrid-columnHeaderTitleContainer': {
                 background: 'var(--primary-color)'
               },
@@ -110,6 +105,7 @@ function KundliOption({ setKundliValue, open, handleClose, KundliData }) {
                 borderRadius: 0, // Remove border radius
                 borderLeft: '0px',
                 borderRight: '0px',
+                border:'0px'
               },
               '& .MuiDataGrid-row:nth-of-type(odd)': {
                 backgroundColor: '#ffffff', // Light color for odd rows

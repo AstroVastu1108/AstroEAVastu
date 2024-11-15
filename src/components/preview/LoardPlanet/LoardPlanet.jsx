@@ -2,7 +2,60 @@ import { Box, createTheme, ThemeProvider } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import React from 'react'
 
-function LoardPlanet({ LoardData,  SelectedEventVal}) {
+function LoardPlanet({ LoardData, SelectedEventVal }) {
+
+  const applyOccupancyColor = (Occupancy) => {
+    if (SelectedEventVal) {
+      const positive = SelectedEventVal.Positive?.split(", ").map(Number) || [];
+      const negative = SelectedEventVal.Negative?.split(", ").map(Number) || [];
+      const occupancyNumber = Number(Occupancy);
+
+      if (positive.includes(occupancyNumber)) {
+        return <span className="text-[var(--green-text-color)] font-semibold">{occupancyNumber}</span>;
+      } else if (negative.includes(occupancyNumber)) {
+        return <span className="text-[var(--red-text-color)] font-semibold">{occupancyNumber}</span>;
+      }
+    }
+    return Occupancy;
+  };
+
+  const applyOwnerShipColor=(OwnershipArray)=>{
+    const formattedOwnership = OwnershipArray?.map((ownershipItem, index) => {
+      const ownershipNumber = Number(ownershipItem);
+
+      if (SelectedEventVal) {
+        const positiveValues = SelectedEventVal.Positive.split(', ').map(Number);
+        const negativeValues = SelectedEventVal.Negative.split(', ').map(Number);
+
+        // Apply green color if ownership is in Positive, red if in Negative
+        if (positiveValues.includes(ownershipNumber)) {
+          return (
+            <span key={index} className="text-[var(--green-text-color)] font-semibold">
+              {ownershipItem}
+              {index < OwnershipArray.length - 1 && ', '}
+            </span>
+          );
+        } else if (negativeValues.includes(ownershipNumber)) {
+          return (
+            <span key={index} className="text-[var(--red-text-color)] font-semibold">
+              {ownershipItem}
+              {index < OwnershipArray.length - 1 && ', '}
+            </span>
+          );
+        }
+      }
+      // Default case with no color
+      return (
+        <span key={index}>
+          {ownershipItem}
+          {index < OwnershipArray.length - 1 && ', '}
+        </span>
+      );
+    });
+    return formattedOwnership;
+  }
+
+
   const customTheme = createTheme({
     components: {
       MuiDataGrid: {
@@ -62,29 +115,11 @@ function LoardPlanet({ LoardData,  SelectedEventVal}) {
       width: 10,
       flex: 1,
       renderCell: (params) => {
-        console.log(params)
         const scriptFull = params.value || '';
-        let formattedScript = scriptFull;
-
-        if (SelectedEventVal) {
-          const positiveValues = SelectedEventVal.Positive.split(', ').map(Number);
-          const negativeValues = SelectedEventVal.Negative.split(', ').map(Number);
-
-          // Check if scriptFull is included in Positive or Negative lists
-          const scriptFullNumber = Number(scriptFull);
-
-          if (positiveValues.includes(scriptFullNumber)) {
-            formattedScript = (
-              <span className="text-[var(--green-text-color)]">{scriptFull}</span>
-            );
-          } else if (negativeValues.includes(scriptFullNumber)) {
-            formattedScript = (
-              <span className="text-[var(--red-text-color)]">{scriptFull}</span>
-            );
-          }
-        }
-
-        return <div className='degreeDiv'>{formattedScript}</div>;
+        let formattedScript = scriptFull.split(" / ");
+        let ownership = Array(formattedScript[1]?.split(", "))
+        return <div className='degreeDiv'>{applyOccupancyColor(formattedScript[0])} / {applyOwnerShipColor(ownership[0])}
+        </div>;
       },
     },
   ];
@@ -97,69 +132,69 @@ function LoardPlanet({ LoardData,  SelectedEventVal}) {
   ];
 
   return (
-      <Box
-        // width={"100%"}
-        sx={{
-          '& .MuiDataGrid-root': {
-            borderRadius: 0, // Remove border radius
-            borderLeft: '0px',
-            borderRight: '0px',
-          },
-          '& .MuiDataGrid-row:nth-of-type(odd)': {
-            backgroundColor: '#ffffff',
-          },
-          '& .MuiDataGrid-row:nth-of-type(even)': {
-            backgroundColor: '#daffaf45',
-          },
-          '& .MuiDataGrid-row:hover': {
-            color: 'var(--primary-color) !important',
-            backgroundColor: 'var(--secondary-soft-color) !important',
-          },
-          '& .MuiDataGrid-columnHeader .MuiDataGrid-sortIcon': {
-            color: 'white', // Change to your desired color
-          },
-          '& .MuiDataGrid-cell': {
-            lineHeight: '30px !important'
-          },
-          // '& .MuiDataGrid-columnHeaderTitleContainerContent':{
-          //   width: '100% !important'
-          // },
-          // '& .MuiDataGrid-columnHeaderTitle':{
-          //   width: '100% !important'
-          // },
-          '& .MuiDataGrid-columnHeader--withRightBorder':{
-            borderRightWidth:'0px !important'
-          },
-          '& .MuiDataGrid-columnSeparator':{
-            display:'none !important'
-          },
-          '& .MuiDataGrid-columnHeader': {
-            cursor: 'default !important', // Change to your desired color
-          },
-          '& .MuiDataGrid-columnHeader:focus':{
-            outline: 'none !important'
-          },
-        }}
-      >
-        <ThemeProvider theme={customTheme}>
+    <Box
+      // width={"100%"}
+      sx={{
+        '& .MuiDataGrid-root': {
+          borderRadius: 0, // Remove border radius
+          borderLeft: '0px',
+          borderRight: '0px',
+        },
+        '& .MuiDataGrid-row:nth-of-type(odd)': {
+          backgroundColor: '#ffffff',
+        },
+        '& .MuiDataGrid-row:nth-of-type(even)': {
+          backgroundColor: '#daffaf45',
+        },
+        '& .MuiDataGrid-row:hover': {
+          color: 'var(--primary-color) !important',
+          backgroundColor: 'var(--secondary-soft-color) !important',
+        },
+        '& .MuiDataGrid-columnHeader .MuiDataGrid-sortIcon': {
+          color: 'white', // Change to your desired color
+        },
+        '& .MuiDataGrid-cell': {
+          lineHeight: '30px !important'
+        },
+        // '& .MuiDataGrid-columnHeaderTitleContainerContent':{
+        //   width: '100% !important'
+        // },
+        // '& .MuiDataGrid-columnHeaderTitle':{
+        //   width: '100% !important'
+        // },
+        '& .MuiDataGrid-columnHeader--withRightBorder': {
+          borderRightWidth: '0px !important'
+        },
+        '& .MuiDataGrid-columnSeparator': {
+          display: 'none !important'
+        },
+        '& .MuiDataGrid-columnHeader': {
+          cursor: 'default !important', // Change to your desired color
+        },
+        '& .MuiDataGrid-columnHeader:focus': {
+          outline: 'none !important'
+        },
+      }}
+    >
+      <ThemeProvider theme={customTheme}>
 
-          <DataGrid
-            showCellVerticalBorder
-            getRowId={(row) => row.rahuId}
-            rows={rows}
-            columns={columns1}
-            disableColumnSorting
-            disableColumnMenu
-            rowHeight={30}
-            columnHeaderHeight={38}
-            disableColumnResize
-            disableRowSelectionOnClick
-            hideFooterPagination={true}
-            hideFooter={true}
-          />
-        </ThemeProvider>
+        <DataGrid
+          showCellVerticalBorder
+          getRowId={(row) => row.rahuId}
+          rows={rows}
+          columns={columns1}
+          disableColumnSorting
+          disableColumnMenu
+          rowHeight={30}
+          columnHeaderHeight={38}
+          disableColumnResize
+          disableRowSelectionOnClick
+          hideFooterPagination={true}
+          hideFooter={true}
+        />
+      </ThemeProvider>
 
-      </Box>
+    </Box>
   )
 }
 

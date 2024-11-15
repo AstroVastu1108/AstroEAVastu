@@ -7,6 +7,7 @@ import EventModel from '@/components/EventModel/eventModel';
 import { value } from 'valibot';
 
 function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
+
   const applyOccupancyColor = (Occupancy) => {
     if (SelectedEventVal) {
       const positive = SelectedEventVal.Positive?.split(", ").map(Number) || [];
@@ -21,6 +22,43 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
     }
     return Occupancy;
   };
+
+  const applyOwnerShipColor=(OwnershipArray)=>{
+    const formattedOwnership = OwnershipArray.map((ownershipItem, index) => {
+      const ownershipNumber = Number(ownershipItem);
+
+      if (SelectedEventVal) {
+        const positiveValues = SelectedEventVal.Positive.split(', ').map(Number);
+        const negativeValues = SelectedEventVal.Negative.split(', ').map(Number);
+
+        // Apply green color if ownership is in Positive, red if in Negative
+        if (positiveValues.includes(ownershipNumber)) {
+          return (
+            <span key={index} className="text-[var(--green-text-color)] font-semibold">
+              {ownershipItem}
+              {index < OwnershipArray.length - 1 && ', '}
+            </span>
+          );
+        } else if (negativeValues.includes(ownershipNumber)) {
+          return (
+            <span key={index} className="text-[var(--red-text-color)] font-semibold">
+              {ownershipItem}
+              {index < OwnershipArray.length - 1 && ', '}
+            </span>
+          );
+        }
+      }
+      // Default case with no color
+      return (
+        <span key={index}>
+          {ownershipItem}
+          {index < OwnershipArray.length - 1 && ', '}
+        </span>
+      );
+    });
+    return formattedOwnership;
+  }
+
   const columns = [
     Aspect === 'P'
       ? {
@@ -113,13 +151,13 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
       renderCell: (e) => {
         const planetName = e?.row?.PL?.Planet?.slice(0, 3) || "";
         const Occupancy = e?.row?.PL?.Occupancy || "";
-        const Ownership = e?.row?.PL?.Ownership?.join(", ") || "";
+        const OwnershipArray = e?.row?.PL?.Ownership || [];
 
         return (
           <div className="planet-col-script flex justify-between cursor-pointer">
             <div className="planet-col-planet-text">{planetName}</div>
             <div className="degreeDiv">
-              {applyOccupancyColor(Occupancy)} / {Ownership}
+              {applyOccupancyColor(Occupancy)} / {applyOwnerShipColor(OwnershipArray)}
             </div>
           </div>
         );
@@ -137,16 +175,29 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
       flex: 1,
       cellClassName: 'nl-column-cell',
       renderCell: (e) => {
+        // const planetName = e?.row?.NL?.Planet?.slice(0, 3) || "";
+        // const Occupancy = e?.row?.NL?.Occupancy || "";
+        // const scriptFull = e?.row?.NL?.ScriptFull || "";
+
+        // return (
+        //   <div className="flex justify-between cursor-pointer">
+        //     <div className="planet-col-planet-text">{planetName}</div>
+        //     <span className="degreeDiv">
+        //       {applyOccupancyColor(Occupancy)} / {scriptFull}
+        //     </span>
+        //   </div>
+        // );
+
         const planetName = e?.row?.NL?.Planet?.slice(0, 3) || "";
         const Occupancy = e?.row?.NL?.Occupancy || "";
-        const scriptFull = e?.row?.NL?.ScriptFull || "";
+        const OwnershipArray = e?.row?.PL?.Ownership || [];
 
         return (
-          <div className="flex justify-between cursor-pointer">
+          <div className="planet-col-script flex justify-between cursor-pointer">
             <div className="planet-col-planet-text">{planetName}</div>
-            <span className="degreeDiv">
-              {applyOccupancyColor(Occupancy)} / {scriptFull}
-            </span>
+            <div className="degreeDiv">
+              {applyOccupancyColor(Occupancy)} / {applyOwnerShipColor(OwnershipArray)}
+            </div>
           </div>
         );
       },
@@ -162,16 +213,29 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
       minWidth: 120,
       flex: 1,
       renderCell: (e) => {
+        // const planetName = e?.row?.SL?.Planet?.slice(0, 3) || "";
+        // const Occupancy = e?.row?.SL?.Occupancy || "";
+        // const scriptFull = e?.row?.SL?.ScriptFull || "";
+
+        // return (
+        //   <div className="flex justify-between cursor-pointer">
+        //     <div className="planet-col-planet-text">{planetName}</div>
+        //     <span className="degreeDiv">
+        //       {applyOccupancyColor(Occupancy)} / {scriptFull}
+        //     </span>
+        //   </div>
+        // );
+
         const planetName = e?.row?.SL?.Planet?.slice(0, 3) || "";
         const Occupancy = e?.row?.SL?.Occupancy || "";
-        const scriptFull = e?.row?.SL?.ScriptFull || "";
+        const OwnershipArray = e?.row?.PL?.Ownership || [];
 
         return (
-          <div className="flex justify-between cursor-pointer">
+          <div className="planet-col-script flex justify-between cursor-pointer">
             <div className="planet-col-planet-text">{planetName}</div>
-            <span className="degreeDiv">
-              {applyOccupancyColor(Occupancy)} / {scriptFull}
-            </span>
+            <div className="degreeDiv">
+              {applyOccupancyColor(Occupancy)} / {applyOwnerShipColor(OwnershipArray)}
+            </div>
           </div>
         );
       },
@@ -187,16 +251,29 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
       minWidth: 120,
       flex: 1,
       renderCell: (e) => {
+        // const planetName = e?.row?.NLSL?.Planet?.slice(0, 3) || "";
+        // const Occupancy = e?.row?.NLSL?.Occupancy || "";
+        // const scriptFull = e?.row?.NLSL?.ScriptFull || "";
+
+        // return (
+        //   <div className="flex justify-between cursor-pointer">
+        //     <div className="planet-col-planet-text">{planetName}</div>
+        //     <span className="degreeDiv">
+        //       {applyOccupancyColor(Occupancy)} / {scriptFull}
+        //     </span>
+        //   </div>
+        // );
+
         const planetName = e?.row?.NLSL?.Planet?.slice(0, 3) || "";
         const Occupancy = e?.row?.NLSL?.Occupancy || "";
-        const scriptFull = e?.row?.NLSL?.ScriptFull || "";
+        const OwnershipArray = e?.row?.PL?.Ownership || [];
 
         return (
-          <div className="flex justify-between cursor-pointer">
+          <div className="planet-col-script flex justify-between cursor-pointer">
             <div className="planet-col-planet-text">{planetName}</div>
-            <span className="degreeDiv">
-              {applyOccupancyColor(Occupancy)} / {scriptFull}
-            </span>
+            <div className="degreeDiv">
+              {applyOccupancyColor(Occupancy)} / {applyOwnerShipColor(OwnershipArray)}
+            </div>
           </div>
         );
       },
