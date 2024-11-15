@@ -55,7 +55,8 @@ const LoginV2 = ({ mode }) => {
 
   const { loginData } = useAuth();
   const [formData, setFormData] = useState({
-    email: ""
+    email: "",
+    verifyoTP:""
   });
   const emailRef = useRef();
   const [isDisable, setIsDisable] = useState(false);
@@ -70,13 +71,14 @@ const LoginV2 = ({ mode }) => {
   useEffect(() => {
     const authData = {
       useremail: Cookies.get('astrovastu_auth_useremail'),
-      accessToken: Cookies.get('astrovastu_auth_accessToken'), 
+      // accessToken: Cookies.get('astrovastu_auth_accessToken'),
       userRole: Cookies.get('astrovastu_auth_userRole'),
-      expirationTime: Cookies.get('astrovastu_auth_expirationTime'), 
-      refreshToken: Cookies.get('astrovastu_auth_refreshToken')
+      DID: Cookies.get('DID'),
+      // expirationTime: Cookies.get('astrovastu_auth_expirationTime'),
+      // refreshToken: Cookies.get('astrovastu_auth_refreshToken')
     };
-  
-    if (authData.useremail && authData.accessToken && authData.userRole) {
+
+    if (authData.useremail && authData.DID && authData.userRole) {
       try {
         const firstAccessibleItem = navigation.find(item => item);
         if (firstAccessibleItem) {
@@ -87,7 +89,7 @@ const LoginV2 = ({ mode }) => {
       }
     }
   }, []);
-  
+
 
   const handleSubmit = async (e) => {
     try {
@@ -96,13 +98,25 @@ const LoginV2 = ({ mode }) => {
         emailRef.current.focus();
         setIsDisable(false)
         setErrors(true)
-        setErrorMessage("Email is required.")
+        // setErrorMessage("Email is required.")
         return setErrors(prev => ({
           ...prev,
           email: true
         }));
       }
-      setIsDisable(true)
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!formData.email || !emailRegex.test(formData.email)) {
+        setIsDisable(false)
+        setErrors(true)
+        emailRef.current.focus();
+        setErrorMessage("Invalid email address.")
+        // toastDisplayer("error", "Invalid Email address.")
+        return setErrors(prev => ({
+          ...prev,
+          email: true
+        }));
+      }
+      // setIsDisable(true)
       const token = await recaptchaRef.current.executeAsync();
       recaptchaRef.current.reset();
       const recaptchaResponse = await fetch('/api/verifyRecaptcha', {
@@ -170,7 +184,56 @@ const LoginV2 = ({ mode }) => {
     }
   }
 
-  const handleLogin = async () => {
+  // const handleLogin = async () => {
+  //   try {
+  //     if (formData.email == "") {
+  //       setErrors(true)
+  //       emailRef.current.focus();
+  //       setErrorMessage("Email is required.")
+  //       return toastDisplayer("error", "Email is required.")
+  //     }
+  //     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  //     if (!formData.email || !emailRegex.test(formData.email)) {
+  //       setIsDisable(false)
+  //       setErrorMessage("Invalid email address.")
+  //       setErrors(true)
+  //       return setErrorMessage("Invalid email address.")
+  //     }
+  //     setErrors(false)
+  //     setIsDisable(true)
+  //     const result = await loginData(formData)
+  //     if (result.error) {
+  //       setIsDisable(false);
+  //       setLoading(false);
+  //       setIsOtpVerified("pending")
+  //       setErrors(true)
+  //       return setErrorMessage(result.message)
+  //     } else {
+  //       const firstAccessibleItem = navigation.find(item => item);
+  //       const prevPath = Cookies.get("prevPath")
+  //       if (prevPath) {
+  //         Cookies.remove("prevPath");
+  //         return window.location.href = prevPath;
+  //       }
+  //       return router.push(firstAccessibleItem.href)
+  //     }
+  //   } catch (error) {
+  //     setIsDisable(false);
+  //     setIsOtpVerified("pending")
+  //     setLoading(false)
+  //     setErrors(true)
+  //     return setErrorMessage(error)
+  //   }
+  // };
+
+  const handleInput = (fieldName, e) => {
+    setErrors(false);
+    setFormData((prevData) => ({
+      ...prevData,
+      [fieldName]: e.target.value.toLowerCase()
+    }));
+  }
+  const handleVerifyOtp = async (otp)=>{
     try {
       if (formData.email == "") {
         setErrors(true)
@@ -187,7 +250,16 @@ const LoginV2 = ({ mode }) => {
       }
       setErrors(false)
       setIsDisable(true)
-      const result = await loginData(formData)
+      setFormData((prevData) => ({
+        ...prevData,
+        "verifyoTP": otp
+      }));
+      const payload = {
+        "email": formData.email,
+        "verifyoTP": otp
+      }
+      const result = await loginData(payload)
+      console.log("result : ",result)
       if (result.error) {
         setIsDisable(false);
         setLoading(false);
@@ -210,23 +282,14 @@ const LoginV2 = ({ mode }) => {
       setErrors(true)
       return setErrorMessage(error)
     }
-  };
-
-  const handleInput = (fieldName, e) => {
-    setErrors(false);
-    setFormData((prevData) => ({
-      ...prevData,
-      [fieldName]: e.target.value
-    }));
   }
-
-  useEffect(() => {
-    if (isOtpVerified == "verified") {
-      // passwordInputRef.current.focus();
-      setLoading(true);
-      handleLogin();
-    }
-  }, [isOtpVerified])
+  // useEffect(() => {
+  //   if (isOtpVerified == "verified") {
+  //     // passwordInputRef.current.focus();
+  //     setLoading(true);
+  //     handleLogin();
+  //   }
+  // }, [isOtpVerified])
 
   const customtheme = createTheme({
     typography: {
@@ -290,7 +353,8 @@ const LoginV2 = ({ mode }) => {
                       autoFocus
                       label='Email'
                       // placeholder='Enter your email'
-                      onChange={(e) => { handleInput("email", e); }}
+                      onChange={(e) => handleInput("email", e)}
+                      // onChange={(e) => { handleInput("email", e); }}
                       value={formData.email}
                       inputRef={emailRef}
 
@@ -300,7 +364,7 @@ const LoginV2 = ({ mode }) => {
 
                     {(errors && errorMessage) ?
                       (
-                        <Alert severity='error' onClose={() => { setErrors(false)}}>
+                        <Alert severity='error' onClose={() => { setErrors(false) }}>
                           {errorMessage}
                         </Alert>
                       )
@@ -328,15 +392,26 @@ const LoginV2 = ({ mode }) => {
                         </LoadingButton>
                       ) : ""
                     }
+                    <div className="flex flex-col gap-6">
 
-
-                    <div className='flex justify-center items-center flex-wrap gap-2'>
-                      <Typography>No Account?</Typography>
-                      <Typography color='primary' style={{ cursor: 'pointer' }} onClick={() => {
-                        router.push('/sign-up')
-                      }}>
-                        Create New Account
-                      </Typography>
+                      <div className='flex justify-center items-center flex-wrap gap-2'>
+                        <Typography>No Account?</Typography>
+                        <Typography color='primary' style={{ cursor: 'pointer' }} onClick={() => {
+                          router.push('/sign-up')
+                        }}>
+                          Create New Account
+                        </Typography>
+                      </div>
+                      <div>
+                        <Typography style={{ fontSize: "12px", display: "flex", justifyContent: "center", gap: "10px" }}>
+                          <Link href="#" onClick={(e) => e.preventDefault()} style={{ fontWeight: "600" }}> Terms of Use </Link>
+                          |
+                          <Link href="#" onClick={(e) => e.preventDefault()} style={{ fontWeight: "600" }}>Privacy Policy</Link>
+                          |
+                          <Link href="#" onClick={(e) => e.preventDefault()} style={{ fontWeight: "600" }}> Help Centre
+                          </Link>
+                        </Typography>
+                      </div>
                     </div>
                   </form>
                 </>
@@ -348,24 +423,17 @@ const LoginV2 = ({ mode }) => {
                       <Typography>Please enter the verification code sent to <span style={{ fontWeight: "600", color: "#590a73" }}>{formData?.email}</span></Typography>
                     </div>
                   </div>
-                  <OTPverify email={formData?.email} role={"login"} setIsOtpVerified={setIsOtpVerified} />
+                  <OTPverify email={formData?.email} role={"login"} setIsOtpVerified={setIsOtpVerified} handleVerifyOtp={handleVerifyOtp} />
                 </>
 
               }
-              <Typography style={{ fontSize: "10px", display: "flex", justifyContent: "center", gap: "10px" }}>
-                <Link href="#" onClick={(e) => e.preventDefault()} style={{ fontWeight: "600" }}> Terms of Use </Link>
-                |
-                <Link href="#" onClick={(e) => e.preventDefault()} style={{ fontWeight: "600" }}>Privacy Policy</Link>
-                |
-                <Link href="#" onClick={(e) => e.preventDefault()} style={{ fontWeight: "600" }}> Help Centre
-                </Link>
-              </Typography>
-              <ReCAPTCHA
-                ref={recaptchaRef}
-                sitekey={process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_SITE_KEY}
-                size="invisible"
-              />
-
+              <div>
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey={process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_SITE_KEY}
+                  size="invisible"
+                />
+              </div>
 
             </div>
           </div>

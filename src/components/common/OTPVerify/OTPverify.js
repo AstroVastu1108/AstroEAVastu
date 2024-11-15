@@ -210,7 +210,7 @@ import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplaye
 import { requestOtp, VerifyOtp } from '@/app/Server/API/auth'
 import { Alert, Button } from '@mui/material'
 
-function OTPverify({ email, role, setIsOtpVerified }) {
+function OTPverify({ email, role, setIsOtpVerified,handleVerifyOtp }) {
   const [otp, setOtp] = useState(['', '', '', '', '', ''])
   const [isResendDisabled, setIsResendDisabled] = useState(true)
   const [timer, setTimer] = useState(60)
@@ -266,28 +266,29 @@ function OTPverify({ email, role, setIsOtpVerified }) {
     }
   }
 
-  const handleVerifyOTP = async () => {
-    const otpCode = otp.join('')
-    try {
-      const response = await VerifyOtp(email, otpCode, role)
-      if (response.hasError) {
-        setErrors(true)
-        return setErrorMessage(response.error || 'Failed to verify OTP')
-        // return toastDisplayer('error', response.error || 'Failed to verify OTP')
-      }
-      setErrors(false)
-      setIsOtpVerified('verified')
-    } catch (error) {
-      setErrors(true)
-      return setErrorMessage(error.error || 'Failed to verify OTP')
-      // toastDisplayer('error', error.error || 'Failed to verify OTP')
-    }
-  }
+  // const handleVerifyOTP = async () => {
+  //   const otpCode = otp.join('')
+  //   try {
+  //     const response = await VerifyOtp(email, otpCode, role)
+  //     if (response.hasError) {
+  //       setErrors(true)
+  //       return setErrorMessage(response.error || 'Failed to verify OTP')
+  //       // return toastDisplayer('error', response.error || 'Failed to verify OTP')
+  //     }
+  //     setErrors(false)
+  //     setIsOtpVerified('verified')
+  //   } catch (error) {
+  //     setErrors(true)
+  //     return setErrorMessage(error.error || 'Failed to verify OTP')
+  //     // toastDisplayer('error', error.error || 'Failed to verify OTP')
+  //   }
+  // }
 
     useEffect(() => {
     if (otp.every(digit => digit.length === 1)) {
       const otpCode = otp.join('')
-      handleVerifyOTP(otpCode) // Call the verify method when OTP is complete
+      handleVerifyOtp(otpCode) // Call the verify method when OTP is complete
+      // handleVerifyOTP(otpCode) // Call the verify method when OTP is complete
     }
   }, [otp])
 
@@ -381,7 +382,7 @@ function OTPverify({ email, role, setIsOtpVerified }) {
             {errorMessage}
           </Alert>
         )
-        : ""}
+        : "" }
 
       <Button
         fullWidth
@@ -393,6 +394,7 @@ function OTPverify({ email, role, setIsOtpVerified }) {
           '&:hover': {
             backgroundColor: '#4a055b',
           },
+          textTransform: 'none',
         }}
       >
         Resend OTP {isResendDisabled && `(${timer}s)`}

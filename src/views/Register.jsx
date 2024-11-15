@@ -137,31 +137,33 @@ const RegisterPage = ({ mode }) => {
 
   const validateFields = () => {
     let newErrors = {};
-  
+
     newErrors = {
       fname: !userData.fname.trim(),
       lname: !userData.lname.trim(),
       email: !userData.email.trim() || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(userData.email),
       // Add other validations here, such as password and phone if needed
     };
-  
+
     if (newErrors.fname) {
       fnameRef.current.focus();
-      setErrorMessage("First name is required.");
+      // setErrorMessage("First name is required.");
     } else if (newErrors.lname) {
       lnameRef.current.focus();
-      setErrorMessage("Last name is required.");
+      // setErrorMessage("Last name is required.");
     } else if (newErrors.email) {
       emailRef.current.focus();
-      setErrorMessage("Enter a valid email address.");
+      if(userData.email.trim() != ""){
+        setErrorMessage("Enter a valid email address.");
+      }
     } else {
       setErrorMessage(null); // Clear error message if no errors are found
     }
-  
+
     setErrors(newErrors);
     return !Object.values(newErrors).some(error => error);
   };
-  
+
 
   const handleInputChange = (field, value) => {
     setUserData(prev => ({
@@ -306,7 +308,7 @@ const RegisterPage = ({ mode }) => {
                       // placeholder='Enter your email'
                       name='email'
                       value={userData.email}
-                      onChange={e => handleInputChange('email', e.target.value)}
+                      onChange={e => handleInputChange('email', e.target.value.toLowerCase())}
                       error={Boolean(errors.email)}
                       inputRef={emailRef}
                     // helperText={errors.email && 'Enter a valid email address.'}
@@ -362,18 +364,20 @@ const RegisterPage = ({ mode }) => {
                   </div>
 
                   <Typography style={{ fontSize: "10px" }}>By clicking
-                    <Link href="#" onClick={(e) => e.preventDefault()} style={{ fontWeight: "600" }}> ‘Get started’ </Link>
+                    <Link href="#" onClick={(e) => e.preventDefault()} style={{ fontWeight: "600", color: "#590a73" }}> ‘Get started’ </Link>
                     you are agreeing to our
-                    <Link href="#" onClick={(e) => e.preventDefault()} style={{ fontWeight: "600" }}> Terms of Use </Link>
+                    <Link href="#" onClick={(e) => e.preventDefault()} style={{ fontWeight: "600", color: "#590a73" }}> Terms of Use </Link>
                     and
-                    <Link href="#" onClick={(e) => e.preventDefault()} style={{ fontWeight: "600" }}> Privacy Policy.
+                    <Link href="#" onClick={(e) => e.preventDefault()} style={{ fontWeight: "600", color: "#590a73" }}> Privacy Policy.
                     </Link>
                   </Typography>
-                  <ReCAPTCHA
-                    ref={recaptchaRef}
-                    sitekey={process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_SITE_KEY}
-                    size="invisible"
-                  />
+                  <div style={{ display: 'none' }}>
+                    <ReCAPTCHA
+                      ref={recaptchaRef}
+                      sitekey={process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_SITE_KEY}
+                      size="invisible"
+                    />
+                  </div>
 
                 </div>
               </div>
