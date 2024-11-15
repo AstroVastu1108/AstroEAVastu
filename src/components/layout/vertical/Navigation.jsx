@@ -63,7 +63,7 @@ const StyledLoggedInUserContainer = styled(Box)(({ theme }) => ({
   bottom: 10,
   width: '100%',
   padding: theme.spacing(2),
-  color: ` var(--primary-soft-color)`,
+  color: ` var(--primary-color)`,
   // background: `linear-gradient(270deg, rgb(var(--mui-palette-primary-mainChannel) / 0.7) 0%, var(--mui-palette-primary-main) 100%) !important`,
   // boxShadow: ` var(--mui-customShadows-primary-sm)`,
   // borderTop: `1px solid ${theme.palette.divider}`,

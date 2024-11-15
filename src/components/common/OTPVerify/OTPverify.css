@@ -54,7 +54,7 @@
       transition: border-color 0.3s ease;
   
       &:focus {
-        border: 2px solid  var(--primary-soft-color);
+        border: 2px solid  var(--primary-color);
       }
     }
   }

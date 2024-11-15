@@ -23,19 +23,20 @@ export async function validateCaptcha(token){
   }
 }
 
-export async function sendSignInRequest(username,password) {
+export async function sendSignInRequest(payload,did) {
   const responseBody = {
     responseData: null,
     hasError: false,
     error: null,
   };
     try {
-      const payload = {
-        email:username
-        // password: password
-      }
+     
 
-      const response = await axios.post(`${API_URL}/Auth/LoginPost`, payload);
+      const response = await axios.post(`${API_URL}/Auth/LoginPost`, payload,{
+        headers: {
+            "M-DID": did  
+        }
+    });
       responseBody.responseData = response.data;
       if (response.status === 200) {
         return {

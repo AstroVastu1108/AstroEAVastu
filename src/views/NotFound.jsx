@@ -10,7 +10,7 @@ import { useImageVariant } from '@core/hooks/useImageVariant'
 import { useEffect } from 'react'
 import Cookies from 'js-cookie';
 import { useAuth } from '@/@core/contexts/authContext'
-
+import { useRouter } from 'next/navigation'
 const MaskImg = styled('img')({
   blockSize: 'auto',
   maxBlockSize: 355,
@@ -22,6 +22,7 @@ const MaskImg = styled('img')({
 
 const NotFound = ({ mode,type }) => {
   const { logout } =useAuth();
+  const router = useRouter()
   // Vars
   const darkImg = '/images/pages/misc-mask-dark.png'
   const lightImg = '/images/pages/misc-mask-light.png'
@@ -33,6 +34,13 @@ const NotFound = ({ mode,type }) => {
       }     
     }
   }, []);
+
+  useEffect(()=>{
+    if(type == "unAuthorized"){
+      return router.push('/login')
+    }
+  },[])
+
   // Hooks
   const theme = useTheme()
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
@@ -56,19 +64,20 @@ const NotFound = ({ mode,type }) => {
        </div>
       ) : 
       (
-        <div className='flex items-center flex-col text-center'>
-        <div className='flex flex-col gap-2 is-[90vw] sm:is-[unset] mbe-6'>
-          <Typography className='font-medium text-8xl' color='text.primary'>
-            403
-          </Typography>
-          <Typography variant='h4'>You are not authorized ⚠️</Typography>
-          <Typography>You tried to access a page you did not have prior authorization for.</Typography>
-        </div>
-        <Button href='/' component={Link} variant='contained' onClick={()=>{window.history.back();}}>
-          Go Back
-        </Button>
+        ""
+      //   <div className='flex items-center flex-col text-center'>
+      //   <div className='flex flex-col gap-2 is-[90vw] sm:is-[unset] mbe-6'>
+      //     <Typography className='font-medium text-8xl' color='text.primary'>
+      //       403
+      //     </Typography>
+      //     <Typography variant='h4'>You are not authorized ⚠️</Typography>
+      //     <Typography>You tried to access a page you did not have prior authorization for.</Typography>
+      //   </div>
+      //   <Button href='/' component={Link} variant='contained' onClick={()=>{window.history.back();}}>
+      //     Go Back
+      //   </Button>
 
-      </div>
+      // </div>
       )
       }
      
