@@ -13,7 +13,7 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation'
 import OTPverify from '@/components/common/OTPVerify/OTPverify'
-import { registerCompnay, requestOtp } from '@/app/Server/API/auth'
+import { registerCompnay, requestOtp, requestOtpNewUser } from '@/app/Server/API/auth'
 import { useAuth } from '@/@core/contexts/authContext'
 import Loader from '@/components/common/Loader/Loader'
 import { LoadingButton } from '@mui/lab'
@@ -72,7 +72,7 @@ const RegisterPage = ({ mode }) => {
         const recaptchaData = await recaptchaResponse.json();
         if (recaptchaData.success) {
           setIsDisable(true)
-          const result = await requestOtp(userData?.email, "register")
+          const result = await requestOtpNewUser(userData?.email,userData?.fname,userData?.lname, "register")
           if (result.hasError) {
             setIsDisable(false);
             setIsOtpVerified("pending")
@@ -225,13 +225,74 @@ const RegisterPage = ({ mode }) => {
     },
   });
 
-  useEffect(() => {
-    if (isOtpVerified == "verified") {
-      // passwordInputRef.current.focus();
+  const handleVerifyOtp = async (otp)=>{
+    try {
+      console.log("OTP : ",otp)
+      if (userData.email == "") {
+        setErrors(true)
+        emailRef.current.focus();
+        setErrorMessage("Email is required.")
+        return toastDisplayer("error", "Email is required.")
+      }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!userData.email || !emailRegex.test(userData.email)) {
+        setIsDisable(false)
+        setErrorMessage("Invalid email address.")
+        setErrors(true)
+        return setErrorMessage("Invalid email address.")
+      }
+      setErrors(false)
+      setIsDisable(true)
+      const payload = {
+        FirstName : userData?.fname,
+        LastName : userData?.lname,
+        email: userData?.email,
+        password: userData?.password,
+        phone: userData?.phone,
+        businessname: userData?.businessname,
+        businesslocation: userData?.businesslocation,
+        UserAvatar : userData?.profilePicture,
+        userType  : "CompanyMaster",
+        "verifyoTP": otp
+      }
       setLoading(true);
-      handleSubmit();
+      const result = await companyRegistration(payload)
+      if (result.error) {
+        setLoading(false);
+        setIsDisable(false);
+
+        // setActiveStep(0)
+        setIsOtpVerified("pending")
+        return setErrorMessage(result.message)
+      } else {
+        setIsDisable(false);
+        setUserData({
+          email: '',
+          password: '',
+          phone: '',
+          businessname: '',
+          businesslocation: '',
+          profilePicture: null
+        })
+        const firstAccessibleItem = navigation.find(item => item);
+        return router.push(firstAccessibleItem.href);
+      }
+    } catch (error) {
+      setIsDisable(false);
+      setIsOtpVerified("pending")
+      setLoading(false)
+      setErrors(true)
+      return setErrorMessage(error)
     }
-  }, [isOtpVerified])
+  }
+
+  // useEffect(() => {
+  //   if (isOtpVerified == "verified") {
+  //     // passwordInputRef.current.focus();
+  //     setLoading(true);
+  //     handleSubmit();
+  //   }
+  // }, [isOtpVerified])
 
   return (
     <>
@@ -322,7 +383,7 @@ const RegisterPage = ({ mode }) => {
                         <Typography variant='h5'>{`One Time Security`}</Typography>
                         <Typography>Please enter the verification code sent to <span style={{ fontWeight: "600", color: "#590a73" }}>{userData?.email}</span></Typography>
                       </div>
-                      <OTPverify email={userData?.email} role={"register"} setIsOtpVerified={setIsOtpVerified} />
+                      <OTPverify email={userData?.email} role={"register"} setIsOtpVerified={setIsOtpVerified} handleVerifyOtp={handleVerifyOtp}/>
                     </div>
                   </>)
                 }
