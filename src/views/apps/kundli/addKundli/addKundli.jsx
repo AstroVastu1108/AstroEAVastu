@@ -8,6 +8,10 @@ import AppReactDatepicker from '@/components/datePicker/AppReactDatepicker';
 import { CreateKundli, UpdateKundli } from '@/app/Server/API/kundliAPI';
 import "./addKundli.css"
 import { convertIconSetInfo } from '@iconify/utils';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
+import dayjs from 'dayjs';
 
 function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserData }) {
 
@@ -154,7 +158,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
     }
     const birthDate = userData.date ? new Date(userData.date).toLocaleDateString('en-GB').split('/').join('-') : null
 
-    const birthTime = userData.time ? new Date(userData.time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit',second: '2-digit', hour12: false }).replace(/:/g, '') : null;
+    const birthTime = userData.time ? new Date(userData.time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).replace(/:/g, '') : null;
 
 
     try {
@@ -172,8 +176,10 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
         Prakriti: userData.prakriti || '',
         City: userData.CityID?.FormattedCity,
         TransitTime: "",
-        TransitDate: ""
+        TransitDate: "",
+        ClientID:""
       }
+      // return console.log(formattedData)
       if (!userData.isUpdate) {
         setIsDisable(false);
         const response = await CreateKundli(formattedData)
@@ -210,7 +216,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
 
   const handlePreview = async () => {
     const kid = await handleSubmit();
-    if(kid)
+    if (kid)
       router.push(`kundali/${kid}`)
   }
 
@@ -366,8 +372,19 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
               />
             </Grid>
             <Grid item xs={12} sm={4}>
-
-              <AppReactDatepicker
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={['TimePicker']}>
+                  <TimePicker
+                    label="Birth Time"
+                    ampm={false} // 24-hour format
+                    views={['hours', 'minutes', 'seconds']}
+                    format="HH:mm:ss"
+                    value={dayjs()}
+                    onChange={date => handleInputChange('time', date, 'BirthTime', true)}
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
+              {/* <AppReactDatepicker
                 showTimeSelect
                 showTimeSelectOnly
                 timeFormat="HH:mm:ss"
@@ -388,7 +405,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                     {...(errors.BirthTime && { error: true })}
                   />
                 }
-              />
+              /> */}
             </Grid>
             <Grid item xs={12} sm={8}>
               <Autocomplete
