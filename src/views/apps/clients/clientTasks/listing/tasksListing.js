@@ -48,6 +48,7 @@ function Listing({ cid, from }) {
       }
 
       const response = await GetCompanyTasks(transactionID)
+      console.log("Response : ",response.responseData)
       setLoading(false)
       // return await response.responseData
       if(response.responseData.length > 0){
@@ -68,14 +69,14 @@ function Listing({ cid, from }) {
   //   }
   // }
   useEffect(() => {
-    if (user?.transactionID) {
+    // if (user?.transactionID) {
       if (from == 'ClientTasks') {
         fetchKundliTasksData(user?.transactionID, cid, 'ClientTasks')
       } else {
         fetchKundliTasksData(user?.transactionID, cid, 'Tasks')
       }
-    }
-  }, [user, cid])
+    // }
+  }, [])
 
   const handleOpenDrawer = item => {
     setCurrentTask(item)
@@ -88,7 +89,7 @@ function Listing({ cid, from }) {
     // const Tasks = { id: Date.now(), name: newTask };
     try{
       const payload = {
-        "title": newTask,
+        "Title": newTask,
         "badgeText": [],
         "attachments": "",
         "comments": "",
@@ -104,8 +105,8 @@ function Listing({ cid, from }) {
         return toastDisplayer("error",response.errorMessage)
       }
       setTasks((prevList) => [...prevList, payload]);
-      setNewTask(""); 
-      return toastDisplayer("success",response.responseData.statusMsg)
+      return setNewTask(""); 
+      // return toastDisplayer("success",response.responseData.statusMsg)
     }catch(error){
       return toastDisplayer("error",error)
     }
@@ -138,7 +139,7 @@ function Listing({ cid, from }) {
       </div>
       <List sx={{ bgcolor: 'background.paper', marginTop: 2 }}>
         {tasks.map(item => (
-          <ListItem key={item.id} disablePadding>
+          <ListItem key={item.Id} disablePadding>
             <ListItemButton role={undefined} dense>
               {/* <ListItemButton role={undefined} onClick={handleToggle(item.id)} dense> */}
               <ListItemIcon>
@@ -146,7 +147,7 @@ function Listing({ cid, from }) {
                   edge='start'
                   // checked={checked.includes(item.id)}
                   disableRipple
-                  inputProps={{ 'aria-labelledby': `checkbox-list-label-${item.id}` }}
+                  inputProps={{ 'aria-labelledby': `checkbox-list-label-${item.Id}` }}
                 />
               </ListItemIcon>
               {/* {editItem === item.id ? (
@@ -157,7 +158,7 @@ function Listing({ cid, from }) {
                     fullWidth
                   />
                 ) : ( */}
-              <ListItemText primary={item.title} onClick={() => handleOpenDrawer(item)} />
+              <ListItemText primary={item.Title} onClick={() => handleOpenDrawer(item)} />
 
               <IconButton edge='end' aria-label='edit'>
                 {/* <IconButton edge="end" aria-label="edit" onClick={() => (editItem === item.id ? handleSaveEdit() : handleEdit(item))}> */}

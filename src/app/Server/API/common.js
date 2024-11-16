@@ -1,5 +1,6 @@
 import axios from 'axios'
-const API_URL = process.env.NEXT_PUBLIC_APIURL
+import astroInstance from './astroInstance'
+// const API_URL = process.env.NEXT_PUBLIC_APIURL
 
 // get all the countries data
 export async function getCountries() {
@@ -9,7 +10,7 @@ export async function getCountries() {
     error: null
   }
   try {
-    const response = await axios.get(`${API_URL}/geo/countries`)
+    const response = await astroInstance.get(`/geo/countries`)
     responseBody.responseData = response.data
     return responseBody
   } catch (error) {
@@ -28,7 +29,7 @@ export async function getCities(iso2, query) {
     error: null
   }
   try {
-    const response = await axios.get(`${API_URL}/geo/city/${iso2}/${query}`)
+    const response = await astroInstance.get(`/geo/city/${iso2}/${query}`)
     responseBody.responseData = response.data
     return responseBody
   } catch (error) {
@@ -47,7 +48,7 @@ export async function getKundliPdf(kundliId) {
     error: null
   }
   try {
-    const response = await axios.get(`${API_URL}/astro/astro-vastu-report-pdf/${kundliId}`, {
+    const response = await astroInstance.get(`/astro/astro-vastu-report-pdf/${kundliId}`, {
       responseType: 'blob'
     })
     responseBody.responseData = response
@@ -68,7 +69,7 @@ export async function getReport(payload) {
     error: null
   }
   try {
-    const response = await axios.post(`${API_URL}/astro/astro-vastu-report`, payload)
+    const response = await astroInstance.post(`/astro/astro-vastu-report`, payload)
     responseBody.responseData = response.data
     return responseBody
   } catch (error) {

@@ -137,8 +137,8 @@ const CustomerForm = () => {
         var resData = response.responseData
         setIsDisable(false)
         setKundliData(resData?.Result)
-        router.push('kundli/preview')
-        toastDisplayer("success", `kundli data is getting successfully..\nyou will be redirecting to preview page shortly.`)
+        return router.push('kundli/preview')
+        // toastDisplayer("success", `kundli data is getting successfully..\nyou will be redirecting to preview page shortly.`)
       } else {
         setIsDisable(false)
       }

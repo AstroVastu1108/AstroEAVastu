@@ -144,9 +144,9 @@ const PricingPlan = () => {
         if (verifyData.status) {
           setIsDisable(false)
           setPaymentStatus("Payment Successful!");
-          logout();
-          toastDisplayer("success","Payment Successful! \nYou will login again to get authroize.")
-          return router.push("login")
+          // logout();
+          return toastDisplayer("success","Payment Successful!")
+          // return router.push("login")
         } else {
           setIsDisable(false)
           setPaymentStatus("Payment Failed. Please try again.");

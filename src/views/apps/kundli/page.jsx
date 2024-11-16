@@ -258,7 +258,7 @@ export default function KundliMain() {
   const searchInputRef = useRef(null);
   const printRef = useRef(null);
   const fetchConfig = async (id) => {
-    const res = await GetConfig(id);
+    const res = await GetConfig();
     if (res.hasError) {
       setLoading(false);
       return toastDisplayer("error", res.error);
@@ -268,21 +268,19 @@ export default function KundliMain() {
       setUserData((prev) => ({
         ...prev,
         CityID: {
-            CityID: response.city?.cityID, // Set correct property name
-            FormattedCity: response.city?.formattedCity // Set correct property name
+            CityID: response.City?.CityID, // Set correct property name
+            FormattedCity: response.City?.FormattedCity // Set correct property name
         },
         Country: {
-            iso2: response.country?.iso2,
-            name: response.country?.name
+            iso2: response.Country?.iso2,
+            name: response.Country?.name
         }
     }));
     }
   }
   useEffect(() => {
-    if (user && user?.transactionID) {
-      fetchConfig(user?.transactionID)
-    }
-  }, [user])
+    fetchConfig()
+  }, [])
   // func
   const handleAddClick = () => {
     // setUserData({

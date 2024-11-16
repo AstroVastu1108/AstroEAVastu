@@ -28,7 +28,7 @@ export async function GetColumns(TransactionID,ClientId) {
     error: null
   }
   try {
-    const response = await axios.post(`${API_URL}/ColumnGroup/column/get`,{
+    const response = await axiosInstance.post(`/ColumnGroup/column/get`,{
         "cmpTransId": TransactionID,
         "CmpClientId":ClientId
       })
@@ -50,7 +50,7 @@ export async function GetColumnsByComp(TransactionID) {
     error: null
   }
   try {
-    const response = await axios.post(`${API_URL}/ColumnGroup/column/getByComp`,{
+    const response = await axiosInstance.post(`/ColumnGroup/column/getByComp`,{
         "cmpTransId": TransactionID
       })
     responseBody.responseData = response.data.result
@@ -71,7 +71,7 @@ export async function GetTasks(TransactionID,ClientId) {
     error: null
   }
   try {
-    const response = await axiosInstance.post(`/KundaliTask/task/getClientTasks`,{
+    const response = await axiosInstance.post(`/KundaliTask/task/task/getClientTasks`,{
         "cmpTransId": TransactionID,
         "CmpClientId":ClientId
       })
@@ -93,10 +93,8 @@ export async function GetCompanyTasks(TransactionID) {
     error: null
   }
   try {
-    const response = await axiosInstance.post(`/KundaliTask/task/getTasks`,{
-        "cmpTransId": TransactionID
-      })
-    responseBody.responseData = response.data.result
+    const response = await axiosInstance.post(`/KundaliTask/task/task/getTasks`)
+    responseBody.responseData = response?.data?.Result?.kundaliTasks
     return responseBody
   } catch (error) {
     responseBody.hasError = true
@@ -113,7 +111,7 @@ export async function AddTasks(PayLoad) {
     error: null
   }
   try {
-    const response = await axios.post(`${API_URL}/KundaliTask/task/create`,PayLoad)
+    const response = await axiosInstance.post(`/KundaliTask/task/create`,PayLoad)
     responseBody.responseData = response.data
     return responseBody
   } catch (error) {
