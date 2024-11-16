@@ -182,24 +182,14 @@ export default function KundliMain() {
         // };
 
         const handleDownload = () => {
-          // Create a download link
+          setLoading(true);
           const link = document.createElement('a');
-          // Set the href to the provided URL
           link.href = `${process.env.NEXT_PUBLIC_APIURL}/astro/astro-vastu-report-pdf/${params?.row?.KundaliID}`;
-
-          // Set the link to open in a new tab (optional)
-          // link.target = '_blank';
-
-          // Append the link to the document body
           document.body.appendChild(link);
-
-          // Trigger the download by simulating a click
           link.click();
-
-          // Remove the link from the document after download is triggered
           document.body.removeChild(link);
-
           handleClose();
+          setLoading(false);
         };
 
         return (

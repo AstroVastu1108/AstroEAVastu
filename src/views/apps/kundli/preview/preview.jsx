@@ -32,34 +32,47 @@ const Preview = ({ kundliData, setKundliData }) => {
   const [TransitData, setTransitData] = useState(null);
   const [datePicker, setDatePicker] = useState(dayjs());
 
-  const handleKundliApi = async () => {
+  // const handleKundliApi = async () => {
+  //   if (kundliData) {
+  //     try {
+  //       setExistDownloadLoading(true);
+  //       const response = await getKundliPdf(kundliData.AstroVastuReport.BirthDetails.KundaliID);
+  //       if (response.hasError) {
+  //         return toastDisplayer("error", response.error)
+  //       }
+  //       // Create a Blob from the PDF
+  //       const pdfBlob = new Blob([response.responseData.data], { type: 'application/pdf' });
+
+  //       // Create a URL for the Blob
+  //       const pdfURL = URL.createObjectURL(pdfBlob);
+
+  //       // Open the PDF in a new window
+  //       const newWindow = window.open(pdfURL);
+
+  //       // if (newWindow) {
+  //       //   newWindow.addEventListener('load', () => {
+  //       //     newWindow.print();
+  //       //   });
+  //       // }
+  //       setExistDownloadLoading(false);
+  //     } catch (error) {
+  //       setExistDownloadLoading(false);
+  //     }
+  //   }
+  // }
+
+  const handleKundliApi = () => {
     if (kundliData) {
-      try {
-        setExistDownloadLoading(true);
-        const response = await getKundliPdf(kundliData.AstroVastuReport.BirthDetails.KundaliID);
-        if (response.hasError) {
-          return toastDisplayer("error", response.error)
-        }
-        // Create a Blob from the PDF
-        const pdfBlob = new Blob([response.responseData.data], { type: 'application/pdf' });
-
-        // Create a URL for the Blob
-        const pdfURL = URL.createObjectURL(pdfBlob);
-
-        // Open the PDF in a new window
-        const newWindow = window.open(pdfURL);
-
-        // if (newWindow) {
-        //   newWindow.addEventListener('load', () => {
-        //     newWindow.print();
-        //   });
-        // }
-        setExistDownloadLoading(false);
-      } catch (error) {
-        setExistDownloadLoading(false);
-      }
+      setLoading(true);
+      const link = document.createElement('a');
+      link.href = `${process.env.NEXT_PUBLIC_APIURL}/astro/astro-vastu-report-pdf/${kundliData?.AstroVastuReport?.BirthDetails?.KundaliID}`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      // handleClose();
+      setLoading(false);
     }
-  }
+  };
 
   const handleButtonClick = () => {
     setDownloadLoading(true);

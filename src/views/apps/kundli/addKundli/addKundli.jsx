@@ -174,7 +174,6 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
         TransitTime: "",
         TransitDate: ""
       }
-      console.log(formattedData);
       if (!userData.isUpdate) {
         setIsDisable(false);
         const response = await CreateKundli(formattedData)
@@ -367,6 +366,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
               />
             </Grid>
             <Grid item xs={12} sm={4}>
+
               <AppReactDatepicker
                 showTimeSelect
                 showTimeSelectOnly

@@ -2,7 +2,7 @@ import { Box, createTheme, ThemeProvider } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import React from 'react'
 
-function LoardPlanet({ LoardData, SelectedEventVal }) {
+function LoardPlanet({ LoardData, SelectedEventVal, symbols }) {
 
   const applyOccupancyColor = (Occupancy) => {
     if (SelectedEventVal) {
@@ -19,7 +19,7 @@ function LoardPlanet({ LoardData, SelectedEventVal }) {
     return Occupancy;
   };
 
-  const applyOwnerShipColor=(OwnershipArray)=>{
+  const applyOwnerShipColor = (OwnershipArray) => {
     const formattedOwnership = OwnershipArray?.map((ownershipItem, index) => {
       const ownershipNumber = Number(ownershipItem);
 
@@ -92,14 +92,34 @@ function LoardPlanet({ LoardData, SelectedEventVal }) {
   //   }
   // ];
 
+  const getSymbolArr = (data) => {
+    const { IsRetro, IsExalted, IsDebilitated, IsCombust, IsUntenanted, IsSelfStar, IsExchange } = data;
+    const activeSymbols = [
+      IsExalted && symbols.IsExalted,
+      IsDebilitated && symbols.IsDebilitated,
+      IsCombust && symbols.IsCombust,
+      IsExchange && symbols.IsExchange,
+      IsUntenanted && symbols.IsUntenanted,
+      IsSelfStar && symbols.IsSelfStar,
+      IsRetro && symbols.IsRetro,
+    ].filter(Boolean).join(" ");
+    return activeSymbols;
+  }
+
 
   const columns1 = [
     {
       field: 'rahuId',
       headerName: LoardData.Planet,
-      width: 100,
+      width: 130,
       headerClassName: 'rowheader',
       renderCell: (params) => {
+        if (params?.row?.symbol) {
+          return <div className='flex justify-between rahuHeader'>
+            <div>{params.value}</div>
+            <div>{params?.row?.symbol}</div>
+          </div>;
+        }
         return <div className='rahuHeader'>{params.value}</div>;
       },
     },
@@ -126,10 +146,15 @@ function LoardPlanet({ LoardData, SelectedEventVal }) {
 
   const rows = [
     // { rahuId: 'Vedic Aspect', rahuScriptFull: LoardData.Aspect }
-    { rahuId: LoardData.PL.Planet, rahuScriptFull: LoardData.PL.ScriptFull },
-    { rahuId: LoardData.NL.Planet, rahuScriptFull: LoardData.NL.ScriptFull },
-    { rahuId: LoardData.SL.Planet, rahuScriptFull: LoardData.SL.ScriptFull },
+    { rahuId: LoardData.PL.Planet, rahuScriptFull: LoardData.PL.ScriptFull, symbol: getSymbolArr(LoardData) },
+    { rahuId: LoardData.NL.Planet, rahuScriptFull: LoardData.NL.ScriptFull, symbol: "" },
+    { rahuId: LoardData.SL.Planet, rahuScriptFull: LoardData.SL.ScriptFull, symbol: "" },
   ];
+
+  const rowsSummaryData = rows?.map((item, index) => ({
+    id: index + 1, // You can use uuidv4() for truly unique IDs if needed
+    ...item
+  }));
 
   return (
     <Box
@@ -180,8 +205,9 @@ function LoardPlanet({ LoardData, SelectedEventVal }) {
 
         <DataGrid
           showCellVerticalBorder
-          getRowId={(row) => row.rahuId}
-          rows={rows}
+          // getRowId={(row) => row.rahuId}
+          getRowId={rowsSummaryData.id}
+          rows={rowsSummaryData}
           columns={columns1}
           disableColumnSorting
           disableColumnMenu
