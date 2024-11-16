@@ -24,17 +24,16 @@ export async function SaveConfig(configureID,TransactionID,city,country) {
   }
 
 
-export async function GetConfig(TransactionID) {
+export async function GetConfig() {
     const responseBody = {
       responseData: null,
       hasError: false,
       error: null
     }
     try {
-      const response = await axiosInstance.post(`/Configuration/getConfiguration`,{
-        "cmpid": TransactionID
-      })
-      responseBody.responseData = response.data.configuration
+      const response = await axiosInstance.post(`/Configuration/getConfiguration`)
+      console.log("response : ",response.data)
+      responseBody.responseData = response.data?.Result?.Configuration
       return responseBody
     } catch (error) {
       responseBody.hasError = true

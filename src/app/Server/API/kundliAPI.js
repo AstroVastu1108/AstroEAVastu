@@ -1,5 +1,6 @@
 import axios from 'axios'
-const API_URL = process.env.NEXT_PUBLIC_APIURL
+import astroInstance from './astroInstance';
+// const API_URL = process.env.NEXT_PUBLIC_APIURL
 
 // get all the kundli data
 export async function GetKundliDataAPI(PageSize,PageNumber,Search) {
@@ -9,7 +10,7 @@ export async function GetKundliDataAPI(PageSize,PageNumber,Search) {
     error: null
   }
   try {
-    const response = await axios.get(`${API_URL}/astro/kundali-list/${PageSize}/${PageNumber}/${Search}`);
+    const response = await astroInstance.get(`/astro/kundali-list/${PageSize}/${PageNumber}/${Search}`);
     responseBody.responseData = response
     return responseBody
   } catch (error) {
@@ -28,7 +29,7 @@ export async function CreateKundli(payload) {
     error: null
   }
   try {
-    const response = await axios.post(`${API_URL}/astro/create-kundali`, payload)
+    const response = await astroInstance.post(`/astro/create-kundali`, payload)
     responseBody.responseData = response.data
     return responseBody
   } catch (error) {
@@ -47,7 +48,7 @@ export async function UpdateKundli(payload) {
     error: null
   }
   try {
-    const response = await axios.post(`${API_URL}/astro/update-kundali`, payload)
+    const response = await astroInstance.post(`/astro/update-kundali`, payload)
     responseBody.responseData = response.data
     return responseBody
   } catch (error) {
@@ -67,7 +68,7 @@ export async function GetKundliIDDataAPI(kId) {
     error: null
   }
   try {
-    const response = await axios.get(`${API_URL}/astro/astro-vastu-report/${kId}`)
+    const response = await astroInstance.get(`/astro/astro-vastu-report/${kId}`)
     responseBody.responseData = response
     return responseBody
   } catch (error) {
@@ -86,7 +87,7 @@ export async function ChangeDateTimeKundli(payload) {
     error: null
   }
   try {
-    const response = await axios.post(`${API_URL}/astro/datetime-change`, payload)
+    const response = await astroInstance.post(`/astro/datetime-change`, payload)
     responseBody.responseData = response.data
     return responseBody
   } catch (error) {
@@ -105,7 +106,7 @@ export async function SearchKundli(searchText) {
     error: null
   }
   try {
-    const response = await axios.get(`${API_URL}/astro/kundali-list/5/1/${searchText}`)
+    const response = await astroInstance.get(`/astro/kundali-list/5/1/${searchText}`)
     responseBody.responseData = response.data
     return responseBody
   } catch (error) {
@@ -125,7 +126,7 @@ export async function EventOptionsData() {
     error: null
   }
   try {
-    const response = await axios.get(`${API_URL}/kundali-options-event`)
+    const response = await astroInstance.get(`/kundali-options-event`)
     responseBody.responseData = response.data
     return responseBody
   } catch (error) {
@@ -145,7 +146,7 @@ export async function KundliOptionsData() {
     error: null
   }
   try {
-    const response = await axios.get(`${API_URL}/kundali-options`)
+    const response = await astroInstance.get(`/kundali-options`)
     responseBody.responseData = response.data
     return responseBody
   } catch (error) {
@@ -165,7 +166,7 @@ export async function DashaClickEvent(payload) {
     error: null
   }
   try {
-    const response = await axios.post(`${API_URL}/kundali-dasha`,payload)
+    const response = await astroInstance.post(`/kundali-dasha`,payload)
     responseBody.responseData = response.data
     return responseBody
   } catch (error) {
@@ -185,7 +186,7 @@ export async function TransitClickEvent(payload) {
     error: null
   }
   try {
-    const response = await axios.post(`${API_URL}/astro/chart/transit`,payload)
+    const response = await astroInstance.post(`/astro/chart/transit`,payload)
     responseBody.responseData = response.data
     return responseBody
   } catch (error) {

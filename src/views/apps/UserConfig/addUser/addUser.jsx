@@ -49,7 +49,8 @@ function AddUserPopUp({ open, handleAddClose, getAllUsers, userData, setUserData
           setIsDisable(false)
           getAllUsers();
           handleAddClose();
-          return toastDisplayer("success", `User data is saved successfully.`);
+          return;
+          // return toastDisplayer("success", `User data is saved successfully.`);
         } else {
         }
       }

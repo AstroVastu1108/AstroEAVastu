@@ -86,7 +86,7 @@ export default function ClientKundli({ cid }) {
       const response = await DeleteClientKundli(id);
       if (response.hasError) throw new Error(response.errorMessage);
       setClientKundliList((prevList) => prevList.filter((item) => item.id !== id));
-      toastDisplayer("success", response.responseData.statusMsg);
+      // toastDisplayer("success", response.responseData.statusMsg);
     } catch (error) {
       toastDisplayer("error", error.message);
     }
@@ -119,7 +119,7 @@ export default function ClientKundli({ cid }) {
       setEditItem(null);
       setEditText("");
       setKundliType(false);
-      toastDisplayer("success", response.responseData.statusMsg);
+      // toastDisplayer("success", response.responseData.statusMsg);
     } catch (error) {
       toastDisplayer("error", error.message);
     }
@@ -158,8 +158,8 @@ export default function ClientKundli({ cid }) {
       if(!kundliType){
         setClientKundliList((prevList) => [...prevList, payloadData]);
       }
-      setKundliType(false)
-      return toastDisplayer("success", response.responseData.statusMsg);
+      return setKundliType(false)
+      // return toastDisplayer("success", response.responseData.statusMsg);
     } catch (error) {
       toastDisplayer("error", error.message);
     }

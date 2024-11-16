@@ -125,7 +125,7 @@ export default function ClientMain() {
         return toastDisplayer("error", response.errorMessage);
       } else {
         setOpen(false);
-        toastDisplayer("success", "Client added successfully.");
+        // toastDisplayer("success", "Client added successfully.");
         if (user?.transactionID) {
           getAllClients(user?.transactionID);
         }
@@ -178,7 +178,7 @@ export default function ClientMain() {
           return toastDisplayer("error", response.errorMessage);
         } else {
           setOpenDelete(false);
-          toastDisplayer("success", "Client deleted successfully.");
+          // toastDisplayer("success", "Client deleted successfully.");
           if (user?.transactionID) {
             getAllClients(user?.transactionID);
           }

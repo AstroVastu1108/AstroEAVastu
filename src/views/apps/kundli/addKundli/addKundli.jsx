@@ -186,7 +186,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
         setIsDisable(false)
         getAllKundli(1, "");
         handleAddClose();
-        toastDisplayer("success", `kundli data is saved successfully.`)
+        // toastDisplayer("success", `kundli data is saved successfully.`)
         return kId;
       } else {
         setIsDisable(false)
@@ -200,7 +200,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
         setIsDisable(false)
         getAllKundli(1, "");
         handleAddClose();
-        toastDisplayer("success", `Kundli data is updated successfully.`)
+        // toastDisplayer("success", `Kundli data is updated successfully.`)
         return kId;
       }
     } catch (error) {

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import axiosInstance from './axiosInstance'
+import { RESPONSE_LIMIT_DEFAULT } from 'next/dist/server/api-utils'
 const API_URL = process.env.NEXT_PUBLIC_APIURL1
 
 export async function validateCaptcha(token) {
@@ -25,36 +26,16 @@ export async function validateCaptcha(token) {
 }
 
 export async function sendSignInRequest(payload, did) {
-  // const responseBody = {
-  //   responseData: null,
-  //   hasError: false,
-  //   error: null,
-  // };
+  const responseBody = {
+    responseData: null,
+    hasError: false,
+    error: null,
+  };
   try {
-
-
     const response = await axiosInstance.post(`/Auth/LoginPost`,payload);
-    console.log(response.data.Status)
     return {
       isOk: response.data.Status,
       data: response.data
-    }
-    // const response = await axios.post(`${API_URL}/Auth/LoginPost`, payload, {
-    //   headers: {
-    //     'M-DID': did
-    //   }
-    // })
-    // responseBody.responseData = response.data
-    if (response?.Status === true) {
-      return {
-        isOk: response.data.Status,
-        data: response.data
-      }
-    } else {
-      return {
-        isOk: false,
-        data: response.data
-      }
     }
   } catch (error) {
     return {
@@ -124,17 +105,20 @@ export const requestOtp = async (email, role) => {
     userType: role
   }
 
-  // const responseBody = {
-  //   responseData: null,
-  //   hasError: false,
-  //   error: null,
-  // };
+  const responseBody = {
+    responseData: null,
+    hasError: false,
+    error: null,
+  };
   try {
-    const response = await axios.post(`${API_URL}/Otp/GenerateOTP`, payload)
-    console.log('====>', response.data)
-    // responseBody.response = response.data;
-
-    return response.data
+    const response = await axiosInstance.post(`/Otp/GenerateOTP`, payload)
+    if(!response?.data.Status){
+      responseBody.hasError = true;
+      responseBody.responseData = response?.data;
+      return responseBody;
+    }
+    responseBody.responseData = response.data;
+    return responseBody
   } catch (error) {
     responseBody.error = error.response?.data?.statusMsg || error.message || error.response?.data?.errors
     responseBody.hasError = true
@@ -150,11 +134,11 @@ export const requestOtpNewUser = async (email, firstName, lastname, role) => {
     FirstName: firstName
   }
 
-  // const responseBody = {
-  //   responseData: null,
-  //   hasError: false,
-  //   error: null
-  // }
+  const responseBody = {
+    responseData: null,
+    hasError: false,
+    error: null
+  }
   try {
     const response = await axiosInstance.post(`/Otp/GenerateOTP`,payload);
     // responseBody.response = response.data
@@ -181,7 +165,7 @@ export const VerifyOtp = async (email, otp, role) => {
   }
 
   try {
-    const response = await axios.post(`${API_URL}/Otp/VerifyOTP`, payload)
+    const response = await axiosInstance.post(`/Otp/VerifyOTP`, payload)
     responseBody.responseData = response.data
 
     if (response.data.Status === 400) {

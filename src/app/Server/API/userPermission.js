@@ -1,4 +1,5 @@
 import axios from 'axios'
+import axiosInstance from './axiosInstance'
 const API_URL = process.env.NEXT_PUBLIC_APIURL1
 
 // get all the users
@@ -9,7 +10,7 @@ export async function GetUsers(TransactionID) {
     error: null
   }
   try {
-    const response = await axios.post(`${API_URL}/Auth/GetUser`,{
+    const response = await axiosInstance.post(`/Auth/GetUser`,{
         "cmpTransId": TransactionID
       })
     responseBody.responseData = response.data.result
@@ -30,7 +31,7 @@ export async function GetUserAuthRule(TransactionID,Email) {
     error: null
   }
   try {
-    const response = await axios.post(`${API_URL}/Auth/getAuthRule`,{
+    const response = await axiosInstance.post(`/Auth/getAuthRule`,{
       "cmpTransId": TransactionID,
       "userEmail": Email
       })
@@ -53,7 +54,7 @@ export async function saveUserAuthRule(TransactionID,Email,moduleCLasses) {
     error: null
   }
   try {
-    const response = await axios.post(`${API_URL}/Auth/SaveAuthRule`,{
+    const response = await axiosInstance.post(`/Auth/SaveAuthRule`,{
       "cmpTransId": TransactionID,
       "userEmail": Email,
       "moduleCLasses":moduleCLasses
@@ -76,7 +77,7 @@ export async function CreateUser(payload) {
     error: null
   }
   try {
-    const response = await axios.post(`${API_URL}/Auth/UserRegistration`, payload)
+    const response = await axiosInstance.post(`/Auth/UserRegistration`, payload)
     responseBody.responseData = response.data
     return responseBody
   } catch (error) {
