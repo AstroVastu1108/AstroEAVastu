@@ -255,17 +255,29 @@ export default function KundliMain() {
     } else {
       setLoading(false);
       const response = await res.responseData
-      setUserData((prev) => ({
-        ...prev,
-        CityID: {
-            CityID: response.City?.CityID, // Set correct property name
-            FormattedCity: response.City?.FormattedCity // Set correct property name
-        },
-        Country: {
-            iso2: response.Country?.iso2,
-            name: response.Country?.name
-        }
-    }));
+      if (response?.Country?.iso2) {
+
+        setUserData((prev) => ({
+          ...prev,
+          CityID: {
+            CityID: response?.City?.CityID, // Set correct property name
+            FormattedCity: response?.City?.FormattedCity // Set correct property name
+          },
+          Country: {
+            iso2: response?.Country?.iso2,
+            name: response?.Country?.name
+          }
+        }));
+      } else {
+        setUserData((prev) => ({
+          ...prev,
+          CityID: {
+            "CityID": "A1AE28185ED49D47211760BF32D40EB742C84998",
+            "FormattedCity": "Surat, Gujarat"
+          },
+          Country: { iso2: 'IN', name: 'India' }
+        }));
+      }
     }
   }
   useEffect(() => {
@@ -299,7 +311,7 @@ export default function KundliMain() {
   }
 
 
-  const getAllKundli = async (pageNo, searchValue) => {
+  const getAllKundli = async (pageNo, searchValue="") => {
     // setLoading(true);
     const res = await GetKundliDataAPI(10, pageNo, searchValue);
     if (res.hasError) {
