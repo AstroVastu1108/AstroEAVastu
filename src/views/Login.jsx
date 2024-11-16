@@ -128,6 +128,7 @@ const LoginV2 = ({ mode }) => {
 
       const recaptchaData = await recaptchaResponse.json();
       if (recaptchaData.success) {
+        setIsDisable(true);
         handleVerifyEmail();
       } else {
         setIsDisable(false)
@@ -167,12 +168,11 @@ const LoginV2 = ({ mode }) => {
       }
       setIsDisable(true)
       const result = await requestOtp(formData?.email, "login");
-      if (!result?.Status) {
+      if (result.hasError) {
         setIsDisable(false);
         setIsOtpVerified("pending")
         setErrors(true)
-        return setErrorMessage(result?.Error)
-        // return toastDisplayer("error", result.error)
+        return setErrorMessage(result.responseData?.Error)
       } else {
         setIsDisable(false);
         setIsOtpVerified("sent")
@@ -181,7 +181,7 @@ const LoginV2 = ({ mode }) => {
       setIsDisable(false);
       setIsOtpVerified("pending")
       setErrors(true)
-      return setErrorMessage(result.error)
+      return setErrorMessage(error)
     }
   }
 

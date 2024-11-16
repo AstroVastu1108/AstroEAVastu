@@ -141,7 +141,7 @@ export default function EnhancedTable() {
       } else {
         setIsVisible(false);
         setSelectedValue("");
-        toastDisplayer("success", response.responseData.statusMsg);
+        // toastDisplayer("success", response.responseData.statusMsg);
       }
     } catch (error) {
       // console.error(error);

@@ -1,4 +1,5 @@
 import axios from 'axios'
+import axiosInstance from './axiosInstance'
 const API_URL = process.env.NEXT_PUBLIC_APIURL1
 // save client data
 export async function CreateClient(payload) {
@@ -8,7 +9,7 @@ export async function CreateClient(payload) {
     error: null
   }
   try {
-    const response = await axios.post(`${API_URL}/Client/save`, payload)
+    const response = await axiosInstance.post(`/Client/save`, payload)
     responseBody.responseData = response.data
     return responseBody
   } catch (error) {
@@ -27,7 +28,7 @@ export async function GetClients(TransactionID) {
     error: null
   }
   try {
-    const response = await axios.post(`${API_URL}/Client/GetClient`,{
+    const response = await axiosInstance.post(`/Client/GetClient`,{
         "cmpTransId": TransactionID
       })
     responseBody.responseData = response.data.result
@@ -48,7 +49,7 @@ export async function GetClientById(TransactionID,cid) {
     error: null
   }
   try {
-    const response = await axios.post(`${API_URL}/Client/getClientById`,{
+    const response = await axiosInstance.post(`/Client/getClientById`,{
         "clientID":cid,
         "companyID": TransactionID
       })
@@ -70,7 +71,7 @@ export async function DeleteClient(ClientID,TransactionID) {
     error: null
   }
   try {
-    const response = await axios.post(`${API_URL}/Client/delete`,{
+    const response = await axiosInstance.post(`/Client/delete`,{
         "clientID":ClientID,
         "companyID": TransactionID
       })
@@ -92,7 +93,7 @@ export async function SaveClientKundli(payload) {
     error: null
   }
   try {
-    const response = await axios.post(`${API_URL}/ClientKundali/transaction`,payload)
+    const response = await axiosInstance.post(`/ClientKundali/transaction`,payload)
     responseBody.responseData = response.data
     return responseBody
   } catch (error) {
@@ -111,7 +112,7 @@ export async function GetClientKundli(TransactionID,clientID) {
     error: null
   }
   try {
-    const response = await axios.post(`${API_URL}/ClientKundali/get`,{
+    const response = await axiosInstance.post(`/ClientKundali/get`,{
         "companyId": TransactionID,
         "clientId": clientID
       })
@@ -133,7 +134,7 @@ export async function DeleteClientKundli(KundliTransactionID) {
     error: null
   }
   try {
-    const response = await axios.delete(`${API_URL}/ClientKundali/${KundliTransactionID}`)
+    const response = await axiosInstance.delete(`/ClientKundali/${KundliTransactionID}`)
     responseBody.responseData = response.data
     return responseBody
   } catch (error) {

@@ -63,29 +63,28 @@ function Settings() {
     }, [query])
 
     const fetchConfig = async (id) => {
-        const res = await GetConfig(id);
+        const res = await GetConfig();
+        console.log("response : ",res)
         if (res.hasError) {
             setLoading(false);
             return toastDisplayer("error", res.error);
         } else {
             setLoading(false);
             const response = res.responseData
-            setConfigureID(response.configureID)
+            setConfigureID(response.ConfigureID)
             setSelectedCountry({
-                "iso2": response.country?.iso2,
-                "name": response.country?.name
+                "iso2": response.Country?.iso2,
+                "name": response.Country?.name
             })
             setSelectedCity({
-                "FormattedCity": response.city?.formattedCity,
-                "CityID": response.city?.cityID
+                "FormattedCity": response.City?.FormattedCity,
+                "CityID": response.City?.CityID
             })
         }
     }
     useEffect(() => {
-        if (user && user?.transactionID) {
-            fetchConfig(user?.transactionID)
-        }
-    }, [user])
+        fetchConfig(user?.transactionID) 
+    }, [])
 
     const handleSave = async () => {
         setLoading(true);
@@ -94,8 +93,8 @@ function Settings() {
             setLoading(false);
             return toastDisplayer("error", res.error);
         } else {
-            setLoading(false);
-            return toastDisplayer("success", "Configuration updated.");
+            return setLoading(false);
+            // return toastDisplayer("success", "Configuration updated.");
         }
     }
     return (

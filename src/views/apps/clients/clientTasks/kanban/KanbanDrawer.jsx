@@ -356,7 +356,7 @@ const KanbanDrawer = props => {
 
   // To set the initial values according to the task
   useEffect(() => {
-    reset({ title: task.title })
+    reset({ Title: task.Title })
     setBadgeText(task.badgeText || [])
     setDate(task.dueDate)
   }, [task, reset])
@@ -380,15 +380,15 @@ const KanbanDrawer = props => {
         <div className='p-6'>
           <form className='flex flex-col gap-y-5' onSubmit={handleSubmit(updateTask)}>
             <Controller
-              name='title'
+              name='Title'
               control={control}
               render={({ field }) => (
                 <CustomTextField
                   fullWidth
                   label='Title'
                   {...field}
-                  error={Boolean(errors.title)}
-                  helperText={errors.title?.message}
+                  error={Boolean(errors?.Title)}
+                  helperText={errors?.Title?.message}
                 />
               )}
             />

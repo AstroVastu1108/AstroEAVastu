@@ -1,4 +1,5 @@
 import axios from 'axios'
+import axiosInstance from './axiosInstance'
 const API_URL = process.env.NEXT_PUBLIC_APIURL1
 // save client data
 export async function CreateOrder(payload) {
@@ -8,7 +9,7 @@ export async function CreateOrder(payload) {
     error: null
   }
   try {
-    const response = await axios.post(`${API_URL}/Subscription/CreateOrder`, payload)
+    const response = await axiosInstance.post(`/Subscription/CreateOrder`, payload)
     responseBody.responseData = response.data
     return responseBody
   } catch (error) {
@@ -26,7 +27,7 @@ export async function VerifyOrder(payload) {
     error: null
   }
   try {
-    const response = await axios.post(`${API_URL}/Subscription/VerifyPayment`, payload)
+    const response = await axiosInstance.post(`/Subscription/VerifyPayment`, payload)
     responseBody.responseData = response.data
     return responseBody
   } catch (error) {

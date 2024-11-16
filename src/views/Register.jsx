@@ -232,8 +232,7 @@ const RegisterPage = ({ mode }) => {
       if (userData.email == "") {
         setErrors(true)
         emailRef.current.focus();
-        setErrorMessage("Email is required.")
-        return toastDisplayer("error", "Email is required.")
+        return setErrorMessage("Email is required.")
       }
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!userData.email || !emailRegex.test(userData.email)) {
