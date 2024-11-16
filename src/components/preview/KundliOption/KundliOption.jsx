@@ -31,10 +31,19 @@ function KundliOption({ setKundliValue, open, handleClose, KundliData }) {
     {
       field: 'OptionName',
       headerName: 'Name',
-      minWidth: 150,
+      minWidth: 170,
       align: "end",
       headerClassName: 'rowheader',
-      flex: 1
+      // flex: 1,
+      renderCell: (params) => {
+        if (params.id != "V" && params.id != "T") {
+          return <div className=''>
+            <span>{params.id} </span>
+            <span> - </span>
+            {params.value}</div>;
+        }
+        return <div className=''>{params.value}</div>;
+      },
     },
     {
       field: 'Desc',
@@ -105,7 +114,7 @@ function KundliOption({ setKundliValue, open, handleClose, KundliData }) {
                 borderRadius: 0, // Remove border radius
                 borderLeft: '0px',
                 borderRight: '0px',
-                border:'0px'
+                border: '0px'
               },
               '& .MuiDataGrid-row:nth-of-type(odd)': {
                 backgroundColor: '#ffffff', // Light color for odd rows
@@ -155,11 +164,11 @@ function KundliOption({ setKundliValue, open, handleClose, KundliData }) {
                   setSelectedRow(params.row)
                 }}
                 onRowSelectionModelChange={(newRowSelectionModel) => {
-                  setSelectedRow(KundliData.filter((e)=>e.Option == newRowSelectionModel[0])[0])
+                  setSelectedRow(KundliData.filter((e) => e.Option == newRowSelectionModel[0])[0])
                 }}
                 // checkboxSelection
                 disableMultipleRowSelection
-                // selectionModel={KundliData && selectedRow ? [selectedRow.Kundli] : []}
+              // selectionModel={KundliData && selectedRow ? [selectedRow.Kundli] : []}
               />
             </ThemeProvider>
           </Box>

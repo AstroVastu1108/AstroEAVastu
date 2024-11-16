@@ -591,7 +591,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               {PlaneNSummaryData.length
                 ? PlaneNSummaryData.slice(0, 9).map((element, index) => ( // only display first 9 elements
                   <div key={index} className=''>
-                    <LoardPlanet LoardData={element} SelectedEventVal={eventValue} />
+                    <LoardPlanet LoardData={element} SelectedEventVal={eventValue} symbols={Symbols} />
                   </div>
                 ))
                 : null

@@ -131,7 +131,7 @@ function NavTaraChakra({ open, handleClose, NavTaraChakraData }) {
                 backgroundColor: '#ffffff',
               },
               '& .MuiDataGrid-row:nth-of-type(even)': {
-                backgroundColor: '#daffaf45',
+                backgroundColor: '#f5f5f5',
               },
               '& .MuiDataGrid-row:hover': {
                 color: 'var(--primary-color) !important',
