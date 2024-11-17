@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 
 // Component Imports
 // import Breadcrumb from '@/components/common/BreadCrumb's
-import CustomerForm from '@/views/apps/customerForm'
 import KundliMain from '@/views/apps/kundli/page'
 
 // API Imports
@@ -43,13 +42,4 @@ export default function KundliPage() {
     <KundliMain kundliData={kundliData} />
   </>)
 
-
-  // return (
-  // <div>
-  {/* <Breadcrumb pageName='Kundli page' /> */ }
-  {/* <div className='flex justify-end'> */ }
-  {/* <CustomerForm /> */ }
-  {/* </div>
-    </div> */}
-  // )
 }

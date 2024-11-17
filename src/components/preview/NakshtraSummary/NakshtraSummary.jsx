@@ -366,7 +366,7 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
             display: 'none !important'
           },
           '& .Mui-selected': {
-            backgroundColor: 'var(--secondary-color) !important'
+            backgroundColor: '#99e27b65 !important'
           },
           '& .MuiDataGrid-columnHeader': {
             cursor: 'default !important', // Change to your desired color

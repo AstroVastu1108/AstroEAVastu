@@ -1,6 +1,7 @@
 import axios from 'axios'
 import axiosInstance from './axiosInstance'
 import { RESPONSE_LIMIT_DEFAULT } from 'next/dist/server/api-utils'
+import astroInstance from './astroInstance'
 const API_URL = process.env.NEXT_PUBLIC_APIURL1
 
 export async function validateCaptcha(token) {
@@ -33,6 +34,27 @@ export async function sendSignInRequest(payload, did) {
   };
   try {
     const response = await axiosInstance.post(`/Auth/LoginPost`,payload);
+    return {
+      isOk: response.data.Status,
+      data: response.data
+    }
+  } catch (error) {
+    return {
+      isOk: false,
+      data: (responseBody.errorMessage =
+        error.response?.data?.statusMsg || error.message || error.response?.data?.errors)
+    }
+  }
+}
+
+export async function authCheckRequest() {
+  const responseBody = {
+    responseData: null,
+    hasError: false,
+    error: null,
+  };
+  try {
+    const response = await astroInstance.post(`/ValidateClient`);
     return {
       isOk: response.data.Status,
       data: response.data

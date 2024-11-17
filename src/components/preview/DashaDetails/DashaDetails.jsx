@@ -97,9 +97,9 @@ function DashaDetails({ title, DashaData, handleDashadbClick, divref }) {
           '& .MuiDataGrid-columnHeader .MuiDataGrid-sortIcon': {
             color: 'white', // Change to your desired color
           },
-          '& .MuiDataGrid-cell': {
-            lineHeight: '30px !important'
-          },
+          // '& .MuiDataGrid-cell': {
+          //   lineHeight: '30px !important'
+          // },
           '& .MuiDataGrid-columnHeader--withRightBorder': {
             borderRightWidth: '0px !important'
           },

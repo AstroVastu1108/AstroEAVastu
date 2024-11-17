@@ -111,7 +111,8 @@
 }
 
 .highlight-row {
-  background-color: var(--secondary-color) !important;
+  /* background-color: var(--secondary-color) !important; */
+  background-color: #99e27b65 !important;
   color: var(--primary-color);
   font-weight: 600;
 }

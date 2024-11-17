@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 
 // Component Imports
 // import Breadcrumb from '@/components/common/BreadCrumb's
-import CustomerForm from '@/views/apps/customerForm'
 
 // API Imports
 import { GetKundliDataAPI } from '@/app/Server/API/kundliAPI';

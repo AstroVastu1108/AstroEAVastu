@@ -20,8 +20,9 @@ import KundliOption from '@/components/preview/KundliOption/KundliOption'
 import { DashaClickEvent, KundliOptionsData, TransitClickEvent } from '@/app/Server/API/kundliAPI'
 import JaiminiCharKarakasPopUp from '@/components/preview/JaiminiCharKarakas/JaiminiCharKarakas'
 import NavTaraChakra from '@/components/preview/NavTaraChakra/NavTaraChakra'
+import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
 
-const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, TransitData, setTransitData, getTransitData }) => {
+const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, TransitData, setTransitData, getTransitData, getDivisionalChartData,DivisionalData, setDivisionalData }) => {
   // var
   const BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
   const AstroDetails = kundliData?.AstroVastuReport?.AstroDetails;
@@ -137,7 +138,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       getTransitData("", "");
     }
     else
-      setTransitData(ChartSVG?.HouseChart)
+      getDivisionalChartData(kundliOptValue.Option)
   }, [kundliOptValue])
 
   const handleDashaChange = async () => {
@@ -266,7 +267,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       <Grid className='previewCard' item xs={12} md={12}>
         <Grid item xs={12} className='pdf-Div'>
           <div className={`chart-name rounded-t flex justify-between md:items-center gap-y-2 lg:flex-row ${!isPrintDiv ? 'sm:flex-row flex-col' : "items-center"}`}>
-            {BirthDetails?.FirstName ? `${BirthDetails.FirstName} ${BirthDetails.MiddleName} ${BirthDetails.LastName}` : 'Prashna Kundli'}
+            {BirthDetails?.FirstName ? `${BirthDetails.FirstName} ${BirthDetails.MiddleName} ${BirthDetails.LastName}` : 'Prashna Kundali'}
             <div className={`flex justify-between md-items-center lg:gap-1 lg:flex-row md:flex-row ${!isPrintDiv ? 'sm:flex-row sm:gap-1 flex-col' : "gap-5"} birthDateTime-Div`} >
               <div className='flex flex-row gap-1 chart-date items-center'>
                 <span className='label'>Birth Date & Time: </span>
@@ -478,9 +479,21 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
                     </div>
                   ) : (
                     TransitData &&
-                    <div className='flex justify-center items-center px-2'>
-                      <img src={`data:image/svg+xml;base64,${TransitData?.TransitChart}`} alt="transitChart" className='flex-auto' />
-                    </div>
+                    <>
+                      {kundliOptValue.Option == "T" ? <>
+                        {console.log("hello : ", TransitData)}
+
+                        <div className='flex justify-center items-center px-2'>
+                          <img src={`data:image/svg+xml;base64,${TransitData?.TransitChart}`} alt="transitChart" className='flex-auto' />
+                        </div>
+                      </> :
+                        <>
+                          {console.log("hello : ", TransitData)}
+                          <div className='flex justify-center items-center px-2'>
+                            <img src={`data:image/svg+xml;base64,${DivisionalData?.DChart}`} alt="transitChart" className='flex-auto' />
+                          </div>
+                        </>}
+                    </>
                   )}
 
                 </td>

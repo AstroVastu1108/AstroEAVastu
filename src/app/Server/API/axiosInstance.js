@@ -17,9 +17,9 @@ const axiosInstance = axios.create({
 //     // Get the token from cookies
 //     const authData = {
 //       useremail: Cookies.get('astrovastu_auth_useremail'),
-//       // accessToken: Cookies.get('astrovastu_auth_accessToken'), 
+//       // accessToken: Cookies.get('astrovastu_auth_accessToken'),
 //       userRole: Cookies.get('astrovastu_auth_userRole'),
-//       // expirationTime: Cookies.get('astrovastu_auth_expirationTime'), 
+//       // expirationTime: Cookies.get('astrovastu_auth_expirationTime'),
 //       // refreshToken: Cookies.get('astrovastu_auth_refreshToken')
 //   };
 
@@ -60,7 +60,7 @@ axiosInstance.interceptors.request.use(
       SecureRoute: Cookies.get('astrovastu_auth_SecureRoute')
   };
     if (authData) {
-      const { DID,InstanceID,ClientID,SecureRoute } = authData 
+      const { DID,InstanceID,ClientID,SecureRoute } = authData
       config.headers['M-DID'] = DID;
       config.headers['M-CID'] = ClientID;
       config.headers['M-IID'] = InstanceID;
@@ -87,12 +87,12 @@ axiosInstance.interceptors.response.use(
         originalRequest.headers['M-CID'] = ClientID;
         originalRequest.headers['M-IID'] = InstanceID;
         originalRequest.headers['M-SECURE-ROUTE'] = SecureRoute;
-        return axiosInstance(originalRequest) 
+        return axiosInstance(originalRequest)
       } catch (refreshError) {
-        Cookies.remove('astrovastu_auth_useremail')
-        Cookies.remove('astrovastu_auth_userRole')
-        Cookies.remove('astrovastu_auth_transactionID')
-        window.location.href = '/login'
+        Cookies.remove('astrovastu_auth_SecureRoute')
+        Cookies.remove('astrovastu_auth_InstanceID')
+        Cookies.remove('astrovastu_auth_ClientID')
+        window.location.href = '/logout'
         return Promise.reject(refreshError)
       }
     }

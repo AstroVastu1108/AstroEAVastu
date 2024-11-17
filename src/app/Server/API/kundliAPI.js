@@ -196,3 +196,22 @@ export async function TransitClickEvent(payload) {
     return responseBody
   }
 }
+
+// For Transit Click Event
+export async function DivisionalChartEvent(payload,dchart) {
+  const responseBody = {
+    responseData: null,
+    hasError: false,
+    error: null
+  }
+  try {
+    const response = await astroInstance.post(`/astro/chart/divisional/${dchart}`,payload)
+    responseBody.responseData = response.data
+    return responseBody
+  } catch (error) {
+    responseBody.hasError = true
+    responseBody.errorMessage = responseBody.errorMessage =
+      error.response?.data?.statusMsg || error.response?.data?.errors
+    return responseBody
+  }
+}

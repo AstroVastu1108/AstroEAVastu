@@ -15,7 +15,7 @@ import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplaye
 import { Box, Button, Card, CardContent, Grid } from '@mui/material'
 import PageTitle from '@/components/common/PageTitle/PageTitle'
 import TimeTool from './TimeTool'
-import { ChangeDateTimeKundli, TransitClickEvent } from '@/app/Server/API/kundliAPI'
+import { ChangeDateTimeKundli, DivisionalChartEvent, TransitClickEvent } from '@/app/Server/API/kundliAPI'
 import Loader from '@/components/common/Loader/Loader'
 import dayjs from 'dayjs'
 
@@ -30,6 +30,7 @@ const Preview = ({ kundliData, setKundliData }) => {
   const [TransiteTime, setTransiteTime] = useState(null);
   const [loading, setLoading] = useState(false);
   const [TransitData, setTransitData] = useState(null);
+  const [DivisionalData, setDivisionalData] = useState(null);
   const [datePicker, setDatePicker] = useState(dayjs());
 
   // const handleKundliApi = async () => {
@@ -142,7 +143,8 @@ const Preview = ({ kundliData, setKundliData }) => {
       "Country": BirthDetails.Country,
       "CityID": BirthDetails.CityID,
       "TransitTime": time,
-      "TransitDate": date
+      "TransitDate": date,
+      "City": BirthDetails.City,
     }
     const response = await TransitClickEvent(payload);
     if (response.hasError) {
@@ -160,39 +162,31 @@ const Preview = ({ kundliData, setKundliData }) => {
       setTransitData(data);
     }
   }
-  // const getTransitData = async (date, time, option) => {
-  //   var BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
-  //   const payload = {
-  //     "KundaliID": BirthDetails.KundaliID,
-  //     "FirstName": BirthDetails.FirstName,
-  //     "MiddleName": BirthDetails.MiddleName,
-  //     "LastName": BirthDetails.LastName,
-  //     "Gender": BirthDetails.Gender,
-  //     "Prakriti": BirthDetails.Prakriti,
-  //     "BirthDate": BirthDetails.Date,
-  //     "BirthTime": BirthDetails.Time,
-  //     "Country": BirthDetails.Country,
-  //     "CityID": BirthDetails.CityID,
-  //     "TransitTime": time,
-  //     "TransitDate": date
-  //   }
-  //   const response = await TransitClickEvent(payload);
-  //   if (response.hasError) {
-  //     // setLoading(false);
-  //     return toastDisplayer("error", response.error);
-  //   } else {
-  //     const data = response?.responseData?.Result?.Transit;
-  //     setTransiteTime(dayjs(data?.TransitDateTime, 'DD-MM-YYYY HH:mm:ss'))
-  //     console.log("time tool opt : ", option)
-  //     if (TimeToolOpt != "T") {
-  //       if (option == "T")
-  //         setDatePicker(dayjs(data?.TransitDateTime, 'DD-MM-YYYY HH:mm:ss'))
-  //     } else {
-  //       setDatePicker(dayjs(data?.TransitDateTime, 'DD-MM-YYYY HH:mm:ss'))
-  //     }
-  //     setTransitData(data);
-  //   }
-  // }
+
+  const getDivisionalChartData = async (option) => {
+    var BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
+
+    const payload = {
+      "KundaliID": BirthDetails.KundaliID,
+      "FirstName": BirthDetails.FirstName,
+      "MiddleName": BirthDetails.MiddleName,
+      "LastName": BirthDetails.LastName,
+      "Gender": BirthDetails.Gender,
+      "Prakriti": BirthDetails.Prakriti,
+      "BirthDate": BirthDetails.Date,
+      "BirthTime": BirthDetails.Time,
+      "Country": BirthDetails.Country,
+      "CityID": BirthDetails.CityID,
+      "City": BirthDetails.City,
+    }
+    const response = await DivisionalChartEvent(payload,option);
+    if (response.hasError) {
+      return toastDisplayer("error", response.error);
+    } else {
+      const data = response?.responseData?.Result;
+      setDivisionalData(data);
+    }
+  }
 
   const handleDateChange = async (datePicker) => {
     var kdata = kundliData?.AstroVastuReport?.BirthDetails;
@@ -255,7 +249,7 @@ const Preview = ({ kundliData, setKundliData }) => {
       } else {
         setDatePicker(dayjs(TransiteTime, 'DD-MM-YYYY HHmm'));
       }
-    } else {
+    } else if(e.target.value == "V") {
       const { Date: birthDate, Time: birthTime } = kundliData?.AstroVastuReport?.BirthDetails;
       const formattedDate = dayjs(`${birthDate} ${birthTime}`, 'DD-MM-YYYY HHmm');
       setDatePicker(formattedDate);
@@ -274,7 +268,7 @@ const Preview = ({ kundliData, setKundliData }) => {
               <div className='previewPDF flex justify-center'>
                 {kundliData &&
                   <>
-                    <PreviewCard kundliData={kundliData} handleDownload={handleKundliApi} isPrintDiv={false} loading={existdownloadLoading} handleTimeTool={handleTimeTool} setTransitData={setTransitData} TransitData={TransitData} getTransitData={getTransitData} />
+                    <PreviewCard kundliData={kundliData} handleDownload={handleKundliApi} isPrintDiv={false} loading={existdownloadLoading} handleTimeTool={handleTimeTool} setTransitData={setTransitData} TransitData={TransitData} getTransitData={getTransitData} getDivisionalChartData={getDivisionalChartData} DivisionalData={DivisionalData} setDivisionalData={setDivisionalData}/>
                   </>
                 }
                 {timeToolPopUp &&

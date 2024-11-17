@@ -69,7 +69,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
       setCityData([userData.CityID])
       // console.log(userData.Country)
       const now = new Date();
-      setUserData((prev) => ({ ...prev, ["date"]: now, ["time"]: now }));
+      setUserData((prev) => ({ ...prev, ["date"]: now, ["time"]: dayjs() }));
       setCurrentTime(now);
       // setConutryData(userData.Country)
       // var newCounty = conutryData.filter((e) => e.name === userData.Country || e.iso2 === userData.Country);
@@ -79,6 +79,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
       //   ["Country"]: newCounty[0],
       // }));
     } else {
+      console.log(userData)
       const dateParts = userData.BirthDate.split('-');
       const timeParts = userData.BirthTime;
 
@@ -98,12 +99,17 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
       }
 
       const birthDate = new Date(year, month, day, hours, minutes);
+      const birthTime  = userData.BirthTime;
+      const formattedDate = dayjs(`${birthTime}`, 'HHmmss');
+      // setDatePicker(formattedDate);
+      console.log(formattedDate)
 
 
       setUserData((prev) => ({
         ...prev,
         ["date"]: birthDate,
-        ["time"]: birthDate,
+        // ["time"]: birthDate,
+        ["time"]: formattedDate,
         ["CityID"]: {
           CityID: userData.CityID,
           FormattedCity: userData.City
@@ -165,8 +171,8 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
       setIsDisable(true)
       const formattedData = {
         KundaliID: userData.KundaliID,
-        FirstName: userData.FirstName,
-        LastName: userData.LastName,
+        FirstName: userData.FirstName || "Prashna",
+        LastName: userData.LastName || "Kundali",
         MiddleName: userData.MiddleName,
         Gender: userData.Gender,
         Country: userData.Country?.name,
@@ -177,7 +183,8 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
         City: userData.CityID?.FormattedCity,
         TransitTime: "",
         TransitDate: "",
-        ClientID:""
+        ClientID: "",
+        DChart:""
       }
       // return console.log(formattedData)
       if (!userData.isUpdate) {
@@ -379,7 +386,8 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                     ampm={false} // 24-hour format
                     views={['hours', 'minutes', 'seconds']}
                     format="HH:mm:ss"
-                    value={dayjs()}
+                    // value={dayjs()}
+                    value={userData.time}
                     onChange={date => handleInputChange('time', date, 'BirthTime', true)}
                   />
                 </DemoContainer>

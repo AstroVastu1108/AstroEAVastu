@@ -36,12 +36,12 @@ function KundliOption({ setKundliValue, open, handleClose, KundliData }) {
       headerClassName: 'rowheader',
       // flex: 1,
       renderCell: (params) => {
-        if (params.id != "V" && params.id != "T") {
-          return <div className=''>
-            <span>{params.id} </span>
-            <span> - </span>
-            {params.value}</div>;
-        }
+        // if (params.id != "V" && params.id != "T") {
+        //   return <div className=''>
+        //     <span>{params.id} </span>
+        //     <span> - </span>
+        //     {params.value}</div>;
+        // }
         return <div className=''>{params.value}</div>;
       },
     },
@@ -136,7 +136,7 @@ function KundliOption({ setKundliValue, open, handleClose, KundliData }) {
                 display: 'none !important'
               },
               '& .Mui-selected': {
-                backgroundColor: 'var(--secondary-color) !important'
+                backgroundColor: '#99e27b65 !important'
               },
               '& .MuiDataGrid-columnHeader': {
                 cursor: 'default !important', // Change to your desired color

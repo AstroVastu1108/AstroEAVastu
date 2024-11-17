@@ -25,15 +25,15 @@ const FooterContent = () => {
           AstroVastu.net
         </Link>
         <i className='tabler-git-merge'></i>
-        <span>Version 24.05.17</span>
+        <span>Version 24.K17</span>
         <i className='tabler-minus-vertical'></i>
         <span>Powered by</span>
         <Link href='#' className='text-primary'>
-          Elephant Astrology
+          MAYCOMS Software
         </Link>
       </div>
-      <div  className='flex gap-x-2'>
-      <span className='text-textSecondary'>{`© ${new Date().getFullYear()} `}</span>
+      <div className='flex gap-x-2'>
+        <span className='text-textSecondary'>{`© ${new Date().getFullYear()} Elephant Astrology. All rights reserved. `}</span>
       </div>
       {!isBreakpointReached && (""
         // <div className='flex items-center gap-4'>
