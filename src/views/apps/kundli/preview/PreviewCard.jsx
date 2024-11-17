@@ -481,14 +481,11 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
                     TransitData &&
                     <>
                       {kundliOptValue.Option == "T" ? <>
-                        {console.log("hello : ", TransitData)}
-
                         <div className='flex justify-center items-center px-2'>
                           <img src={`data:image/svg+xml;base64,${TransitData?.TransitChart}`} alt="transitChart" className='flex-auto' />
                         </div>
                       </> :
                         <>
-                          {console.log("hello : ", TransitData)}
                           <div className='flex justify-center items-center px-2'>
                             <img src={`data:image/svg+xml;base64,${DivisionalData?.DChart}`} alt="transitChart" className='flex-auto' />
                           </div>

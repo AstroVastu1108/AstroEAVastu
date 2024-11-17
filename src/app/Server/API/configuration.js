@@ -32,7 +32,6 @@ export async function GetConfig() {
     }
     try {
       const response = await axiosInstance.post(`/Configuration/getConfiguration`)
-      console.log("response : ",response.data)
       responseBody.responseData = response.data?.Result?.Configuration
       return responseBody
     } catch (error) {

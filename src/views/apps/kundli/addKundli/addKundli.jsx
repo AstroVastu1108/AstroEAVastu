@@ -79,7 +79,6 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
       //   ["Country"]: newCounty[0],
       // }));
     } else {
-      console.log(userData)
       const dateParts = userData.BirthDate.split('-');
       const timeParts = userData.BirthTime;
 
@@ -102,7 +101,6 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
       const birthTime  = userData.BirthTime;
       const formattedDate = dayjs(`${birthTime}`, 'HHmmss');
       // setDatePicker(formattedDate);
-      console.log(formattedDate)
 
 
       setUserData((prev) => ({

@@ -49,7 +49,6 @@ const RegisterPage = ({ mode }) => {
   const authBackground = useImageVariant(mode)
 
   const handleComplete = async () => {
-    console.log("validateFields : ",validateFields())
     if (validateFields()) {
 
       try {
@@ -228,7 +227,6 @@ const RegisterPage = ({ mode }) => {
 
   const handleVerifyOtp = async (otp) => {
     try {
-      console.log("OTP : ", otp)
       if (userData.email == "") {
         setErrors(true)
         emailRef.current.focus();
@@ -258,7 +256,6 @@ const RegisterPage = ({ mode }) => {
       setLoading(true);
       // const result = await companyRegistration(payload)
       const result = await registerCompnay(payload)
-      console.log("result : ",result)
       if (!result?.isOk) {
         setLoading(false);
         setIsDisable(false);
@@ -266,8 +263,6 @@ const RegisterPage = ({ mode }) => {
         // setActiveStep(0)
         setIsOtpVerified("error")
         setErrors(true);
-        console.log(result)
-        console.log(result?.data?.Error)
         return setErrorMessage(result?.data?.Error)
       } else {
         companyRegistration(result);
@@ -281,7 +276,6 @@ const RegisterPage = ({ mode }) => {
           profilePicture: null
         })
         const firstAccessibleItem = navigation.find(item => item);
-        console.log(firstAccessibleItem)
         return router.push(firstAccessibleItem.href);
       }
     } catch (error) {

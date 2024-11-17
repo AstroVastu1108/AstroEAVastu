@@ -298,7 +298,8 @@ function PrakritiPopUp({ open, handlePraClose }) {
       </DialogContent>
       <DialogActions className='p-0'>
         <div className='p-4'>
-          <Button variant='contained' type='submit' disabled={false} onClick={() => console.log(selectedOptions)} >
+          {/* <Button variant='contained' type='submit' disabled={false} onClick={() => console.log(selectedOptions)} > */}
+          <Button variant='contained' type='submit' disabled={false} >
             Save
           </Button>
           <Button variant='contained' className='bg-secondary' onClick={handlePraClose}>Cancel</Button>

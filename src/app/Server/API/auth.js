@@ -95,7 +95,6 @@ export async function registerCompnay(payload, did) {
     //   }
     // })
     const response = await axiosInstance.post(`Auth/Registration`,payload);
-    console.log('response : ', response)
     return {
       isOk: response.data.Status,
       data: response.data

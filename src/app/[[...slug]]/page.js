@@ -14,22 +14,19 @@ const baseUrl = process.env.NEXT_PUBLIC_APP_URL; // or replace with the correct 
 const API_URL = process.env.NEXT_PUBLIC_APIURL1;
 async function fetchSecureData(DID,SecureRoute,ClientID,InstanceID) {
   try {
-    console.log("Called this")
     const response = await axios.get(`${API_URL}/Auth/ServerTest`, {
       // headers: {
       headers: {
-         "M-DID": DID, 
-         "M-CID": ClientID, 
-         "M-IID": InstanceID, 
-         "M-SECURE-ROUTE": SecureRoute 
+         "M-DID": DID,
+         "M-CID": ClientID,
+         "M-IID": InstanceID,
+         "M-SECURE-ROUTE": SecureRoute
         },
       // headers: { Authorization: `Bearer ${accessToken}` },
       // httpsAgent,
     });
-    console.log("Respone : ",response)
     return response;
   } catch (error) {
-    console.log("error : ",error)
     if (error.response?.status === 401) {
       throw new Error('Token expired');
     }
@@ -131,7 +128,6 @@ export default async function Page({ params }) {
     //   return <NotFoundPage type={"unAuthorized"}/>;
     // }
   } catch (error) {
-    console.log("Unauthorisexd")
     return <NotFoundPage type={"unAuthorized"}/>;
   }
 }

@@ -219,8 +219,6 @@ function OTPverify({ email, role, setIsOtpVerified, handleVerifyOtp, ErrorMessag
   const [errorMessage, setErrorMessage] = useState(ErrorMessageLogin)
 
   useEffect(()=>{
-    console.log("here error : ",Errors)
-    console.log("here error : ",ErrorMessageLogin)
     setErrors(Errors);
     setErrorMessage(ErrorMessageLogin);
   },[Errors, ErrorMessageLogin])

@@ -17,8 +17,6 @@ const PreviewPage = ({id}) => {
 
   // Hooks
   useEffect(() => {
-    // const kidValue = searchParams.get('kid');
-    // console.log("Kid : ",kidValue)
     getKundliData(id);
 
   }, [searchParams]);

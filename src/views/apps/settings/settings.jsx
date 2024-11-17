@@ -64,7 +64,6 @@ function Settings() {
 
   const fetchConfig = async (id) => {
     const res = await GetConfig();
-    console.log("response : ", res)
     if (res.hasError) {
       setLoading(false);
       return toastDisplayer("error", res.error);

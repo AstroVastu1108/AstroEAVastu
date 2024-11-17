@@ -48,7 +48,6 @@ function Listing({ cid, from }) {
       }
 
       const response = await GetCompanyTasks(transactionID)
-      console.log("Response : ",response.responseData)
       setLoading(false)
       // return await response.responseData
       if(response.responseData.length > 0){
@@ -105,7 +104,7 @@ function Listing({ cid, from }) {
         return toastDisplayer("error",response.errorMessage)
       }
       setTasks((prevList) => [...prevList, payload]);
-      return setNewTask(""); 
+      return setNewTask("");
       // return toastDisplayer("success",response.responseData.statusMsg)
     }catch(error){
       return toastDisplayer("error",error)

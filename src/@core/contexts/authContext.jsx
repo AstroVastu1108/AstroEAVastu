@@ -65,7 +65,6 @@ export const AuthProvider = ({ children }) => {
       getDID();
       if (ClientID && InstanceID && SecureRoute) {
         const result = await authCheckRequest();
-        console.log("result : authCheckRequest ", result)
       }
       const incrementedValue = parseInt(DID_INCR) + 1;
       Cookies.set('M-DIDC', incrementedValue, { expires: 1 });
