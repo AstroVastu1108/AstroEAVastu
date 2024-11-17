@@ -30,7 +30,7 @@ const Preview = ({ kundliData, setKundliData }) => {
   const [TransiteTime, setTransiteTime] = useState(null);
   const [loading, setLoading] = useState(false);
   const [TransitData, setTransitData] = useState(null);
-  const [DivisionalData, setDivisionalData] = useState(null);
+  const [DivisionalData, setDivisionalData] = useState("D2");
   const [datePicker, setDatePicker] = useState(dayjs());
 
   // const handleKundliApi = async () => {
@@ -164,27 +164,29 @@ const Preview = ({ kundliData, setKundliData }) => {
   }
 
   const getDivisionalChartData = async (option) => {
-    var BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
+    if(option && option!="undefined" && option!=""){
+      var BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
 
-    const payload = {
-      "KundaliID": BirthDetails.KundaliID,
-      "FirstName": BirthDetails.FirstName,
-      "MiddleName": BirthDetails.MiddleName,
-      "LastName": BirthDetails.LastName,
-      "Gender": BirthDetails.Gender,
-      "Prakriti": BirthDetails.Prakriti,
-      "BirthDate": BirthDetails.Date,
-      "BirthTime": BirthDetails.Time,
-      "Country": BirthDetails.Country,
-      "CityID": BirthDetails.CityID,
-      "City": BirthDetails.City,
-    }
-    const response = await DivisionalChartEvent(payload,option);
-    if (response.hasError) {
-      return toastDisplayer("error", response.error);
-    } else {
-      const data = response?.responseData?.Result;
-      setDivisionalData(data);
+      const payload = {
+        "KundaliID": BirthDetails.KundaliID,
+        "FirstName": BirthDetails.FirstName,
+        "MiddleName": BirthDetails.MiddleName,
+        "LastName": BirthDetails.LastName,
+        "Gender": BirthDetails.Gender,
+        "Prakriti": BirthDetails.Prakriti,
+        "BirthDate": BirthDetails.Date,
+        "BirthTime": BirthDetails.Time,
+        "Country": BirthDetails.Country,
+        "CityID": BirthDetails.CityID,
+        "City": BirthDetails.City,
+      }
+      const response = await DivisionalChartEvent(payload,option);
+      if (response.hasError) {
+        return toastDisplayer("error", response.error);
+      } else {
+        const data = response?.responseData?.Result;
+        setDivisionalData(data);
+      }
     }
   }
 
