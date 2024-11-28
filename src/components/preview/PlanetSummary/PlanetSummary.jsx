@@ -17,6 +17,49 @@ const SummaryAspect = ({ SummaryData, Aspect }) => {
     return '';
   };
 
+  const planetClass = {
+    ketu: "ketu",
+    venus: "venus",
+    sun: "sun",
+    moon: "moon",
+    mars: "mars",
+    rahu: "rahu",
+    jupiter: "jupiter",
+    saturn: "saturn",
+    mercury: "mercury",
+    uranus: "uranus",
+    neptune: "neptune",
+    pluto: "pluto"
+  };
+
+  const shorthandMap = {
+    Ke: planetClass.ketu,
+    Ve: planetClass.venus,
+    Su: planetClass.sun,
+    Mo: planetClass.moon,
+    Ma: planetClass.mars,
+    Ra: planetClass.rahu,
+    Ju: planetClass.jupiter,
+    Sa: planetClass.saturn,
+    Me: planetClass.mercury,
+    Ur: planetClass.uranus,
+    Ne: planetClass.neptune,
+    Pl: planetClass.pluto
+  };
+
+  const highlightText = (value) => {
+    const abbreviation = value.trim().slice(0, 2); // Remove any extra whitespace
+    const fullName = shorthandMap[abbreviation];
+
+    // Split the value by `-` to get individual planet abbreviations
+
+    // Return the elements separated by " - "
+    return (
+      <span className={`pl-${fullName} row-title`} key={abbreviation}>
+        {value}
+      </span>
+    );
+  };
 
   const { columns, rows } = useMemo(() => {
     const headerNames = Aspect === "P"
@@ -34,7 +77,8 @@ const SummaryAspect = ({ SummaryData, Aspect }) => {
       renderCell: (params) => {
         if (index === 0) {
           // Apply primary color to the first column
-          return <span className="row-title">{params.value}</span>;
+          return highlightText(params.value);
+          // return <span className="row-title">{params.value}</span>;
         } else {
           const value = typeof params.value === 'string' ? params.value : String(params.value || '');
           return <span className="summaryTxt" dangerouslySetInnerHTML={{ __html: value }} />;
@@ -75,48 +119,48 @@ const SummaryAspect = ({ SummaryData, Aspect }) => {
   });
   return (
     <Box
-    // sx={{
-    //   '& .MuiDataGrid-cell': {
-    //     // borderLeft: '0.5px solid var(--border-color)',
-    //     borderBottom: '1px solid var(--border-color)',
-    //     borderTop: '0px solid var(--border-color)',
-    //   },
-    //   '& .MuiDataGrid-cell:last-child': {
-    //     // borderRight: '0.5px solid var(--border-color)',
-    //   }
-    // }}
-    sx={{
-      '& .MuiDataGrid-root': {
-        borderRadius: 0, // Remove border radius
-        borderLeft: '0px',
-        borderRight: '0px',
-      },
-      '& .MuiDataGrid-row:nth-of-type(odd)': {
-        backgroundColor: '#ffffff', // Light color for odd rows
-      },
-      '& .MuiDataGrid-row:nth-of-type(even)': {
-        backgroundColor: '#f5f5f5', // White color for even rows
-      },
-      '& .MuiDataGrid-row:hover': {
-        color: 'var(--primary-color) !important',
-        backgroundColor: 'var(--secondary-soft-color) !important',
-      },
-      '& .MuiDataGrid-columnHeader .MuiDataGrid-sortIcon': {
-        color: 'white', // Change to your desired color
-      },
-      '& .MuiDataGrid-columnHeader--withRightBorder':{
-        borderRightWidth:'0px !important'
-      },
-      '& .MuiDataGrid-columnSeparator':{
-        display:'none !important'
-      },
-      '& .MuiDataGrid-columnHeader': {
-        cursor: 'default !important', // Change to your desired color
-      },
-      '& .MuiDataGrid-columnHeader:focus':{
-        outline: 'none !important'
-      },
-    }}
+      // sx={{
+      //   '& .MuiDataGrid-cell': {
+      //     // borderLeft: '0.5px solid var(--border-color)',
+      //     borderBottom: '1px solid var(--border-color)',
+      //     borderTop: '0px solid var(--border-color)',
+      //   },
+      //   '& .MuiDataGrid-cell:last-child': {
+      //     // borderRight: '0.5px solid var(--border-color)',
+      //   }
+      // }}
+      sx={{
+        '& .MuiDataGrid-root': {
+          borderRadius: 0, // Remove border radius
+          borderLeft: '0px',
+          borderRight: '0px',
+        },
+        '& .MuiDataGrid-row:nth-of-type(odd)': {
+          backgroundColor: '#ffffff', // Light color for odd rows
+        },
+        '& .MuiDataGrid-row:nth-of-type(even)': {
+          backgroundColor: '#f5f5f5', // White color for even rows
+        },
+        '& .MuiDataGrid-row:hover': {
+          color: 'var(--primary-color) !important',
+          backgroundColor: 'var(--secondary-soft-color) !important',
+        },
+        '& .MuiDataGrid-columnHeader .MuiDataGrid-sortIcon': {
+          color: 'white', // Change to your desired color
+        },
+        '& .MuiDataGrid-columnHeader--withRightBorder': {
+          borderRightWidth: '0px !important'
+        },
+        '& .MuiDataGrid-columnSeparator': {
+          display: 'none !important'
+        },
+        '& .MuiDataGrid-columnHeader': {
+          cursor: 'default !important', // Change to your desired color
+        },
+        '& .MuiDataGrid-columnHeader:focus': {
+          outline: 'none !important'
+        },
+      }}
     >
       <ThemeProvider theme={customTheme}>
 

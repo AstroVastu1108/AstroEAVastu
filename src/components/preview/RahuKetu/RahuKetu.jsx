@@ -23,6 +23,51 @@ function RahuKetu({ RahuData, KetuData }) {
       },
     },
   });
+
+  const planetClass = {
+    ketu: "ketu",
+    venus: "venus",
+    sun: "sun",
+    moon: "moon",
+    mars: "mars",
+    rahu: "rahu",
+    jupiter: "jupiter",
+    saturn: "saturn",
+    mercury: "mercury",
+    uranus: "uranus",
+    neptune: "neptune",
+    pluto: "pluto"
+  };
+
+  const shorthandMap = {
+    Ke: planetClass.ketu,
+    Ve: planetClass.venus,
+    Su: planetClass.sun,
+    Mo: planetClass.moon,
+    Ma: planetClass.mars,
+    Ra: planetClass.rahu,
+    Ju: planetClass.jupiter,
+    Sa: planetClass.saturn,
+    Me: planetClass.mercury,
+    Ur: planetClass.uranus,
+    Ne: planetClass.neptune,
+    Pl: planetClass.pluto
+  };
+
+  const highlightText = (value) => {
+    const abbreviation = value.trim().slice(0, 2); // Remove any extra whitespace
+    const fullName = shorthandMap[abbreviation];
+
+    // Split the value by `-` to get individual planet abbreviations
+
+    // Return the elements separated by " - "
+    return (
+      <div className={`pl-${fullName} planetName`} key={abbreviation}>
+        {value}
+      </div>
+    );
+  };
+
   const columns1 = [
     {
       field: 'rahuId', headerName: 'Rahu', width: 140, headerClassName: 'rowheader',
@@ -45,9 +90,10 @@ function RahuKetu({ RahuData, KetuData }) {
             <>
               {dataValue.map((element, index) => (
                 <div className='valueData' key={index}>
-                  <div className='planetName'>
+                  {/* <div className='planetName'>
                     {element?.Planet}
-                  </div>
+                  </div> */}
+                  {highlightText(element?.Planet)}
                   <div className='sf'>
                     {element?.ScriptFull}
                   </div>
@@ -58,9 +104,10 @@ function RahuKetu({ RahuData, KetuData }) {
         } else {
           return (
             <div className='valueData'>
-              <div className='planetName'>
+              {/* <div className='planetName'>
                 {dataValue?.Planet}
-              </div>
+              </div> */}
+              {highlightText(dataValue?.Planet)}
               <div className='sf'>
                 {dataValue?.ScriptFull}
               </div>
@@ -92,9 +139,10 @@ function RahuKetu({ RahuData, KetuData }) {
             <>
               {dataValue.map((element, index) => (
                 <div className='valueData' key={index}>
-                  <div className='planetName'>
+                  {/* <div className='planetName'>
                     {element?.Planet}
-                  </div>
+                  </div> */}
+                  {highlightText(element?.Planet)}
                   <div className='sf'>
                     {element?.ScriptFull}
                   </div>
@@ -105,9 +153,10 @@ function RahuKetu({ RahuData, KetuData }) {
         } else {
           return (
             <div className='valueData'>
-              <div className='planetName'>
+              {/* <div className='planetName'>
                 {dataValue?.Planet}
-              </div>
+              </div> */}
+              {highlightText(dataValue?.Planet)}
               <div className='sf'>
                 {dataValue?.ScriptFull}
               </div>

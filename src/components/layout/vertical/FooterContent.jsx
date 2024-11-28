@@ -25,7 +25,7 @@ const FooterContent = () => {
           AstroVastu.net
         </Link>
         <i className='tabler-git-merge'></i>
-        <span>Version 24.K17</span>
+        <span>Version 24.K28</span>
         <i className='tabler-minus-vertical'></i>
         <span>Powered by</span>
         <Link href='#' className='text-primary'>

@@ -8,6 +8,50 @@ import { value } from 'valibot';
 
 function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
 
+  const planetClass = {
+    ketu: "ketu",
+    venus: "venus",
+    sun: "sun",
+    moon: "moon",
+    mars: "mars",
+    rahu: "rahu",
+    jupiter: "jupiter",
+    saturn: "saturn",
+    mercury: "mercury",
+    uranus: "uranus",
+    neptune: "neptune",
+    pluto: "pluto"
+  };
+
+  const shorthandMap = {
+    Ke: planetClass.ketu,
+    Ve: planetClass.venus,
+    Su: planetClass.sun,
+    Mo: planetClass.moon,
+    Ma: planetClass.mars,
+    Ra: planetClass.rahu,
+    Ju: planetClass.jupiter,
+    Sa: planetClass.saturn,
+    Me: planetClass.mercury,
+    Ur: planetClass.uranus,
+    Ne: planetClass.neptune,
+    Pl: planetClass.pluto
+  };
+
+  const highlightText = (value) => {
+    const abbreviation = value.trim().slice(0, 2); // Remove any extra whitespace
+    const fullName = shorthandMap[abbreviation];
+
+    // Split the value by `-` to get individual planet abbreviations
+
+    // Return the elements separated by " - "
+    return (
+      <div className={`pl-${fullName} row-title`} key={abbreviation}>
+        {value}
+      </div>
+    );
+  };
+
   const applyOccupancyColor = (Occupancy) => {
     if (SelectedEventVal) {
       const positive = SelectedEventVal.Positive?.split(", ").map(Number) || [];
@@ -62,7 +106,7 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
   const columns = [
     Aspect === 'P'
       ? {
-        field: 'Planet', headerName: 'Planet', headerClassName: 'rowheader', minWidth: 160, flex: 1,
+        field: 'Planet', headerName: 'Planet', headerClassName: 'rowheader', minWidth: 130, width: 130,
         renderCell: (e) => {
           const { IsRetro, IsExalted, IsDebilitated, IsCombust, IsUntenanted, IsSelfStar, IsExchange } = e.row;
           const activeSymbols = [
@@ -78,8 +122,8 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
           return (
             <>
               <div className="planet-col-title cursor-pointer">
-                <div className='planet-row'>{e.value}
-                </div>
+                {/* <div className='planet-row'>{e.value}</div> */}
+                {highlightText(e.value)}
                 {activeSymbols && <span className='rashiDiv' style={{ fontSize: "16px" }}>{activeSymbols}</span>}
               </div>
             </>
@@ -155,7 +199,8 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
 
         return (
           <div className="planet-col-script flex justify-between cursor-pointer">
-            <div className="planet-col-planet-text">{planetName}</div>
+            {/* <div className="planet-col-planet-text">{planetName}</div> */}
+            {highlightText(planetName)}
             <div className="degreeDiv">
               {applyOccupancyColor(Occupancy)}
               {OwnershipArray.length ? <span> / {applyOwnerShipColor(OwnershipArray)}</span> : ""}
@@ -246,6 +291,12 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
       },
     },
     {
+      field: 'PHScriptFull', headerName: 'PH', headerClassName: 'rowheader', minWidth: 100, with: 100,
+      renderCell: (e) => {
+        return <span className='planet-col-ph cursor-pointer'>{e.value}</span>
+      }
+    },
+    {
       field: 'NLSL',
       headerName: (
         <>
@@ -253,6 +304,7 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
         </>
       ),
       headerClassName: 'rowheader',
+      cellClassName: 'nlsl-column-cell',
       minWidth: 120,
       flex: 1,
       renderCell: (e) => {
@@ -284,12 +336,6 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
           </div>
         );
       },
-    },
-    {
-      field: 'PHScriptFull', headerName: 'PH', headerClassName: 'rowheader', minWidth: 100, with: 100,
-      renderCell: (e) => {
-        return <span className='planet-col-ph cursor-pointer'>{e.value}</span>
-      }
     },
   ];
   // Adding unique IDs

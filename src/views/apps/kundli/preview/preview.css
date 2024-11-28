@@ -805,6 +805,10 @@
   background-color: #daffaf45; /* Choose your preferred background color */
 }
 
+.nlsl-column-cell {
+  background-color: #d5d5d560; /* Choose your preferred background color */
+}
+
 
 .Nakshatra-Legend{
   .arrow-info{
@@ -822,4 +826,42 @@
 .arrow {
   inline-size: 8mm;
   display: inline-block;
+}
+
+
+.pl-ketu {
+  color: #7d3434 !important;
+}
+.pl-venus {
+  color: #d646a1 !important;
+}
+.pl-sun {
+  color: #f48d25 !important;
+}
+.pl-moon {
+  color: #0dc6df !important;
+}
+.pl-mars {
+  color: #c93838 !important;
+}
+.pl-rahu {
+  color: #555555 !important;
+}
+.pl-jupiter {
+  color: #ebbf10 !important;
+}
+.pl-saturn {
+  color: #3652ba !important;
+}
+.pl-mercury {
+  color: #1c8946 !important;
+}
+.pl-uranus {
+  color: #4e6f73 !important;
+}
+.pl-neptune {
+  color: #6b8ac6 !important;
+}
+.pl-pluto {
+  color: #a6705c !important;
 }

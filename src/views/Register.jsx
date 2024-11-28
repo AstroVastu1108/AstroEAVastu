@@ -36,6 +36,7 @@ const RegisterPage = ({ mode }) => {
   const [loading, setLoading] = useState(false);
   const [isOtpVerified, setIsOtpVerified] = useState("pending");
   const [errorMessage, setErrorMessage] = useState(null);  // Add this line
+  const [isCaptchaVerified, setIsCaptchaVerified] = useState(false);
 
   const router = useRouter()
   const fnameRef = useRef();
@@ -48,10 +49,43 @@ const RegisterPage = ({ mode }) => {
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
   const authBackground = useImageVariant(mode)
 
+
+  const handleVerifyCaptcha = async () => {
+    try {
+      const token = await recaptchaRef.current.executeAsync();
+      recaptchaRef.current.reset();
+      const recaptchaResponse = await fetch('/api/verifyRecaptcha', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token }),
+      });
+
+      const recaptchaData = await recaptchaResponse.json();
+      if (recaptchaData.success) {
+        setIsCaptchaVerified(true);
+        // setIsDisable(true);
+        // handleVerifyEmail();
+      } else {
+        setIsCaptchaVerified(false);
+        // setIsDisable(false)
+        recaptchaRef.current.reset();
+      }
+    } catch (error) {
+      setIsCaptchaVerified(false);
+      // setIsDisable(false)
+      return setErrorMessage('Unable to Verify Captcha. Try Again.')
+      // return toastDisplayer('error', 'Server error. Please try again later.');
+    }
+  };
+
+  useEffect(()=>{
+    handleVerifyCaptcha();
+  },[])
+
   const handleComplete = async () => {
     if (validateFields()) {
-
       try {
+        if(isCaptchaVerified){
         if (userData.email == "") {
           setErrorMessage("Email is required.");
           // toastDisplayer("error", "Email or username is required.")
@@ -60,32 +94,47 @@ const RegisterPage = ({ mode }) => {
             email: true
           }));
         }
-        setIsDisable(true)
-        const token = await recaptchaRef.current.executeAsync();
-        recaptchaRef.current.reset();
-        const recaptchaResponse = await fetch('/api/verifyRecaptcha', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ token }),
-        });
+        // setIsDisable(true)
+        // const token = await recaptchaRef.current.executeAsync();
+        // recaptchaRef.current.reset();
+        // const recaptchaResponse = await fetch('/api/verifyRecaptcha', {
+        //   method: 'POST',
+        //   headers: { 'Content-Type': 'application/json' },
+        //   body: JSON.stringify({ token }),
+        // });
 
-        const recaptchaData = await recaptchaResponse.json();
-        if (recaptchaData.success) {
-          setIsDisable(true)
-          const result = await requestOtpNewUser(userData?.email, userData?.fname, userData?.lname, "register")
-          if (!result?.Status) {
-            setIsDisable(false);
-            setIsOtpVerified("pending")
-            return setErrorMessage(result?.Error || "An error occurred.");
-          } else {
-            setIsDisable(false);
-            setIsOtpVerified("sent")
-            // handleNext()
-          }
+        // const recaptchaData = await recaptchaResponse.json();
+        // if (recaptchaData.success) {
+        //   setIsDisable(true)
+        //   const result = await requestOtpNewUser(userData?.email, userData?.fname, userData?.lname, "register")
+        //   if (!result?.Status) {
+        //     setIsDisable(false);
+        //     setIsOtpVerified("pending")
+        //     return setErrorMessage(result?.Error || "An error occurred.");
+        //   } else {
+        //     setIsDisable(false);
+        //     setIsOtpVerified("sent")
+        //     // handleNext()
+        //   }
+        // } else {
+        //   setIsDisable(false)
+        //   recaptchaRef.current.reset();
+        // }
+
+        setIsDisable(true)
+        const result = await requestOtpNewUser(userData?.email, userData?.fname, userData?.lname, "register")
+        if (!result?.Status) {
+          setIsDisable(false);
+          setIsOtpVerified("pending")
+          return setErrorMessage(result?.Error || "An error occurred.");
         } else {
-          setIsDisable(false)
-          recaptchaRef.current.reset();
+          setIsDisable(false);
+          setIsOtpVerified("sent")
+          // handleNext()
         }
+      }else{
+        setErrorMessage("Unable to Verify Captcha. Try Again.");
+      }
 
       } catch (error) {
         setIsDisable(false);
@@ -96,6 +145,55 @@ const RegisterPage = ({ mode }) => {
 
     }
   }
+
+  // const handleComplete = async () => {
+  //   if (validateFields()) {
+
+  //     try {
+  //       if (userData.email == "") {
+  //         setErrorMessage("Email is required.");
+  //         // toastDisplayer("error", "Email or username is required.")
+  //         return setErrors(prev => ({
+  //           ...prev,
+  //           email: true
+  //         }));
+  //       }
+  //       setIsDisable(true)
+  //       const token = await recaptchaRef.current.executeAsync();
+  //       recaptchaRef.current.reset();
+  //       const recaptchaResponse = await fetch('/api/verifyRecaptcha', {
+  //         method: 'POST',
+  //         headers: { 'Content-Type': 'application/json' },
+  //         body: JSON.stringify({ token }),
+  //       });
+
+  //       const recaptchaData = await recaptchaResponse.json();
+  //       if (recaptchaData.success) {
+  //         setIsDisable(true)
+  //         const result = await requestOtpNewUser(userData?.email, userData?.fname, userData?.lname, "register")
+  //         if (!result?.Status) {
+  //           setIsDisable(false);
+  //           setIsOtpVerified("pending")
+  //           return setErrorMessage(result?.Error || "An error occurred.");
+  //         } else {
+  //           setIsDisable(false);
+  //           setIsOtpVerified("sent")
+  //           // handleNext()
+  //         }
+  //       } else {
+  //         setIsDisable(false)
+  //         recaptchaRef.current.reset();
+  //       }
+
+  //     } catch (error) {
+  //       setIsDisable(false);
+  //       setIsOtpVerified("pending")
+
+  //       return setErrorMessage(error);
+  //     }
+
+  //   }
+  // }
 
   const [userData, setUserData] = useState({
     fname: '',

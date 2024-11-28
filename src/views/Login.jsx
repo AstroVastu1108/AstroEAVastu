@@ -64,7 +64,7 @@ const LoginV2 = ({ mode }) => {
   const [isOtpVerified, setIsOtpVerified] = useState("pending");
   const [errors, setErrors] = useState(false)
   const [errorMessage, setErrorMessage] = useState(null)
-
+  const [isCaptchaVerified, setIsCaptchaVerified] = useState(false);
 
   const recaptchaRef = useRef(null);
 
@@ -73,13 +73,13 @@ const LoginV2 = ({ mode }) => {
       useremail: Cookies.get('astrovastu_auth_useremail'),
 
       // accessToken: Cookies.get('astrovastu_auth_accessToken'),
-      userRole: Cookies.get('astrovastu_auth_userRole'),
+      // userRole: Cookies.get('astrovastu_auth_userRole'),
       DID: Cookies.get('M-DID'),
       // expirationTime: Cookies.get('astrovastu_auth_expirationTime'),
       // refreshToken: Cookies.get('astrovastu_auth_refreshToken')
     };
 
-    if (authData.useremail && authData.DID && authData.userRole) {
+    if (authData.useremail && authData.DID) {
 
       try {
         const firstAccessibleItem = navigation.find(item => item);
@@ -92,32 +92,8 @@ const LoginV2 = ({ mode }) => {
   }, []);
 
 
-  const handleSubmit = async (e) => {
+  const handleVerifyCaptcha = async () => {
     try {
-      e.preventDefault();
-      if (formData.email == "") {
-        emailRef.current.focus();
-        setIsDisable(false)
-        setErrors(true)
-        // setErrorMessage("Email is required.")
-        return setErrors(prev => ({
-          ...prev,
-          email: true
-        }));
-      }
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!formData.email || !emailRegex.test(formData.email)) {
-        setIsDisable(false)
-        setErrors(true)
-        emailRef.current.focus();
-        setErrorMessage("Invalid email address.")
-        // toastDisplayer("error", "Invalid Email address.")
-        return setErrors(prev => ({
-          ...prev,
-          email: true
-        }));
-      }
-      // setIsDisable(true)
       const token = await recaptchaRef.current.executeAsync();
       recaptchaRef.current.reset();
       const recaptchaResponse = await fetch('/api/verifyRecaptcha', {
@@ -128,21 +104,79 @@ const LoginV2 = ({ mode }) => {
 
       const recaptchaData = await recaptchaResponse.json();
       if (recaptchaData.success) {
-        setIsDisable(true);
-        handleVerifyEmail();
+        setIsCaptchaVerified(true);
+        // setIsDisable(true);
+        // handleVerifyEmail();
       } else {
-        setIsDisable(false)
+        setIsCaptchaVerified(false);
+        // setIsDisable(false)
         recaptchaRef.current.reset();
       }
     } catch (error) {
-      setIsDisable(false)
-      return setErrorMessage('Server error. Please try again later.')
+      setIsCaptchaVerified(false);
+      // setIsDisable(false)
+      return setErrorMessage('Unable to Verify Captcha. Try Again.')
       // return toastDisplayer('error', 'Server error. Please try again later.');
     }
   };
 
-  const handleVerifyEmail = async () => {
+  useEffect(()=>{
+    handleVerifyCaptcha();
+  },[])
+
+
+  // const handleSubmit = async (e) => {
+  //   try {
+  //     e.preventDefault();
+  //     if (formData.email == "") {
+  //       emailRef.current.focus();
+  //       setIsDisable(false)
+  //       setErrors(true)
+  //       // setErrorMessage("Email is required.")
+  //       return setErrors(prev => ({
+  //         ...prev,
+  //         email: true
+  //       }));
+  //     }
+  //     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  //     if (!formData.email || !emailRegex.test(formData.email)) {
+  //       setIsDisable(false)
+  //       setErrors(true)
+  //       emailRef.current.focus();
+  //       setErrorMessage("Invalid email address.")
+  //       // toastDisplayer("error", "Invalid Email address.")
+  //       return setErrors(prev => ({
+  //         ...prev,
+  //         email: true
+  //       }));
+  //     }
+  //     // setIsDisable(true)
+  //     const token = await recaptchaRef.current.executeAsync();
+  //     recaptchaRef.current.reset();
+  //     const recaptchaResponse = await fetch('/api/verifyRecaptcha', {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ token }),
+  //     });
+
+  //     const recaptchaData = await recaptchaResponse.json();
+  //     if (recaptchaData.success) {
+  //       setIsDisable(true);
+  //       handleVerifyEmail();
+  //     } else {
+  //       setIsDisable(false)
+  //       recaptchaRef.current.reset();
+  //     }
+  //   } catch (error) {
+  //     setIsDisable(false)
+  //     return setErrorMessage('Server error. Please try again later.')
+  //     // return toastDisplayer('error', 'Server error. Please try again later.');
+  //   }
+  // };
+
+  const handleSubmit = async () => {
     try {
+      if(isCaptchaVerified){
       if (formData.email == "") {
         // toastDisplayer("error", "Email is required.")
         emailRef.current.focus();
@@ -177,6 +211,9 @@ const LoginV2 = ({ mode }) => {
         setIsDisable(false);
         setIsOtpVerified("sent")
       }
+    }else{
+      setErrorMessage("Unable to Verify Captcha. Try Again.");
+    }
     } catch (error) {
       setIsDisable(false);
       setIsOtpVerified("pending")

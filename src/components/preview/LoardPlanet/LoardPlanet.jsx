@@ -106,6 +106,50 @@ function LoardPlanet({ LoardData, SelectedEventVal, symbols }) {
     return activeSymbols;
   }
 
+  const planetClass = {
+    ketu: "ketu",
+    venus: "venus",
+    sun: "sun",
+    moon: "moon",
+    mars: "mars",
+    rahu: "rahu",
+    jupiter: "jupiter",
+    saturn: "saturn",
+    mercury: "mercury",
+    uranus: "uranus",
+    neptune: "neptune",
+    pluto: "pluto"
+  };
+
+  const shorthandMap = {
+    Ke: planetClass.ketu,
+    Ve: planetClass.venus,
+    Su: planetClass.sun,
+    Mo: planetClass.moon,
+    Ma: planetClass.mars,
+    Ra: planetClass.rahu,
+    Ju: planetClass.jupiter,
+    Sa: planetClass.saturn,
+    Me: planetClass.mercury,
+    Ur: planetClass.uranus,
+    Ne: planetClass.neptune,
+    Pl: planetClass.pluto
+  };
+
+  const highlightText = (value) => {
+    const abbreviation = value.trim().slice(0, 2); // Remove any extra whitespace
+    const fullName = shorthandMap[abbreviation];
+
+    // Split the value by `-` to get individual planet abbreviations
+
+    // Return the elements separated by " - "
+    return (
+      <span className={`pl-${fullName} row-title`} key={abbreviation}>
+        {value}
+      </span>
+    );
+  };
+
 
   const columns1 = [
     {
@@ -116,11 +160,13 @@ function LoardPlanet({ LoardData, SelectedEventVal, symbols }) {
       renderCell: (params) => {
         if (params?.row?.symbol) {
           return <div className='flex justify-between rahuHeader'>
-            <div>{params.value}</div>
+            {/* <div>{params.value}</div> */}
+            {highlightText(params.value)}
             <div>{params?.row?.symbol}</div>
           </div>;
         }
-        return <div className='rahuHeader'>{params.value}</div>;
+        // return <div className='rahuHeader'>{params.value}</div>;
+        return <> {highlightText(params.value)}</>;
       },
     },
     {

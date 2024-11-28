@@ -1,8 +1,79 @@
 import { Box, createTheme, ThemeProvider } from '@mui/material';
-import { DataGrid, GridToolbarContainer } from '@mui/x-data-grid'
-import React from 'react'
+import { DataGrid, GridToolbarContainer } from '@mui/x-data-grid';
+import React from 'react';
+import "./DashaDetail.css";
 
 function DashaDetails({ title, DashaData, handleDashadbClick, divref }) {
+
+  // const planetColor = {
+  //   ketu: "#7D3434",
+  //   venus: "#d646a1",
+  //   sun: "#f48d25",
+  //   moon: "#0dc6df",
+  //   mars: "#c93838",
+  //   rahu: "#555555",
+  //   jupiter: "#ebbf10",
+  //   saturn: "#3652ba",
+  //   mercury: "#1c8946",
+  //   uranus: "#4E6F73",
+  //   neptune: "#6b8ac6",
+  //   pluto: "#A6705C"
+  // }
+  const planetClass = {
+    ketu: "ketu",
+    venus: "venus",
+    sun: "sun",
+    moon: "moon",
+    mars: "mars",
+    rahu: "rahu",
+    jupiter: "jupiter",
+    saturn: "saturn",
+    mercury: "mercury",
+    uranus: "uranus",
+    neptune: "neptune",
+    pluto: "pluto"
+  };
+
+  const shorthandMap = {
+    Ke: planetClass.ketu,
+    Ve: planetClass.venus,
+    Su: planetClass.sun,
+    Mo: planetClass.moon,
+    Ma: planetClass.mars,
+    Ra: planetClass.rahu,
+    Ju: planetClass.jupiter,
+    Sa: planetClass.saturn,
+    Me: planetClass.mercury,
+    Ur: planetClass.uranus,
+    Ne: planetClass.neptune,
+    Pl: planetClass.pluto
+  };
+
+  const highlightText = (value) => {
+    // Split the value by `-` to get individual planet abbreviations
+    const planetElements = value.split("-").map((abbr) => {
+      const abbreviation = abbr.trim().slice(0, 2); // Remove any extra whitespace
+      const fullName = shorthandMap[abbreviation]; // Map to full name
+      console.log(fullName)
+      return (
+        <span className={`pl-${fullName}`} key={abbreviation}>
+          {abbr}
+        </span>
+      );
+    });
+
+    // Return the elements separated by " - "
+    return (
+      <span>
+        {planetElements.map((el, idx) => (
+          <React.Fragment key={idx}>
+            {el}
+            {idx < planetElements.length - 1 && "-"}
+          </React.Fragment>
+        ))}
+      </span>
+    );
+  };
 
   const customTheme = createTheme({
     components: {
@@ -37,7 +108,8 @@ function DashaDetails({ title, DashaData, handleDashadbClick, divref }) {
   const columns = [
     {
       field: 'Planet', headerName: 'Planet', headerClassName: 'rowheader', flex: 1,
-      minWidth: 80
+      minWidth: 150,
+      renderCell: (params) => highlightText(params.value)
       // headerAlign: 'center', textAlign:'center'
     },
     {
@@ -60,13 +132,12 @@ function DashaDetails({ title, DashaData, handleDashadbClick, divref }) {
   const handleDashaClick = (e) => {
     // console.log(e);
     // if(e.row?.IsCurrent)
-      handleDashadbClick(e.row);
+    handleDashadbClick(e.row);
   }
 
-  const rowHeight = ()=>
-  {
+  const rowHeight = () => {
     if (divref.current) {
-      const height = ((divref.current.offsetHeight)-30)/9;
+      const height = ((divref.current.offsetHeight) - 30) / 9;
       return height;
     }
     return 25
@@ -115,17 +186,17 @@ function DashaDetails({ title, DashaData, handleDashadbClick, divref }) {
           '& .MuiDataGrid-scrollbar--vertical': {
             display: 'none'
           },
-          '& .MuiDataGrid-filler':{
-            display:'none'
+          '& .MuiDataGrid-filler': {
+            display: 'none'
           }
         }}
       >
         <ThemeProvider theme={customTheme}>
 
           <DataGrid
-              getRowHeight={rowHeight}
+            getRowHeight={rowHeight}
 
-          //  rowHeight={rowHeight}
+            //  rowHeight={rowHeight}
             rows={rowsDasha}
             columns={columns}
             pageSize={rowsDasha.length} // Show all rows

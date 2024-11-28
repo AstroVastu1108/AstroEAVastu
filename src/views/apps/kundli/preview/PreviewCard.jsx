@@ -158,7 +158,6 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       }
     }
     else if (DashaValue == "SookshmaDasha") {
-      const payloadPlanet = titleArr[1].split("-");
       const payload = {
         "BirthDate": BirthDetails?.Date,
         "BirthTime": BirthDetails?.Time,
@@ -200,12 +199,11 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
         "BirthDate": BirthDetails?.Date,
         "BirthTime": BirthDetails?.Time,
         "DashaStartDate": row?.StartDt,
-        "Planet": row?.Planet
+        "Planet": row?.DashaPlanet
       }
       const response = await DashaClickEvent(payload);
       if (!response.hasError) {
         const data = response?.responseData;
-        const ADDasha = data.filter((e) => e.IsCurrent == true)[0]
         setDashaTitle(`${row?.Planet} > AntarDasha`);
         setDashaValue("AntarDasha");
         setDashaGridData(response?.responseData)
@@ -216,7 +214,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
         "BirthDate": BirthDetails?.Date,
         "BirthTime": BirthDetails?.Time,
         "DashaStartDate": DashaDate,
-        "Planet": row?.Planet
+        "Planet": row?.DashaPlanet
       }
       const response = await DashaClickEvent(payload);
       if (!response.hasError) {
@@ -233,7 +231,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
         "BirthDate": BirthDetails?.Date,
         "BirthTime": BirthDetails?.Time,
         "DashaStartDate": DashaDate,
-        "Planet": row?.Planet
+        "Planet": row?.DashaPlanet
       }
       const response = await DashaClickEvent(payload);
       if (!response.hasError) {
@@ -481,7 +479,12 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
                     <>
                       {kundliOptValue.Option == "T" ? <>
                         <div className='flex justify-center items-center px-2'>
-                          <img src={`data:image/svg+xml;base64,${TransitData?.TransitChart}`} alt="transitChart" className='flex-auto' />
+                          {TransitData?.TransitChart ?
+                            <img src={`data:image/svg+xml;base64,${TransitData?.TransitChart}`} alt="transitChart" className='flex-auto' />
+                            :
+                            <></>
+                            // <Skeleton variant="rectangular" width={210} height={60} />
+                          }
                         </div>
                       </> :
                         <>
