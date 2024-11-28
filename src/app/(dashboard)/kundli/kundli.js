@@ -22,7 +22,7 @@ export default function KundliPage() {
   // func
   const getAllKundli = async () => {
     setLoading(true);
-    const res = await GetKundliDataAPI(1000, 1);
+    const res = await GetKundliDataAPI(1000, 1,"");
     setLoading(false);
     if (res.hasError) {
       return toastDisplayer("error", res.error);

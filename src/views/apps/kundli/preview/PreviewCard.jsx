@@ -149,7 +149,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
         "BirthDate": BirthDetails?.Date,
         "BirthTime": BirthDetails?.Time,
         "DashaStartDate": DashaDate,
-        "Planet": `${titleArr[0]}-${titleArr[1]}-${titleArr[2]}`
+        "Planet": `${titleArr[0]}-${titleArr[1]}`
       }
       const response = await DashaClickEvent(payload);
       if (!response.hasError) {
@@ -159,11 +159,12 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       }
     }
     else if (DashaValue == "SookshmaDasha") {
+      const payloadPlanet = titleArr[1].split("-");
       const payload = {
         "BirthDate": BirthDetails?.Date,
         "BirthTime": BirthDetails?.Time,
         "DashaStartDate": DashaDate,
-        "Planet": `${titleArr[0]}-${titleArr[1]}`
+        "Planet": `${titleArr[0]}-${payloadPlanet[0]}`
       }
       const response = await DashaClickEvent(payload);
       if (!response.hasError) {
@@ -194,6 +195,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   }
 
   const handleDashaDoubleClick = async (row) => {
+    console.log(row)
     // const DashaDate = DashaDetailData.MahaDasha.filter((e) => e.IsCurrent == true)[0].StartDt;
     const titleArr = DashaTitle.split(" > ");
     if (DashaValue == "MahaDasha") {
@@ -218,7 +220,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
         "BirthDate": BirthDetails?.Date,
         "BirthTime": BirthDetails?.Time,
         "DashaStartDate": DashaDate,
-        "Planet": `${titleArr[0]}-${row?.Planet}`
+        "Planet": row?.Planet
       }
       const response = await DashaClickEvent(payload);
       if (!response.hasError) {
@@ -234,7 +236,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
         "BirthDate": BirthDetails?.Date,
         "BirthTime": BirthDetails?.Time,
         "DashaStartDate": DashaDate,
-        "Planet": `${titleArr[0]}-${titleArr[1]}-${row?.Planet}`
+        "Planet": row?.Planet
       }
       const response = await DashaClickEvent(payload);
       if (!response.hasError) {
@@ -249,7 +251,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
         "BirthDate": BirthDetails?.Date,
         "BirthTime": BirthDetails?.Time,
         "DashaStartDate": DashaDate,
-        "Planet": `${titleArr[0]}-${titleArr[1]}-${titleArr[2]}-${row?.Planet}`
+        "Planet": row?.Planet
       }
       const response = await DashaClickEvent(payload);
       if (!response.hasError) {

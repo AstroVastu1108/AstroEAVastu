@@ -10,11 +10,11 @@ import "./addKundli.css"
 import { convertIconSetInfo } from '@iconify/utils';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
+import { DatePicker, LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 
 function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserData }) {
-
+  console.log("user data :", userData)
 
   const [isDisable, setIsDisable] = useState(false);
   const fetchData = async () => {
@@ -69,7 +69,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
       setCityData([userData.CityID])
       // console.log(userData.Country)
       const now = new Date();
-      setUserData((prev) => ({ ...prev, ["date"]: now, ["time"]: dayjs() }));
+      setUserData((prev) => ({ ...prev, ["date"]: dayjs(), ["time"]: dayjs() }));
       setCurrentTime(now);
       // setConutryData(userData.Country)
       // var newCounty = conutryData.filter((e) => e.name === userData.Country || e.iso2 === userData.Country);
@@ -98,14 +98,15 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
       }
 
       const birthDate = new Date(year, month, day, hours, minutes);
-      const birthTime  = userData.BirthTime;
+      const birthTime = userData.BirthTime;
       const formattedDate = dayjs(`${birthTime}`, 'HHmmss');
       // setDatePicker(formattedDate);
 
 
+      console.log("user birth date :",userData.BirthDate)
       setUserData((prev) => ({
         ...prev,
-        ["date"]: birthDate,
+        ["date"]: dayjs(birthDate),
         // ["time"]: birthDate,
         ["time"]: formattedDate,
         ["CityID"]: {
@@ -126,7 +127,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
   const fetchCities = debounce(async (query) => {
     if (query.length > 1 && userData.Country) {
       try {
-        const iso2 = userData.Country.iso2
+        const iso2 = userData.ISO2 ? userData.ISO2 : userData.Country.iso2
         const response = await getCities(iso2, query)
         if (response.hasError) {
           return toastDisplayer("error", response.error)
@@ -182,7 +183,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
         TransitTime: "",
         TransitDate: "",
         ClientID: "",
-        DChart:""
+        DChart: ""
       }
       // return console.log(formattedData)
       if (!userData.isUpdate) {
@@ -323,6 +324,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                 // placeholder='John'
                 value={userData?.MiddleName}
                 onChange={e => handleInputChange('MiddleName', e.target.value, 'MiddleName')}
+
               />
             </Grid>
             <Grid item xs={12} sm={4}>
@@ -342,24 +344,24 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                 <Select
                   labelId="Gender-select-label"
                   id="Gender-select"
-                  value={userData?.Gender || ''}
+                  value={userData?.Gender?.toLowerCase() || ''}
                   onChange={e => handleInputChange('Gender', e.target.value, 'Gender')}
                   label="Gender"
                 >
-                  <MenuItem value="Male">Male</MenuItem>
-                  <MenuItem value="Female">Female</MenuItem>
-                  <MenuItem value="Other">Other</MenuItem>
+                  <MenuItem value="male">Male</MenuItem>
+                  <MenuItem value="female">Female</MenuItem>
+                  <MenuItem value="other">Other</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
 
             <Grid item xs={12} sm={4}>
-              <AppReactDatepicker
+              {/* <AppReactDatepicker
                 selected={userData.date}
                 defaultValue={userData.date}
                 // value={userData.date}
-                showYearDropdown
-                showMonthDropdown
+                // showYearDropdown
+                // showMonthDropdown
                 onChange={date => {
                   handleInputChange('date', date, 'BirthDate')
                 }}
@@ -374,7 +376,23 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                     {...(errors.BirthDate && { error: true })}
                   />
                 }
-              />
+              /> */}
+
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={['DatePicker']}>
+                  <DatePicker
+                    selected={userData.date}
+                    value={userData.date}
+                    label="Birth Date"
+                    name="startDate"
+                    views={['year', 'month', 'day']}
+                    format="DD-MM-YYYY"
+                    onChange={date => {
+                      handleInputChange('date', date, 'BirthDate')
+                    }}
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
             </Grid>
             <Grid item xs={12} sm={4}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -390,28 +408,6 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                   />
                 </DemoContainer>
               </LocalizationProvider>
-              {/* <AppReactDatepicker
-                showTimeSelect
-                showTimeSelectOnly
-                timeFormat="HH:mm:ss"
-                dateFormat="HH:mm:ss"
-                timeIntervals={1}
-                id="time-only-picker"
-                selected={userData.time}
-                // defaultValue={currentTime}
-                value={userData.time}
-                onChange={date => handleInputChange('time', date, 'BirthTime', true)}
-                customInput={
-                  <TextField
-                    label="Birth Time"
-                    fullWidth
-                    readOnly
-                    value={userData.time ? userData.time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : ''}
-                    onChange={date => handleInputChange('time', date, 'BirthTime')}
-                    {...(errors.BirthTime && { error: true })}
-                  />
-                }
-              /> */}
             </Grid>
             <Grid item xs={12} sm={8}>
               <Autocomplete
@@ -480,6 +476,32 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
               // onChange={e => handleInputChange('MiddleName', e.target.value, 'MiddleName')}
               // onChange={e => setUserData({ ...userData, MiddleName: e.target.value })}
               // {...(errors.MiddleName && { error: true, helperText: 'MiddleName is required.' })}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Reference"
+                // inputRef={fnameRef}
+                // value={userData?.FirstName}
+                // onChange={e => {
+                //   const inputValue = e.target.value;
+                //   const capitalizedValue = inputValue.charAt(0).toUpperCase() + inputValue.slice(1);
+                //   handleInputChange('FirstName', capitalizedValue, 'FirstName');
+                // }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Remark"
+                // inputRef={fnameRef}
+                // value={userData?.FirstName}
+                // onChange={e => {
+                //   const inputValue = e.target.value;
+                //   const capitalizedValue = inputValue.charAt(0).toUpperCase() + inputValue.slice(1);
+                //   handleInputChange('FirstName', capitalizedValue, 'FirstName');
+                // }}
               />
             </Grid>
           </Grid>

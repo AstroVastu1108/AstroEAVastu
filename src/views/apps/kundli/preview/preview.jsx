@@ -164,7 +164,7 @@ const Preview = ({ kundliData, setKundliData }) => {
   }
 
   const getDivisionalChartData = async (option) => {
-    if(option && option!="undefined" && option!=""){
+    if(option && option!="undefined" && option!="" && option!="V"){
       var BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
 
       const payload = {

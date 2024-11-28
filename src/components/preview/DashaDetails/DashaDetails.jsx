@@ -41,12 +41,12 @@ function DashaDetails({ title, DashaData, handleDashadbClick, divref }) {
       // headerAlign: 'center', textAlign:'center'
     },
     {
-      field: 'StartDt', headerName: 'Beginning', headerClassName: 'rowheader', flex: 1,
+      field: 'StartDt', headerName: 'Beginning', headerClassName: 'rowheader', width: 80,
       minWidth: 100
       // headerAlign: 'center'
     },
     {
-      field: 'EndDt', headerName: 'Ending', headerClassName: 'rowheader', flex: 1,
+      field: 'EndDt', headerName: 'Ending', headerClassName: 'rowheader', width: 80,
       minWidth: 100
       // headerAlign: 'center'
     },

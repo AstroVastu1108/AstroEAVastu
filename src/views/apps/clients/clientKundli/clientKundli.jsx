@@ -48,7 +48,7 @@ export default function ClientKundli({ cid }) {
   const fetchKundliData = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await GetKundliDataAPI(10, 1);
+      const res = await GetKundliDataAPI(10, 1,"");
       if (res.hasError) throw new Error(res.error);
       setKundliData(res?.responseData?.data?.Result?.KundaliList);
     } catch (error) {
@@ -77,7 +77,7 @@ export default function ClientKundli({ cid }) {
     if (!newItem.trim()) return;
     const newKundli = { id: Date.now(), name: newItem };
     // setClientKundliList((prevList) => [...prevList, newKundli]);
-    setNewItem(""); 
+    setNewItem("");
     handleOpenKundliPopup(newKundli, false);
   };
 

@@ -21,6 +21,8 @@ import RemoveKundli from "./removeKundli/RemoveKundli";
 import { toastDisplayer } from "@/@core/components/toast-displayer/toastdisplayer";
 import { useAuth } from "@/@core/contexts/authContext";
 import { GetConfig } from "@/app/Server/API/configuration";
+import dayjs from "dayjs";
+import { null_ } from "valibot";
 
 
 
@@ -234,9 +236,9 @@ export default function KundliMain() {
     LastName: '',
     MiddleName: '',
     Gender: 'Male',
-    BirthDate: null,
+    BirthDate: dayjs(),
     Country: { iso2: 'IN', name: 'India' },
-    BirthTime: null,
+    BirthTime: dayjs(),
     CityID: { CityID: 'A1AE28185ED49D47211760BF32D40EB742C84998', FormattedCity: 'Surat, Gujarat' },
     // City:'Surat, Gujarat',
     // CityID: 'A1AE28185ED49D47211760BF32D40EB742C84998',
@@ -285,20 +287,21 @@ export default function KundliMain() {
   }, [])
   // func
   const handleAddClick = () => {
-    // setUserData({
-    //   KundaliID: '',
-    //   FirstName: '',
-    //   LastName: '',
-    //   MiddleName: '',
-    //   Gender: 'Male',
-    //   BirthDate: null,
-    //   Country: { iso2: 'IN', name: 'India' },
-    //   BirthTime: null,
-    //   CityID: { CityID: 'A1AE28185ED49D47211760BF32D40EB742C84998', FormattedCity: 'Surat, Gujarat' },
-    //   isUpdate: false,
-    //   // City: 'Surat'
-    // })
-    setUserData(userData)
+    setUserData({
+      KundaliID: '',
+      FirstName: '',
+      LastName: '',
+      MiddleName: '',
+      Gender: 'Male',
+      BirthDate: null,
+      Country: { iso2: 'IN', name: 'India' },
+      BirthTime: null,
+      CityID: { CityID: 'A1AE28185ED49D47211760BF32D40EB742C84998', FormattedCity: 'Surat, Gujarat' },
+      isUpdate: false,
+      // City: 'Surat'
+    })
+    // setUserData(userData)
+    fetchConfig();
     setOpen(true);
   }
 
@@ -311,7 +314,7 @@ export default function KundliMain() {
   }
 
 
-  const getAllKundli = async (pageNo, searchValue="") => {
+  const getAllKundli = async (pageNo, searchValue = "") => {
     // setLoading(true);
     const res = await GetKundliDataAPI(10, pageNo, searchValue);
     if (res.hasError) {
@@ -334,6 +337,7 @@ export default function KundliMain() {
   // }
 
   const handleEditClick = (data) => {
+    console.log("edited data:", data)
     setLoading(true);
     data.isUpdate = true;
     // data.CityID = {
@@ -377,8 +381,10 @@ export default function KundliMain() {
 
   const handleFilterModelChange = (filterModel) => {
     if (filterModel.quickFilterValues.length) {
-      const query = filterModel.quickFilterValues.join(' ');
+      let query = filterModel.quickFilterValues.join(' ');
+      query = query.replace(/:/g, '');
       if (query.length >= 3)
+
         fetchData(query);
     } else {
       getAllKundli(pageNo, "");
