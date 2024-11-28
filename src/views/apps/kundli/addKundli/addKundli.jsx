@@ -14,7 +14,6 @@ import { DatePicker, LocalizationProvider, TimePicker } from '@mui/x-date-picker
 import dayjs from 'dayjs';
 
 function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserData }) {
-  console.log("user data :", userData)
 
   const [isDisable, setIsDisable] = useState(false);
   const fetchData = async () => {
@@ -102,13 +101,11 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
       const formattedDate = dayjs(`${birthTime}`, 'HHmmss');
       // setDatePicker(formattedDate);
 
-
-      console.log("user birth date :",userData.BirthDate)
       setUserData((prev) => ({
         ...prev,
         ["date"]: dayjs(birthDate),
         // ["time"]: birthDate,
-        ["time"]: formattedDate,
+        // ["time"]: formattedDate,
         ["CityID"]: {
           CityID: userData.CityID,
           FormattedCity: userData.City

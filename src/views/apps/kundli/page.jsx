@@ -337,13 +337,14 @@ export default function KundliMain() {
   // }
 
   const handleEditClick = (data) => {
-    console.log("edited data:", data)
     setLoading(true);
     data.isUpdate = true;
-    // data.CityID = {
-    //   CityID: userData.CityID,
-    //   FormattedCity: userData.City
-    // }
+    const birthTime = data.BirthTime;
+    const hours = parseInt(birthTime?.slice(0, 2), 10);   // First 2 characters (HH)
+    const minutes = parseInt(birthTime?.slice(2, 4), 10);  // Next 2 characters (MM)
+    const seconds = parseInt(birthTime?.slice(4, 6), 10);  // Last 2 characters (SS)
+
+    data.time = dayjs().hour(hours).minute(minutes).second(seconds);
     setUserData(data)
     setOpen(true);
     setLoading(false);

@@ -22,7 +22,7 @@ import JaiminiCharKarakasPopUp from '@/components/preview/JaiminiCharKarakas/Jai
 import NavTaraChakra from '@/components/preview/NavTaraChakra/NavTaraChakra'
 import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
 
-const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, TransitData, setTransitData, getTransitData, getDivisionalChartData,DivisionalData, setDivisionalData }) => {
+const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, TransitData, setTransitData, getTransitData, getDivisionalChartData, DivisionalData, setDivisionalData }) => {
   // var
   const BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
   const AstroDetails = kundliData?.AstroVastuReport?.AstroDetails;
@@ -55,7 +55,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   const [allKundliOpt, setAllKundliOpt] = useState(false);
   const [Loading, setLoading] = useState(false);
   const [DashaValue, setDashaValue] = useState("PratyantarDasha");
-  const [DashaTitle, setDashaTitle] = useState(`${DashaDetailData?.CurrentMD} > ${DashaDetailData?.CurrentAD} > PratyantarDashas`);
+  const [DashaTitle, setDashaTitle] = useState(`${DashaDetailData?.CurrentMD}`);
   const [CurrentDasha, setCurrentDasha] = useState(`${DashaDetailData?.CurrentMD} > ${DashaDetailData?.CurrentAD} > ${DashaDetailData?.CurrentPD}`);
   const [DashaGridData, setDashaGridData] = useState(kundliData?.AstroVastuReport?.DashaDetails?.PratyantarDasha);
   const [DashaDate, setDashaDate] = useState(DashaDetailData.MahaDasha.filter((e) => e.IsCurrent == true)[0].StartDt);
@@ -142,18 +142,17 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   }, [kundliOptValue])
 
   const handleDashaChange = async () => {
-    // const DashaDate = DashaDetailData.MahaDasha.filter((e) => e.IsCurrent == true)[0].StartDt;
-    const titleArr = DashaTitle.split(" > ");
+    const titleArr = DashaTitle.split("-");
     if (DashaValue == "PranDasha") {
       const payload = {
         "BirthDate": BirthDetails?.Date,
         "BirthTime": BirthDetails?.Time,
         "DashaStartDate": DashaDate,
-        "Planet": `${titleArr[0]}-${titleArr[1]}`
+        "Planet": `${titleArr[0]}-${titleArr[1]}-${titleArr[2]}`
       }
       const response = await DashaClickEvent(payload);
       if (!response.hasError) {
-        setDashaTitle(`${titleArr[0]} > ${titleArr[1]} > ${titleArr[2]} > SookshmaDasha`);
+        setDashaTitle(`${titleArr[0]}-${titleArr[1]}`);
         setDashaValue("SookshmaDasha");
         setDashaGridData(response?.responseData)
       }
@@ -164,7 +163,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
         "BirthDate": BirthDetails?.Date,
         "BirthTime": BirthDetails?.Time,
         "DashaStartDate": DashaDate,
-        "Planet": `${titleArr[0]}-${payloadPlanet[0]}`
+        "Planet": `${titleArr[0]}-${titleArr[1]}`
       }
       const response = await DashaClickEvent(payload);
       if (!response.hasError) {
@@ -178,11 +177,11 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
         "BirthDate": BirthDetails?.Date,
         "BirthTime": BirthDetails?.Time,
         "DashaStartDate": DashaDate,
-        "Planet": `${titleArr[0]}`
+        "Planet": DashaDetailData?.CurrentMD
       }
       const response = await DashaClickEvent(payload);
       if (!response.hasError) {
-        setDashaTitle(`${titleArr[0]} > AntarDashas`);
+        setDashaTitle(`${titleArr[0]}`);
         setDashaValue("AntarDasha");
         setDashaGridData(response?.responseData)
       }
@@ -195,9 +194,6 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   }
 
   const handleDashaDoubleClick = async (row) => {
-    console.log(row)
-    // const DashaDate = DashaDetailData.MahaDasha.filter((e) => e.IsCurrent == true)[0].StartDt;
-    const titleArr = DashaTitle.split(" > ");
     if (DashaValue == "MahaDasha") {
       setDashaDate(row?.StartDt)
       const payload = {
@@ -226,7 +222,8 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       if (!response.hasError) {
         const data = response?.responseData;
         const ADDasha = data.filter((e) => e.IsCurrent == true)[0]
-        setDashaTitle(`${titleArr[0]} > ${row?.Planet} > PratyantarDasha`);
+        // setDashaTitle(`${titleArr[0]} > ${row?.Planet} > PratyantarDasha`);
+        setDashaTitle(`${row?.Planet}`);
         setDashaValue("PratyantarDasha");
         setDashaGridData(response?.responseData)
       }
@@ -242,7 +239,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       if (!response.hasError) {
         const data = response?.responseData;
         const ADDasha = data.filter((e) => e.IsCurrent == true)[0]
-        setDashaTitle(`${titleArr[0]} > ${titleArr[1]} > ${row?.Planet} > SookshmaDasha`);
+        setDashaTitle(`${row?.Planet}`);
         setDashaValue("SookshmaDasha");
         setDashaGridData(response?.responseData)
       }
@@ -257,7 +254,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       if (!response.hasError) {
         const data = response?.responseData;
         const ADDasha = data.filter((e) => e.IsCurrent == true)[0]
-        setDashaTitle(`${titleArr[0]} > ${titleArr[1]} > ${titleArr[2]} > ${row?.Planet} > PranDasha`);
+        setDashaTitle(`${row?.Planet}`);
         setDashaValue("PranDasha");
         setDashaGridData(response?.responseData)
       }
