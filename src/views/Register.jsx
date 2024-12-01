@@ -19,7 +19,7 @@ import Loader from '@/components/common/Loader/Loader'
 import { LoadingButton } from '@mui/lab'
 import { useSettings } from '@/@core/hooks/useSettings'
 import { navigation } from '@/app-navigation'
-
+import "./global.css";
 
 const MaskImg = styled('img')({
   blockSize: 'auto',
@@ -318,9 +318,9 @@ const RegisterPage = ({ mode }) => {
   }
 
   const customtheme = createTheme({
-    typography: {
-      fontFamily: 'Segoe UI, sans-serif',
-    },
+    // typography: {
+    //   fontFamily: 'Segoe UI, sans-serif',
+    // },
   });
 
   const handleVerifyOtp = async (otp) => {
@@ -428,8 +428,8 @@ const RegisterPage = ({ mode }) => {
 
               {isOtpVerified == "pending" || isOtpVerified == "verifiedd" ? (
                 <div className='flex flex-col gap-1'>
-                  <Typography variant='h5'>{`Welcome! Let's get you started...`}</Typography>
-                  <Typography>Ready to discover new possibilities?</Typography>
+                  <Typography className='font-ea-n' variant='h5'>{`Welcome! Let's get you started...`}</Typography>
+                  <Typography className='font-ea-n'>Ready to discover new possibilities?</Typography>
                 </div>
               ) : ""
               }
@@ -499,7 +499,7 @@ const RegisterPage = ({ mode }) => {
                       <div className='flex flex-col gap-4'>
                         <div className='flex flex-col gap-1'>
                           <Typography variant='h5'>{`One Time Security`}</Typography>
-                          <Typography>Please enter the verification code sent to <span style={{ fontWeight: "600", color: "#590a73" }}>{userData?.email}</span></Typography>
+                          <Typography>Please enter the verification code sent to <span className='text-primary font-ea-sb'>{userData?.email}</span></Typography>
                         </div>
                         <OTPverify email={userData?.email} role={"register"} setIsOtpVerified={setIsOtpVerified} handleVerifyOtp={handleVerifyOtp} Errors={errors} ErrorMessageLogin={errorMessage} />
                       </div>
@@ -528,20 +528,20 @@ const RegisterPage = ({ mode }) => {
                   </Box>
                   <div className='flex justify-center items-center flex-wrap' style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
                     <div className='flex flex-wrap gap-2'>
-                      <Typography>Already have an account? </Typography>
-                      <Typography color='primary' style={{ cursor: 'pointer' }} onClick={() => {
+                      <Typography className='font-ea-n'>Already have an account? </Typography>
+                      <Typography className='font-ea-n' color='primary' style={{ cursor: 'pointer' }} onClick={() => {
                         router.push('/login')
                       }}>
                         Login
                       </Typography>
                     </div>
 
-                    <Typography style={{ fontSize: "10px" }}>By clicking
-                      <Link href="#" onClick={(e) => e.preventDefault()} style={{ fontWeight: "600", color: "#590a73" }}> ‘Get started’ </Link>
+                    <Typography className='font-ea-sb' style={{ fontSize: "10px" }}>By clicking
+                      <Link href="#" className='text-primary' onClick={(e) => e.preventDefault()} > ‘Get started’ </Link>
                       you are agreeing to our
-                      <Link href="#" onClick={(e) => e.preventDefault()} style={{ fontWeight: "600", color: "#590a73" }}> Terms of Use </Link>
+                      <Link href="#" className='text-primary' onClick={(e) => e.preventDefault()} > Terms of Use </Link>
                       and
-                      <Link href="#" onClick={(e) => e.preventDefault()} style={{ fontWeight: "600", color: "#590a73" }}> Privacy Policy.
+                      <Link href="#" className='text-primary' onClick={(e) => e.preventDefault()} > Privacy Policy.
                       </Link>
                     </Typography>
                     <div style={{ display: 'none' }}>

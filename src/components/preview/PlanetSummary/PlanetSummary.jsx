@@ -55,7 +55,7 @@ const SummaryAspect = ({ SummaryData, Aspect }) => {
 
     // Return the elements separated by " - "
     return (
-      <span className={`pl-${fullName} row-title`} key={abbreviation}>
+      <span className={`pl-${fullName} row-title font-ea-sb`} key={abbreviation}>
         {value}
       </span>
     );
@@ -81,7 +81,7 @@ const SummaryAspect = ({ SummaryData, Aspect }) => {
           // return <span className="row-title">{params.value}</span>;
         } else {
           const value = typeof params.value === 'string' ? params.value : String(params.value || '');
-          return <span className="summaryTxt" dangerouslySetInnerHTML={{ __html: value }} />;
+          return <span className="summaryTxt font-ea-sb" dangerouslySetInnerHTML={{ __html: value }} />;
         }
       }
     }));
@@ -97,38 +97,10 @@ const SummaryAspect = ({ SummaryData, Aspect }) => {
 
     return { columns, rows };
   }, [SummaryData, Aspect]);
-  const customTheme = createTheme({
-    components: {
-      MuiDataGrid: {
-        styleOverrides: {
-          root: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-          cell: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-          columnHeaders: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-          toolbar: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-        },
-      },
-    },
-  });
+
   return (
     <Box
-      // sx={{
-      //   '& .MuiDataGrid-cell': {
-      //     // borderLeft: '0.5px solid var(--border-color)',
-      //     borderBottom: '1px solid var(--border-color)',
-      //     borderTop: '0px solid var(--border-color)',
-      //   },
-      //   '& .MuiDataGrid-cell:last-child': {
-      //     // borderRight: '0.5px solid var(--border-color)',
-      //   }
-      // }}
+
       sx={{
         '& .MuiDataGrid-root': {
           borderRadius: 0, // Remove border radius
@@ -162,8 +134,6 @@ const SummaryAspect = ({ SummaryData, Aspect }) => {
         },
       }}
     >
-      <ThemeProvider theme={customTheme}>
-
         <DataGrid
           showCellVerticalBorder
           getRowId={(row) => row.id}
@@ -178,7 +148,6 @@ const SummaryAspect = ({ SummaryData, Aspect }) => {
           rowHeight={30}
           columnHeaderHeight={44}
         />
-      </ThemeProvider>
 
     </Box>
   );

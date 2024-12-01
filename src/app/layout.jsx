@@ -22,7 +22,7 @@ const RootLayout = ({ children }) => {
 
   return (
     <html id='__next' lang='en' dir={direction}>
-      <body className='flex is-full min-bs-full flex-auto flex-col'>
+      <body className='flex is-full min-bs-full flex-auto flex-col font-ea-n'>
         <AuthProvider>
           <ToastContainer />
           <ReduxProvider> {children}</ReduxProvider>

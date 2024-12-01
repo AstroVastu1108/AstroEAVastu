@@ -1,0 +1,17 @@
+@font-face {
+  font-family: 'ea-n';
+  font-weight: 400;
+  font-stretch: 100%;
+  src: url('./../assets/fonts/s-n.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'ea-sb';
+  font-weight: 500;
+  font-stretch: 100%;
+  src: url('./../assets/fonts/s-sb.woff2') format('woff2');
+}
+
+body {
+  font-family: var(--primary-font-n);
+}

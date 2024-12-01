@@ -10,18 +10,18 @@ function KundliOption({ setKundliValue, open, handleClose, KundliData }) {
     components: {
       MuiDataGrid: {
         styleOverrides: {
-          root: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-          cell: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-          columnHeaders: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-          toolbar: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
+          // root: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
+          // cell: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
+          // columnHeaders: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
+          // toolbar: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
         },
       },
     },
@@ -86,7 +86,7 @@ function KundliOption({ setKundliValue, open, handleClose, KundliData }) {
       >
         <DialogTitle className="PopupHeader text-white p-3">
           <div className='w-100' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span className='text-primary text-2xl font-semibold !pl-3'>
+            <span className='text-primary text-2xl font-ea-sb !pl-3'>
               Select Life Kundli
             </span>
             <IconButton

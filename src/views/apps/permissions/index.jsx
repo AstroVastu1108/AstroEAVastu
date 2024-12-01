@@ -32,7 +32,7 @@ function EnhancedTableHead({ order, orderBy }) {
     <TableHead>
       <TableRow>
         {headCells.map(({ id, label, align = 'left' }) => (
-          <TableCell key={id} align={align} sx={{ fontSize: '12pt', fontFamily: 'Segoe UI' }}>
+          <TableCell key={id} align={align} sx={{ fontSize: '12pt' }}>
             {label}
           </TableCell>
         ))}
@@ -60,10 +60,10 @@ export default function EnhancedTable() {
     components: {
       MuiDataGrid: {
         styleOverrides: {
-          root: { fontFamily: 'Segoe UI, Arial, sans-serif' },
-          cell: { fontFamily: 'Segoe UI, Arial, sans-serif' },
-          columnHeaders: { fontFamily: 'Segoe UI, Arial, sans-serif' },
-          toolbar: { fontFamily: 'Segoe UI, Arial, sans-serif' },
+          // root: { fontFamily: 'Segoe UI, Arial, sans-serif' },
+          // cell: { fontFamily: 'Segoe UI, Arial, sans-serif' },
+          // columnHeaders: { fontFamily: 'Segoe UI, Arial, sans-serif' },
+          // toolbar: { fontFamily: 'Segoe UI, Arial, sans-serif' },
         },
       },
     },
@@ -182,7 +182,7 @@ export default function EnhancedTable() {
                         </InputAdornment>
                       ),
                     }}
-                    sx={{ fontSize: '12pt', fontFamily: 'Segoe UI' }}
+                    sx={{ fontSize: '12pt' }}
                   />
                 }
               />
@@ -195,7 +195,7 @@ export default function EnhancedTable() {
                       <TableBody>
                         {rows.map((item, index) => (
                           <TableRow hover key={item.Label} sx={{ cursor: 'pointer' }}>
-                            <TableCell align="center" sx={{ fontSize: '12pt', fontFamily: 'Segoe UI' }}>
+                            <TableCell align="center" sx={{ fontSize: '12pt' }}>
                               {item.Label}
                             </TableCell>
                             <TableCell align="center">

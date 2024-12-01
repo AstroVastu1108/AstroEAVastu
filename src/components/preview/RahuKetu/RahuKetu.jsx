@@ -7,18 +7,18 @@ function RahuKetu({ RahuData, KetuData }) {
     components: {
       MuiDataGrid: {
         styleOverrides: {
-          root: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-          cell: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-          columnHeaders: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-          toolbar: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
+          // root: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
+          // cell: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
+          // columnHeaders: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
+          // toolbar: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
         },
       },
     },
@@ -55,12 +55,9 @@ function RahuKetu({ RahuData, KetuData }) {
   };
 
   const highlightText = (value) => {
-    const abbreviation = value.trim().slice(0, 2); // Remove any extra whitespace
+    const abbreviation = value.trim().slice(0, 2);
     const fullName = shorthandMap[abbreviation];
 
-    // Split the value by `-` to get individual planet abbreviations
-
-    // Return the elements separated by " - "
     return (
       <div className={`pl-${fullName} planetName`} key={abbreviation}>
         {value}
@@ -72,7 +69,7 @@ function RahuKetu({ RahuData, KetuData }) {
     {
       field: 'rahuId', headerName: 'Rahu', width: 140, headerClassName: 'rowheader',
       renderCell: (params) => {
-        return <div className='rahuHeader'>{params.value}</div>
+        return <div className='rahuHeader font-ea-sb'>{params.value}</div>
       }
     },
     {
@@ -121,7 +118,7 @@ function RahuKetu({ RahuData, KetuData }) {
   const columns2 = [
     {
       field: 'ketuId', headerName: 'Ketu', headerClassName: 'rowheader', width: 140, renderCell: (params) => {
-        return <div className='rahuHeader'>{params.value}</div>
+        return <div className='rahuHeader font-ea-sb'>{params.value}</div>
       }
     },
     {

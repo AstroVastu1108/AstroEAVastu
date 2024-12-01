@@ -36,6 +36,8 @@ import { LoadingButton } from '@mui/lab'
 import Cookies from 'js-cookie';
 import { navigation } from '@/app-navigation';
 
+import "./global.css";
+
 
 const MaskImg = styled('img')({
   blockSize: 'auto',
@@ -331,9 +333,9 @@ const LoginV2 = ({ mode }) => {
   // }, [isOtpVerified])
 
   const customtheme = createTheme({
-    typography: {
-      fontFamily: 'Segoe UI, sans-serif',
-    },
+    // typography: {
+    //   fontFamily: 'Segoe UI, sans-serif',
+    // },
   });
 
   return (
@@ -377,8 +379,8 @@ const LoginV2 = ({ mode }) => {
                 <>
 
                   <div className='flex flex-col gap-1'>
-                    <Typography variant='h5'>{`Continue to use ${themeConfig.templateName}.Net`}</Typography>
-                    <Typography>Please sign-in to enhance life experiences !!!</Typography>
+                    <Typography className='font-ea-n' variant='h5'>{`Continue to use ${themeConfig.templateName}.Net`}</Typography>
+                    <Typography className='font-ea-n'>Please sign-in to enhance life experiences !!!</Typography>
                   </div>
                   <form
                     noValidate
@@ -414,7 +416,6 @@ const LoginV2 = ({ mode }) => {
                       isOtpVerified == "pending" ? (
                         <LoadingButton
                           fullWidth
-                          autoFocus
                           variant='contained'
                           onClick={handleSubmit}
                           // onClick={handleVerifyEmail}
@@ -435,20 +436,20 @@ const LoginV2 = ({ mode }) => {
                     <div className="flex flex-col gap-6">
 
                       <div className='flex justify-center items-center flex-wrap gap-2'>
-                        <Typography>No Account?</Typography>
-                        <Typography color='primary' style={{ cursor: 'pointer' }} onClick={() => {
+                        <Typography className='font-ea-n'>No Account?</Typography>
+                        <Typography className='font-ea-n' color='primary' style={{ cursor: 'pointer' }} onClick={() => {
                           router.push('/sign-up')
                         }}>
                           Create New Account
                         </Typography>
                       </div>
                       <div>
-                        <Typography style={{ fontSize: "12px", display: "flex", justifyContent: "center", gap: "10px" }}>
-                          <Link href="#" onClick={(e) => e.preventDefault()} style={{ fontWeight: "600" }}> Terms of Use </Link>
+                        <Typography className='font-ea-sb' style={{ fontSize: "12px", display: "flex", justifyContent: "center", gap: "10px" }}>
+                          <Link href="#" onClick={(e) => e.preventDefault()}> Terms of Use </Link>
                           |
-                          <Link href="#" onClick={(e) => e.preventDefault()} style={{ fontWeight: "600" }}>Privacy Policy</Link>
+                          <Link href="#" onClick={(e) => e.preventDefault()} >Privacy Policy</Link>
                           |
-                          <Link href="#" onClick={(e) => e.preventDefault()} style={{ fontWeight: "600" }}> Help Centre
+                          <Link href="#" onClick={(e) => e.preventDefault()} > Help Centre
                           </Link>
                         </Typography>
                       </div>
@@ -459,8 +460,8 @@ const LoginV2 = ({ mode }) => {
                 <>
                   <div className='flex flex-col gap-4'>
                     <div className='flex flex-col gap-1'>
-                      <Typography variant='h5'>{`One Time Security`}</Typography>
-                      <Typography>Please enter the verification code sent to <span style={{ fontWeight: "600", color: "#590a73" }}>{formData?.email}</span></Typography>
+                      <Typography className='font-ea-n' variant='h5'>{`One Time Security`}</Typography>
+                      <Typography className='font-ea-n'>Please enter the verification code sent to <span className='text-primary font-ea-sb'>{formData?.email}</span></Typography>
                     </div>
                   </div>
                   <OTPverify email={formData?.email} role={"login"} setIsOtpVerified={setIsOtpVerified} handleVerifyOtp={handleVerifyOtp} Errors={errors} ErrorMessageLogin={errorMessage}/>

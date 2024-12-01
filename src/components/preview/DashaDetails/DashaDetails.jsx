@@ -54,7 +54,6 @@ function DashaDetails({ title, DashaData, handleDashadbClick, divref }) {
     const planetElements = value.split("-").map((abbr) => {
       const abbreviation = abbr.trim().slice(0, 2); // Remove any extra whitespace
       const fullName = shorthandMap[abbreviation]; // Map to full name
-      console.log(fullName)
       return (
         <span className={`pl-${fullName}`} key={abbreviation}>
           {abbr}
@@ -74,36 +73,6 @@ function DashaDetails({ title, DashaData, handleDashadbClick, divref }) {
       </span>
     );
   };
-
-  const customTheme = createTheme({
-    components: {
-      MuiDataGrid: {
-        styleOverrides: {
-          root: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-          cell: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-          columnHeaders: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-          toolbar: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-        },
-      },
-    },
-  });
-
-  function CustomToolbar({ title }) {
-    return (
-      <GridToolbarContainer className="flex-row justify-center items-center w-100 py-2">
-        <div style={{ fontSize: '16px', fontWeight: '700', color: 'var(--primary-color)' }}>{title}</div>
-        {/* <GridToolbarQuickFilter className="SearchBar" /> */}
-      </GridToolbarContainer>
-    );
-  }
 
   const columns = [
     {
@@ -191,8 +160,6 @@ function DashaDetails({ title, DashaData, handleDashadbClick, divref }) {
           }
         }}
       >
-        <ThemeProvider theme={customTheme}>
-
           <DataGrid
             getRowHeight={rowHeight}
 
@@ -201,7 +168,7 @@ function DashaDetails({ title, DashaData, handleDashadbClick, divref }) {
             columns={columns}
             pageSize={rowsDasha.length} // Show all rows
             getRowClassName={(params) =>
-              params.row.IsCurrent ? 'highlight-row cursor-pointer select-none' : ''
+              params.row.IsCurrent ? 'highlight-row cursor-pointer select-none font-ea-sb text-md' : ''
             }
             onRowDoubleClick={handleDashaClick}
             disableColumnSorting
@@ -214,8 +181,6 @@ function DashaDetails({ title, DashaData, handleDashadbClick, divref }) {
             hideFooter={true}
           // slots={{ toolbar: () => <CustomToolbar title={title} /> }}
           />
-
-        </ThemeProvider>
 
       </Box>
     </>

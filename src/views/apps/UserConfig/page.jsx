@@ -143,7 +143,7 @@ export default function UserListing({mode}) {
   function CustomToolbar() {
     return (
       <GridToolbarContainer className="px-5  d-flex justify-content-between align-items-center">
-        <div className="me-auto" style={{ fontSize: '16px', fontWeight: '500', color: "#2F2B3DB3" }}>Review User records below</div>
+        <div className="me-auto">Review User records below</div>
         <GridToolbarQuickFilter className="SearchBar" />
       </GridToolbarContainer>
     );
@@ -157,18 +157,18 @@ export default function UserListing({mode}) {
     components: {
       MuiDataGrid: {
         styleOverrides: {
-          root: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-          cell: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-          columnHeaders: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-          toolbar: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
+          // root: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
+          // cell: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
+          // columnHeaders: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
+          // toolbar: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
         },
       },
     },

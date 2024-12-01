@@ -164,7 +164,7 @@ const Preview = ({ kundliData, setKundliData }) => {
   }
 
   const getDivisionalChartData = async (option) => {
-    if(option && option!="undefined" && option!="" && option!="V"){
+    if (option && option != "undefined" && option != "" && option != "V") {
       var BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
 
       const payload = {
@@ -180,7 +180,7 @@ const Preview = ({ kundliData, setKundliData }) => {
         "CityID": BirthDetails.CityID,
         "City": BirthDetails.City,
       }
-      const response = await DivisionalChartEvent(payload,option);
+      const response = await DivisionalChartEvent(payload, option);
       if (response.hasError) {
         return toastDisplayer("error", response.error);
       } else {
@@ -190,19 +190,25 @@ const Preview = ({ kundliData, setKundliData }) => {
     }
   }
 
-  const handleDateChange = async (datePicker) => {
+  const handleDateChange = async (datePicker1) => {
     var kdata = kundliData?.AstroVastuReport?.BirthDetails;
-    const formattedDate = datePicker.format('DD-MM-YYYY');
-    const formattedTime = datePicker.format('HHmmss'); // 24-hour format without colon
+    const formattedDate = datePicker1.format('DD-MM-YYYY');
+    const formattedTime = datePicker1.format('HHmmss'); // 24-hour format without colon
+
     if (TimeToolOpt == "B") {
+      const chkDate = dayjs(`${kdata?.Date} ${kdata?.Time}`, 'DD-MM-YYYY HHmmss')
+      if (chkDate.isSame(datePicker1, 'second')) {
+        // setDatePicker(dayjs(`${kdata?.Date} ${kdata?.Time}`, 'DD-MM-YYYY HHmmss'));
+        return
+      }
       var date = "";
       var time = "";
       if (TransiteTime != null) {
-        const datePicker = dayjs(TransiteTime, 'DD-MM-YYYY HH:mm:ss');
+        const datePicker2 = dayjs(TransiteTime, 'DD-MM-YYYY HH:mm:ss');
 
-        if (datePicker.isValid()) {
-          date = datePicker.format('DD-MM-YYYY');
-          time = datePicker.format('HHmmss');
+        if (datePicker2.isValid()) {
+          date = datePicker2.format('DD-MM-YYYY');
+          time = datePicker2.format('HHmmss');
         }
       }
       const formattedData = {
@@ -235,10 +241,12 @@ const Preview = ({ kundliData, setKundliData }) => {
       }
     } else {
       if (TransiteTime) {
-        const formatedString = dayjs(TransiteTime, 'DD-MM-YYYY HHmm');
-        if (!formatedString.isSame(datePicker, 'second')) {
+        // console.log(TransiteTime)
+        const formatedString = dayjs(TransiteTime, 'DD-MM-YYYY HHmmss');
+        if (!formatedString.isSame(datePicker1, 'second')) {
           getTransitData(formattedDate, formattedTime);
         }
+
       }
     }
   }
@@ -249,11 +257,11 @@ const Preview = ({ kundliData, setKundliData }) => {
       if (!TransiteTime) {
         getTransitData(null, null, "T");
       } else {
-        setDatePicker(dayjs(TransiteTime, 'DD-MM-YYYY HHmm'));
+        setDatePicker(dayjs(TransiteTime, 'DD-MM-YYYY HHmmss'));
       }
-    } else if(e.target.value == "V") {
+    } else if (e.target.value == "B") {
       const { Date: birthDate, Time: birthTime } = kundliData?.AstroVastuReport?.BirthDetails;
-      const formattedDate = dayjs(`${birthDate} ${birthTime}`, 'DD-MM-YYYY HHmm');
+      const formattedDate = dayjs(`${birthDate} ${birthTime}`, 'DD-MM-YYYY HHmmss');
       setDatePicker(formattedDate);
     }
   }
@@ -270,7 +278,7 @@ const Preview = ({ kundliData, setKundliData }) => {
               <div className='previewPDF flex justify-center'>
                 {kundliData &&
                   <>
-                    <PreviewCard kundliData={kundliData} handleDownload={handleKundliApi} isPrintDiv={false} loading={existdownloadLoading} handleTimeTool={handleTimeTool} setTransitData={setTransitData} TransitData={TransitData} getTransitData={getTransitData} getDivisionalChartData={getDivisionalChartData} DivisionalData={DivisionalData} setDivisionalData={setDivisionalData}/>
+                    <PreviewCard kundliData={kundliData} handleDownload={handleKundliApi} isPrintDiv={false} loading={existdownloadLoading} handleTimeTool={handleTimeTool} setTransitData={setTransitData} TransitData={TransitData} getTransitData={getTransitData} getDivisionalChartData={getDivisionalChartData} DivisionalData={DivisionalData} setDivisionalData={setDivisionalData} birthDate={datePicker} setKundliData={setKundliData} />
                   </>
                 }
                 {timeToolPopUp &&

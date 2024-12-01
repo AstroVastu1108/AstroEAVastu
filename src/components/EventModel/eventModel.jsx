@@ -19,7 +19,7 @@ export default function EventModel({ open, handleAddClose, headerTitle, displayD
             >
                 <DialogTitle className="PopupHeader text-white p-3" style={{ borderTopLeftRadius: '8px', borderTopRightRadius: '8px' }}>
                     <div className='w-100' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <span className='text-primary text-2xl font-semibold !pl-3'>
+                        <span className='text-primary text-2xl font-ea-sb !pl-3'>
                             {headerTitle}
                         </span>
                         <IconButton

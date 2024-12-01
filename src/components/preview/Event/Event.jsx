@@ -16,18 +16,18 @@ function Event({ setEventValue, open, handleClose }) {
     components: {
       MuiDataGrid: {
         styleOverrides: {
-          root: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-          cell: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-          columnHeaders: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-          toolbar: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
+          // root: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
+          // cell: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
+          // columnHeaders: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
+          // toolbar: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
         },
       },
     },
@@ -38,7 +38,7 @@ function Event({ setEventValue, open, handleClose }) {
     const parts = text.split(new RegExp(`(${query})`, 'gi'));
     return parts.map((part, index) =>
       part.toLowerCase() === query.toLowerCase() ? (
-        <span key={index} className='font-semibold text-[var(--green-color)]'>
+        <span key={index} className='font-ea-sb text-[var(--green-color)]'>
           {part}
         </span>
       ) : (
@@ -145,7 +145,7 @@ function Event({ setEventValue, open, handleClose }) {
       >
         <DialogTitle className="PopupHeader text-white p-3">
           <div className='w-100' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span className='text-primary text-2xl font-semibold !pl-3'>
+            <span className='text-primary text-2xl font-ea-sb !pl-3'>
               Select Life Event
             </span>
             <IconButton

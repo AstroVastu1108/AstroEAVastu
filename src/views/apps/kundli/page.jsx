@@ -40,7 +40,7 @@ export default function KundliMain() {
       <>
         {parts.map((part, index) =>
           part.toLowerCase() === searchText.toLowerCase() ? (
-            <span className="font-semibold text-[var(--green-color)]" key={index}>
+            <span className="font-ea-sb text-[var(--green-color)]" key={index}>
               {part}
             </span>
           ) : (
@@ -64,7 +64,7 @@ export default function KundliMain() {
       renderCell: (params) => {
         const fullName = `${params.row.FirstName} ${params.row.MiddleName} ${params.row.LastName}`;
         const searchText = searchInputRef.current.value;
-        return <span className="font-semibold">{highlightText(fullName, searchText)}</span>;
+        return <span className="font-ea-sb">{highlightText(fullName, searchText)}</span>;
       },
     },
     {
@@ -94,7 +94,7 @@ export default function KundliMain() {
         const searchText = searchInputRef.current.value;
 
         const fullValue = `${dateValue} ${formattedTime}`;
-        return <span className="font-semibold">{highlightText(fullValue, searchText)}</span>;
+        return <span className="font-ea-sb">{highlightText(fullValue, searchText)}</span>;
       }
     },
     {
@@ -401,18 +401,18 @@ export default function KundliMain() {
     components: {
       MuiDataGrid: {
         styleOverrides: {
-          root: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-          cell: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-          columnHeaders: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-          toolbar: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
+          // root: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
+          // cell: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
+          // columnHeaders: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
+          // toolbar: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
         },
       },
     },

@@ -253,18 +253,18 @@ function KundliDataGrid({ columns, pageSize = 5, checkboxSelection = false, onRo
     components: {
       MuiDataGrid: {
         styleOverrides: {
-          root: {
-            fontFamily: 'Segoe UI, Arial, sans-serif'
-          },
-          cell: {
-            fontFamily: 'Segoe UI, Arial, sans-serif'
-          },
-          columnHeaders: {
-            fontFamily: 'Segoe UI, Arial, sans-serif'
-          },
-          toolbar: {
-            fontFamily: 'Segoe UI, Arial, sans-serif'
-          }
+          // root: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif'
+          // },
+          // cell: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif'
+          // },
+          // columnHeaders: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif'
+          // },
+          // toolbar: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif'
+          // }
         }
       }
     }

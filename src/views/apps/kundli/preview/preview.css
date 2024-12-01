@@ -1,16 +1,30 @@
+@font-face {
+  font-family: 'ea-n';
+  font-weight: 400;
+  font-stretch: 100%;
+  src: url('./../../../../assets/fonts/s-n.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'ea-sb';
+  font-weight: 500;
+  font-stretch: 100%;
+  src: url('./../../../../assets/fonts/s-sb.woff2') format('woff2');
+}
+
+body {
+  font-family: var(--primary-font-n);
+}
+
 .previewPDFPrint {
   position: absolute;
   left: -10000px;
 }
 
-.MuiButtonBase-root {
-  font-family: 'Segoe UI' !important;
-}
-
 .pdf-Div {
   padding-left: 0rem !important;
   padding-top: 0rem !important;
-  font-family: 'Segoe UI' !important;
+  /* font-family: 'Segoe UI' !important; */
   /* border: 1px solid var(--border-color); */
 }
 
@@ -19,7 +33,7 @@
   background-color: var(--primary-color);
   min-block-size: 10mm;
   padding-inline-start: 10px;
-  font-weight: 700;
+  /* font-weight: 700; */
   font-size: 14pt;
   /* padding-bottom: 10px; */
 }
@@ -27,7 +41,7 @@
 .chart-name .chart-date {
   color: #fff;
   font-size: 10pt;
-  font-weight: 400;
+  /* font-weight: 400; */
   text-align: end;
   float: inline-end;
 
@@ -46,8 +60,6 @@
   padding-block-start: 5px;
   padding-block-end: 5px;
 }
-
-
 
 .label-container {
   align-items: end;
@@ -80,15 +92,15 @@
   .text-label {
     padding-inline-end: 10px;
     font-size: 9.5pt;
-    font-weight: 500;
+    /* font-weight: 500; */
     color: var(--primary-color);
     text-wrap: nowrap;
   }
 }
 
 .chart-title {
+  font-family: var(--primary-font-sb);
   color: var(--primary-color);
-  font-weight: 500;
   padding-block-end: 10px;
   text-align: center;
   font-size: 15pt;
@@ -114,29 +126,32 @@
   /* background-color: var(--secondary-color) !important; */
   background-color: #99e27b65 !important;
   color: var(--primary-color);
-  font-weight: 600;
+  /* font-weight: 600; */
+  font-family: 'ea-sb' !important;
+
+  .MuiDataGrid-cell {
+    font-family: 'ea-sb' !important;
+  }
 }
 
 .highlight-row:hover {
   background-color: var(--secondary-color) !important;
 }
 
-
 .rowheader {
   background-color: var(--primary-color);
   color: var(--secondary-color);
-  font-weight: 500;
+  /* font-weight: 500; */
   font-size: 11pt;
   cursor: auto;
   border-radius: 0px !important;
 
   .planet-col-title-small {
     color: #fff;
-    font-weight: 400;
+    /* font-weight: 400; */
     font-size: 9pt;
   }
 }
-
 
 .planet-table {
   display: flex;
@@ -145,7 +160,6 @@
   gap: 12px;
 
   color: black;
-
 
   .MuiDataGrid-footerContainer {
     display: none;
@@ -179,7 +193,7 @@
 
   .rahuHeader {
     color: var(--primary-color);
-    font-weight: 500;
+    /* font-weight: 500; */
   }
 
   .valueData {
@@ -222,13 +236,12 @@
       width: 100%;
 
       .house-header {
-
         display: flex;
         width: 100%;
         background-color: var(--primary-color);
         color: #fff;
         font-size: 14px;
-        font-weight: 500;
+        /* font-weight: 500; */
         justify-content: space-between;
         align-items: center;
         padding-block: 4px;
@@ -244,7 +257,7 @@
             inline-size: 18mm;
             display: inline-block;
             /* color: #fcd53f; */
-            font-weight: 500;
+            /* font-weight: 500; */
             color: var(--secondary-color);
           }
 
@@ -353,7 +366,6 @@
               inline-size: 6mm;
             }
           }
-
         }
 
         .house-body-Div2 {
@@ -483,8 +495,6 @@
                     .item-aspect-arrow {
                       inline-size: 6mm;
                     }
-
-
                   }
 
                   .sub-div3 {
@@ -499,7 +509,6 @@
                       display: flex;
                     }
                   }
-
                 }
 
                 .planet-Div1 {
@@ -522,8 +531,6 @@
                     display: flex;
                     gap: 4px;
                   }
-
-
                 }
 
                 .item-title-planet-bg-ketu {
@@ -586,7 +593,7 @@
                     border-right: 1px solid var(--border-color);
                     display: flex;
                     flex-direction: column;
-                    font-weight: 500;
+                    /* font-weight: 500; */
                     font-size: 11pt;
                     padding-inline-start: 10px;
 
@@ -596,7 +603,7 @@
                   }
 
                   span:first-child {
-                    font-weight: 500;
+                    /* font-weight: 500; */
                   }
 
                   .sub-div:last-child {
@@ -619,7 +626,7 @@
 
                   .sub-div1 {
                     color: var(--primary-color);
-                    font-weight: 500;
+                    /* font-weight: 500; */
 
                     font-size: 10pt;
                     padding-block-start: 2px;
@@ -642,8 +649,6 @@
 
             /* .rahi-Div2 {
             } */
-
-
           }
 
           .rahi-Div:last-child {
@@ -743,18 +748,16 @@
   } */
 
   .MuiDataGrid-cell {
-
     /* color: #cc1616; */
     .row-title {
       color: var(--primary-color);
-      font-weight: 500;
+      /* font-weight: 500; */
     }
 
     .summaryTxt {
-
       .neutral {
         color: #1762ad;
-        font-weight: 500;
+        /* font-weight: 500; */
       }
 
       .rake {
@@ -763,23 +766,21 @@
         align-items: center;
         justify-content: center;
         color: gray;
-        font-weight: 500;
+        /* font-weight: 500; */
       }
 
       .positive {
         color: #057143;
-        font-weight: 500;
+        /* font-weight: 500; */
       }
 
       .negative {
         color: #cc1616;
-        font-weight: 500;
+        /* font-weight: 500; */
       }
     }
   }
-
 }
-
 
 .timeTool-div {
   position: fixed;
@@ -789,11 +790,10 @@
   z-index: 1111;
 }
 
-
-.Loard-Div{
+.Loard-Div {
   /* border: 2px solid red;
   overflow: hidden; */
-  .valueHeader{
+  .valueHeader {
     display: flex;
     /* justify-content: space-between; */
     color: #fff;
@@ -809,9 +809,8 @@
   background-color: #d5d5d560; /* Choose your preferred background color */
 }
 
-
-.Nakshatra-Legend{
-  .arrow-info{
+.Nakshatra-Legend {
+  .arrow-info {
     font-size: 10pt;
     display: flex;
     justify-content: space-between;
@@ -828,7 +827,6 @@
   display: inline-block;
 }
 
-
 .pl-ketu {
   color: #7d3434 !important;
 }
@@ -836,19 +834,19 @@
   color: #d646a1 !important;
 }
 .pl-sun {
-  color: #f48d25 !important;
+  color: #cd0008 !important;
 }
 .pl-moon {
-  color: #0dc6df !important;
+  color: #0db1c7 !important;
 }
 .pl-mars {
-  color: #c93838 !important;
+  color: #e6151d !important;
 }
 .pl-rahu {
   color: #555555 !important;
 }
 .pl-jupiter {
-  color: #ebbf10 !important;
+  color: #f48d25 !important;
 }
 .pl-saturn {
   color: #3652ba !important;

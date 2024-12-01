@@ -11,9 +11,17 @@ function LoardPlanet({ LoardData, SelectedEventVal, symbols }) {
       const occupancyNumber = Number(Occupancy);
 
       if (positive.includes(occupancyNumber)) {
-        return <span className="text-[var(--green-text-color)] font-semibold">{occupancyNumber}</span>;
+        return <div className='bg-[var(--green-bg-color)] px-[2px]'>
+          <span className="text-[var(--green-text-color)] font-ea-sb">
+            {occupancyNumber}
+          </span>
+        </div>
       } else if (negative.includes(occupancyNumber)) {
-        return <span className="text-[var(--red-text-color)] font-semibold">{occupancyNumber}</span>;
+        return <div className='bg-[var(--red-bg-color)] px-[2px]'>
+          <span className="text-[var(--red-text-color)] font-ea-sb">
+            {occupancyNumber}
+          </span>
+        </div>
       }
     }
     return Occupancy;
@@ -30,17 +38,29 @@ function LoardPlanet({ LoardData, SelectedEventVal, symbols }) {
         // Apply green color if ownership is in Positive, red if in Negative
         if (positiveValues.includes(ownershipNumber)) {
           return (
-            <span key={index} className="text-[var(--green-text-color)] font-semibold">
-              {ownershipItem}
-              {index < OwnershipArray.length - 1 && ', '}
-            </span>
+            <div className='bg-[var(--green-bg-color)] px-[2px]'>
+              <span key={index} className="text-[var(--green-text-color)] font-ea-sb">
+                {ownershipItem}
+                {index < OwnershipArray.length - 1 && ', '}
+              </span>
+            </div>
+            // <span key={index} className="text-[var(--green-text-color)] font-ea-sb">
+            //   {ownershipItem}
+            //   {index < OwnershipArray.length - 1 && ', '}
+            // </span>
           );
         } else if (negativeValues.includes(ownershipNumber)) {
           return (
-            <span key={index} className="text-[var(--red-text-color)] font-semibold">
-              {ownershipItem}
-              {index < OwnershipArray.length - 1 && ', '}
-            </span>
+            <div className='bg-[var(--red-bg-color)] px-[2px]'>
+              <span key={index} className="text-[var(--red-text-color)] font-ea-sb">
+                {ownershipItem}
+                {index < OwnershipArray.length - 1 && ', '}
+              </span>
+            </div>
+            // <span key={index} className="text-[var(--red-text-color)] font-ea-sb">
+            //   {ownershipItem}
+            //   {index < OwnershipArray.length - 1 && ', '}
+            // </span>
           );
         }
       }
@@ -60,18 +80,18 @@ function LoardPlanet({ LoardData, SelectedEventVal, symbols }) {
     components: {
       MuiDataGrid: {
         styleOverrides: {
-          root: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-          cell: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-          columnHeaders: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-          toolbar: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
+          // root: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
+          // cell: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
+          // columnHeaders: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
+          // toolbar: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
         },
       },
     },
@@ -144,7 +164,7 @@ function LoardPlanet({ LoardData, SelectedEventVal, symbols }) {
 
     // Return the elements separated by " - "
     return (
-      <span className={`pl-${fullName} row-title`} key={abbreviation}>
+      <span className={`pl-${fullName} row-title  font-ea-sb`} key={abbreviation}>
         {value}
       </span>
     );
@@ -184,7 +204,7 @@ function LoardPlanet({ LoardData, SelectedEventVal, symbols }) {
         const scriptFull = params.value || '';
         let formattedScript = scriptFull.split(" / ");
         let ownership = Array(formattedScript[1]?.split(", "))
-        return <div className='degreeDiv'>{applyOccupancyColor(formattedScript[0])} / {applyOwnerShipColor(ownership[0])}
+        return <div className='degreeDiv'>{applyOccupancyColor(formattedScript[0])} &nbsp;/&nbsp; {applyOwnerShipColor(ownership[0])}
         </div>;
       },
     },

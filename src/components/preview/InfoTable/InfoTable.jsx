@@ -13,7 +13,7 @@ const InfoTable = ({ InfoTableTextArr, isPrintDiv}) => {
         <tbody>
           {InfoTableTextArr.map((details, index) => (
             <tr key={index}>
-              <td className="text-label">{details.label}</td>
+              <td className="text-label font-ea-sb">{details.label}</td>
               <td className="text-Value">{details.value}</td>
               {/* {details.label == "Prakriti" && !isPrintDiv ? <td className="text-Value">{details.value}
                 <IconButton onClick={handleIsPraOpen}>

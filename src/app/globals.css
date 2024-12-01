@@ -2,40 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-main {
-  font-family: 'Segoe UI' !important;
-}
-
-body {
-  font-family: 'Segoe UI', Arial, sans-serif;
-}
-
 :root {
-  /* new added */
-  /* --mui-palette-primary-main: #662294; */
-  /* --mui-palette-primary-mainChannel: 120 38 148; */
-  /* --primary-soft-color: rgba(102, 34, 148, 0.2); */
-  /* --primary-soft-color: #4c0473; */
   --primary-soft-color: rgb(89, 10, 115, 0.1);
-  /* --primary-soft-color: #4d0a72; */
-  /* --primary-soft-color: #662294; */
-  /* --secondary-color: rgb(255, 196, 1); */
-  /* --secondary-color: #FFCB04; */
-  /* --secondary-color: #fde457; */
-  /* --secondary-color: #f7c243; */
-  /* --secondary-color: #ffe457; */
   --secondary-color: #f4cf6b;
   --secondary-soft-color: rgb(247, 194, 67, 0.4);
   --green-color: #00a75a;
   --green-text-color: #057143;
+  --green-bg-color: #00e00c20;
   --red-text-color: #cc1616;
-  /* --mui-palette-divider:rgb(128, 128, 128,0.5); */
+  --red-bg-color: #fd999920;
   --mui-palette-divider: var(--border-color);
-
-  /* built in */
   --border-radius: var(--mui-shape-borderRadius);
   --border-color: #d7cddc;
-  /* --border-color: var(--mui-palette-divider); */
   --primary-color: var(--mui-palette-primary-main);
   --background-color: var(--mui-palette-background-default);
   --background-color-rgb: var(--mui-palette-background-paperChannel);
@@ -47,12 +25,33 @@ body {
   --drawer-z-index: var(--mui-zIndex-drawer);
   --backdrop-color: rgb(var(--mui-mainColorChannels-light) / 0.5);
   --mui-mainColorChannels-shadow: var(--mui-mainColorChannels-lightShadow);
+  --primary-font-n: 'ea-n';
+  --primary-font-sb: 'ea-sb';
 }
 
 [data-mui-color-scheme='dark'] {
   --backdrop-color: rgb(23 25 37 / 0.6);
   --mui-mainColorChannels-shadow: var(--mui-mainColorChannels-darkShadow);
 }
+
+@font-face {
+  font-family: var(--primary-font-n);
+  font-weight: 400;
+  font-stretch: 100%;
+  src: url('./../assets/fonts/s-n.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: var(--primary-font-sb);
+  font-weight: 500;
+  font-stretch: 100%;
+  src: url('./../assets/fonts/s-sb.woff2') format('woff2');
+}
+
+body {
+  font-family: var(--primary-font-n);
+}
+
 
 
 *,
@@ -163,7 +162,6 @@ input[autocomplete='one-time-code'][data-input-otp='true'] {
 }
 
 code {
-  font-family: 'Segoe UI';
   padding-block: 2px;
   padding-inline: 4px;
   border-radius: 4px;
@@ -197,4 +195,16 @@ code {
 
 ::-webkit-scrollbar-corner {
   background-color: #f1f1f1; /* Corner for dual scrollbars */
+}
+
+.MuiDataGrid-cell, .MuiDataGrid-columnHeaderTitle, .MuiButtonBase-root, .ts-menu-label, .text-primary{
+  font-family: var(--primary-font-n);
+}
+
+.MuiDataGrid-columnHeaderTitle{
+  font-family: var(--primary-font-sb);
+}
+
+.MuiDataGrid-cell{
+  font-size: 14px;
 }

@@ -8,9 +8,13 @@ const config = {
   important: '#__next',
   plugins: [require('tailwindcss-logical'), require('./src/@core/tailwind/plugin')],
   theme: {
-    extend: {}
-  },
-  fontFamily:"Segoe UI"
+    extend: {
+      fontFamily: {
+        'ea-n': ['ea-n', 'sans-serif'], // Add the custom font family 'ea-n'
+        'ea-sb': ['ea-sb', 'sans-serif'], // Add the custom font family 'ea-sb'
+      }
+    }
+  }
 }
 
 export default config

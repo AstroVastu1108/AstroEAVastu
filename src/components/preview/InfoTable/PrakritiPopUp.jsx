@@ -7,15 +7,15 @@ function PrakritiPopUp({ open, handlePraClose }) {
     components: {
       MuiDataGrid: {
         styleOverrides: {
-          root: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-          cell: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-          columnHeaders: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
+          // root: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
+          // cell: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
+          // columnHeaders: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
         },
       },
     },
@@ -220,7 +220,7 @@ function PrakritiPopUp({ open, handlePraClose }) {
     <Dialog open={open} onClose={handlePraClose} maxWidth="md" fullWidth>
       <DialogTitle className="PopupHeader text-white p-3">
         <div className='w-100' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span className='text-primary text-2xl font-semibold !pl-3'>
+          <span className='text-primary text-2xl font-ea-sb !pl-3'>
             Prakriti Assessment Questions
           </span>
           <IconButton
@@ -276,7 +276,7 @@ function PrakritiPopUp({ open, handlePraClose }) {
             width:"0.7em !important"
           },
           '& .MuiFormControlLabel-label':{
-            fontFamily: 'Segoe UI, Arial, sans-serif',
+            // fontFamily: 'Segoe UI, Arial, sans-serif',
             fontSize: '14px'
           }
         }}>

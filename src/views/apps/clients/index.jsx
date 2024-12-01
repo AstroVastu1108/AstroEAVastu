@@ -24,7 +24,7 @@ export default function ClientMain() {
     { field: 'clientID', headerName: 'Client ID', width: 350, headerClassName: 'rowheader', },
     { field: 'name', headerName: 'Name', width: 250, headerClassName: 'rowheader', renderCell: (params) => (
       <>
-        <span className="font-semibold">{params.row.name}</span>
+        <span className="font-ea-sb">{params.row.name}</span>
       </>
     ), },
     { field: 'status', headerName: 'Status', width: 80, headerClassName: 'rowheader', },
@@ -139,7 +139,7 @@ export default function ClientMain() {
     return (
       <GridToolbarContainer className="px-5  d-flex justify-content-between align-items-center">
 
-        <div className="me-auto" style={{ fontSize: '16px', fontWeight: '500', color: "#2F2B3DB3" }}>  <GridToolbarColumnsButton />
+        <div className="me-auto" >  <GridToolbarColumnsButton />
           {/* <GridToolbarExport className="SearchBar" /> */}
         </div>
         <GridToolbarQuickFilter className="SearchBar" />
@@ -152,18 +152,18 @@ export default function ClientMain() {
     components: {
       MuiDataGrid: {
         styleOverrides: {
-          root: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-          cell: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-          columnHeaders: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-          toolbar: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
+          // root: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
+          // cell: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
+          // columnHeaders: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
+          // toolbar: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
         },
       },
     },
@@ -206,7 +206,7 @@ export default function ClientMain() {
                     <DataGrid
                       className="KundliListGrid"
                       getRowClassName={(params) =>
-                        params.row.IsCurrent ? 'highlight-row' : ''
+                        params.row.IsCurrent ? 'highlight-row font-ea-sb' : ''
                       }
                       sx={{
                         '& .MuiDataGrid-row:nth-of-type(odd)': {

@@ -12,17 +12,18 @@ import NakshtraSummary from '@/components/preview/NakshtraSummary/NakshtraSummar
 import RahuKetu from '@/components/preview/RahuKetu/RahuKetu';
 import DashaDetails from '@/components/preview/DashaDetails/DashaDetails';
 import LoardPlanet from '@/components/preview/LoardPlanet/LoardPlanet'
-import { Button, Divider, FormControl, IconButton, InputLabel, Menu, MenuItem, Select } from '@mui/material'
+import { Button, Divider, FormControl, IconButton, InputLabel, Menu, MenuItem, Select, Skeleton } from '@mui/material'
 import { useEffect, useRef, useState } from 'react'
 import Event from '@/components/preview/Event/Event'
 import PrakritiPopUp from '@/components/preview/InfoTable/PrakritiPopUp'
 import KundliOption from '@/components/preview/KundliOption/KundliOption'
-import { DashaClickEvent, KundliOptionsData, TransitClickEvent } from '@/app/Server/API/kundliAPI'
+import { DashaClickEvent, KundliOptionsData, RotateChartEvent, TransitClickEvent } from '@/app/Server/API/kundliAPI'
 import JaiminiCharKarakasPopUp from '@/components/preview/JaiminiCharKarakas/JaiminiCharKarakas'
 import NavTaraChakra from '@/components/preview/NavTaraChakra/NavTaraChakra'
 import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
+import Rotation from '@/components/preview/Rotation/Rotation'
 
-const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, TransitData, setTransitData, getTransitData, getDivisionalChartData, DivisionalData, setDivisionalData }) => {
+const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, TransitData, setTransitData, getTransitData, getDivisionalChartData, DivisionalData, setDivisionalData, birthDate, setKundliData }) => {
   // var
   const BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
   const AstroDetails = kundliData?.AstroVastuReport?.AstroDetails;
@@ -52,13 +53,16 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   const [openKundli, setOpenKundli] = useState(false);
   const [openJCK, setJCK] = useState(false);
   const [openNTC, setNTC] = useState(false);
+  const [openRotation, setRotation] = useState(false);
+  const [rotationType, setRotationType] = useState(null);
   const [allKundliOpt, setAllKundliOpt] = useState(false);
   const [Loading, setLoading] = useState(false);
   const [DashaValue, setDashaValue] = useState("PratyantarDasha");
   const [DashaTitle, setDashaTitle] = useState(`${DashaDetailData?.CurrentMD}`);
   const [CurrentDasha, setCurrentDasha] = useState(`${DashaDetailData?.CurrentMD} > ${DashaDetailData?.CurrentAD} > ${DashaDetailData?.CurrentPD}`);
   const [DashaGridData, setDashaGridData] = useState(kundliData?.AstroVastuReport?.DashaDetails?.PratyantarDasha);
-  const [DashaDate, setDashaDate] = useState(DashaDetailData.MahaDasha.filter((e) => e.IsCurrent == true)[0].StartDt);
+  const [DashaDate, setDashaDate] = useState(DashaDetailData?.MahaDasha.filter((e) => e.IsCurrent == true)[0].StartDt);
+  const [rotationTital, setRotationTitle] = useState("");
   // const [TransitData, setTransitData] = useState(ChartSVG?.HouseChart);
   const open = Boolean(anchorEl);
   const divRef = useRef(null);
@@ -71,6 +75,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     handleClose();
     setIsPrakritiVisible(true)
   }
+
   const handleIsPraClose = () => {
     setIsPrakritiVisible(false)
   }
@@ -87,6 +92,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     handleClose();
     handleDownload();
   }
+
   const handleMenuTimeTool = () => {
     handleClose();
     handleTimeTool();
@@ -107,10 +113,12 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   const handleOpenKundliClose = () => {
     setOpenKundli(false);
   }
+
   const handleJCK = () => {
     handleClose();
     setJCK(!openJCK);
   }
+
   const handleNTC = () => {
     handleClose();
     setNTC(!openNTC);
@@ -259,21 +267,109 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     }
   }
 
+  const saveKundaliDateTime = async () => {
+
+    try {
+      const formattedData = {
+        KundaliID: BirthDetails.KundaliID,
+        FirstName: BirthDetails.FirstName,
+        LastName: BirthDetails.LastName,
+        MiddleName: BirthDetails.MiddleName,
+        Gender: BirthDetails.Gender,
+        Country: BirthDetails.Country?.name,
+        CityID: BirthDetails.CityID?.CityID,
+        // BirthDate: birthDate,
+        // BirthTime: birthTime,
+        Prakriti: BirthDetails.prakriti || '',
+        City: BirthDetails.CityID?.FormattedCity,
+        TransitTime: "",
+        TransitDate: "",
+        ClientID: "",
+        DChart: ""
+      }
+      return console.log(formattedData)
+
+      // setIsDisable(false)
+      // const response = await UpdateKundli(formattedData)
+
+      // if (response.hasError) {
+      //   setIsDisable(false)
+      //   return toastDisplayer("error", response.error)
+      // }
+      // var kId = response?.responseData?.Result?.KundaliID;
+      // setIsDisable(false)
+      // getAllKundli(1, "");
+      // handleAddClose();
+      // // toastDisplayer("success", `Kundli data is updated successfully.`)
+      // return kId;
+    } catch (error) {
+      // setIsDisable(false)
+    }
+  }
+
+  const handleRoatationOpen = (value) => {
+    setRotation(true);
+    setRotationType(value);
+  }
+
+  const handleRoatationClose = () => {
+    setRotation(false);
+  }
+
+  const hanldeRotationChange = async (payload) => {
+    setLoading(true);
+    const formattedData = {
+      KundaliID: BirthDetails.KundaliID,
+      FirstName: BirthDetails.FirstName,
+      LastName: BirthDetails.LastName,
+      MiddleName: BirthDetails.MiddleName,
+      Gender: BirthDetails.Gender,
+      Country: BirthDetails.Country,
+      CityID: BirthDetails.CityID,
+      Prakriti: BirthDetails.prakriti || '',
+      City: BirthDetails.City,
+      TransitTime: "",
+      TransitDate: "",
+      ClientID: "",
+      DChart: "",
+      BirthDate: BirthDetails.Date,
+      BirthTime: BirthDetails.Time,
+      IsRotate: payload.IsRotate,
+      RotateType: payload.RotateType,
+      RotateFrom: payload.RotateFrom
+    }
+    try {
+      const resp = await RotateChartEvent(formattedData);
+      setLoading(false);
+      setKundliData(resp?.responseData?.Result);
+      if(rotationType == "B"){
+        setRotationTitle(`The chart is rotated to Birth Chart > ${payload.formattedStr}`)
+      }else if(rotationType =="H"){
+        setRotationTitle(`The chart is rotated to House Chart > ${payload.formattedStr}`)
+        // {rotationType && rotationType == "B" ? "The chart is rotated to Birth Chart > " : rotationType == "H" ? "The chart is rotated to House Chart >" :""}
+      }
+      handleRoatationClose();
+    } catch (error) {
+      setLoading(false);
+
+    }
+  }
+
   return (
     <>
       <Grid className='previewCard' item xs={12} md={12}>
         <Grid item xs={12} className='pdf-Div'>
-          <div className={`chart-name rounded-t flex justify-between md:items-center gap-y-2 lg:flex-row ${!isPrintDiv ? 'sm:flex-row flex-col' : "items-center"}`}>
+          <div className={`chart-name font-ea-sb rounded-t flex justify-between md:items-center gap-y-2 lg:flex-row ${!isPrintDiv ? 'sm:flex-row flex-col' : "items-center"}`}>
             {BirthDetails?.FirstName ? `${BirthDetails.FirstName} ${BirthDetails.MiddleName} ${BirthDetails.LastName}` : 'Prashna Kundali'}
             <div className={`flex justify-between md-items-center lg:gap-1 lg:flex-row md:flex-row ${!isPrintDiv ? 'sm:flex-row sm:gap-1 flex-col' : "gap-5"} birthDateTime-Div`} >
               <div className='flex flex-row gap-1 chart-date items-center'>
-                <span className='label'>Birth Date & Time: </span>
-                <span className='value font-medium'>{BirthDetails?.Date} {BirthDetails?.Time.substring(0, 2)}:{BirthDetails?.Time.substring(2, 4)}:{(BirthDetails?.Time.substring(4, 6) ? BirthDetails?.Time.substring(4, 6) : '00')}
+                <span className='label font-ea-n'>Birth Date & Time: </span>
+                <span className='value font-ea-sb'>{BirthDetails?.Date} {BirthDetails?.Time.substring(0, 2)}:{BirthDetails?.Time.substring(2, 4)}:{(BirthDetails?.Time.substring(4, 6) ? BirthDetails?.Time.substring(4, 6) : '00')}
                 </span>
               </div>
               <div className='flex flex-row gap-1 chart-date items-center'>
-                <span className='label'>Place: </span>
-                <span className='value font-medium'>{BirthDetails?.FormattedCity}</span>
+                <span className='label font-ea-n'>Place: </span>
+                <span className='value font-ea-sb'>{BirthDetails?.FormattedCity}</span>
               </div>
               <div className='flex justify-end'>
                 <>
@@ -299,7 +395,9 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
                     <MenuItem onClick={handleIsPraOpen} className="flex gap-1"><i className={'tabler-arrow-up-right me-2'} />Prakriti</MenuItem>
                     {/* <MenuItem className="flex gap-1"><i className={'tabler-arrow-up-right me-2'} />Save</MenuItem> */}
                     <MenuItem onClick={handleMenuTimeTool} className="flex gap-1"><i className={'tabler-calendar-share me-2'} />TimeTool</MenuItem>
+                    <MenuItem className="flex gap-1"><i className={'tabler-calendar-share me-2'} />Transit Analysis</MenuItem>
                     <Divider />
+                    <MenuItem onClick={saveKundaliDateTime} className="flex gap-1"><i className={'tabler-copy-plus me-2'} />Save Kundali</MenuItem>
                     <MenuItem onClick={handleMenuDownload} className="flex gap-1"><i className={'tabler-download me-2'} />Download</MenuItem>
                   </Menu>
                 </>
@@ -333,85 +431,6 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               ]} isPrintDiv={isPrintDiv} />
             </div>
           </div>
-          {/* <div className={`flex flex-wrap lg:flex-nowrap gap-5 px-4 pt-4 ${!isPrintDiv ? 'sm:flex-row sm:justify-start flex-col md:justify-start sm:overflow-auto' : ""}`}>
-            <div className='lg:w-1/4 md:w-1/4 sm:w-[calc(50%-10px)] md:flex-grow flex flex-col birth-chart pt-5 w-[100%]'>
-              <div className='chart-title'>❋ Birth Chart / Lagna Kundali ❋</div>
-              <img src={`data:image/svg+xml;base64,${ChartSVG?.BirthChart}`} alt="birthChart" />
-            </div>
-            <div className='lg:w-1/4 md:w-1/4 sm:w-[calc(50%-10px)] md:flex-grow flex flex-col birth-chart pt-5 w-[100%]'>
-              <div className='chart-title'>❋ House Chart / Bhav Chalit Kundali ❋</div>
-              <img src={`data:image/svg+xml;base64,${ChartSVG?.HouseChart}`} alt="birthChart" />
-            </div>
-            <div className='lg:w-1/4 md:w-1/4 sm:w-[calc(50%-10px)] md:flex-grow flex flex-col birth-chart pt-3 w-[100%]'>
-              <div className='flex justify-center pb-1'>
-                {DashaValue != "MahaDasha" && kundliOptValue && kundliOptValue.Option == "V" &&
-                  <>
-                    <IconButton className='' onClick={handleDashaChange}>
-                      <i className='tabler-arrow-big-left text-primary'></i>
-                    </IconButton>
-                  </>}
-                <Button variant='text' className='' onClick={handleKundliOpt}>
-                  <span className='text-xl'>
-                    ❋ {kundliOptValue && kundliOptValue.Option == "V" ? DashaTitle : kundliOptValue.OptionName} ❋
-                  </span>
-                </Button>
-              </div>
-              {kundliOptValue && kundliOptValue.Option == "V" ?
-                <>
-                  <DashaDetails title={DashaTitle} DashaData={DashaGridData} handleDashadbClick={handleDashaDoubleClick} />
-                </>
-                :
-                <>
-                {TransitData &&
-                  <img src={`data:image/svg+xml;base64,${TransitData}`} alt="birthChart" />
-                }
-                </>
-              }
-              {openKundli &&
-                <KundliOption KundliData={allKundliOpt} setKundliValue={setKundliOptValue} open={openKundli} handleClose={handleOpenKundliClose} />
-              }
-            </div>
-          </div> */}
-
-          {/* <div className={`flex px-4 pt-4 gap-5 overflow-auto md:flex-wrap lg:flex-nowrap`}>
-            <div className='flex-col  justify-center pt-5 flex '>
-              <div className='chart-title '>❋ Birth Chart / Lagna Kundali ❋</div>
-              <img src={`data:image/svg+xml;base64,${ChartSVG?.BirthChart}`} alt="birthChart" style={{ height: "311px" }} />
-              <div className='chart-title'>
-                {CurrentDasha}
-              </div>
-            </div>
-
-            <div className='flex-col  justify-center pt-5 flex'>
-              <div className='chart-title'>❋ House Chart / Bhav Chalit Kundali ❋</div>
-              <img src={`data:image/svg+xml;base64,${ChartSVG?.HouseChart}`} alt="birthChart" style={{ height: "311px" }} />
-            </div>
-
-            <div className='flex-col  justify-center pt-3 flex'>
-              <div className='flex justify-center '>
-                {DashaValue != "MahaDasha" && kundliOptValue && kundliOptValue.Option == "V" && (
-                  <IconButton onClick={handleDashaChange}>
-                    <i className='tabler-arrow-big-left text-primary'></i>
-                  </IconButton>
-                )}
-                <Button variant='text' onClick={handleKundliOpt}>
-                  <span className='text-xl'>
-                    ❋ {kundliOptValue && kundliOptValue.Option == "V" ? DashaValue : kundliOptValue.OptionName} ❋
-                  </span>
-                </Button>
-              </div>
-
-              {kundliOptValue && kundliOptValue.Option == "V" ? (
-                <div className=''>
-                  <DashaDetails title={DashaTitle} DashaData={DashaGridData} handleDashadbClick={handleDashaDoubleClick} />
-                </div>
-              ) : (
-                TransitData && <img src={`data:image/svg+xml;base64,${TransitData?.TransitChart}`} alt="transitChart" className='' style={{ height: "311px" }} />
-              )}
-
-
-            </div>
-          </div> */}
 
           <div className={`flex px-1 pt-4 gap-5 overflow-auto md:flex-wrap lg:flex-nowrap`}>
             {openKundli && (
@@ -425,10 +444,22 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
             <table>
               <tr>
                 <td>
-                  <div className='chart-title '>❋ Birth Chart / Lagna Kundali ❋</div>
+                  <div className='chart-title '>
+                    <Button onClick={() => handleRoatationOpen("B")}>
+                      <span className='font-ea-sb text-xl'>
+                        ❋ Birth Chart / Lagna Kundali ❋
+                      </span>
+                    </Button>
+                  </div>
                 </td>
                 <td>
-                  <div className='chart-title'>❋ House Chart / Bhav Chalit Kundali ❋</div>
+                  <div className='chart-title'>
+                    <Button onClick={() => handleRoatationOpen("H")}>
+                      <span className='font-ea-sb text-xl'>
+                        ❋ House Chart / Bhav Chalit Kundali ❋
+                      </span>
+                    </Button>
+                  </div>
                 </td>
                 <td>
                   <div className='chart-title flex justify-center'>
@@ -438,21 +469,12 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
                           <i className='tabler-arrow-big-left text-primary'></i>
                         </IconButton>
                       )}
-                      <div className='cursor-pointer flex items-center' onClick={handleKundliOpt}>
-                        ❋ {kundliOptValue && kundliOptValue.Option == "V" ? DashaValue : kundliOptValue.OptionName} ❋
-                      </div>
+                      <Button className='cursor-pointer flex items-center' onClick={handleKundliOpt}>
+                        <span className='font-ea-sb text-xl'>
+                          ❋ {kundliOptValue && kundliOptValue.Option == "V" ? DashaValue : kundliOptValue.OptionName} ❋
+                        </span>
+                      </Button>
                     </div>
-                    {/* {DashaValue != "MahaDasha" && kundliOptValue && kundliOptValue.Option == "V" && (
-                      <IconButton onClick={handleDashaChange}>
-                        <i className='tabler-arrow-big-left text-primary'></i>
-                      </IconButton>
-                    )} */}
-                    {/* <div className='chart-title cursor-pointer' onClick={handleKundliOpt}>❋ {kundliOptValue && kundliOptValue.Option == "V" ? DashaValue : kundliOptValue.OptionName} ❋</div> */}
-                    {/* <Button variant='tex' onClick={handleKundliOpt}>
-                      <span className='text-xl'>
-                        ❋ {kundliOptValue && kundliOptValue.Option == "V" ? DashaValue : kundliOptValue.OptionName} ❋
-                      </span>
-                    </Button> */}
                   </div>
                 </td>
               </tr>
@@ -482,14 +504,17 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
                           {TransitData?.TransitChart ?
                             <img src={`data:image/svg+xml;base64,${TransitData?.TransitChart}`} alt="transitChart" className='flex-auto' />
                             :
-                            <></>
-                            // <Skeleton variant="rectangular" width={210} height={60} />
+                            <Skeleton variant="rectangular" width={210} height={60} />
                           }
                         </div>
                       </> :
                         <>
                           <div className='flex justify-center items-center px-2'>
-                            <img src={`data:image/svg+xml;base64,${DivisionalData?.DChart}`} alt="transitChart" className='flex-auto' />
+                            {DivisionalData?.DChart ?
+                              <img src={`data:image/svg+xml;base64,${DivisionalData?.DChart}`} alt="transitChart" className='flex-auto' />
+                              :
+                              <Skeleton variant="rectangular" width={210} height={60} />
+                            }
                           </div>
                         </>}
                     </>
@@ -498,19 +523,20 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
                 </td>
               </tr>
               <tr>
-                <td>
-                  <div className='chart-title'>
-                    {CurrentDasha}
+                <td className='mx-2 px-2'>
+                  <div className=''>
+
+                  {rotationTital}
                   </div>
                 </td>
-                <td></td>
+                {/* <td></td>
                 <td>
                   {TransitData && TransitData?.MahaDasha &&
                     <div className='chart-title'>
                       {TransitData?.MahaDasha} &gt; {TransitData?.AntarDasha} &gt; {TransitData?.PratyantarDasha}
                     </div>
                   }
-                </td>
+                </td> */}
               </tr>
             </table>
           </div>
@@ -548,7 +574,8 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
                 <div>🡑 Exalted</div>
                 <div>🡓 Debilitated</div>
                 <div>☀ Combust</div>
-                <div>⮂ Exchange Sign or Nakshatra</div>
+                <div>⮂ Exchange Sign</div>
+                <div>⮁ Exchange Nakshatra</div>
                 <div>★ Untenanted</div>
                 <div>✪ SelfStar</div>
                 <div>⮌ Retro</div></p>
@@ -598,7 +625,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               </div>
             </div>
             <div
-              className="Loard-Div sm:grid md:grid-rows-3 md:grid-cols-3 sm:grid-rows-5 sm:grid-cols-2 xs:flex xs:flex-col grid-flow-col gap-8 auto-rows-auto"
+              className="Loard-Div sm:grid md:grid-rows-3 md:grid-cols-3 sm:grid-rows-5 sm:grid-cols-2 xs:flex xs:flex-col grid-flow-col gap-4 auto-rows-auto"
             >
               {PlaneNSummaryData.length
                 ? PlaneNSummaryData.slice(0, 9).map((element, index) => ( // only display first 9 elements
@@ -642,6 +669,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       {isPrakritiVisible && <PrakritiPopUp open={isPrakritiVisible} handlePraClose={handleIsPraClose} />}
       {openJCK && <JaiminiCharKarakasPopUp open={openJCK} handleClose={handleJCK} JaiminiCharKarakasData={JaiminiCharKarakas} />}
       {openNTC && <NavTaraChakra open={openNTC} handleClose={handleNTC} NavTaraChakraData={NavTaraChakraData} />}
+      {openRotation && <Rotation open={openRotation} handleClose={handleRoatationClose} rotationType={rotationType} hanldeRotationChange={hanldeRotationChange} />}
     </>
   )
 }

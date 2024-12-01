@@ -215,3 +215,23 @@ export async function DivisionalChartEvent(payload,dchart) {
     return responseBody
   }
 }
+
+
+// For rotate change
+export async function RotateChartEvent(payload) {
+  const responseBody = {
+    responseData: null,
+    hasError: false,
+    error: null
+  }
+  try {
+    const response = await astroInstance.post(`/astro/rotate`,payload);
+    responseBody.responseData = response.data
+    return responseBody
+  } catch (error) {
+    responseBody.hasError = true
+    responseBody.errorMessage = responseBody.errorMessage =
+      error.response?.data?.statusMsg || error.response?.data?.errors
+    return responseBody
+  }
+}

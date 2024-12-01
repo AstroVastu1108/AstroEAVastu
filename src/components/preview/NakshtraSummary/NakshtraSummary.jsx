@@ -46,7 +46,7 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
 
     // Return the elements separated by " - "
     return (
-      <div className={`pl-${fullName} row-title`} key={abbreviation}>
+      <div className={`pl-${fullName} row-title font-ea-sb`} key={abbreviation}>
         {value}
       </div>
     );
@@ -59,9 +59,13 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
       const occupancyNumber = Number(Occupancy);
 
       if (positive.includes(occupancyNumber)) {
-        return <span className="text-[var(--green-text-color)] font-semibold">{occupancyNumber}</span>;
+        return <div className='bg-[var(--green-bg-color)] px-[2px]'>
+          <span className="text-[var(--green-text-color)] font-ea-sb">{occupancyNumber}</span>
+        </div>
       } else if (negative.includes(occupancyNumber)) {
-        return <span className="text-[var(--red-text-color)] font-semibold">{occupancyNumber}</span>;
+        return <div className='bg-[var(--red-bg-color)] px-[2px]'>
+          <span className="text-[var(--red-text-color)] font-ea-sb">{occupancyNumber}</span>
+        </div>
       }
     }
     return Occupancy;
@@ -78,17 +82,21 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
         // Apply green color if ownership is in Positive, red if in Negative
         if (positiveValues.includes(ownershipNumber)) {
           return (
-            <span key={index} className="text-[var(--green-text-color)] font-semibold">
-              {ownershipItem}
-              {index < OwnershipArray.length - 1 && ', '}
-            </span>
+            <div className='bg-[var(--green-bg-color)] px-[2px]'>
+              <span key={index} className="text-[var(--green-text-color)] font-ea-sb">
+                {ownershipItem}
+                {index < OwnershipArray.length - 1 && ', '}
+              </span>
+            </div>
           );
         } else if (negativeValues.includes(ownershipNumber)) {
           return (
-            <span key={index} className="text-[var(--red-text-color)] font-semibold">
-              {ownershipItem}
-              {index < OwnershipArray.length - 1 && ', '}
-            </span>
+            <div className='bg-[var(--red-bg-color)] px-[2px]'>
+              <span key={index} className="text-[var(--red-text-color)] font-ea-sb">
+                {ownershipItem}
+                {index < OwnershipArray.length - 1 && ', '}
+              </span>
+            </div>
           );
         }
       }
@@ -121,7 +129,7 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
 
           return (
             <>
-              <div className="planet-col-title cursor-pointer">
+              <div className="planet-col-title cursor-pointer font-ea-sb">
                 {/* <div className='planet-row'>{e.value}</div> */}
                 {highlightText(e.value)}
                 {activeSymbols && <span className='rashiDiv' style={{ fontSize: "16px" }}>{activeSymbols}</span>}
@@ -136,29 +144,31 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
           return (
             <>
               <div className="planet-col-title cursor-pointer">
-                <div className='planet-row'>{e.value}</div>
+                <div className='planet-row font-ea-sb'>{e.value}</div>
               </div>
             </>
           );
         }
       },
     {
-      field: 'Rashi', headerName: 'Sign', headerClassName: 'rowheader', minWidth: 80, flex: 1,
+      field: 'Rashi', headerName: 'Sign', headerClassName: 'rowheader', minWidth: 120, width: 120,
       renderCell: (e) => {
         const Rashi = e?.value.slice(0, 3) || "";
         const Degree = e?.row?.Degree?.split(":")[0] || "";
+        const Min = e?.row?.Degree?.split(":")[1] || "";
         return (
           <>
             <div className="planet-col-sign flex justify-between cursor-pointer">
               <div className='signDiv'>{Rashi}.</div>
-              <span className='degreeDiv'>{Degree}</span>
+              <span className='degreeDiv'>{Degree}° {Min}'</span>
+
             </div>
           </>
         );
       }
     },
     {
-      field: 'Nakshatra', headerName: 'Nakshatra', headerClassName: 'rowheader', minWidth: 150, flex: 1.5,
+      field: 'Nakshatra', headerName: 'Nakshatra', headerClassName: 'rowheader', minWidth: 140, width: 140,
       renderCell: (e) => {
         return (
           <>
@@ -203,7 +213,7 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
             {highlightText(planetName)}
             <div className="degreeDiv">
               {applyOccupancyColor(Occupancy)}
-              {OwnershipArray.length ? <span> / {applyOwnerShipColor(OwnershipArray)}</span> : ""}
+              {OwnershipArray.length ? <span style={{display:"flex"}}>&nbsp;/&nbsp;{applyOwnerShipColor(OwnershipArray)}</span> : ""}
             </div>
           </div>
         );
@@ -240,10 +250,10 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
 
         return (
           <div className="planet-col-script flex justify-between cursor-pointer">
-            <div className="planet-col-planet-text">{planetName}</div>
+            <div className="planet-col-planet-text  font-ea-sb">{planetName}</div>
             <div className="degreeDiv">
               {applyOccupancyColor(Occupancy)}
-              {OwnershipArray.length ? <span> / {applyOwnerShipColor(OwnershipArray)}</span> : ""}
+              {OwnershipArray.length ? <span style={{display:"flex"}}> &nbsp;/&nbsp; {applyOwnerShipColor(OwnershipArray)}</span> : ""}
               {/* / {applyOwnerShipColor(OwnershipArray)} */}
             </div>
           </div>
@@ -280,10 +290,10 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
 
         return (
           <div className="planet-col-script flex justify-between cursor-pointer">
-            <div className="planet-col-planet-text">{planetName}</div>
+            <div className="planet-col-planet-text  font-ea-sb">{planetName}</div>
             <div className="degreeDiv">
               {applyOccupancyColor(Occupancy)}
-              {OwnershipArray.length ? <span> / {applyOwnerShipColor(OwnershipArray)}</span> : ""}
+              {OwnershipArray.length ? <span style={{display:"flex"}}>&nbsp;/&nbsp;{applyOwnerShipColor(OwnershipArray)}</span> : ""}
               {/* / {applyOwnerShipColor(OwnershipArray)} */}
             </div>
           </div>
@@ -327,10 +337,10 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
 
         return (
           <div className="planet-col-script flex justify-between cursor-pointer">
-            <div className="planet-col-planet-text">{planetName}</div>
+            <div className="planet-col-planet-text font-ea-sb">{planetName}</div>
             <div className="degreeDiv">
               {applyOccupancyColor(Occupancy)}
-              {OwnershipArray.length ? <span> / {applyOwnerShipColor(OwnershipArray)}</span> : ""}
+              {OwnershipArray.length ? <span style={{display:"flex"}}>&nbsp;/&nbsp;{applyOwnerShipColor(OwnershipArray)}</span> : ""}
               {/* / {applyOwnerShipColor(OwnershipArray)} */}
             </div>
           </div>
@@ -348,18 +358,18 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
     components: {
       MuiDataGrid: {
         styleOverrides: {
-          root: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-          cell: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-          columnHeaders: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
-          toolbar: {
-            fontFamily: 'Segoe UI, Arial, sans-serif',
-          },
+          // root: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
+          // cell: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
+          // columnHeaders: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
+          // toolbar: {
+          //   fontFamily: 'Segoe UI, Arial, sans-serif',
+          // },
         },
       },
     },

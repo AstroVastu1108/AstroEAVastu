@@ -15,6 +15,9 @@ const mergedTheme = (settings, mode, direction) => {
   // Vars
   const userTheme = {
     // Write your overrides here.
+    typography: {
+      fontFamily: montserrat.style.fontFamily
+    }
   }
 
   return deepmerge(coreTheme(settings, mode, direction), userTheme)

@@ -281,7 +281,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
       >
         <DialogTitle className="PopupHeader text-white p-3">
           <div className='w-100' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span className='text-primary text-2xl font-semibold !pl-3'>
+            <span className='text-primary text-2xl font-ea-sb !pl-3'>
               New Kundali
             </span>
             <IconButton

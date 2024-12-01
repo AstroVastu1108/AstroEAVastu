@@ -5,7 +5,7 @@ function RemoveKundli({ open, handleClose, userData }) {
 
   const theme = createTheme({
     typography: {
-      fontFamily: 'Segoe UI, Arial, sans-serif',
+      // fontFamily: 'Segoe UI, Arial, sans-serif',
     },
     shape: {
       borderRadius: 12, // Set the global border radius here
