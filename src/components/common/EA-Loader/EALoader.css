@@ -1,5 +1,5 @@
-/* HTML: <div class="loader"></div>
-.loader-main {
+/* HTML: <div class="ealoader"></div>
+.ealoader-main {
   position: fixed;
   top: 0;
   left: 0;
@@ -12,7 +12,7 @@
   z-index: 9999;
 }
 
-.loader {
+.ealoader {
 
   width: 50px;
   aspect-ratio: 1;
@@ -23,8 +23,8 @@
   animation: l15 1s infinite linear;
 }
 
-.loader::before,
-.loader::after {
+.ealoader::before,
+.ealoader::after {
   content: "";
   grid-area: 1/1;
   margin: 2px;
@@ -33,7 +33,7 @@
   animation: l15 2s infinite;
 }
 
-.loader::after {
+.ealoader::after {
   margin: 8px;
   animation-duration: 3s;
 }
@@ -45,43 +45,36 @@
 } */
 
 
-.loader-main {
-  position: fixed;
+.ealoader-main {
+  /* position: fixed;
   top: 0;
-  left: 0;
+  left: 0; */
   width: 100%;
   height: 100%;
-  background: #34445050;
+  background: transparent;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 9999;
 }
 
-/* .loader {
-  width: 50px;
-  aspect-ratio: 1;
-  display: grid;
-  border: 4px solid #0000;
-  border-radius: 50%;
-  border-right-color: var(--primary-color);
-  animation: colorChange 1s infinite linear;
-} */
-.loader {
+.ealoader {
   width: 100px; /* Adjust the size as needed */
   height: auto;
-  animation: colorChange 1s ease-in-out infinite ;
+  animation: colorChange 1.5s ease-in-out infinite ;
 }
 
 @keyframes colorChange {
   0%, 100% {
     fill: gray; /* Start and end color */
+    width: 80px;
   }
   50% {
     fill: #590A73; /* Original purple color */
+    width: 100px;
   }
 }
 
-.loader path {
+.ealoader path {
   animation: colorChange 1s infinite;
 }

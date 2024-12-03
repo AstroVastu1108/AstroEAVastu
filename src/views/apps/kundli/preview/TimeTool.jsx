@@ -53,28 +53,23 @@ function TimeTool({ handleDateChange, kundliBirthData, handleTimeTool, handleTim
     }
 
     setDatePicker(newDate); // Update the state with the new date
-    getNewData(newDate);
-     return () => {
-      getNewData.clear();
-    };
-  };
+    // getNewData(newDate);
 
-  const handleTimeValueChange = (e) => {
-    setTimeValue(e.target.value);
   };
 
   const getNewData = debounce(async (newDate) => {
     handleDateChange(newDate)
+    return () => {
+      getNewData.clear();
+    };
   }, 500)
 
-  // Use effect to fetch cities when the query changes
   useEffect(() => {
-    // getNewData(datePicker)
-    // return () => {
-    //   getNewData.clear();
-    // };
+    getNewData(datePicker);
+    return () => {
+      getNewData.clear();
+    };
   }, [datePicker])
-
 
   return (
     <>
@@ -154,6 +149,7 @@ function TimeTool({ handleDateChange, kundliBirthData, handleTimeTool, handleTim
           >
             Hour
           </Button>
+
           <Button
             variant={timeValue === "Min" ? "contained" : "outlined"}
             onClick={() => setTimeValue("Min")}

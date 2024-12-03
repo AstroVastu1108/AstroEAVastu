@@ -372,11 +372,6 @@ export default function KundliMain() {
   const fetchData = debounce(async (query) => {
     if (query.length > 0 || query.length == 0) {
       await getAllKundli(pageNo, query);
-      // setTimeout(() => {
-      //   if (searchInputRef.current) {
-      //     searchInputRef.current.focus();
-      //   }
-      // }, 1000);
     }
   }, 500)
 

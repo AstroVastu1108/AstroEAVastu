@@ -12,16 +12,17 @@ import NakshtraSummary from '@/components/preview/NakshtraSummary/NakshtraSummar
 import RahuKetu from '@/components/preview/RahuKetu/RahuKetu';
 import DashaDetails from '@/components/preview/DashaDetails/DashaDetails';
 import LoardPlanet from '@/components/preview/LoardPlanet/LoardPlanet'
-import { Button, Divider, FormControl, IconButton, InputLabel, Menu, MenuItem, Select, Skeleton } from '@mui/material'
+import { Button, Chip, Divider, IconButton, Menu, MenuItem } from '@mui/material'
 import { useEffect, useRef, useState } from 'react'
 import Event from '@/components/preview/Event/Event'
 import PrakritiPopUp from '@/components/preview/InfoTable/PrakritiPopUp'
 import KundliOption from '@/components/preview/KundliOption/KundliOption'
-import { DashaClickEvent, KundliOptionsData, RotateChartEvent, TransitClickEvent } from '@/app/Server/API/kundliAPI'
+import { DashaClickEvent, KundliOptionsData, RotateChartEvent } from '@/app/Server/API/kundliAPI'
 import JaiminiCharKarakasPopUp from '@/components/preview/JaiminiCharKarakas/JaiminiCharKarakas'
 import NavTaraChakra from '@/components/preview/NavTaraChakra/NavTaraChakra'
 import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
 import Rotation from '@/components/preview/Rotation/Rotation'
+import EALoader from '@/components/common/EA-Loader/EALoader'
 
 const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, TransitData, setTransitData, getTransitData, getDivisionalChartData, DivisionalData, setDivisionalData, birthDate, setKundliData }) => {
   // var
@@ -45,7 +46,6 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   const NavTaraChakraData = kundliData?.AstroVastuReport?.NavTaraChakra;
 
   const [anchorEl, setAnchorEl] = useState(null);
-  const [chartValue, setChartValue] = useState("D");
   const [eventValue, setEventValue] = useState(null);
   const [kundliOptValue, setKundliOptValue] = useState("V");
   const [isPrakritiVisible, setIsPrakritiVisible] = useState(false);
@@ -59,11 +59,10 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   const [Loading, setLoading] = useState(false);
   const [DashaValue, setDashaValue] = useState("PratyantarDasha");
   const [DashaTitle, setDashaTitle] = useState(`${DashaDetailData?.CurrentMD}`);
-  const [CurrentDasha, setCurrentDasha] = useState(`${DashaDetailData?.CurrentMD} > ${DashaDetailData?.CurrentAD} > ${DashaDetailData?.CurrentPD}`);
   const [DashaGridData, setDashaGridData] = useState(kundliData?.AstroVastuReport?.DashaDetails?.PratyantarDasha);
   const [DashaDate, setDashaDate] = useState(DashaDetailData?.MahaDasha.filter((e) => e.IsCurrent == true)[0].StartDt);
   const [rotationTital, setRotationTitle] = useState("");
-  // const [TransitData, setTransitData] = useState(ChartSVG?.HouseChart);
+
   const open = Boolean(anchorEl);
   const divRef = useRef(null);
 
@@ -278,8 +277,6 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
         Gender: BirthDetails.Gender,
         Country: BirthDetails.Country?.name,
         CityID: BirthDetails.CityID?.CityID,
-        // BirthDate: birthDate,
-        // BirthTime: birthTime,
         Prakriti: BirthDetails.prakriti || '',
         City: BirthDetails.CityID?.FormattedCity,
         TransitTime: "",
@@ -289,19 +286,6 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       }
       return console.log(formattedData)
 
-      // setIsDisable(false)
-      // const response = await UpdateKundli(formattedData)
-
-      // if (response.hasError) {
-      //   setIsDisable(false)
-      //   return toastDisplayer("error", response.error)
-      // }
-      // var kId = response?.responseData?.Result?.KundaliID;
-      // setIsDisable(false)
-      // getAllKundli(1, "");
-      // handleAddClose();
-      // // toastDisplayer("success", `Kundli data is updated successfully.`)
-      // return kId;
     } catch (error) {
       // setIsDisable(false)
     }
@@ -346,7 +330,6 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
         setRotationTitle(`The chart is rotated to Birth Chart > ${payload.formattedStr}`)
       }else if(rotationType =="H"){
         setRotationTitle(`The chart is rotated to House Chart > ${payload.formattedStr}`)
-        // {rotationType && rotationType == "B" ? "The chart is rotated to Birth Chart > " : rotationType == "H" ? "The chart is rotated to House Chart >" :""}
       }
       handleRoatationClose();
     } catch (error) {
@@ -504,7 +487,9 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
                           {TransitData?.TransitChart ?
                             <img src={`data:image/svg+xml;base64,${TransitData?.TransitChart}`} alt="transitChart" className='flex-auto' />
                             :
-                            <Skeleton variant="rectangular" width={210} height={60} />
+                            // <Skeleton variant="rectangular" width={210} height={60} />
+                              <EALoader />
+
                           }
                         </div>
                       </> :
@@ -513,7 +498,8 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
                             {DivisionalData?.DChart ?
                               <img src={`data:image/svg+xml;base64,${DivisionalData?.DChart}`} alt="transitChart" className='flex-auto' />
                               :
-                              <Skeleton variant="rectangular" width={210} height={60} />
+                              // <Skeleton variant="rectangular" width={210} height={60} />
+                              <EALoader />
                             }
                           </div>
                         </>}
@@ -524,19 +510,11 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               </tr>
               <tr>
                 <td className='mx-2 px-2'>
-                  <div className=''>
+                  <div className='pt-2'>
 
-                  {rotationTital}
+                  {rotationTital && <Chip label={rotationTital} className='text-sm' color='primary' variant='tonal' />}
                   </div>
                 </td>
-                {/* <td></td>
-                <td>
-                  {TransitData && TransitData?.MahaDasha &&
-                    <div className='chart-title'>
-                      {TransitData?.MahaDasha} &gt; {TransitData?.AntarDasha} &gt; {TransitData?.PratyantarDasha}
-                    </div>
-                  }
-                </td> */}
               </tr>
             </table>
           </div>

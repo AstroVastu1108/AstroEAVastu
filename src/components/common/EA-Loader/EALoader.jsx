@@ -1,24 +1,11 @@
-// import React from 'react'
-// import "./Loader.css"
+import React from 'react'
+import "./EALoader.css";
 
-// function Loader() {
-//   return (
-//     <div className="loader-main">
-//       <div className='loader'></div>
-//     </div>
-//   )
-// }
-
-// export default Loader
-
-import React from "react";
-import "./Loader.css";
-
-function Loader() {
+function EALoader() {
   return (
-    <div className="loader-main">
+    <div className="ealoader-main">
       <svg
-        className="loader"
+        className="ealoader"
         xmlns="http://www.w3.org/2000/svg"
         xmlSpace="preserve"
         width="46.2467mm"
@@ -38,8 +25,8 @@ function Loader() {
         <defs>
           <style type="text/css">
             {`
-              .fil0 { fill:#590A73; fill-rule:nonzero; }
-            `}
+            .fil0 { fill:#590A73; fill-rule:nonzero; }
+          `}
           </style>
         </defs>
         <g id="Layer_x0020_1">
@@ -50,7 +37,7 @@ function Loader() {
         </g>
       </svg>
     </div>
-  );
+  )
 }
 
-export default Loader;
+export default EALoader
