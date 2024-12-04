@@ -67,11 +67,11 @@
 @keyframes colorChange {
   0%, 100% {
     fill: gray; /* Start and end color */
-    width: 80px;
+    /* width: 80px; */
   }
   50% {
     fill: #590A73; /* Original purple color */
-    width: 100px;
+    /* width: 100px; */
   }
 }
 
