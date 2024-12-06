@@ -208,18 +208,6 @@ export default function ClientMain() {
                       getRowClassName={(params) =>
                         params.row.IsCurrent ? 'highlight-row font-ea-sb' : ''
                       }
-                      sx={{
-                        '& .MuiDataGrid-row:nth-of-type(odd)': {
-                          backgroundColor: '#ffffff', // Light color for odd rows
-                        },
-                        '& .MuiDataGrid-row:nth-of-type(even)': {
-                          backgroundColor: '#f5f5f5', // White color for even rows
-                        },
-                        '& .MuiDataGrid-row:hover': {
-                          color:'var(--primary-color) !important',
-                          backgroundColor: 'var(--secondary-soft-color) !important',
-                        },
-                      }}
                       rows={clientData}
                       columns={columns}
                       getRowId={(row) => row.clientID}

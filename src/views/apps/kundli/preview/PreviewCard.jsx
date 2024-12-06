@@ -17,7 +17,7 @@ import { useEffect, useRef, useState } from 'react'
 import Event from '@/components/preview/Event/Event'
 import PrakritiPopUp from '@/components/preview/InfoTable/PrakritiPopUp'
 import KundliOption from '@/components/preview/KundliOption/KundliOption'
-import { DashaClickEvent, KundliOptionsData, RotateChartEvent } from '@/app/Server/API/kundliAPI'
+import { DashaClickEvent, KundliOptionsData, RotateChartEvent, UpdateKundli } from '@/app/Server/API/kundliAPI'
 import JaiminiCharKarakasPopUp from '@/components/preview/JaiminiCharKarakas/JaiminiCharKarakas'
 import NavTaraChakra from '@/components/preview/NavTaraChakra/NavTaraChakra'
 import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
@@ -29,10 +29,6 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   const BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
   const AstroDetails = kundliData?.AstroVastuReport?.AstroDetails;
   const ChartSVG = kundliData?.AstroVastuReport?.ChartSVG;
-  // const MahaDasha = kundliData?.AstroVastuReport?.DashaDetails?.MahaDasha;
-  // const AntarDasha = kundliData?.AstroVastuReport?.DashaDetails?.AntarDasha;
-  // const PratyantarDasha = kundliData?.AstroVastuReport?.DashaDetails?.PratyantarDasha;
-  // const LifeAntarDasha = kundliData?.AstroVastuReport?.DashaDetails?.LifeAntarDasha;
   const AstroVastuHouseScript = kundliData?.AstroVastuReport?.AstroVastuHouseScript;
   const Symbols = kundliData?.AstroVastuReport?.Symbols;
   const PlanetSummaryData = kundliData?.AstroVastuReport?.AsperctSummaryPlanet;
@@ -267,25 +263,34 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   }
 
   const saveKundaliDateTime = async () => {
-
     try {
-      const formattedData = {
+      let formattedData = {
         KundaliID: BirthDetails.KundaliID,
         FirstName: BirthDetails.FirstName,
         LastName: BirthDetails.LastName,
         MiddleName: BirthDetails.MiddleName,
         Gender: BirthDetails.Gender,
-        Country: BirthDetails.Country?.name,
-        CityID: BirthDetails.CityID?.CityID,
+        Country: BirthDetails.Country,
+        CityID: BirthDetails.CityID,
         Prakriti: BirthDetails.prakriti || '',
-        City: BirthDetails.CityID?.FormattedCity,
+        City: BirthDetails.City,
+        BirthDate: BirthDetails.Date,
+        BirthTime: BirthDetails.Time,
         TransitTime: "",
         TransitDate: "",
         ClientID: "",
-        DChart: ""
+        DChart: "",
       }
-      return console.log(formattedData)
-
+      if (TransitData?.TransitDateTime) {
+        formattedData.TransitDate = TransitData?.TransitDateTime.split(" ")[0];
+        formattedData.TransitTime = TransitData?.TransitDateTime.split(" ")[1].replace(/:/g, "");
+      }
+      const response = await UpdateKundli(formattedData);
+      if (response.hasError) {
+        setIsDisable(false)
+        return toastDisplayer("error", response.error)
+      }
+      handleClose();
     } catch (error) {
       // setIsDisable(false)
     }
@@ -326,9 +331,9 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       const resp = await RotateChartEvent(formattedData);
       setLoading(false);
       setKundliData(resp?.responseData?.Result);
-      if(rotationType == "B"){
+      if (rotationType == "B") {
         setRotationTitle(`The chart is rotated to Birth Chart > ${payload.formattedStr}`)
-      }else if(rotationType =="H"){
+      } else if (rotationType == "H") {
         setRotationTitle(`The chart is rotated to House Chart > ${payload.formattedStr}`)
       }
       handleRoatationClose();
@@ -488,7 +493,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
                             <img src={`data:image/svg+xml;base64,${TransitData?.TransitChart}`} alt="transitChart" className='flex-auto' />
                             :
                             // <Skeleton variant="rectangular" width={210} height={60} />
-                              <EALoader />
+                            <EALoader />
 
                           }
                         </div>
@@ -512,7 +517,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
                 <td className='mx-2 px-2'>
                   <div className='pt-2'>
 
-                  {rotationTital && <Chip label={rotationTital} className='text-sm' color='primary' variant='tonal' />}
+                    {rotationTital && <Chip label={rotationTital} className='text-sm' color='primary' variant='tonal' />}
                   </div>
                 </td>
               </tr>

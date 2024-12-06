@@ -231,18 +231,6 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
       flex: 1,
       cellClassName: 'nl-column-cell',
       renderCell: (e) => {
-        // const planetName = e?.row?.NL?.Planet?.slice(0, 3) || "";
-        // const Occupancy = e?.row?.NL?.Occupancy || "";
-        // const scriptFull = e?.row?.NL?.ScriptFull || "";
-
-        // return (
-        //   <div className="flex justify-between cursor-pointer">
-        //     <div className="planet-col-planet-text">{planetName}</div>
-        //     <span className="degreeDiv">
-        //       {applyOccupancyColor(Occupancy)} / {scriptFull}
-        //     </span>
-        //   </div>
-        // );
 
         const planetName = e?.row?.NL?.Planet?.slice(0, 3) || "";
         const Occupancy = e?.row?.NL?.Occupancy || "";
@@ -254,7 +242,6 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
             <div className="degreeDiv">
               {applyOccupancyColor(Occupancy)}
               {OwnershipArray.length ? <span style={{display:"flex"}}> &nbsp;/&nbsp; {applyOwnerShipColor(OwnershipArray)}</span> : ""}
-              {/* / {applyOwnerShipColor(OwnershipArray)} */}
             </div>
           </div>
         );
@@ -271,18 +258,6 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
       minWidth: 120,
       flex: 1,
       renderCell: (e) => {
-        // const planetName = e?.row?.SL?.Planet?.slice(0, 3) || "";
-        // const Occupancy = e?.row?.SL?.Occupancy || "";
-        // const scriptFull = e?.row?.SL?.ScriptFull || "";
-
-        // return (
-        //   <div className="flex justify-between cursor-pointer">
-        //     <div className="planet-col-planet-text">{planetName}</div>
-        //     <span className="degreeDiv">
-        //       {applyOccupancyColor(Occupancy)} / {scriptFull}
-        //     </span>
-        //   </div>
-        // );
 
         const planetName = e?.row?.SL?.Planet?.slice(0, 3) || "";
         const Occupancy = e?.row?.SL?.Occupancy || "";
@@ -294,7 +269,6 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
             <div className="degreeDiv">
               {applyOccupancyColor(Occupancy)}
               {OwnershipArray.length ? <span style={{display:"flex"}}>&nbsp;/&nbsp;{applyOwnerShipColor(OwnershipArray)}</span> : ""}
-              {/* / {applyOwnerShipColor(OwnershipArray)} */}
             </div>
           </div>
         );
@@ -318,19 +292,6 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
       minWidth: 120,
       flex: 1,
       renderCell: (e) => {
-        // const planetName = e?.row?.NLSL?.Planet?.slice(0, 3) || "";
-        // const Occupancy = e?.row?.NLSL?.Occupancy || "";
-        // const scriptFull = e?.row?.NLSL?.ScriptFull || "";
-
-        // return (
-        //   <div className="flex justify-between cursor-pointer">
-        //     <div className="planet-col-planet-text">{planetName}</div>
-        //     <span className="degreeDiv">
-        //       {applyOccupancyColor(Occupancy)} / {scriptFull}
-        //     </span>
-        //   </div>
-        // );
-
         const planetName = e?.row?.NLSL?.Planet?.slice(0, 3) || "";
         const Occupancy = e?.row?.NLSL?.Occupancy || "";
         const OwnershipArray = e?.row?.NLSL?.Ownership || [];
@@ -341,7 +302,6 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
             <div className="degreeDiv">
               {applyOccupancyColor(Occupancy)}
               {OwnershipArray.length ? <span style={{display:"flex"}}>&nbsp;/&nbsp;{applyOwnerShipColor(OwnershipArray)}</span> : ""}
-              {/* / {applyOwnerShipColor(OwnershipArray)} */}
             </div>
           </div>
         );
@@ -350,30 +310,9 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
   ];
   // Adding unique IDs
   const rowsSummaryData = SummaryData?.map((item, index) => ({
-    id: index + 1, // You can use uuidv4() for truly unique IDs if needed
+    id: index + 1,
     ...item
   }));
-
-  const customTheme = createTheme({
-    components: {
-      MuiDataGrid: {
-        styleOverrides: {
-          // root: {
-          //   fontFamily: 'Segoe UI, Arial, sans-serif',
-          // },
-          // cell: {
-          //   fontFamily: 'Segoe UI, Arial, sans-serif',
-          // },
-          // columnHeaders: {
-          //   fontFamily: 'Segoe UI, Arial, sans-serif',
-          // },
-          // toolbar: {
-          //   fontFamily: 'Segoe UI, Arial, sans-serif',
-          // },
-        },
-      },
-    },
-  });
 
   const [selectedRowId, setSelectedRowId] = useState(null);
 
@@ -395,51 +334,7 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
       {open && (
         <EventModel open={open} handleAddClose={handleAddClose} headerTitle={selectedTitle} displayData={selectedEvent} />
       )}
-      <Box width={"100%"}
-        sx={{
-          '& .MuiDataGrid-root': {
-            borderRadius: 0, // Remove border radius
-            borderLeft: '0px',
-            borderRight: '0px',
-          },
-          '& .MuiDataGrid-row:nth-of-type(odd)': {
-            backgroundColor: '#ffffff', // Light color for odd rows
-          },
-          '& .MuiDataGrid-row:nth-of-type(even)': {
-            backgroundColor: '#f5f5f5', // White color for even rows
-          },
-          '& .MuiDataGrid-row:hover': {
-            color: 'var(--primary-color) !important',
-            backgroundColor: 'var(--secondary-soft-color) !important',
-          },
-          '& .MuiDataGrid-columnHeader .MuiDataGrid-sortIcon': {
-            color: 'white', // Change to your desired color
-          },
-          '& .MuiDataGrid-columnHeader--withRightBorder': {
-            borderRightWidth: '0px !important'
-          },
-          '& .MuiDataGrid-columnSeparator': {
-            display: 'none !important'
-          },
-          '& .Mui-selected': {
-            backgroundColor: '#99e27b65 !important'
-          },
-          '& .MuiDataGrid-columnHeader': {
-            cursor: 'default !important', // Change to your desired color
-          },
-          '& .MuiDataGrid-columnHeader:focus': {
-            outline: 'none !important'
-          },
-          '& .MuiDataGrid-scrollbar--vertical': {
-            display: 'none'
-          },
-          '& .MuiDataGrid-scrollbarFiller--header': {
-            display: 'none'
-          }
-        }}
-      >
-
-        <ThemeProvider theme={customTheme}>
+      <Box width={"100%"}>
 
           <DataGrid
             showCellVerticalBorder
@@ -458,10 +353,8 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
             hideFooter={true}
             onRowClick={(params) => setSelectedRowId(params.id)}
             onCellDoubleClick={(params) => handleEvent("cell", params.field, `${params?.value?.Planet ? params?.value?.Planet : ""} ${params?.value?.ScriptFull ? params?.value?.ScriptFull : params?.value}`, `${params?.value?.Planet ? params?.value?.Planet : ""} ${params?.value?.ScriptFull ? params?.value?.ScriptFull : params?.value}`)}
-            // onCellClick={(params) => console.log(`Cell clicked: ${params.field} - Value: ${params.value}`, params)}
             getRowClassName={(params) => params.id === selectedRowId ? 'Mui-selected' : ''}
           />
-        </ThemeProvider>
 
       </Box>
     </>

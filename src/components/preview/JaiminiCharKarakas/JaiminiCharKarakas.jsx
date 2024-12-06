@@ -96,49 +96,6 @@ function JaiminiCharKarakasPopUp({ open, handleClose, JaiminiCharKarakasData }) 
         <DialogContent className=' flex justify-center'>
           <Box
             width={"100%"}
-            className=""
-            sx={{
-              '& .MuiDataGrid-root': {
-                borderRadius: 0, // Remove border radius
-                borderLeft: '0px',
-                borderRight: '0px',
-                borderTop: '0px !important'
-              },
-              '& .MuiDataGrid-row:nth-of-type(odd)': {
-                backgroundColor: '#ffffff',
-              },
-              '& .MuiDataGrid-row:nth-of-type(even)': {
-                backgroundColor: '#f5f5f5',
-              },
-              '& .MuiDataGrid-row:hover': {
-                color: 'var(--primary-color) !important',
-                backgroundColor: 'var(--secondary-soft-color) !important',
-              },
-              '& .MuiDataGrid-columnHeader .MuiDataGrid-sortIcon': {
-                color: 'white', // Change to your desired color
-              },
-              '& .MuiDataGrid-cell': {
-                lineHeight: '30px !important'
-              },
-              // '& .MuiDataGrid-columnHeaderTitleContainerContent':{
-              //   width: '100% !important'
-              // },
-              // '& .MuiDataGrid-columnHeaderTitle':{
-              //   width: '100% !important'
-              // },
-              '& .MuiDataGrid-columnHeader--withRightBorder': {
-                borderRightWidth: '0px !important'
-              },
-              '& .MuiDataGrid-columnSeparator': {
-                display: 'none !important'
-              },
-              '& .MuiDataGrid-columnHeader': {
-                cursor: 'default !important', // Change to your desired color
-              },
-              '& .MuiDataGrid-columnHeader:focus': {
-                outline: 'none !important'
-              },
-            }}
           >
             <ThemeProvider theme={customTheme}>
               <DataGrid

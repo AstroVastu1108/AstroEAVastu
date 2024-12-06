@@ -269,19 +269,19 @@ body {
           .house-title-desc {
             inline-size: 120mm;
             display: inline-block;
-            font-weight: 400;
+            /* font-weight: 400; */
           }
         }
 
         .house-title-nakshatra {
           display: flex;
           text-align: end;
-          font-weight: 400;
+          /* font-weight: 400; */
           gap: 8px;
 
           .house-title-energyfield {
             color: var(--secondary-color);
-            font-weight: 600;
+            /* font-weight: 600; */
           }
         }
       }
@@ -310,7 +310,7 @@ body {
             display: flex;
             /* gap: 4px; */
             align-items: center;
-            font-weight: 600;
+            /* font-weight: 600; */
 
             div {
               inline-size: 8mm;
@@ -325,7 +325,7 @@ body {
           .sub-div1 {
             color: #1762ad;
             display: flex;
-            font-weight: 600;
+            /* font-weight: 600; */
 
             div {
               inline-size: 8mm;
@@ -340,7 +340,7 @@ body {
           .sub-div2 {
             color: #057143;
             display: flex;
-            font-weight: 600;
+            /* font-weight: 600; */
 
             div {
               inline-size: 8mm;
@@ -355,7 +355,7 @@ body {
           .sub-div3 {
             color: #cc1616;
             display: flex;
-            font-weight: 600;
+            /* font-weight: 600; */
 
             div {
               inline-size: 8mm;
@@ -392,7 +392,7 @@ body {
             }
 
             .rashi-Div1-sub1 {
-              font-weight: 600;
+              /* font-weight: 600; */
               font-size: 12pt;
               padding-block-start: 1px;
               padding-block-end: 1px;
@@ -401,19 +401,19 @@ body {
                 color: var(--primary-color);
                 padding-inline-start: 5px;
                 padding-inline-end: 5px;
-                font-weight: 400;
+                /* font-weight: 400; */
               }
             }
 
             .rashi-Div1-sub2 {
-              font-weight: 400;
+              /* font-weight: 400; */
               font-size: 10pt;
               padding-block-start: 2px;
               color: grey;
             }
 
             .rashi-Div1-sub3 {
-              font-weight: 400;
+              /* font-weight: 400; */
               font-size: 10pt;
               padding-block-start: 2px;
               color: grey;
@@ -450,7 +450,7 @@ body {
                       color: gray;
                       display: flex;
                       align-items: center;
-                      font-weight: 600;
+                      /* font-weight: 600; */
 
                       div {
                         inline-size: 8mm;
@@ -468,7 +468,7 @@ body {
                     /* padding-bottom: 12px; */
                     display: flex;
                     align-items: center;
-                    font-weight: 600;
+                    /* font-weight: 600; */
 
                     div {
                       inline-size: 8mm;
@@ -485,7 +485,7 @@ body {
                     /* padding-bottom: 12px; */
                     display: flex;
                     align-items: center;
-                    font-weight: 600;
+                    /* font-weight: 600; */
 
                     div {
                       inline-size: 8mm;
@@ -502,7 +502,7 @@ body {
                     /* padding-bottom: 12px; */
                     display: flex;
                     align-items: center;
-                    font-weight: 600;
+                    /* font-weight: 600; */
 
                     div {
                       inline-size: 8mm;
@@ -519,7 +519,7 @@ body {
                   justify-content: space-between;
                   font-weight: 500; */
 
-                  font-weight: 600;
+                  /* font-weight: 600; */
                   padding: 8px;
                   width: 100%;
                   padding-inline-start: 10px;
@@ -598,7 +598,7 @@ body {
                     padding-inline-start: 10px;
 
                     .font-normal {
-                      font-weight: 400;
+                      /* font-weight: 400; */
                     }
                   }
 
@@ -617,7 +617,7 @@ body {
                   flex-direction: column; */
 
                   padding-top: 8px;
-                  font-weight: 400;
+                  /* font-weight: 400; */
                   font-size: 10pt;
                   padding-block-start: 2px;
                   color: grey;
@@ -633,7 +633,7 @@ body {
                   }
 
                   .sub-div {
-                    font-weight: 400;
+                    /* font-weight: 400; */
                     font-size: 10pt;
                     padding-block-start: 2px;
                     color: grey;
@@ -862,4 +862,63 @@ body {
 }
 .pl-pluto {
   color: #a6705c !important;
+}
+
+/* ======================================= redesign mui datagrid ==================================== */
+
+.MuiDataGrid-root {
+  border-radius: 0px;
+  border-left: 0px;
+  border-right: 0px;
+  border-top: 0px;
+  /* border: none !important; */
+}
+
+
+.MuiDataGrid-row:nth-of-type(odd) {
+  background-color: #ffffff;
+}
+
+.MuiDataGrid-row:nth-of-type(even) {
+  background-color: #f5f5f5;
+}
+
+.MuiDataGrid-row:hover {
+  color: var(--primary-color) !important;
+  background-color: var(--secondary-soft-color) !important;
+}
+
+.MuiDataGrid-columnHeader .MuiDataGrid-sortIcon {
+  color: white;
+}
+
+.MuiDataGrid-columnSeparator {
+  display: none !important;
+}
+
+.MuiDataGrid-columnHeader--withRightBorder {
+  border-right: 0px !important;
+  border-right-width: 0px !important;
+}
+
+.MuiDataGrid-columnHeader {
+  cursor: default !important;
+  border: none !important;
+}
+.MuiDataGrid-columnHeader:focus {
+  outline: none !important;
+}
+.MuiDataGrid-scrollbar--vertical {
+  display: none;
+}
+.MuiDataGrid-filler {
+  display: none;
+}
+.MuiDataGrid-scrollbarFiller--header{
+  /* display: none !important; */
+  background-color: var(--primary-color);
+  border-bottom: none !important;
+}
+.Mui-selected {
+  background-color: #99e27b65 !important
 }

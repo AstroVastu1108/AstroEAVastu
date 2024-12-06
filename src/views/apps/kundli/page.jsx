@@ -392,27 +392,6 @@ export default function KundliMain() {
     getAllKundli(parseInt(e) + 1, searchInputRef.current?.value ? searchInputRef.current?.value : "");
   }
 
-  const customTheme = createTheme({
-    components: {
-      MuiDataGrid: {
-        styleOverrides: {
-          // root: {
-          //   fontFamily: 'Segoe UI, Arial, sans-serif',
-          // },
-          // cell: {
-          //   fontFamily: 'Segoe UI, Arial, sans-serif',
-          // },
-          // columnHeaders: {
-          //   fontFamily: 'Segoe UI, Arial, sans-serif',
-          // },
-          // toolbar: {
-          //   fontFamily: 'Segoe UI, Arial, sans-serif',
-          // },
-        },
-      },
-    },
-  });
-
   // Func
   // const getAKundliData = async (kId,cname) => {
   //   if (kId) {
@@ -517,27 +496,11 @@ export default function KundliMain() {
             <CardContent className='flex flex-col gap-2 p-0'>
               <div className="KundliList">
                 <Box>
-                  <ThemeProvider theme={customTheme}>
                     <DataGrid
                       className="KundliListGrid"
                       getRowClassName={(params) =>
                         params.row.IsCurrent ? 'highlight-row' : ''
                       }
-                      sx={{
-                        '& .MuiDataGrid-row:nth-of-type(odd)': {
-                          backgroundColor: '#ffffff', // Light color for odd rows
-                        },
-                        '& .MuiDataGrid-row:nth-of-type(even)': {
-                          backgroundColor: '#f5f5f5', // White color for even rows
-                        },
-                        '& .MuiDataGrid-row:hover': {
-                          color: 'var(--primary-color) !important',
-                          backgroundColor: 'var(--secondary-soft-color) !important',
-                        },
-                        '& .MuiDataGrid-columnHeader .MuiDataGrid-sortIcon': {
-                          color: 'white', // Change to your desired color
-                        },
-                      }}
                       onRowDoubleClick={(e) => { handlePreviewClick(e, e.row.KundaliID) }}
                       onFilterModelChange={(e) => handleFilterModelChange(e, searchInputRef)}
                       getRowId={(row) => row.KundaliID}
@@ -564,7 +527,6 @@ export default function KundliMain() {
                       slots={{ toolbar: CustomToolbar }}
                       slotProps={{ toolbar: { showQuickFilter: true } }}
                     />
-                  </ThemeProvider>
 
 
                 </Box>

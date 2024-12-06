@@ -33,35 +33,6 @@ const Preview = ({ kundliData, setKundliData }) => {
   const [DivisionalData, setDivisionalData] = useState("D2");
   const [datePicker, setDatePicker] = useState(dayjs());
 
-  // const handleKundliApi = async () => {
-  //   if (kundliData) {
-  //     try {
-  //       setExistDownloadLoading(true);
-  //       const response = await getKundliPdf(kundliData.AstroVastuReport.BirthDetails.KundaliID);
-  //       if (response.hasError) {
-  //         return toastDisplayer("error", response.error)
-  //       }
-  //       // Create a Blob from the PDF
-  //       const pdfBlob = new Blob([response.responseData.data], { type: 'application/pdf' });
-
-  //       // Create a URL for the Blob
-  //       const pdfURL = URL.createObjectURL(pdfBlob);
-
-  //       // Open the PDF in a new window
-  //       const newWindow = window.open(pdfURL);
-
-  //       // if (newWindow) {
-  //       //   newWindow.addEventListener('load', () => {
-  //       //     newWindow.print();
-  //       //   });
-  //       // }
-  //       setExistDownloadLoading(false);
-  //     } catch (error) {
-  //       setExistDownloadLoading(false);
-  //     }
-  //   }
-  // }
-
   const handleKundliApi = () => {
     if (kundliData) {
       setLoading(true);
@@ -70,7 +41,6 @@ const Preview = ({ kundliData, setKundliData }) => {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      // handleClose();
       setLoading(false);
     }
   };
@@ -126,8 +96,6 @@ const Preview = ({ kundliData, setKundliData }) => {
         if (datePicker.isValid()) {
           date = datePicker.format('DD-MM-YYYY');
           time = datePicker.format('HHmmss');
-        } else {
-          // console.log('Invalid Date');
         }
       }
     }
@@ -241,7 +209,6 @@ const Preview = ({ kundliData, setKundliData }) => {
       }
     } else {
       if (TransiteTime) {
-        // console.log(TransiteTime)
         const formatedString = dayjs(TransiteTime, 'DD-MM-YYYY HHmmss');
         if (!formatedString.isSame(datePicker1, 'second')) {
           getTransitData(formattedDate, formattedTime);
@@ -290,15 +257,6 @@ const Preview = ({ kundliData, setKundliData }) => {
           </Card>
         </Grid>
       </Grid>
-      {/* <Button variant='contained' sx={{
-        position: 'fixed',
-        insetInlineEnd: '2.5rem',
-        insetBlockEnd: '6.5rem',
-        zIndex: 9999
-      }} className='is-10 bs-10 rounded-full p-0 min-is-0 flex items-center justify-center'
-        onClick={handleTimeTool}>
-        <i className='tabler-calendar-share' />
-      </Button> */}
 
     </>
   )

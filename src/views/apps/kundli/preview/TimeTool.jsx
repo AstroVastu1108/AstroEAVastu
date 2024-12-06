@@ -74,7 +74,7 @@ function TimeTool({ handleDateChange, kundliBirthData, handleTimeTool, handleTim
   return (
     <>
 
-      <Box className="timeTool-div bg-[var(--secondary-color)]  lg:w-[calc(100%-125px)] md:w-[calc(100%-100px)] sm:w-[calc(100%-50px)]">
+      <Box className="timeTool-div bg-[var(--secondary-color)]  lg:w-[calc(100%-125px)] md:w-[calc(100%-40px)] sm:w-[calc(100%-50px)]">
         <div className='w-full flex justify-between items-center'>
           <div>
             <span className='text-primary text-sm font-medium'>Time Tool</span>

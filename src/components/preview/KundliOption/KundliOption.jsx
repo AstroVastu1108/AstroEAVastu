@@ -6,27 +6,6 @@ function KundliOption({ setKundliValue, open, handleClose, KundliData }) {
 
   const [selectedRow, setSelectedRow] = useState(null);
 
-  const customTheme = createTheme({
-    components: {
-      MuiDataGrid: {
-        styleOverrides: {
-          // root: {
-          //   fontFamily: 'Segoe UI, Arial, sans-serif',
-          // },
-          // cell: {
-          //   fontFamily: 'Segoe UI, Arial, sans-serif',
-          // },
-          // columnHeaders: {
-          //   fontFamily: 'Segoe UI, Arial, sans-serif',
-          // },
-          // toolbar: {
-          //   fontFamily: 'Segoe UI, Arial, sans-serif',
-          // },
-        },
-      },
-    },
-  });
-
   const columns = [
     {
       field: 'OptionName',
@@ -104,49 +83,7 @@ function KundliOption({ setKundliValue, open, handleClose, KundliData }) {
           </DialogContentText> */}
         </DialogTitle>
         <DialogContent className=' flex justify-center'>
-          <Box width={"100%"}
-            className=""
-            sx={{
-              '& .MuiDataGrid-columnHeaderTitleContainer': {
-                background: 'var(--primary-color)'
-              },
-              '& .MuiDataGrid-root': {
-                borderRadius: 0, // Remove border radius
-                borderLeft: '0px',
-                borderRight: '0px',
-                border: '0px'
-              },
-              '& .MuiDataGrid-row:nth-of-type(odd)': {
-                backgroundColor: '#ffffff', // Light color for odd rows
-              },
-              '& .MuiDataGrid-row:nth-of-type(even)': {
-                backgroundColor: '#f5f5f5', // White color for even rows
-              },
-              '& .MuiDataGrid-row:hover': {
-                color: 'var(--primary-color) !important',
-                backgroundColor: 'var(--secondary-soft-color) !important',
-              },
-              '& .MuiDataGrid-columnHeader .MuiDataGrid-sortIcon': {
-                color: 'white', // Change to your desired color
-              },
-              '& .MuiDataGrid-columnHeader--withRightBorder': {
-                borderRightWidth: '0px !important'
-              },
-              '& .MuiDataGrid-columnSeparator': {
-                display: 'none !important'
-              },
-              '& .Mui-selected': {
-                backgroundColor: '#99e27b65 !important'
-              },
-              '& .MuiDataGrid-columnHeader': {
-                cursor: 'default !important', // Change to your desired color
-              },
-              '& .MuiDataGrid-columnHeader:focus': {
-                outline: 'none !important'
-              }
-            }}
-          >
-            <ThemeProvider theme={customTheme}>
+          <Box width={"100%"} >
               <DataGrid
                 showCellVerticalBorder
                 getRowId={(e) => e.Option}
@@ -170,7 +107,6 @@ function KundliOption({ setKundliValue, open, handleClose, KundliData }) {
                 disableMultipleRowSelection
               // selectionModel={KundliData && selectedRow ? [selectedRow.Kundli] : []}
               />
-            </ThemeProvider>
           </Box>
         </DialogContent>
         <DialogActions>

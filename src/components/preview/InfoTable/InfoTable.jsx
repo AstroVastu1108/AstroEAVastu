@@ -15,13 +15,6 @@ const InfoTable = ({ InfoTableTextArr, isPrintDiv}) => {
             <tr key={index}>
               <td className="text-label font-ea-sb">{details.label}</td>
               <td className="text-Value">{details.value}</td>
-              {/* {details.label == "Prakriti" && !isPrintDiv ? <td className="text-Value">{details.value}
-                <IconButton onClick={handleIsPraOpen}>
-                  <i
-                    className={'tabler-arrow-up-right bg-primary'}
-                  />
-                </IconButton>
-              </td> : <td className="text-Value">{details.value}</td>} */}
             </tr>
           ))}
         </tbody>
