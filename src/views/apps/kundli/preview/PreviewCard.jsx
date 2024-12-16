@@ -23,6 +23,8 @@ import NavTaraChakra from '@/components/preview/NavTaraChakra/NavTaraChakra'
 import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
 import Rotation from '@/components/preview/Rotation/Rotation'
 import EALoader from '@/components/common/EA-Loader/EALoader'
+import LifeEvent from '@/components/preview/LifeEvent/LifeEvent'
+import Loader from '@/components/common/Loader/Loader'
 
 const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, TransitData, setTransitData, getTransitData, getDivisionalChartData, DivisionalData, setDivisionalData, birthDate, setKundliData }) => {
   // var
@@ -42,9 +44,11 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   const NavTaraChakraData = kundliData?.AstroVastuReport?.NavTaraChakra;
 
   const [anchorEl, setAnchorEl] = useState(null);
-  const [eventValue, setEventValue] = useState(null);
+  const [LifeEventValue, setLifeEventValue] = useState(null);
+  const [EventValue, setEventValue] = useState(null);
   const [kundliOptValue, setKundliOptValue] = useState("V");
   const [isPrakritiVisible, setIsPrakritiVisible] = useState(false);
+  const [openLifeEvent, setOpenLifeEvent] = useState(false);
   const [openEvent, setOpenEvent] = useState(false);
   const [openKundli, setOpenKundli] = useState(false);
   const [openJCK, setJCK] = useState(false);
@@ -93,11 +97,21 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     handleTimeTool();
   }
 
-  const handleOpenClose = () => {
+  const handleLifeEventClose = () => {
+    setOpenLifeEvent(false);
+  }
+
+  const handleLifeEventOpen = () => {
+    handleClose();
+    setOpenLifeEvent(true);
+  }
+
+  const handleEventClose = () => {
     setOpenEvent(false);
   }
 
-  const handleOpen = () => {
+  const handleEventOpen = () => {
+    handleClose();
     setOpenEvent(true);
   }
 
@@ -307,6 +321,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
 
   const hanldeRotationChange = async (payload) => {
     setLoading(true);
+    handleRoatationClose();
     const formattedData = {
       KundaliID: BirthDetails.KundaliID,
       FirstName: BirthDetails.FirstName,
@@ -330,13 +345,14 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     try {
       const resp = await RotateChartEvent(formattedData);
       setLoading(false);
-      setKundliData(resp?.responseData?.Result);
-      if (rotationType == "B") {
-        setRotationTitle(`The chart is rotated to Birth Chart > ${payload.formattedStr}`)
-      } else if (rotationType == "H") {
-        setRotationTitle(`The chart is rotated to House Chart > ${payload.formattedStr}`)
+      if(resp?.responseData?.Result){
+        setKundliData(resp?.responseData?.Result);
+        if (rotationType == "B") {
+          setRotationTitle(`The chart is rotated to Birth Chart > ${payload.formattedStr}`)
+        } else if (rotationType == "H") {
+          setRotationTitle(`The chart is rotated to House Chart > ${payload.formattedStr}`)
+        }
       }
-      handleRoatationClose();
     } catch (error) {
       setLoading(false);
 
@@ -345,6 +361,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
 
   return (
     <>
+    {/* {Loading && <Loader />} */}
       <Grid className='previewCard' item xs={12} md={12}>
         <Grid item xs={12} className='pdf-Div'>
           <div className={`chart-name font-ea-sb rounded-t flex justify-between md:items-center gap-y-2 lg:flex-row ${!isPrintDiv ? 'sm:flex-row flex-col' : "items-center"}`}>
@@ -377,7 +394,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
                       horizontal: 'right',
                     }}
                   >
-                    <MenuItem className="flex gap-1"><i className={'tabler-browser-check me-2'} />Events</MenuItem>
+                    <MenuItem onClick={handleEventOpen} className="flex gap-1"><i className={'tabler-browser-check me-2'} />Events</MenuItem>
                     <MenuItem onClick={handleJCK} className="flex gap-1"><i className={'tabler-aspect-ratio me-2'} />Jaimini Char Karakas</MenuItem>
                     <MenuItem onClick={handleNTC} className="flex gap-1"><i className={'tabler-jewish-star me-2'} />NavTara Chakra</MenuItem>
                     <MenuItem onClick={handleIsPraOpen} className="flex gap-1"><i className={'tabler-arrow-up-right me-2'} />Prakriti</MenuItem>
@@ -534,21 +551,21 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
                 </span>
               </div>
               <div className='mb-1 w-[30%] flex justify-end pt-4'>
-                <Button variant='text' className='' onClick={handleOpen}>
+                <Button variant='text' className='' onClick={handleLifeEventOpen}>
                   <span className='text-[var(--green-color)]'>Life Event</span>
                   <span className='arrow text-black'>🡒</span>
                   <span>
-                    {eventValue ? `${eventValue.EventName}` : "NA"}
+                    {LifeEventValue ? `${LifeEventValue.EventName}` : "NA"}
                   </span>
                 </Button>
               </div>
-              {openEvent &&
-                <Event setEventValue={setEventValue} open={openEvent} handleClose={handleOpenClose} />
+              {openLifeEvent &&
+                <LifeEvent setLifeEventValue={setLifeEventValue} open={openLifeEvent} handleClose={handleLifeEventClose} />
               }
             </div>
             <div className='planet-table'>
 
-              <NakshtraSummary SummaryData={PlaneNSummaryData} Aspect={"P"} symbols={Symbols} SelectedEventVal={eventValue} />
+              <NakshtraSummary SummaryData={PlaneNSummaryData} Aspect={"P"} symbols={Symbols} SelectedEventVal={LifeEventValue} />
 
             </div>
             <div className='Nakshatra-Legend mt-2 px-2'>
@@ -574,17 +591,17 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
                 </span>
               </div>
               <div className='mb-1 w-[30%] flex justify-end pt-4'>
-                <Button variant='text' className='' onClick={handleOpen}>
+                <Button variant='text' className='' onClick={handleLifeEventOpen}>
                   <span className='text-[var(--green-color)]'>Life Event</span>
                   <span className='arrow text-black'>🡒</span>
                   <span>
-                    {eventValue ? `${eventValue.EventName}` : "NA"}
+                    {LifeEventValue ? `${LifeEventValue.EventName}` : "NA"}
                   </span>
                 </Button>
               </div>
             </div>
             <div className='planet-table'>
-              <NakshtraSummary SummaryData={HouseNSummaryData} Aspect={"H"} symbols={Symbols} SelectedEventVal={eventValue} />
+              <NakshtraSummary SummaryData={HouseNSummaryData} Aspect={"H"} symbols={Symbols} SelectedEventVal={LifeEventValue} />
             </div>
           </div>
 
@@ -598,11 +615,11 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
                 </span>
               </div>
               <div className='mb-1 w-[25%] flex justify-end pt-4'>
-                <Button variant='text' className='' onClick={handleOpen}>
+                <Button variant='text' className='' onClick={handleLifeEventOpen}>
                   <span className='text-[var(--green-color)]'>Life Event</span>
                   <span className='arrow text-black'>🡒</span>
                   <span>
-                    {eventValue ? `${eventValue.EventName}` : "NA"}
+                    {LifeEventValue ? `${LifeEventValue.EventName}` : "NA"}
                   </span>
                 </Button>
               </div>
@@ -613,7 +630,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               {PlaneNSummaryData.length
                 ? PlaneNSummaryData.slice(0, 9).map((element, index) => ( // only display first 9 elements
                   <div key={index} className=''>
-                    <LoardPlanet LoardData={element} SelectedEventVal={eventValue} symbols={Symbols} />
+                    <LoardPlanet LoardData={element} SelectedEventVal={LifeEventValue} symbols={Symbols} />
                   </div>
                 ))
                 : null
@@ -622,9 +639,26 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
           </div>
 
           <div className='main-RahuKetu-Div pt-8'>
-            <div className='chart-title'>❋ Rahu & Ketu Special Significators ❋</div>
+          <div className='flex px-4 w-[100%] justify-between'>
+              <div className=' w-[30%]'></div>
+              <div className='chart-title w-[40%] pt-5'>
+                <span>
+                ❋ Rahu & Ketu Special Significators ❋
+                </span>
+              </div>
+              <div className='mb-1 w-[30%] flex justify-end pt-4'>
+                <Button variant='text' className='' onClick={handleLifeEventOpen}>
+                  <span className='text-[var(--green-color)]'>Life Event</span>
+                  <span className='arrow text-black'>🡒</span>
+                  <span>
+                    {LifeEventValue ? `${LifeEventValue.EventName}` : "NA"}
+                  </span>
+                </Button>
+              </div>
+            </div>
+            {/* <div className='chart-title'>❋ Rahu & Ketu Special Significators ❋</div> */}
             <div className='RahuKetu-Div flex gap-4 flex-col sm:flex-row'>
-              <RahuKetu RahuData={RahuData} KetuData={KetuData} Significators={"R"} />
+              <RahuKetu RahuData={RahuData} KetuData={KetuData} Significators={"R"} SelectedEventVal={LifeEventValue} />
             </div>
           </div>
 
@@ -653,6 +687,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       {openJCK && <JaiminiCharKarakasPopUp open={openJCK} handleClose={handleJCK} JaiminiCharKarakasData={JaiminiCharKarakas} />}
       {openNTC && <NavTaraChakra open={openNTC} handleClose={handleNTC} NavTaraChakraData={NavTaraChakraData} />}
       {openRotation && <Rotation open={openRotation} handleClose={handleRoatationClose} rotationType={rotationType} hanldeRotationChange={hanldeRotationChange} />}
+      {openEvent && <Event setEventValue={setEventValue} open={openEvent} handleClose={handleEventClose} JaiminiCharKarakasData={JaiminiCharKarakas} />}
     </>
   )
 }

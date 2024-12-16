@@ -1,10 +1,12 @@
-import { Box, Button, createTheme, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControl, IconButton, InputLabel, List, ListItem, ListItemButton, ListItemText, MenuItem, Select, ThemeProvider } from '@mui/material'
+import { Autocomplete, Box, Button, createTheme, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControl, Grid, IconButton, InputLabel, List, ListItem, ListItemButton, ListItemText, MenuItem, Select, TextField, ThemeProvider } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import "./Event.css";
 import { DataGrid, GridToolbarContainer, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import { EventOptionsData } from '@/app/Server/API/kundliAPI';
+import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
-function Event({ setEventValue, open, handleClose }) {
+function Event({ setEventValue, open, handleClose, JaiminiCharKarakasData }) {
 
 
   const [EventData, setEventData] = useState([]);
@@ -12,52 +14,35 @@ function Event({ setEventValue, open, handleClose }) {
 
   const [selectedRow, setSelectedRow] = useState(null);
 
-  const highlightText = (text, query) => {
-    if (!query) return text;
-    const parts = text.split(new RegExp(`(${query})`, 'gi'));
-    return parts.map((part, index) =>
-      part.toLowerCase() === query.toLowerCase() ? (
-        <span key={index} className='font-ea-sb text-[var(--green-color)]'>
-          {part}
-        </span>
-      ) : (
-        part
-      )
-    );
-  };
-
-
   const columns = [
-    {
-      field: 'EventName',
-      headerName: 'Event Name',
-      minWidth: 150,
-      align: "end",
-      headerClassName: 'rowheader',
+    ...JaiminiCharKarakasData.map(item => ({
+      field: item.Karak,
+      headerName: `${item.Karak} Karaka`,
       flex: 1,
-      renderCell: (params) => highlightText(params.value, quickFilterValue),
-    },
-    {
-      field: 'Positive',
-      headerName: 'Positive',
-      minWidth: 150,
-      align: "end",
+      sortable: false,
       headerClassName: 'rowheader',
-      flex: 1,
-      renderCell: (params) => highlightText(params.value, quickFilterValue),
-    },
-    {
-      field: 'Negative',
-      headerName: 'Negative',
-      minWidth: 150,
-      align: "end",
-      headerClassName: 'rowheader',
-      flex: 1,
-      renderCell: (params) => highlightText(params.value, quickFilterValue),
-    },
+    })),
   ];
 
-
+  // Creating rows for 'Planet' and 'Degree'
+  const rows = [
+    {
+      id: 1,
+      rowLabel: 'Planet',
+      ...JaiminiCharKarakasData.reduce((acc, item) => {
+        acc[item.Karak] = item.Planet;
+        return acc;
+      }, {}),
+    },
+    {
+      id: 2,
+      rowLabel: 'Degree',
+      ...JaiminiCharKarakasData.reduce((acc, item) => {
+        acc[item.Karak] = item.Degree;
+        return acc;
+      }, {}),
+    },
+  ];
 
   const handleSelect = () => {
     setEventValue(selectedRow);
@@ -79,33 +64,13 @@ function Event({ setEventValue, open, handleClose }) {
     getEventOpions();
   }, [])
 
-  const [quickFilterValue, setQuickFilterValue] = useState('');
-
-  // Capture filter change from the quick filter
-  const handleFilterChange = (filterModel) => {
-    if (filterModel.quickFilterValues.length) {
-      const query = filterModel.quickFilterValues.join(' ');
-      setQuickFilterValue(query);
-    } else {
-      setQuickFilterValue('');
-    }
-  };
-
-
-  function CustomToolbar() {
-    return (
-      <GridToolbarContainer className="d-flex justify-content-between p-0 w-full align-items-center">
-        <GridToolbarQuickFilter autoFocus className="SearchBar w-full md:w-full sm:w-8/12 m-2 " />
-      </GridToolbarContainer>
-    );
-  }
 
   return (
     <>
       <Dialog
         open={open}
         onClose={handleClose}
-        maxWidth="sm"   // 'xs', 'sm', 'md', 'lg', 'xl' or false for custom width
+        maxWidth="lg"   // 'xs', 'sm', 'md', 'lg', 'xl' or false for custom width
         fullWidth={true}  // Ensures the dialog takes up full width of the container
         PaperProps={{
           component: 'form',
@@ -125,7 +90,7 @@ function Event({ setEventValue, open, handleClose }) {
         <DialogTitle className="PopupHeader text-white p-3">
           <div className='w-100' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span className='text-primary text-2xl font-ea-sb !pl-3'>
-              Select Life Event
+              Event
             </span>
             <IconButton
               aria-label="close"
@@ -137,38 +102,92 @@ function Event({ setEventValue, open, handleClose }) {
               <i className='tabler-x text-primary'></i>
             </IconButton>
           </div>
-          {/* <DialogContentText className="text-white">
-            Enter the required information to create a new Kundli.
-          </DialogContentText> */}
         </DialogTitle>
-        <DialogContent className=' flex justify-center'>
+        <DialogContent className=' flex flex-col justify-center'>
+          <div className='p-4 flex'>
+            <Grid className='' container spacing={5}>
+              <Grid item xs={12} sm={4}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DateTimePicker
+                    openTo="day"
+                    className="w-[100%]"
+                    // className="w-[225px]"
+                    // className="w-full sm:w-[25%] md:w-[23%] lg:w-[18%]"
+                    views={["year", "month", "day", "hours", "minutes"]}
+                    // value={datePicker}
+                    // onChange={(newDate) => handleDateChange(newDate)}
+                    inputFormat="DD-MM-YYYY HH:mm:ss"
+                    format='DD-MM-YYYY HH:mm:ss'
+                    ampm={false}
+                    // sx={{
+                    //   height: '2.5rem',
+                    //   minHeight: '2.5rem',
+                    //   '& .MuiInputBase-root': { height: '2.5rem' },
+                    // }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                      // sx={{
+                      //   height: '2.5rem',
+                      //   minHeight: '2.5rem',
+                      //   '& .MuiInputBase-root': { height: '2.5rem' },
+                      // }}
+                      // className="w-[225px]"
+                      />
+                    )}
+                  />
+                </LocalizationProvider>
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Autocomplete
+                  id='event-select'
+                  options={EventData && EventData}
+
+                  // defaultValue={userData && userData.Country}
+                  getOptionLabel={(option) => option?.EventName}
+                  getOptionKey={(option) => option?.Event}
+                  // onChange={(event, newValue) => handleInputChange('Country', newValue, 'Country', true)}
+                  // sx={{
+                  //   '& .MuiOutlinedInput-root': {
+                  //     height: '56px', // Adjust height as needed
+                  //   },
+                  // }}
+                  renderInput={(params) => (
+                    <TextField {...params} label='Select Event' variant='outlined'
+                      // {...(errors.Country && { error: true })}
+
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  fullWidth
+                  label="Remark"
+                // value={userData?.FirstName}
+                // onChange={e => {
+                //   const inputValue = e.target.value;
+                //   const capitalizedValue = inputValue.charAt(0).toUpperCase() + inputValue.slice(1);
+                //   handleInputChange('FirstName', capitalizedValue, 'FirstName');
+                // }}
+                />
+              </Grid>
+            </Grid>
+          </div>
           <Box width={"100%"}>
-              <DataGrid
-                showCellVerticalBorder
-                getRowId={(e) => e.Event}
-                rows={EventData}
-                columns={columns}
-                pageSize={5}
-                hideFooter={true}
-                disableColumnSorting
-                disableColumnMenu
-                rowHeight={30}
-                columnHeaderHeight={38}
-                disableColumnResize
-                hideFooterPagination={true}
-                onRowClick={(params) => {
-                  setSelectedRow(params.row)
-                }}
-                onRowSelectionModelChange={(newRowSelectionModel) => {
-                  setSelectedRow(EventData.filter((e) => e.Event == newRowSelectionModel[0])[0])
-                }}
-                // checkboxSelection
-                disableMultipleRowSelection
-                selectionModel={EventData && selectedRow ? [selectedRow.Event] : []}
-                slots={{ toolbar: CustomToolbar }}
-                slotProps={{ toolbar: { showQuickFilter: true } }}
-                onFilterModelChange={handleFilterChange}
-              />
+            <DataGrid
+              rows={rows}
+              columns={columns}
+              pageSize={5}
+              hideFooter={true}
+              disableColumnSorting
+              disableColumnMenu
+              rowHeight={40}
+              columnHeaderHeight={38}
+              disableColumnResize
+              hideFooterPagination={true}
+              showColumnVerticalBorder
+            />
           </Box>
         </DialogContent>
         <DialogActions>

@@ -3,33 +3,9 @@ import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 
 function JaiminiCharKarakasPopUp({ open, handleClose, JaiminiCharKarakasData }) {
-  const customTheme = createTheme({
-    components: {
-      MuiDataGrid: {
-        styleOverrides: {
-          // root: {
-          //   fontFamily: 'Segoe UI, Arial, sans-serif',
-          // },
-          // cell: {
-          //   fontFamily: 'Segoe UI, Arial, sans-serif',
-          // },
-          // columnHeaders: {
-          //   fontFamily: 'Segoe UI, Arial, sans-serif',
-          // },
-          // toolbar: {
-          //   fontFamily: 'Segoe UI, Arial, sans-serif',
-          // },
-        },
-      },
-    },
-  });
 
   // Transforming Data: Making each 'Karak' a column
   const columns = [
-    // {
-    //   field: 'rowLabel', headerName: '', flex: 1, sortable: false,
-    //   headerClassName: 'rowheader',
-    // },
     ...JaiminiCharKarakasData.map(item => ({
       field: item.Karak,
       headerName: `${item.Karak} Karaka`,
@@ -94,10 +70,7 @@ function JaiminiCharKarakasPopUp({ open, handleClose, JaiminiCharKarakasData }) 
           </div>
         </DialogTitle>
         <DialogContent className=' flex justify-center'>
-          <Box
-            width={"100%"}
-          >
-            <ThemeProvider theme={customTheme}>
+          <Box width={"100%"}>
               <DataGrid
                 rows={rows}
                 columns={columns}
@@ -111,7 +84,6 @@ function JaiminiCharKarakasPopUp({ open, handleClose, JaiminiCharKarakasData }) 
                 hideFooterPagination={true}
                 showColumnVerticalBorder
               />
-            </ThemeProvider>
           </Box>
         </DialogContent>
         {/* <DialogActions>

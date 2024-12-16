@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import './OTPverify.css'
-import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
+// import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
 import { requestOtp, VerifyOtp } from '@/app/Server/API/auth'
 import { Alert, Button } from '@mui/material'
 
@@ -121,9 +121,9 @@ function OTPverify({ email, role, setIsOtpVerified, handleVerifyOtp, ErrorMessag
     setTimer(60)
     try {
       const result = await requestOtp(email, role)
-      if (!result?.Status) {
-        return toastDisplayer('error', result?.Error)
-      }
+      // if (!result?.Status) {
+      //   return toastDisplayer('error', result?.Error)
+      // }
       // if (result.hasError) {
       //   return toastDisplayer('error', result.error)
       // }

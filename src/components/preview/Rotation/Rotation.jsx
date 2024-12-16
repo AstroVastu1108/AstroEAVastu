@@ -1,14 +1,14 @@
 import { ThemeProvider } from '@emotion/react'
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 function Rotation({ open, handleClose, rotationType, hanldeRotationChange }) {
 
-  const [selectedRowsTable1, setSelectedRowsTable1] = useState([]);
-  const [selectedRowsTable2, setSelectedRowsTable2] = useState([]);
-  const [selectedRowsTable3, setSelectedRowsTable3] = useState([]);
-  const [selectedRowsTable4, setSelectedRowsTable4] = useState([]);
+  // const [selectedRowsTable1, setSelectedRowsTable1] = useState([]);
+  // const [selectedRowsTable2, setSelectedRowsTable2] = useState([]);
+  // const [selectedRowsTable3, setSelectedRowsTable3] = useState([]);
+  // const [selectedRowsTable4, setSelectedRowsTable4] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
 
   const planetClass = {
@@ -114,28 +114,28 @@ function Rotation({ open, handleClose, rotationType, hanldeRotationChange }) {
   ];
 
   const handleRowSelection = (table, params) => {
-    // setSelectedRow({ table, params })
-    if (table === 'table1') {
-      setSelectedRowsTable1([params.id]);
-      setSelectedRowsTable2([]); // Clear selection of table 2
-      setSelectedRowsTable3([]); // Clear selection of table 2
-      setSelectedRowsTable4([]); // Clear selection of table 2
-    } else if (table === 'table2') {
-      setSelectedRowsTable2([params.id]);
-      setSelectedRowsTable1([]); // Clear selection of table 1
-      setSelectedRowsTable4([]); // Clear selection of table 1
-      setSelectedRowsTable3([]); // Clear selection of table 1
-    } else if (table === 'table3') {
-      setSelectedRowsTable3([params.id]);
-      setSelectedRowsTable1([]); // Clear selection of table 1
-      setSelectedRowsTable2([]); // Clear selection of table 1
-      setSelectedRowsTable4([]); // Clear selection of table 1
-    } else if (table === 'table4') {
-      setSelectedRowsTable4([params.id]);
-      setSelectedRowsTable1([]); // Clear selection of table 1
-      setSelectedRowsTable2([]); // Clear selection of table 1
-      setSelectedRowsTable3([]); // Clear selection of table 1
-    }
+    setSelectedRow({ table, params })
+    // if (table === 'table1') {
+    //   setSelectedRowsTable1([params.id]);
+    //   setSelectedRowsTable2([]); // Clear selection of table 2
+    //   setSelectedRowsTable3([]); // Clear selection of table 2
+    //   setSelectedRowsTable4([]); // Clear selection of table 2
+    // } else if (table === 'table2') {
+    //   setSelectedRowsTable2([params.id]);
+    //   setSelectedRowsTable1([]); // Clear selection of table 1
+    //   setSelectedRowsTable4([]); // Clear selection of table 1
+    //   setSelectedRowsTable3([]); // Clear selection of table 1
+    // } else if (table === 'table3') {
+    //   setSelectedRowsTable3([params.id]);
+    //   setSelectedRowsTable1([]); // Clear selection of table 1
+    //   setSelectedRowsTable2([]); // Clear selection of table 1
+    //   setSelectedRowsTable4([]); // Clear selection of table 1
+    // } else if (table === 'table4') {
+    //   setSelectedRowsTable4([params.id]);
+    //   setSelectedRowsTable1([]); // Clear selection of table 1
+    //   setSelectedRowsTable2([]); // Clear selection of table 1
+    //   setSelectedRowsTable3([]); // Clear selection of table 1
+    // }
   };
 
   const onSave = () => {
@@ -143,7 +143,7 @@ function Rotation({ open, handleClose, rotationType, hanldeRotationChange }) {
       "IsRotate": true,
       "RotateType": rotationType,
       "RotateFrom": selectedRow?.value,
-      "formattedStr":selectedRow?.formattedStr
+      "formattedStr": selectedRow?.formattedStr
     }
     hanldeRotationChange(payload);
   }
@@ -185,6 +185,14 @@ function Rotation({ open, handleClose, rotationType, hanldeRotationChange }) {
         <Box
           width={"25%"}
           className="flex"
+          sx={{
+            '& .MuiDataGrid-row.Mui-selected:nth-of-type(even)': {
+              backgroundColor: selectedRow?.table == "table1" ? '#99e27b65 !important' : '#f5f5f5 !important', // Change background for selected cell only
+            },
+            '& .MuiDataGrid-row.Mui-selected:nth-of-type(odd)': {
+              backgroundColor: selectedRow?.table == "table1" ? '#99e27b65 !important' : '#ffffff !important', // Change background for selected cell only
+            }
+          }}
         >
 
           <DataGrid
@@ -198,12 +206,21 @@ function Rotation({ open, handleClose, rotationType, hanldeRotationChange }) {
             rowHeight={30}
             columnHeaderHeight={38}
             onRowClick={(params) => handleRowSelection('table1', params)}
-            selectionModel={selectedRowsTable1}
+          // selectionModel={selectedRowsTable1}
+          // getRowClassName={(params) => params.id == selectedRow?.id ? 'Mui-selected1' : ''}
           />
         </Box>
         <Box
           width={"25%"}
           className="flex"
+          sx={{
+            '& .MuiDataGrid-row.Mui-selected:nth-of-type(even)': {
+              backgroundColor: selectedRow?.table == "table2" ? '#99e27b65 !important' : '#f5f5f5 !important', // Change background for selected cell only
+            },
+            '& .MuiDataGrid-row.Mui-selected:nth-of-type(odd)': {
+              backgroundColor: selectedRow?.table == "table2" ? '#99e27b65 !important' : '#ffffff !important', // Change background for selected cell only
+            }
+          }}
         >
 
           <DataGrid
@@ -217,12 +234,20 @@ function Rotation({ open, handleClose, rotationType, hanldeRotationChange }) {
             rowHeight={30}
             columnHeaderHeight={38}
             onRowClick={(params) => handleRowSelection('table2', params)}
-            selectionModel={selectedRowsTable2}
+          // selectionModel={selectedRowsTable2}
           />
         </Box>
         <Box
           width={"25%"}
           className="flex"
+          sx={{
+            '& .MuiDataGrid-row.Mui-selected:nth-of-type(even)': {
+              backgroundColor: selectedRow?.table == "table3" ? '#99e27b65 !important' : '#f5f5f5 !important', // Change background for selected cell only
+            },
+            '& .MuiDataGrid-row.Mui-selected:nth-of-type(odd)': {
+              backgroundColor: selectedRow?.table == "table3" ? '#99e27b65 !important' : '#ffffff !important', // Change background for selected cell only
+            }
+          }}
         >
 
           <DataGrid
@@ -236,12 +261,20 @@ function Rotation({ open, handleClose, rotationType, hanldeRotationChange }) {
             rowHeight={30}
             columnHeaderHeight={38}
             onRowClick={(params) => handleRowSelection('table3', params)}
-            selectionModel={selectedRowsTable3}
+          // selectionModel={selectedRowsTable3}
           />
         </Box>
         <Box
           width={"25%"}
           className="flex"
+          sx={{
+            '& .MuiDataGrid-row.Mui-selected:nth-of-type(even)': {
+              backgroundColor: selectedRow?.table == "table4" ? '#99e27b65 !important' : '#f5f5f5 !important', // Change background for selected cell only
+            },
+            '& .MuiDataGrid-row.Mui-selected:nth-of-type(odd)': {
+              backgroundColor: selectedRow?.table == "table4" ? '#99e27b65 !important' : '#ffffff !important', // Change background for selected cell only
+            }
+          }}
         >
 
           <DataGrid
@@ -255,7 +288,7 @@ function Rotation({ open, handleClose, rotationType, hanldeRotationChange }) {
             rowHeight={30}
             columnHeaderHeight={38}
             onRowClick={(params) => handleRowSelection('table4', params)}
-            selectionModel={selectedRowsTable4}
+          // selectionModel={selectedRowsTable4}
           />
         </Box>
       </DialogContent>

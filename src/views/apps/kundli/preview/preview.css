@@ -12,9 +12,9 @@
   src: url('./../../../../assets/fonts/s-sb.woff2') format('woff2');
 }
 
-body {
+/* body {
   font-family: var(--primary-font-n);
-}
+} */
 
 .previewPDFPrint {
   position: absolute;
@@ -24,6 +24,10 @@ body {
 .pdf-Div {
   padding-left: 0rem !important;
   padding-top: 0rem !important;
+  /* border: 2px solid red; */
+  /* position: sticky; */
+  /* top: 1.5rem; */
+  /* overflow: hidden; */
   /* font-family: 'Segoe UI' !important; */
   /* border: 1px solid var(--border-color); */
 }
@@ -919,6 +923,23 @@ body {
   background-color: var(--primary-color);
   border-bottom: none !important;
 }
-.Mui-selected {
+.MuiDataGrid-row.Mui-selected  {
   background-color: #99e27b65 !important
+}
+/*
+.MuiOutlinedInput-root{
+  height: 2.7rem
+} */
+
+.MuiInputBase-input{
+  font: unset;
+  font-family: var(--primary-font-n);
+}
+
+.MuiFormLabel-root{
+  font-family: var(--primary-font-n);
+}
+
+.MuiDialogActions-root{
+  padding: 8px;
 }
