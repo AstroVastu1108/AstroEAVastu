@@ -22,14 +22,14 @@ export async function getCountries() {
 }
 
 // get all the cities data as per search
-export async function getCities(iso2, query) {
+export async function getCities(CountryCode, query) {
   const responseBody = {
     responseData: null,
     hasError: false,
     error: null
   }
   try {
-    const response = await astroInstance.get(`/geo/city/${iso2}/${query}`)
+    const response = await astroInstance.get(`/geo/city/${CountryCode}/${query}`)
     responseBody.responseData = response.data
     return responseBody
   } catch (error) {

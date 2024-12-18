@@ -9,6 +9,7 @@ import Subscription from "./app/(dashboard)/Subscription/subscription";
 import KundliTasksMain from "./app/(dashboard)/Tasks/kundliTasks";
 import UserConfig from "./app/(dashboard)/userConfig/userConfig";
 import Logout from "./views/Logout";
+import TransitPage from "./app/(dashboard)/kundli/transit/transit";
 
 export const routes = [
     {
@@ -22,6 +23,10 @@ export const routes = [
     {
       path: "kundali/:id",
       element: PreviewPage,
+    },
+    {
+      path: "transit/:id",
+      element: TransitPage,
     },
     {
       path: "permission",

@@ -30,11 +30,11 @@ function AddClientPopUp({ open, handleAddClose,saveClient }) {
         gstin: false
     })
     const [conutryData, setConutryData] = useState([
-        { iso2: 'IN', name: 'India' }
+        { CountryCode: 'IN', Country: 'India' }
     ])
 
     const [cityData, setCityData] = useState([{
-        "CityID": "A1AE28185ED49D47211760BF32D40EB742C84998",
+        "CityID": "1255364",
         "FormattedCity": "Surat, Gujarat"
     }])
 
@@ -47,12 +47,12 @@ function AddClientPopUp({ open, handleAddClose,saveClient }) {
         lane: '',
         area: '',
         city: {
-            "CityID": "A1AE28185ED49D47211760BF32D40EB742C84998",
+            "CityID": "1255364",
             "FormattedCity": "Surat, Gujarat"
         },
         pin: '',
         state: '',
-        country: { iso2: 'IN', name: 'India' },
+        country: { CountryCode: 'IN', Country: 'India' },
         phone1: '',
         phone2: '',
         phone3: '',
@@ -175,8 +175,8 @@ function AddClientPopUp({ open, handleAddClose,saveClient }) {
     const fetchCities = debounce(async (query) => {
         if (query.length > 1 && data.country) {
             try {
-                const iso2 = data.country.iso2
-                const response = await getCities(iso2, query)
+                const CountryCode = data.country.CountryCode
+                const response = await getCities(CountryCode, query)
                 if (response.hasError) {
                     return toastDisplayer("error", response.error)
                 }
@@ -324,8 +324,8 @@ function AddClientPopUp({ open, handleAddClose,saveClient }) {
                         <Autocomplete
                             id='country-select'
                             options={conutryData}
-                            defaultValue={{ iso2: 'IN', name: 'India' }}
-                            getOptionLabel={(option) => option.name}
+                            defaultValue={{ CountryCode: 'IN', Country: 'India' }}
+                            getOptionLabel={(option) => option.Country}
                             onChange={(event, newValue) => handleChange('country', newValue)}
                             renderInput={(params) => (
                                 <TextField
@@ -343,7 +343,7 @@ function AddClientPopUp({ open, handleAddClose,saveClient }) {
                         <Autocomplete
                             id='city-autocomplete'
                             options={cityData}
-                            defaultValue={{ "CityID": "A1AE28185ED49D47211760BF32D40EB742C84998", "FormattedCity": "Surat, Gujarat" }}
+                            defaultValue={{ "CityID": "1255364", "FormattedCity": "Surat, Gujarat" }}
                             getOptionLabel={(option) => option.FormattedCity || ''}
                             onInputChange={(event, newQuery) => setQuery(newQuery)}
                             onChange={(event, newValue) => handleChange('city', newValue)}

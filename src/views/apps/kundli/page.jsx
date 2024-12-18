@@ -237,7 +237,7 @@ export default function KundliMain() {
     MiddleName: '',
     Gender: 'Male',
     BirthDate: dayjs(),
-    Country: { iso2: 'IN', name: 'India' },
+    Country: { CountryCode: 'IN', Country: 'India' },
     BirthTime: dayjs(),
     CityID: { CityID: 'A1AE28185ED49D47211760BF32D40EB742C84998', FormattedCity: 'Surat, Gujarat' },
     // City:'Surat, Gujarat',
@@ -257,7 +257,7 @@ export default function KundliMain() {
     } else {
       setLoading(false);
       const response = await res.responseData
-      if (response?.Country?.iso2) {
+      if (response?.Country?.CountryCode) {
 
         setUserData((prev) => ({
           ...prev,
@@ -266,8 +266,8 @@ export default function KundliMain() {
             FormattedCity: response?.City?.FormattedCity // Set correct property name
           },
           Country: {
-            iso2: response?.Country?.iso2,
-            name: response?.Country?.name
+            CountryCode: response?.Country?.CountryCode,
+            Country: response?.Country?.Country
           }
         }));
       } else {
@@ -277,7 +277,7 @@ export default function KundliMain() {
             "CityID": "A1AE28185ED49D47211760BF32D40EB742C84998",
             "FormattedCity": "Surat, Gujarat"
           },
-          Country: { iso2: 'IN', name: 'India' }
+          Country: { CountryCode: 'IN', Country: 'India' }
         }));
       }
     }
@@ -294,7 +294,7 @@ export default function KundliMain() {
       MiddleName: '',
       Gender: 'Male',
       BirthDate: null,
-      Country: { iso2: 'IN', name: 'India' },
+      Country: { CountryCode: 'IN', Country: 'India' },
       BirthTime: null,
       CityID: { CityID: 'A1AE28185ED49D47211760BF32D40EB742C84998', FormattedCity: 'Surat, Gujarat' },
       isUpdate: false,
@@ -345,6 +345,7 @@ export default function KundliMain() {
     const seconds = parseInt(birthTime?.slice(4, 6), 10);  // Last 2 characters (SS)
 
     data.time = dayjs().hour(hours).minute(minutes).second(seconds);
+    // console.log(data)
     setUserData(data)
     setOpen(true);
     setLoading(false);

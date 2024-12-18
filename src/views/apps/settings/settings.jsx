@@ -14,7 +14,7 @@ function Settings() {
   const [loading, setLoading] = useState(false)
   const [conutryData, setConutryData] = useState([])
   const [configureID, setConfigureID] = useState("")
-  const [selectedCountry, setSelectedCountry] = useState({ iso2: 'IN', name: 'India' })
+  const [selectedCountry, setSelectedCountry] = useState({ CountryCode: 'IN', Country: 'India' })
   const [selectedCity, setSelectedCity] = useState({
     "CityID": "A1AE28185ED49D47211760BF32D40EB742C84998",
     "FormattedCity": "Surat, Gujarat"
@@ -45,8 +45,8 @@ function Settings() {
   const fetchCities = debounce(async (query) => {
     if (query.length > 1 && selectedCountry) {
       try {
-        const iso2 = selectedCountry.iso2
-        const response = await getCities(iso2, query)
+        const CountryCode = selectedCountry.CountryCode
+        const response = await getCities(CountryCode, query)
         if (response.hasError) {
           return toastDisplayer("error", response.error)
         }
@@ -70,18 +70,18 @@ function Settings() {
     } else {
       setLoading(false);
       const response = res.responseData
-      if (response?.Country?.iso2) {
+      if (response?.Country?.CountryCode) {
         setConfigureID(response.ConfigureID)
         setSelectedCountry({
-          "iso2": response?.Country?.iso2,
-          "name": response?.Country?.name
+          "CountryCode": response?.Country?.CountryCode,
+          "Country": response?.Country?.Country
         })
         setSelectedCity({
           "FormattedCity": response?.City?.FormattedCity,
           "CityID": response?.City?.CityID
         })
       } else {
-        setSelectedCountry({ iso2: 'IN', name: 'India' })
+        setSelectedCountry({ CountryCode: 'IN', Country: 'India' })
         setSelectedCity({
           "CityID": "A1AE28185ED49D47211760BF32D40EB742C84998",
           "FormattedCity": "Surat, Gujarat"
@@ -89,7 +89,7 @@ function Settings() {
 
       }
       // setSelectedCountry({
-      //     "iso2": response?.Country?.iso2,
+      //     "CountryCode": response?.Country?.CountryCode,
       //     "name": response?.Country?.name
       // })
       // setSelectedCity({
@@ -125,8 +125,8 @@ function Settings() {
             options={conutryData}
             value={selectedCountry || null}
             // defaultValue={selectedCountry || null}
-            getOptionLabel={(option) => option?.name}
-            getOptionKey={(option) => option?.iso2}
+            getOptionLabel={(option) => option?.Country}
+            getOptionKey={(option) => option?.CountryCode}
             onChange={(event, newValue) => {
               if (newValue) {
                 setSelectedCountry(newValue);

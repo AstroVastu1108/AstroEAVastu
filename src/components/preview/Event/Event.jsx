@@ -5,6 +5,7 @@ import { DataGrid, GridToolbarContainer, GridToolbarQuickFilter } from '@mui/x-d
 import { EventOptionsData } from '@/app/Server/API/kundliAPI';
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 
 function Event({ setEventValue, open, handleClose, JaiminiCharKarakasData }) {
 
@@ -45,7 +46,7 @@ function Event({ setEventValue, open, handleClose, JaiminiCharKarakasData }) {
   ];
 
   const handleSelect = () => {
-    setEventValue(selectedRow);
+    // setEventValue(selectedRow);
     handleClose(); // Close the dialog after selecting an item
   };
 
@@ -108,34 +109,24 @@ function Event({ setEventValue, open, handleClose, JaiminiCharKarakasData }) {
             <Grid className='' container spacing={5}>
               <Grid item xs={12} sm={4}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DateTimePicker
-                    openTo="day"
-                    className="w-[100%]"
-                    // className="w-[225px]"
-                    // className="w-full sm:w-[25%] md:w-[23%] lg:w-[18%]"
-                    views={["year", "month", "day", "hours", "minutes"]}
-                    // value={datePicker}
-                    // onChange={(newDate) => handleDateChange(newDate)}
-                    inputFormat="DD-MM-YYYY HH:mm:ss"
-                    format='DD-MM-YYYY HH:mm:ss'
-                    ampm={false}
-                    // sx={{
-                    //   height: '2.5rem',
-                    //   minHeight: '2.5rem',
-                    //   '& .MuiInputBase-root': { height: '2.5rem' },
-                    // }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                      // sx={{
-                      //   height: '2.5rem',
-                      //   minHeight: '2.5rem',
-                      //   '& .MuiInputBase-root': { height: '2.5rem' },
-                      // }}
-                      // className="w-[225px]"
-                      />
-                    )}
-                  />
+                  <DemoContainer components={['DateTimePicker']}>
+                    <DateTimePicker
+                      label="Birth Date & Time"
+                      name="startDate"
+                      views={['year', 'month', 'day', 'hours', 'minutes']}
+                      format="DD-MM-YYYY HH:mm:ss"
+                      ampm={false}
+                      onChange={(date) => {
+                        // Handle date and time changes
+                        // handleInputChange('date', date, 'BirthDate');
+                      }}
+                      slots={{
+                        actionBar: () => null, // Hide the action bar, including the OK button
+                      }}
+                    // Uncomment and use the value if necessary
+                    // value={userData.date}
+                    />
+                  </DemoContainer>
                 </LocalizationProvider>
               </Grid>
               <Grid item xs={12} sm={4}>
@@ -154,7 +145,7 @@ function Event({ setEventValue, open, handleClose, JaiminiCharKarakasData }) {
                   // }}
                   renderInput={(params) => (
                     <TextField {...params} label='Select Event' variant='outlined'
-                      // {...(errors.Country && { error: true })}
+                    // {...(errors.Country && { error: true })}
 
                     />
                   )}
@@ -192,6 +183,9 @@ function Event({ setEventValue, open, handleClose, JaiminiCharKarakasData }) {
         </DialogContent>
         <DialogActions>
           <div className='p-4'>
+            <Button variant='contained' type='submit' disabled={false} onClick={handleSelect} >
+              Transit
+            </Button>
             <Button variant='contained' type='submit' disabled={false} onClick={handleSelect} >
               Save
             </Button>

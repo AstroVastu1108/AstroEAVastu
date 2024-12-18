@@ -92,7 +92,8 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
           FormattedCity: userData.City
         },
         ["Country"]: {
-          name: userData.Country
+          Country: userData.Country,
+          CountryCode: userData.CountryCode
         },
       }));
     }
@@ -103,8 +104,10 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
   const fetchCities = async (query) => {
     if (query.length > 1 && userData.Country) {
       try {
-        const iso2 = userData.ISO2 ? userData.ISO2 : userData.Country.iso2
-        const response = await getCities(iso2, query)
+        // console.log(userData)
+        // const CountryCode = userData.ISO2 ? userData.ISO2 : userData.Country.CountryCode
+        const CountryCode = userData.Country.CountryCode
+        const response = await getCities(CountryCode, query)
         if (response.hasError) {
           return toastDisplayer("error", response.error)
         }
@@ -149,12 +152,13 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
         LastName: userData.LastName || "Kundali",
         MiddleName: userData.MiddleName,
         Gender: userData.Gender,
-        Country: userData.Country?.name,
+        // Country: userData.Country?.Country,
+        // CountryCode: userData.Country?.CountryCode,
         CityID: userData.CityID?.CityID,
         BirthDate: birthDate,
         BirthTime: birthTime,
         Prakriti: userData.prakriti || '',
-        City: userData.CityID?.FormattedCity,
+        // City: userData.CityID?.FormattedCity,
         TransitTime: "",
         TransitDate: "",
         ClientID: "",
@@ -362,8 +366,8 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                 id='country-select'
                 options={conutryData && conutryData}
                 defaultValue={userData && userData.Country}
-                getOptionLabel={(option) => option?.name}
-                getOptionKey={(option) => option?.iso2}
+                getOptionLabel={(option) => option?.Country}
+                getOptionKey={(option) => option?.CountryCode}
                 onChange={(event, newValue) => handleInputChange('Country', newValue, 'Country', true)}
                 renderInput={(params) => (
                   <TextField {...params} label='Select Country' variant='outlined'
