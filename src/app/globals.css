@@ -46,7 +46,7 @@
   font-weight: 500;
   font-stretch: 100%;
   src: url('./../assets/fonts/s-sb.woff2') format('woff2');
-} */
+}
 
 body {
   font-family: var(--primary-font-n);
