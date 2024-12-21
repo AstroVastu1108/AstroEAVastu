@@ -940,6 +940,10 @@
   font-family: var(--primary-font-n);
 }
 
-.MuiDialogActions-root{
+/* .MuiDialogActions-root{
   padding: 8px;
+} */
+
+.MuiDataGrid-scrollbar{
+  display: none;
 }

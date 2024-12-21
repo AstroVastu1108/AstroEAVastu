@@ -22,6 +22,7 @@ import "./addKundli.css"
 function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserData }) {
 
   const [isDisable, setIsDisable] = useState(false);
+  const [formData, setFormData] = useState(userData);
   const fetchData = async () => {
     try {
       const response = await getCountries()
@@ -52,20 +53,20 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
   });
   const [conutryData, setConutryData] = useState([])
   const [cityData, setCityData] = useState([{
-    "CityID": "A1AE28185ED49D47211760BF32D40EB742C84998",
+    "CityID": 1255364,
     "FormattedCity": "Surat, Gujarat"
   }])
 
   const fnameRef = useRef(null);
 
   useEffect(() => {
-    if (!userData.isUpdate) {
-      setCityData([userData.CityID])
+    if (!formData.isUpdate) {
+      setCityData([formData.CityID])
       const now = new Date();
-      setUserData((prev) => ({ ...prev, ["date"]: dayjs(), ["time"]: dayjs() }));
+      setFormData((prev) => ({ ...prev, ["date"]: dayjs(), ["time"]: dayjs() }));
     } else {
-      const dateParts = userData.BirthDate.split('-');
-      const timeParts = userData.BirthTime;
+      const dateParts = formData.BirthDate.split('-');
+      const timeParts = formData.BirthTime;
 
       const day = parseInt(dateParts[0], 10);
       const month = parseInt(dateParts[1], 10) - 1; // month is 0-indexed in JS
@@ -83,17 +84,17 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
       }
 
       const birthDate = new Date(year, month, day, hours, minutes);
-      const birthTime = userData.BirthTime;
-      setUserData((prev) => ({
+      const birthTime = formData.BirthTime;
+      setFormData((prev) => ({
         ...prev,
         ["date"]: dayjs(birthDate),
         ["CityID"]: {
-          CityID: userData.CityID,
-          FormattedCity: userData.City
+          CityID: formData.CityID,
+          FormattedCity: formData.City
         },
         ["Country"]: {
-          Country: userData.Country,
-          CountryCode: userData.CountryCode
+          Country: formData.Country,
+          CountryCode: formData.CountryCode
         },
       }));
     }
@@ -102,11 +103,9 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
   const router = useRouter();
 
   const fetchCities = async (query) => {
-    if (query.length > 1 && userData.Country) {
+    if (query.length > 1 && formData.Country) {
       try {
-        // console.log(userData)
-        // const CountryCode = userData.ISO2 ? userData.ISO2 : userData.Country.CountryCode
-        const CountryCode = userData.Country.CountryCode
+        const CountryCode = formData.Country.CountryCode
         const response = await getCities(CountryCode, query)
         if (response.hasError) {
           return toastDisplayer("error", response.error)
@@ -139,33 +138,31 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
       toastDisplayer("error", "Please fill out all required fields correctly before submitting.");
       return; // Prevent submission
     }
-    const birthDate = userData.date ? new Date(userData.date).toLocaleDateString('en-GB').split('/').join('-') : null
+    const birthDate = formData.date ? new Date(formData.date).toLocaleDateString('en-GB').split('/').join('-') : null
 
-    const birthTime = userData.time ? new Date(userData.time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).replace(/:/g, '') : null;
-
+    const birthTime = formData.time ? new Date(formData.time).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).replace(/:/g, '') : null;
 
     try {
       setIsDisable(true)
       const formattedData = {
-        KundaliID: userData.KundaliID,
-        FirstName: userData.FirstName || "Prashna",
-        LastName: userData.LastName || "Kundali",
-        MiddleName: userData.MiddleName,
-        Gender: userData.Gender,
-        // Country: userData.Country?.Country,
-        // CountryCode: userData.Country?.CountryCode,
-        CityID: userData.CityID?.CityID,
+        KundaliID: formData.KundaliID,
+        FirstName: formData.FirstName || "Prashna",
+        LastName: formData.LastName || "Kundali",
+        MiddleName: formData.MiddleName,
+        Gender: formData.Gender,
+        // Country: formData.Country?.Country,
+        // CountryCode: formData.Country?.CountryCode,
+        CityID: formData.CityID?.CityID,
         BirthDate: birthDate,
         BirthTime: birthTime,
-        Prakriti: userData.prakriti || '',
-        // City: userData.CityID?.FormattedCity,
+        Prakriti: formData.prakriti || '',
+        // City: formData.CityID?.FormattedCity,
         TransitTime: "",
         TransitDate: "",
         ClientID: "",
         DChart: ""
       }
-      // return console.log(formattedData)
-      if (!userData.isUpdate) {
+      if (!formData.isUpdate) {
         setIsDisable(false);
         const response = await CreateKundli(formattedData)
 
@@ -206,7 +203,6 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
   }
 
   const handleInputChange = (field, value, key, isRequired = false) => {
-
     if (isRequired) {
       if (!value) {
         setErrors(prev => ({
@@ -220,10 +216,19 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
         }))
       }
     }
+
+    if(field === "FirstName"){
+      const newVal = value.replace(/^\w/, char => char.toUpperCase());
+      setFormData(prev => ({
+        ...prev,
+        [field]: newVal
+      }))
+    }
+
     if (field === "Country") {
       // Clear the city data and reset selected city when the country changes
       setCityData([]); // Clear city options
-      setUserData(prev => ({
+      setFormData(prev => ({
         ...prev,
         CityID: null, // Reset the selected city
         [field]: value
@@ -236,7 +241,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
     }
 
 
-    setUserData(prev => ({
+    setFormData(prev => ({
       ...prev,
       [field]: value
     }))
@@ -264,7 +269,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
         <DialogTitle className="PopupHeader text-white p-3">
           <div className='w-100' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span className='text-primary text-2xl font-ea-sb !pl-3'>
-              New Kundali
+              {!formData.isUpdate ? "New Kundali":"Update Kundali"}
             </span>
             <IconButton
               aria-label="close"
@@ -285,11 +290,9 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                 label="First Name"
                 autoFocus
                 inputRef={fnameRef}
-                value={userData?.FirstName}
+                value={formData?.FirstName}
                 onChange={e => {
-                  const inputValue = e.target.value;
-                  const capitalizedValue = inputValue.charAt(0).toUpperCase() + inputValue.slice(1);
-                  handleInputChange('FirstName', capitalizedValue, 'FirstName');
+                  handleInputChange('FirstName', e.target.value, 'FirstName');
                 }}
               />
             </Grid>
@@ -297,8 +300,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
               <TextField
                 fullWidth
                 label='Middle Name'
-                // placeholder='John'
-                value={userData?.MiddleName}
+                value={formData?.MiddleName}
                 onChange={e => handleInputChange('MiddleName', e.target.value, 'MiddleName')}
 
               />
@@ -307,8 +309,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
               <TextField
                 fullWidth
                 label='Last Name'
-                // placeholder='Doe'
-                value={userData?.LastName}
+                value={formData?.LastName}
                 onChange={e => handleInputChange('LastName', e.target.value, 'LastName')}
               />
             </Grid>
@@ -318,7 +319,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                 <Select
                   labelId="Gender-select-label"
                   id="Gender-select"
-                  value={userData?.Gender?.toLowerCase() || ''}
+                  value={formData?.Gender?.toLowerCase() || ''}
                   onChange={e => handleInputChange('Gender', e.target.value, 'Gender')}
                   label="Gender"
                 >
@@ -333,8 +334,8 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['DatePicker']}>
                   <DatePicker
-                    selected={userData.date}
-                    value={userData.date}
+                    selected={formData.date}
+                    value={formData.date}
                     label="Birth Date"
                     name="startDate"
                     views={['year', 'month', 'day']}
@@ -355,7 +356,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                     views={['hours', 'minutes', 'seconds']}
                     format="HH:mm:ss"
                     // value={dayjs()}
-                    value={userData.time}
+                    value={formData.time}
                     onChange={date => handleInputChange('time', date, 'BirthTime', true)}
                   />
                 </DemoContainer>
@@ -365,7 +366,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
               <Autocomplete
                 id='country-select'
                 options={conutryData && conutryData}
-                defaultValue={userData && userData.Country}
+                defaultValue={formData && formData.Country}
                 getOptionLabel={(option) => option?.Country}
                 getOptionKey={(option) => option?.CountryCode}
                 onChange={(event, newValue) => handleInputChange('Country', newValue, 'Country', true)}
@@ -390,7 +391,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
               <Autocomplete
                 id='city-autocomplete'
                 options={cityData}
-                value={userData.CityID || null}  // Ensure city is cleared when CityID is null
+                value={formData.CityID || null}  // Ensure city is cleared when CityID is null
                 getOptionLabel={(option) => option?.FormattedCity || ''}
                 // onInputChange={(event, newQuery) => setQuery(newQuery)}
                 onInputChange={(event, newQuery) => handleCityChange(newQuery)}
@@ -400,6 +401,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                     {...(errors.CityID && { error: true })}
                   />
                 )}
+                filterOptions={(x) => x} // Disable frontend filtering
               />
 
             </Grid>
@@ -408,9 +410,9 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                 fullWidth
                 label='Lat, Lng '
               // placeholder='John'
-              // value={userData?.MiddleName}
+              // value={formData?.MiddleName}
               // onChange={e => handleInputChange('MiddleName', e.target.value, 'MiddleName')}
-              // onChange={e => setUserData({ ...userData, MiddleName: e.target.value })}
+              // onChange={e => setFormData({ ...formData, MiddleName: e.target.value })}
               // {...(errors.MiddleName && { error: true, helperText: 'MiddleName is required.' })}
               />
             </Grid>
@@ -419,7 +421,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                 fullWidth
                 label="Reference"
               // inputRef={fnameRef}
-              // value={userData?.FirstName}
+              // value={formData?.FirstName}
               // onChange={e => {
               //   const inputValue = e.target.value;
               //   const capitalizedValue = inputValue.charAt(0).toUpperCase() + inputValue.slice(1);
@@ -432,7 +434,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                 fullWidth
                 label="Remark"
               // inputRef={fnameRef}
-              // value={userData?.FirstName}
+              // value={formData?.FirstName}
               // onChange={e => {
               //   const inputValue = e.target.value;
               //   const capitalizedValue = inputValue.charAt(0).toUpperCase() + inputValue.slice(1);

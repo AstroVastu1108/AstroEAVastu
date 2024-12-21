@@ -16,11 +16,11 @@ function Settings() {
   const [configureID, setConfigureID] = useState("")
   const [selectedCountry, setSelectedCountry] = useState({ CountryCode: 'IN', Country: 'India' })
   const [selectedCity, setSelectedCity] = useState({
-    "CityID": "A1AE28185ED49D47211760BF32D40EB742C84998",
+    "CityID": 1255364,
     "FormattedCity": "Surat, Gujarat"
   })
   const [cityData, setCityData] = useState([{
-    "CityID": "A1AE28185ED49D47211760BF32D40EB742C84998",
+    "CityID": 1255364,
     "FormattedCity": "Surat, Gujarat"
   }])
   const fetchData = async () => {
@@ -70,11 +70,12 @@ function Settings() {
     } else {
       setLoading(false);
       const response = res.responseData
-      if (response?.Country?.CountryCode) {
+      if (response?.Country?.iso2) {
+        console.log(response);
         setConfigureID(response.ConfigureID)
         setSelectedCountry({
-          "CountryCode": response?.Country?.CountryCode,
-          "Country": response?.Country?.Country
+          "CountryCode": response?.Country?.iso2,
+          "Country": response?.Country?.name
         })
         setSelectedCity({
           "FormattedCity": response?.City?.FormattedCity,
@@ -83,7 +84,7 @@ function Settings() {
       } else {
         setSelectedCountry({ CountryCode: 'IN', Country: 'India' })
         setSelectedCity({
-          "CityID": "A1AE28185ED49D47211760BF32D40EB742C84998",
+          "CityID": 1255364,
           "FormattedCity": "Surat, Gujarat"
         })
 

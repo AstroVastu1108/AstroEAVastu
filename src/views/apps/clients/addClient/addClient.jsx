@@ -34,7 +34,7 @@ function AddClientPopUp({ open, handleAddClose,saveClient }) {
     ])
 
     const [cityData, setCityData] = useState([{
-        "CityID": "1255364",
+        "CityID": 1255364,
         "FormattedCity": "Surat, Gujarat"
     }])
 
@@ -47,7 +47,7 @@ function AddClientPopUp({ open, handleAddClose,saveClient }) {
         lane: '',
         area: '',
         city: {
-            "CityID": "1255364",
+            "CityID": 1255364,
             "FormattedCity": "Surat, Gujarat"
         },
         pin: '',
@@ -343,7 +343,7 @@ function AddClientPopUp({ open, handleAddClose,saveClient }) {
                         <Autocomplete
                             id='city-autocomplete'
                             options={cityData}
-                            defaultValue={{ "CityID": "1255364", "FormattedCity": "Surat, Gujarat" }}
+                            defaultValue={{ "CityID": 1255364, "FormattedCity": "Surat, Gujarat" }}
                             getOptionLabel={(option) => option.FormattedCity || ''}
                             onInputChange={(event, newQuery) => setQuery(newQuery)}
                             onChange={(event, newValue) => handleChange('city', newValue)}

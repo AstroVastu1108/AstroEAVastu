@@ -208,3 +208,7 @@ code {
 .MuiDataGrid-cell{
   font-size: 14px;
 }
+
+.MuiAutocomplete-option{
+  font-family: 'ea-n' !important;
+}

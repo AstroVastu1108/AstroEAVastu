@@ -239,7 +239,7 @@ export default function KundliMain() {
     BirthDate: dayjs(),
     Country: { CountryCode: 'IN', Country: 'India' },
     BirthTime: dayjs(),
-    CityID: { CityID: 'A1AE28185ED49D47211760BF32D40EB742C84998', FormattedCity: 'Surat, Gujarat' },
+    CityID: { CityID: 1255364, FormattedCity: 'Surat, Gujarat' },
     // City:'Surat, Gujarat',
     // CityID: 'A1AE28185ED49D47211760BF32D40EB742C84998',
     isUpdate: false,
@@ -274,7 +274,7 @@ export default function KundliMain() {
         setUserData((prev) => ({
           ...prev,
           CityID: {
-            "CityID": "A1AE28185ED49D47211760BF32D40EB742C84998",
+            "CityID": 1255364,
             "FormattedCity": "Surat, Gujarat"
           },
           Country: { CountryCode: 'IN', Country: 'India' }
@@ -296,7 +296,7 @@ export default function KundliMain() {
       BirthDate: null,
       Country: { CountryCode: 'IN', Country: 'India' },
       BirthTime: null,
-      CityID: { CityID: 'A1AE28185ED49D47211760BF32D40EB742C84998', FormattedCity: 'Surat, Gujarat' },
+      CityID: { CityID: 1255364, FormattedCity: 'Surat, Gujarat' },
       isUpdate: false,
       // City: 'Surat'
     })
@@ -345,7 +345,6 @@ export default function KundliMain() {
     const seconds = parseInt(birthTime?.slice(4, 6), 10);  // Last 2 characters (SS)
 
     data.time = dayjs().hour(hours).minute(minutes).second(seconds);
-    // console.log(data)
     setUserData(data)
     setOpen(true);
     setLoading(false);
@@ -515,9 +514,6 @@ export default function KundliMain() {
                       pageSizeOptions={[10]}
                       initialState={{
                         pagination: { paginationModel: { pageSize: 10 } },
-                        // pinnedColumns: {
-                        //   right: ['iconColumn'],  // iconColumn pinned to the right
-                        // }
                       }}
                       paginationMode="server"
                       filterMode="server"
