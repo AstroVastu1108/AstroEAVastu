@@ -364,7 +364,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     {/* {Loading && <Loader />} */}
       <Grid className='previewCard' item xs={12} md={12}>
         <Grid item xs={12} className='pdf-Div'>
-          <div className={`chart-name font-ea-sb rounded-t flex justify-between md:items-center gap-y-2 lg:flex-row ${!isPrintDiv ? 'sm:flex-row flex-col' : "items-center"}`}>
+          <div className={`chart-name sticky top-0 z-50 font-ea-sb rounded-t flex justify-between md:items-center gap-y-2 lg:flex-row ${!isPrintDiv ? 'sm:flex-row flex-col' : "items-center"}`}>
             {BirthDetails?.FirstName ? `${BirthDetails.FirstName} ${BirthDetails.MiddleName} ${BirthDetails.LastName}` : 'Prashna Kundali'}
             <div className={`flex justify-between md-items-center lg:gap-1 lg:flex-row md:flex-row ${!isPrintDiv ? 'sm:flex-row sm:gap-1 flex-col' : "gap-5"} birthDateTime-Div`} >
               <div className='flex flex-row gap-1 chart-date items-center'>

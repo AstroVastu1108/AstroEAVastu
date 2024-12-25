@@ -1,16 +1,29 @@
 import axios from 'axios'
-import astroInstance from './astroInstance';
+import astroInstance from './astroInstance'
 // const API_URL = process.env.NEXT_PUBLIC_APIURL
 
 // get all the kundli data
-export async function GetKundliDataAPI(PageSize,PageNumber,Search) {
+export async function GetKundliDataAPI(PageSize, PageNumber, Search = '', Group = '') {
   const responseBody = {
     responseData: null,
     hasError: false,
     error: null
   }
   try {
-    const response = await astroInstance.get(`/astro/kundali-list/${PageSize}/${PageNumber}/${Search}`);
+    var apiURL = `/astro/kundali-list/${PageSize}/${PageNumber}`
+    if (Search != '') {
+      apiURL = `/astro/kundali-list/${PageSize}/${PageNumber}/${Search}`
+    }
+
+    if (Group != 'All') {
+      if (Search != '') apiURL = `/astro/kundali-list/${PageSize}/${PageNumber}/${Search}/${Group}`
+      else apiURL = `/astro/kundali-list/${PageSize}/${PageNumber}/ /${Group}`
+    }
+
+    if (Search != '' && Group != 'All') {
+      apiURL = `/astro/kundali-list/${PageSize}/${PageNumber}/${Search}/${Group}`
+    }
+    const response = await astroInstance.get(apiURL)
     responseBody.responseData = response
     return responseBody
   } catch (error) {
@@ -58,7 +71,6 @@ export async function UpdateKundli(payload) {
     return responseBody
   }
 }
-
 
 // get kundli data from kundli id
 export async function GetKundliIDDataAPI(kId) {
@@ -117,7 +129,6 @@ export async function SearchKundli(searchText) {
   }
 }
 
-
 // Get Event Options Selection
 export async function EventOptionsData() {
   const responseBody = {
@@ -136,7 +147,6 @@ export async function EventOptionsData() {
     return responseBody
   }
 }
-
 
 // Get Kundli Options Selection
 export async function KundliOptionsData() {
@@ -157,7 +167,6 @@ export async function KundliOptionsData() {
   }
 }
 
-
 // For Dasha Click Event
 export async function DashaClickEvent(payload) {
   const responseBody = {
@@ -166,7 +175,7 @@ export async function DashaClickEvent(payload) {
     error: null
   }
   try {
-    const response = await astroInstance.post(`/kundali-dasha`,payload)
+    const response = await astroInstance.post(`/kundali-dasha`, payload)
     responseBody.responseData = response.data
     return responseBody
   } catch (error) {
@@ -176,7 +185,6 @@ export async function DashaClickEvent(payload) {
     return responseBody
   }
 }
-
 
 // For Transit Click Event
 export async function TransitClickEvent(payload) {
@@ -186,7 +194,7 @@ export async function TransitClickEvent(payload) {
     error: null
   }
   try {
-    const response = await astroInstance.post(`/astro/chart/transit`,payload)
+    const response = await astroInstance.post(`/astro/chart/transit`, payload)
     responseBody.responseData = response.data
     return responseBody
   } catch (error) {
@@ -198,14 +206,14 @@ export async function TransitClickEvent(payload) {
 }
 
 // For Transit Click Event
-export async function DivisionalChartEvent(payload,dchart) {
+export async function DivisionalChartEvent(payload, dchart) {
   const responseBody = {
     responseData: null,
     hasError: false,
     error: null
   }
   try {
-    const response = await astroInstance.post(`/astro/chart/divisional/${dchart}`,payload)
+    const response = await astroInstance.post(`/astro/chart/divisional/${dchart}`, payload)
     responseBody.responseData = response.data
     return responseBody
   } catch (error) {
@@ -216,7 +224,6 @@ export async function DivisionalChartEvent(payload,dchart) {
   }
 }
 
-
 // For rotate change
 export async function RotateChartEvent(payload) {
   const responseBody = {
@@ -225,7 +232,7 @@ export async function RotateChartEvent(payload) {
     error: null
   }
   try {
-    const response = await astroInstance.post(`/astro/rotate`,payload);
+    const response = await astroInstance.post(`/astro/rotate`, payload)
     responseBody.responseData = response.data
     return responseBody
   } catch (error) {

@@ -71,7 +71,7 @@ function Settings() {
       setLoading(false);
       const response = res.responseData
       if (response?.Country?.iso2) {
-        console.log(response);
+        // console.log(response);
         setConfigureID(response.ConfigureID)
         setSelectedCountry({
           "CountryCode": response?.Country?.iso2,

@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardContent, createTheme, debounce, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid, IconButton, Menu, MenuItem, TextField, ThemeProvider } from "@mui/material";
+import { Autocomplete, Box, Button, Card, CardContent, createTheme, debounce, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid, IconButton, Menu, MenuItem, Select, TextField, ThemeProvider } from "@mui/material";
 import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarQuickFilter } from "@mui/x-data-grid"
 import PreviewActions from "./preview/PreviewActions";
 import { useEffect, useRef, useState } from "react";
@@ -94,7 +94,13 @@ export default function KundliMain() {
         const searchText = searchInputRef.current.value;
 
         const fullValue = `${dateValue} ${formattedTime}`;
-        return <span className="font-ea-sb">{highlightText(fullValue, searchText)}</span>;
+        const dateVal = highlightText(dateValue, searchText)
+        const timeVal = highlightText(formattedTime, searchText)
+        return <>
+          <span className="font-ea-sb">{dateVal} </span>
+          <span className="font-ea-n">{timeVal}</span>
+        </>
+        // return <span className="font-ea-sb">{highlightText(fullValue, searchText)}</span>;
       }
     },
     {
@@ -228,6 +234,8 @@ export default function KundliMain() {
   const [open, setOpen] = useState(false);
   const [removePopUp, setSetRemovePopUp] = useState(false);
   const [kundliData, setKundliData] = useState([]);
+  const [groupData, setGroupData] = useState(["All"]);
+  const [selectedGroup, setSelectedGroup] = useState("All");
   const [loading, setLoading] = useState(false);
   const [AKundliData, setAKundliData] = useState(false);
   const [userData, setUserData] = useState({
@@ -314,15 +322,15 @@ export default function KundliMain() {
   }
 
 
-  const getAllKundli = async (pageNo, searchValue = "") => {
+  const getAllKundli = async (pageNo, searchValue = "", group = "") => {
     // setLoading(true);
-    const res = await GetKundliDataAPI(10, pageNo, searchValue);
+    const res = await GetKundliDataAPI(10, pageNo, searchValue, group);
     if (res.hasError) {
       setLoading(false);
       return toastDisplayer("error", res.error);
     } else {
       setKundliData(res?.responseData?.data?.Result?.KundaliList);
-      // setTotalRowCount(res?.responseData?.data?.Result?.KundaliList.length)
+      setGroupData(res?.responseData?.data?.Result?.Group);
       setTotalRowCount(res?.responseData?.data?.Result?.KundaliCount)
       setLoading(false);
     }
@@ -353,7 +361,7 @@ export default function KundliMain() {
 
   // Hooks
   useEffect(() => {
-    getAllKundli(1, "");
+    getAllKundli(1, "", selectedGroup);
   }, [])
 
   function CustomToolbar() {
@@ -362,6 +370,33 @@ export default function KundliMain() {
         <PageTitle title={"Kundali / Birth Charts"} endCmp={
           <>
             <GridToolbarQuickFilter inputRef={searchInputRef} autoFocus={!open} className="SearchBar w-full md:w-full sm:w-8/12 " />
+            <Select
+              labelId="country-select-label"
+              id="country-select"
+              value={selectedGroup} // Set default value as 'All'
+              onChange={(e) => {
+                setSelectedGroup(e.target.value);
+                getAllKundli(1, searchInputRef.current?.value, e.target.value);
+              }}
+              disableClearable
+              className="w-4/12"
+              sx={{
+                height: '42px', // Reduce the height of the select box
+                '& .MuiSelect-select': {
+                  padding: '8px', // Adjust the padding of the selected item
+                }
+              }}
+            // error={!!errors.Country} // You can add your error handling if needed
+            >
+              {/* 'All' option */}
+              <MenuItem value="All">ALL</MenuItem>
+              {/* Group data options */}
+              {groupData.map((item, index) => (
+                <MenuItem key={index} value={item}>
+                  {item}
+                </MenuItem>
+              ))}
+            </Select>
             <PreviewActions value={"New Kundali"} onButtonClick={handleAddClick} icon={'tabler-plus'} />
           </>
         } />
@@ -371,7 +406,7 @@ export default function KundliMain() {
 
   const fetchData = debounce(async (query) => {
     if (query.length > 0 || query.length == 0) {
-      await getAllKundli(pageNo, query);
+      await getAllKundli(pageNo, query, selectedGroup);
     }
   }, 500)
 
@@ -383,13 +418,13 @@ export default function KundliMain() {
 
         fetchData(query);
     } else {
-      getAllKundli(pageNo, "");
+      getAllKundli(pageNo, "", selectedGroup);
     }
   }
 
   const fetchDataForPage = (e) => {
     setPageNo(parseInt(e) + 1)
-    getAllKundli(parseInt(e) + 1, searchInputRef.current?.value ? searchInputRef.current?.value : "");
+    getAllKundli(parseInt(e) + 1, searchInputRef.current?.value ? searchInputRef.current?.value : "", selectedGroup);
   }
 
   // Func
@@ -496,34 +531,37 @@ export default function KundliMain() {
             <CardContent className='flex flex-col gap-2 p-0'>
               <div className="KundliList">
                 <Box>
-                    <DataGrid
-                      className="KundliListGrid"
-                      getRowClassName={(params) =>
-                        params.row.IsCurrent ? 'highlight-row' : ''
-                      }
-                      onRowDoubleClick={(e) => { handlePreviewClick(e, e.row.KundaliID) }}
-                      onFilterModelChange={(e) => handleFilterModelChange(e, searchInputRef)}
-                      getRowId={(row) => row.KundaliID}
-                      rows={kundliData}
-                      columns={columns}
-                      disableColumnMenu
-                      rowHeight={45}
-                      columnHeaderHeight={45}
-                      disableColumnResize
-                      disableRowSelectionOnClick
-                      pageSizeOptions={[10]}
-                      initialState={{
-                        pagination: { paginationModel: { pageSize: 10 } },
-                      }}
-                      paginationMode="server"
-                      filterMode="server"
-                      rowCount={totalRowCount}
-                      onPaginationModelChange={(paginationModel) => {
-                        fetchDataForPage(paginationModel.page);
-                      }}
-                      slots={{ toolbar: CustomToolbar }}
-                      slotProps={{ toolbar: { showQuickFilter: true } }}
-                    />
+                  <DataGrid
+                    className="KundliListGrid"
+                    getRowClassName={(params) =>
+                      params.row.IsCurrent ? 'highlight-row' : ''
+                    }
+                    onRowDoubleClick={(e) => { handlePreviewClick(e, e.row.KundaliID) }}
+                    onFilterModelChange={(e) => handleFilterModelChange(e, searchInputRef)}
+                    getRowId={(row) => row.KundaliID}
+                    rows={kundliData}
+                    columns={columns}
+                    disableColumnMenu
+                    rowHeight={45}
+                    columnHeaderHeight={45}
+                    disableColumnResize
+                    disableRowSelectionOnClick
+                    pageSizeOptions={[10]}
+                    initialState={{
+                      pagination: { paginationModel: { pageSize: 10 } },
+                    }}
+                    paginationMode="server"
+                    filterMode="server"
+                    rowCount={totalRowCount}
+                    onPaginationModelChange={(paginationModel) => {
+                      fetchDataForPage(paginationModel.page);
+                    }}
+                    slots={{ toolbar: CustomToolbar }}
+                    slotProps={{ toolbar: { showQuickFilter: true } }}
+                    showFirstButton
+                    showLastButton
+                    pagination
+                  />
 
 
                 </Box>
