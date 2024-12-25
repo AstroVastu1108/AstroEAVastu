@@ -3,7 +3,7 @@ import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarQuickFilter } f
 import PreviewActions from "./preview/PreviewActions";
 import { useEffect, useRef, useState } from "react";
 import AddKundliPopUp from "./addKundli/addKundli";
-import { GetKundliDataAPI, GetKundliIDDataAPI } from "@/app/Server/API/kundliAPI";
+import { DeleteKundli, GetKundliDataAPI, GetKundliIDDataAPI } from "@/app/Server/API/kundliAPI";
 import classNames from "classnames";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/common/Loader/Loader";
@@ -85,7 +85,7 @@ export default function KundliMain() {
       minWidth: 100,
       headerName: 'Birth Date & Time',
       headerClassName: 'rowheader',
-      width: 170,
+      width: 150,
       headerAlign: 'left',
       renderCell: (params) => {
         const dateValue = params.row.BirthDate;
@@ -96,10 +96,10 @@ export default function KundliMain() {
         const fullValue = `${dateValue} ${formattedTime}`;
         const dateVal = highlightText(dateValue, searchText)
         const timeVal = highlightText(formattedTime, searchText)
-        return <>
-          <span className="font-ea-sb">{dateVal} </span>
-          <span className="font-ea-n">{timeVal}</span>
-        </>
+        return <div className="flex justify-between">
+          <div className="font-ea-sb">{dateVal} </div>
+          <div className="font-ea-n">{timeVal}</div>
+        </div>
         // return <span className="font-ea-sb">{highlightText(fullValue, searchText)}</span>;
       }
     },
@@ -133,6 +133,19 @@ export default function KundliMain() {
       field: 'Prakriti',
       minWidth: 100,
       headerName: 'Prakriti',
+      headerClassName: 'rowheader',
+      width: 100,
+      headerAlign: 'left',
+      renderCell: (params) => {
+        const prakritiValue = params.value || '';
+        const searchText = searchInputRef.current.value;
+        return highlightText(prakritiValue, searchText);
+      }
+    },
+    {
+      field: 'Group',
+      minWidth: 100,
+      headerName: 'Group',
       headerClassName: 'rowheader',
       width: 100,
       headerAlign: 'left',
@@ -238,6 +251,7 @@ export default function KundliMain() {
   const [selectedGroup, setSelectedGroup] = useState("All");
   const [loading, setLoading] = useState(false);
   const [AKundliData, setAKundliData] = useState(false);
+  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [userData, setUserData] = useState({
     KundaliID: '',
     FirstName: '',
@@ -293,6 +307,8 @@ export default function KundliMain() {
   useEffect(() => {
     fetchConfig()
   }, [])
+
+
   // func
   const handleAddClick = () => {
     setUserData({
@@ -306,11 +322,28 @@ export default function KundliMain() {
       BirthTime: null,
       CityID: { CityID: 1255364, FormattedCity: 'Surat, Gujarat' },
       isUpdate: false,
+      Remark:"",
+      Reference:"",
+      Group:"Client"
       // City: 'Surat'
     })
     // setUserData(userData)
     fetchConfig();
     setOpen(true);
+  }
+
+  const handleDeleteClick =async (kid) => {
+    const res = await DeleteKundli(kid);
+    if (res.hasError) {
+      setLoading(false);
+      return toastDisplayer("error", res.error);
+    } else {
+      getAllKundli(1,"", selectedGroup);
+      // setKundliData(res?.responseData?.data?.Result?.KundaliList);
+      // setGroupData(res?.responseData?.data?.Result?.Group);
+      // setTotalRowCount(res?.responseData?.data?.Result?.KundaliCount)
+      setLoading(false);
+    }
   }
 
   const handleAddClose = () => {
@@ -377,6 +410,7 @@ export default function KundliMain() {
               onChange={(e) => {
                 setSelectedGroup(e.target.value);
                 getAllKundli(1, searchInputRef.current?.value, e.target.value);
+                resetPagination();
               }}
               disableClearable
               className="w-4/12"
@@ -407,6 +441,7 @@ export default function KundliMain() {
   const fetchData = debounce(async (query) => {
     if (query.length > 0 || query.length == 0) {
       await getAllKundli(pageNo, query, selectedGroup);
+      resetPagination();
     }
   }, 500)
 
@@ -514,6 +549,11 @@ export default function KundliMain() {
   }, [AKundliData])
 
 
+  const resetPagination = () => {
+    // Reset page number to 0
+    setPaginationModel({ page: 0, pageSize: paginationModel.pageSize });
+  };
+
   return (
     <>
 
@@ -547,20 +587,22 @@ export default function KundliMain() {
                     disableColumnResize
                     disableRowSelectionOnClick
                     pageSizeOptions={[10]}
-                    initialState={{
-                      pagination: { paginationModel: { pageSize: 10 } },
-                    }}
+                    // initialState={{
+                    //   pagination: { paginationModel: { pageSize: 10 } },
+                    // }}
+                    paginationModel={paginationModel}
                     paginationMode="server"
                     filterMode="server"
                     rowCount={totalRowCount}
                     onPaginationModelChange={(paginationModel) => {
+                      setPaginationModel(paginationModel);
                       fetchDataForPage(paginationModel.page);
                     }}
                     slots={{ toolbar: CustomToolbar }}
                     slotProps={{ toolbar: { showQuickFilter: true } }}
-                    showFirstButton
-                    showLastButton
-                    pagination
+                  // showFirstButton
+                  // showLastButton
+                  // pagination
                   />
 
 
@@ -576,7 +618,7 @@ export default function KundliMain() {
         <AddKundliPopUp open={open} handleAddClose={handleAddClose} getAllKundli={getAllKundli} setUserData={setUserData} userData={userData} />
       )}
       {removePopUp && (
-        <RemoveKundli open={removePopUp} handleClose={handleRemoveClose} userData={userData} />
+        <RemoveKundli open={removePopUp} handleClose={handleRemoveClose} userData={userData} handleDeleteClick={handleDeleteClick}/>
       )}
 
     </>

@@ -151,7 +151,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
         MiddleName: formData.MiddleName,
         Gender: formData.Gender,
         // Country: formData.Country?.Country,
-        // CountryCode: formData.Country?.CountryCode,
+        CountryCode: formData.Country?.CountryCode,
         CityID: formData.CityID?.CityID,
         BirthDate: birthDate,
         BirthTime: birthTime,
@@ -160,8 +160,12 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
         TransitTime: "",
         TransitDate: "",
         ClientID: "",
-        DChart: ""
+        DChart: "",
+        Reference: formData?.Reference,
+        Remark: formData?.Remark,
+        Group: "Client"
       }
+      console.log("payload : ", formattedData)
       if (!formData.isUpdate) {
         setIsDisable(false);
         const response = await CreateKundli(formattedData)
@@ -217,7 +221,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
       }
     }
 
-    if(field === "FirstName"){
+    if (field === "FirstName") {
       const newVal = value.replace(/^\w/, char => char.toUpperCase());
       setFormData(prev => ({
         ...prev,
@@ -269,7 +273,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
         <DialogTitle className="PopupHeader text-white p-3">
           <div className='w-100' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span className='text-primary text-2xl font-ea-sb !pl-3'>
-              {!formData.isUpdate ? "New Kundali":"Update Kundali"}
+              {!formData.isUpdate ? "New Kundali" : "Update Kundali"}
             </span>
             <IconButton
               aria-label="close"
@@ -420,26 +424,22 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
               <TextField
                 fullWidth
                 label="Reference"
-              // inputRef={fnameRef}
-              // value={formData?.FirstName}
-              // onChange={e => {
-              //   const inputValue = e.target.value;
-              //   const capitalizedValue = inputValue.charAt(0).toUpperCase() + inputValue.slice(1);
-              //   handleInputChange('FirstName', capitalizedValue, 'FirstName');
-              // }}
+                // inputRef={fnameRef}
+                value={formData?.Reference}
+                onChange={e => {
+                  handleInputChange('Reference', e.target.value, 'Reference');
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
                 label="Remark"
-              // inputRef={fnameRef}
-              // value={formData?.FirstName}
-              // onChange={e => {
-              //   const inputValue = e.target.value;
-              //   const capitalizedValue = inputValue.charAt(0).toUpperCase() + inputValue.slice(1);
-              //   handleInputChange('FirstName', capitalizedValue, 'FirstName');
-              // }}
+                // inputRef={fnameRef}
+                value={formData?.Remark}
+                onChange={e => {
+                  handleInputChange('Remark', e.target.value, 'Remark');
+                }}
               />
             </Grid>
           </Grid>

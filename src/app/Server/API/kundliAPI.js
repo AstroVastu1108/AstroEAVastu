@@ -72,6 +72,25 @@ export async function UpdateKundli(payload) {
   }
 }
 
+// deletekundli data and get kundli id
+export async function DeleteKundli(KundaliID) {
+  const responseBody = {
+    responseData: null,
+    hasError: false,
+    error: null
+  }
+  try {
+    const response = await astroInstance.post(`astro/delete-kundali/${KundaliID}`)
+    responseBody.responseData = response.data
+    return responseBody
+  } catch (error) {
+    responseBody.hasError = true
+    responseBody.errorMessage = responseBody.errorMessage =
+      error.response?.data?.statusMsg || error.response?.data?.errors
+    return responseBody
+  }
+}
+
 // get kundli data from kundli id
 export async function GetKundliIDDataAPI(kId) {
   const responseBody = {
