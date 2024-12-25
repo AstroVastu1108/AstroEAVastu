@@ -38,12 +38,12 @@ function RemoveKundli({ open, handleClose, userData, handleDeleteClick }) {
             // className:'rounded',
             onSubmit: (e) => {
               e.preventDefault();
-              const newData = inputRef?.current?.value;
-              const prevData = `${userData?.FirstName} ${userData?.MiddleName} ${userData?.LastName}`;
-              if (newData && prevData && newData.trim() == prevData.trim()) {
+              // const newData = inputRef?.current?.value;
+              // const prevData = `${userData?.FirstName} ${userData?.MiddleName} ${userData?.LastName}`;
+              // if (newData && prevData && newData.trim() == prevData.trim()) {
                 handleDeleteClick(userData?.KundaliID);
                 handleClose();
-              }
+              // }
             },
           }}
         >
