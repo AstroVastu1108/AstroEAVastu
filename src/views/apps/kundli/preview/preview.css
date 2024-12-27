@@ -878,7 +878,6 @@
   /* border: none !important; */
 }
 
-
 .MuiDataGrid-row:nth-of-type(odd) {
   background-color: #ffffff;
 }
@@ -918,25 +917,25 @@
 .MuiDataGrid-filler {
   display: none;
 }
-.MuiDataGrid-scrollbarFiller--header{
+.MuiDataGrid-scrollbarFiller--header {
   /* display: none !important; */
   background-color: var(--primary-color);
   border-bottom: none !important;
 }
-.MuiDataGrid-row.Mui-selected  {
-  background-color: #99e27b65 !important
+.MuiDataGrid-row.Mui-selected {
+  background-color: #99e27b65 !important;
 }
 /*
 .MuiOutlinedInput-root{
   height: 2.7rem
 } */
 
-.MuiInputBase-input{
+.MuiInputBase-input {
   font: unset;
   font-family: var(--primary-font-n);
 }
 
-.MuiFormLabel-root{
+.MuiFormLabel-root {
   font-family: var(--primary-font-n);
 }
 
@@ -944,6 +943,50 @@
   padding: 8px;
 } */
 
-.MuiDataGrid-scrollbar{
+.MuiDataGrid-scrollbar {
   display: none;
+}
+/*
+.MuiInputBase-root{
+  height: 42px;
+} */
+
+/* .MuiSelect-select{
+  height: auto !important;
+}
+
+.MuiInputLabel-root{
+  height: auto !important;
+} */
+
+/* .MuiTextField-root{
+  height: 42px;
+} */
+
+.MuiStack-root {
+  overflow: hidden !important;
+}
+
+.MuiPickersLayout-root {
+  .MuiDialogActions-root {
+    display: none !important;
+  }
+}
+
+.prakritiLabel {
+  .MuiTypography-root {
+    font-family: ea-n;
+    font-weight: unset;
+    font-size: 14px;
+    line-height: unset;
+  }
+
+  .MuiCheckbox-root svg {
+    font-size: 1rem;
+  }
+}
+
+
+.MuiDivider-root{
+  border: 1px solid var(--border-color) !important;
 }

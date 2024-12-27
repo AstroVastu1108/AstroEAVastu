@@ -25,7 +25,7 @@ const PreviewActions = ({ value, onButtonClick, icon,loading }) => {
           loading={loading}
           loadingPosition="start"
           startIcon={<i className={icon} />}
-          className='lg:w-3/12 md:w-4/12 sm:4/12'
+          className='w-5/12 lg:w-3/12 md:w-3/12 sm:w-4/12'
         >
           {value}
         </LoadingButton>

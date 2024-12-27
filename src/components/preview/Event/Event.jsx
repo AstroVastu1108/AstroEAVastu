@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import "./Event.css";
 import { DataGrid, GridToolbarContainer, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import { EventOptionsData } from '@/app/Server/API/kundliAPI';
-import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { DatePicker, DateTimePicker, LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 
@@ -71,7 +71,7 @@ function Event({ setEventValue, open, handleClose, JaiminiCharKarakasData }) {
       <Dialog
         open={open}
         onClose={handleClose}
-        maxWidth="lg"   // 'xs', 'sm', 'md', 'lg', 'xl' or false for custom width
+        maxWidth="sm"   // 'xs', 'sm', 'md', 'lg', 'xl' or false for custom width
         fullWidth={true}  // Ensures the dialog takes up full width of the container
         PaperProps={{
           component: 'form',
@@ -91,7 +91,7 @@ function Event({ setEventValue, open, handleClose, JaiminiCharKarakasData }) {
         <DialogTitle className="PopupHeader text-white p-3">
           <div className='w-100' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span className='text-primary text-2xl font-ea-sb !pl-3'>
-              Event
+              New Event
             </span>
             <IconButton
               aria-label="close"
@@ -107,29 +107,7 @@ function Event({ setEventValue, open, handleClose, JaiminiCharKarakasData }) {
         <DialogContent className=' flex flex-col justify-center'>
           <div className='p-4 flex'>
             <Grid className='' container spacing={5}>
-              <Grid item xs={12} sm={4}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DateTimePicker']}>
-                    <DateTimePicker
-                      label="Birth Date & Time"
-                      name="startDate"
-                      views={['year', 'month', 'day', 'hours', 'minutes']}
-                      format="DD-MM-YYYY HH:mm:ss"
-                      ampm={false}
-                      onChange={(date) => {
-                        // Handle date and time changes
-                        // handleInputChange('date', date, 'BirthDate');
-                      }}
-                      slots={{
-                        actionBar: () => null, // Hide the action bar, including the OK button
-                      }}
-                    // Uncomment and use the value if necessary
-                    // value={userData.date}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-              </Grid>
-              <Grid item xs={12} sm={4}>
+              <Grid item xs={12} sm={6}>
                 <Autocomplete
                   id='event-select'
                   options={EventData && EventData}
@@ -151,41 +129,79 @@ function Event({ setEventValue, open, handleClose, JaiminiCharKarakasData }) {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={4}>
+              <Grid item xs={12} sm={6}
+                className='!pt-4'
+              >
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={['DateTimePicker']}>
+                    <DateTimePicker
+                      label="Event Date & Time"
+                      name="startDate"
+                      views={['year', 'month', 'day', 'hours', 'minutes']}
+                      format="DD-MM-YYYY HH:mm:ss"
+                      ampm={false}
+                      onChange={(date) => {
+                        // Handle date and time changes
+                        // handleInputChange('date', date, 'BirthDate');
+                      }}
+                      slots={{
+                        actionBar: () => null, // Hide the action bar, including the OK button
+                      }}
+                    // Uncomment and use the value if necessary
+                    // value={userData.date}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+              </Grid><Grid item xs={12} sm={12}>
+                <Autocomplete
+                  id='country-select'
+                  // options={conutryData && conutryData}
+                  // defaultValue={formData && formData.Country}
+                  // getOptionLabel={(option) => option?.Country}
+                  // getOptionKey={(option) => option?.CountryCode}
+                  // onChange={(event, newValue) => handleInputChange('Country', newValue, 'Country', true)}
+                  renderInput={(params) => (
+                    <TextField {...params} label='Select Country' variant='outlined'
+                    // {...(errors.Country && { error: true })}
+                    />
+                  )}
+                // size={TextFeildSize}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <Autocomplete
+                  id='city-autocomplete'
+                  // options={cityData}
+                  // value={formData.CityID || null}  // Ensure city is cleared when CityID is null
+                  // getOptionLabel={(option) => option?.FormattedCity || ''}
+                  // onInputChange={(event, newQuery) => setQuery(newQuery)}
+                  // onInputChange={(event, newQuery) => handleCityChange(newQuery)}
+                  // onChange={(event, newValue) => handleInputChange('CityID', newValue, 'CityID', true)}
+                  renderInput={(params) => (
+                    <TextField {...params} label='Select City' variant='outlined'
+                    // {...(errors.CityID && { error: true })}
+                    />
+                  )}
+                  // filterOptions={(x) => x} // Disable frontend filtering
+                // size={TextFeildSize}
+                />
+
+              </Grid>
+
+              <Grid item xs={12} sm={12}>
                 <TextField
                   fullWidth
                   label="Remark"
-                // value={userData?.FirstName}
-                // onChange={e => {
-                //   const inputValue = e.target.value;
-                //   const capitalizedValue = inputValue.charAt(0).toUpperCase() + inputValue.slice(1);
-                //   handleInputChange('FirstName', capitalizedValue, 'FirstName');
-                // }}
                 />
               </Grid>
             </Grid>
           </div>
-          <Box width={"100%"}>
-            <DataGrid
-              rows={rows}
-              columns={columns}
-              pageSize={5}
-              hideFooter={true}
-              disableColumnSorting
-              disableColumnMenu
-              rowHeight={40}
-              columnHeaderHeight={38}
-              disableColumnResize
-              hideFooterPagination={true}
-              showColumnVerticalBorder
-            />
-          </Box>
         </DialogContent>
         <DialogActions>
           <div className='p-4'>
-            <Button variant='contained' type='submit' disabled={false} onClick={handleSelect} >
+            {/* <Button variant='contained' type='submit' disabled={false} onClick={handleSelect} >
               Transit
-            </Button>
+            </Button> */}
             <Button variant='contained' type='submit' disabled={false} onClick={handleSelect} >
               Save
             </Button>

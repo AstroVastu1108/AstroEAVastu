@@ -88,10 +88,16 @@ export default async function Page({ params }) {
 
     // if (secureData.status === 200) {
       const matchingRoute = routes.find(route => {
+        console.log(routes)
         if (route.path === slug) return true;
 
         if (route.path.startsWith("kundali/")) {
           const basePath = "kundali";
+          const idSegment = slug.split('/')[1];
+          return slug.startsWith(basePath) && idSegment;
+        }
+        if (route.path.startsWith("event")) {
+          const basePath = "event";
           const idSegment = slug.split('/')[1];
           return slug.startsWith(basePath) && idSegment;
         }

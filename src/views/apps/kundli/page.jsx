@@ -265,6 +265,7 @@ export default function KundliMain() {
     // City:'Surat, Gujarat',
     // CityID: 'A1AE28185ED49D47211760BF32D40EB742C84998',
     isUpdate: false,
+    Group:"Client"
     // City: 'Surat'
   })
   const [totalRowCount, setTotalRowCount] = useState(0);
@@ -380,6 +381,8 @@ export default function KundliMain() {
   const handleEditClick = (data) => {
     setLoading(true);
     data.isUpdate = true;
+    if(!data.Group)
+      data.Group = "Client";
     const birthTime = data.BirthTime;
     const hours = parseInt(birthTime?.slice(0, 2), 10);   // First 2 characters (HH)
     const minutes = parseInt(birthTime?.slice(2, 4), 10);  // Next 2 characters (MM)
@@ -402,7 +405,7 @@ export default function KundliMain() {
       <GridToolbarContainer className="d-flex justify-content-between p-0 w-full align-items-center">
         <PageTitle title={"Kundali / Birth Charts"} endCmp={
           <>
-            <GridToolbarQuickFilter inputRef={searchInputRef} autoFocus={!open} className="SearchBar w-full md:w-full sm:w-8/12 " />
+            <GridToolbarQuickFilter inputRef={searchInputRef} autoFocus={!open} className="SearchBar w-full lg:w-9/12 sm:w-5/12 md:w-6/12" />
             <Select
               labelId="country-select-label"
               id="country-select"
@@ -413,14 +416,14 @@ export default function KundliMain() {
                 resetPagination();
               }}
               disableClearable
-              className="w-4/12"
-              sx={{
-                height: '42px', // Reduce the height of the select box
-                '& .MuiSelect-select': {
-                  padding: '8px', // Adjust the padding of the selected item
-                }
-              }}
-            // error={!!errors.Country} // You can add your error handling if needed
+              className="w-6/12 lg:w-3/12 md:w-3/12 sm:w-4/12"
+              size="small"
+              // sx={{
+              //   // height: '42px',
+              //   '& .MuiSelect-select': {
+              //     // height:"auto !important"
+              //   }
+              // }}
             >
               {/* 'All' option */}
               <MenuItem value="All">ALL</MenuItem>
@@ -615,7 +618,7 @@ export default function KundliMain() {
         </Grid>
       </Grid>
       {open && (
-        <AddKundliPopUp open={open} handleAddClose={handleAddClose} getAllKundli={getAllKundli} setUserData={setUserData} userData={userData} />
+        <AddKundliPopUp open={open} handleAddClose={handleAddClose} getAllKundli={getAllKundli} setUserData={setUserData} userData={userData} GroupData={groupData} />
       )}
       {removePopUp && (
         <RemoveKundli open={removePopUp} handleClose={handleRemoveClose} userData={userData} handleDeleteClick={handleDeleteClick}/>

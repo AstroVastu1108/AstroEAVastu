@@ -49,7 +49,6 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   const [kundliOptValue, setKundliOptValue] = useState("V");
   const [isPrakritiVisible, setIsPrakritiVisible] = useState(false);
   const [openLifeEvent, setOpenLifeEvent] = useState(false);
-  const [openEvent, setOpenEvent] = useState(false);
   const [openKundli, setOpenKundli] = useState(false);
   const [openJCK, setJCK] = useState(false);
   const [openNTC, setNTC] = useState(false);
@@ -106,13 +105,11 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     setOpenLifeEvent(true);
   }
 
-  const handleEventClose = () => {
-    setOpenEvent(false);
-  }
-
   const handleEventOpen = () => {
-    handleClose();
-    setOpenEvent(true);
+    window.open(`../event/${BirthDetails.KundaliID}`, '_blank');
+
+    // handleClose();
+    // setOpenEvent(true);
   }
 
   const handleKundliOpt = () => {
@@ -163,7 +160,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     if (DashaValue == "PranDasha") {
       const payload = {
         "BirthDate": BirthDetails?.Date,
-        "BirthTime": BirthDetails?.Time,
+        "BirthTime": BirthDetails?.BirthTime,
         "DashaStartDate": DashaDate,
         "Planet": `${titleArr[0]}-${titleArr[1]}-${titleArr[2]}`
       }
@@ -177,7 +174,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     else if (DashaValue == "SookshmaDasha") {
       const payload = {
         "BirthDate": BirthDetails?.Date,
-        "BirthTime": BirthDetails?.Time,
+        "BirthTime": BirthDetails?.BirthTime,
         "DashaStartDate": DashaDate,
         "Planet": `${titleArr[0]}-${titleArr[1]}`
       }
@@ -191,7 +188,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     else if (DashaValue == "PratyantarDasha") {
       const payload = {
         "BirthDate": BirthDetails?.Date,
-        "BirthTime": BirthDetails?.Time,
+        "BirthTime": BirthDetails?.BirthTime,
         "DashaStartDate": DashaDate,
         "Planet": DashaDetailData?.CurrentMD
       }
@@ -214,7 +211,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       setDashaDate(row?.StartDt)
       const payload = {
         "BirthDate": BirthDetails?.Date,
-        "BirthTime": BirthDetails?.Time,
+        "BirthTime": BirthDetails?.BirthTime,
         "DashaStartDate": row?.StartDt,
         "Planet": row?.DashaPlanet
       }
@@ -229,7 +226,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     else if (DashaValue == "AntarDasha") {
       const payload = {
         "BirthDate": BirthDetails?.Date,
-        "BirthTime": BirthDetails?.Time,
+        "BirthTime": BirthDetails?.BirthTime,
         "DashaStartDate": DashaDate,
         "Planet": row?.DashaPlanet
       }
@@ -246,7 +243,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     else if (DashaValue == "PratyantarDasha") {
       const payload = {
         "BirthDate": BirthDetails?.Date,
-        "BirthTime": BirthDetails?.Time,
+        "BirthTime": BirthDetails?.BirthTime,
         "DashaStartDate": DashaDate,
         "Planet": row?.DashaPlanet
       }
@@ -261,7 +258,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     } else if (DashaValue == "SookshmaDasha") {
       const payload = {
         "BirthDate": BirthDetails?.Date,
-        "BirthTime": BirthDetails?.Time,
+        "BirthTime": BirthDetails?.BirthTime,
         "DashaStartDate": DashaDate,
         "Planet": row?.Planet
       }
@@ -369,12 +366,12 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
             <div className={`flex justify-between md-items-center lg:gap-1 lg:flex-row md:flex-row ${!isPrintDiv ? 'sm:flex-row sm:gap-1 flex-col' : "gap-5"} birthDateTime-Div`} >
               <div className='flex flex-row gap-1 chart-date items-center'>
                 <span className='label font-ea-n'>Birth Date & Time: </span>
-                <span className='value font-ea-sb'>{BirthDetails?.Date} {BirthDetails?.Time.substring(0, 2)}:{BirthDetails?.Time.substring(2, 4)}:{(BirthDetails?.Time.substring(4, 6) ? BirthDetails?.Time.substring(4, 6) : '00')}
+                <span className='value font-ea-sb'>{BirthDetails?.BirthDate} {BirthDetails?.BirthTime.substring(0, 2)}:{BirthDetails?.BirthTime.substring(2, 4)}:{(BirthDetails?.BirthTime.substring(4, 6) ? BirthDetails?.BirthTime.substring(4, 6) : '00')}
                 </span>
               </div>
               <div className='flex flex-row gap-1 chart-date items-center'>
                 <span className='label font-ea-n'>Place: </span>
-                <span className='value font-ea-sb'>{BirthDetails?.FormattedCity}</span>
+                <span className='value font-ea-sb'>{BirthDetails?.City}, {BirthDetails?.Country}</span>
               </div>
               <div className='flex justify-end'>
                 <>
@@ -422,16 +419,24 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
             <div className='flex flex-row block-detail'>
               <InfoTable InfoTableTextArr={[
                 { "label": "Vikram Samvant ", "value": AstroDetails?.VikramSamvat },
-                { "label": "Birth Tithi (Sun Rise) ", "value": `${AstroDetails?.JanmaTithi} (${AstroDetails?.SunRiseTime})` },
+                { "label": "Birth Tithi / Sun Rise ", "value": `${AstroDetails?.JanmaTithi} / ${AstroDetails?.SunRiseTime}` },
                 { "label": "Astro / Western Day ", "value": `${AstroDetails?.AstroWeekday} / ${AstroDetails?.WesternWeekday}` },
-                { "label": "Location ", "value": `${BirthDetails?.FormattedCity}, ${BirthDetails?.Country}` },
+                // { "label": "Location ", "value": `${BirthDetails?.City}, ${BirthDetails?.Country}` },
               ]} isPrintDiv={isPrintDiv} />
             </div>
             <div className='flex flex-row block-detail'>
               <InfoTable InfoTableTextArr={[
-                { "label": "Lat, Lng ", "value": `${BirthDetails?.Lat} , ${BirthDetails?.Lng}` },
                 { "label": "Lucky / Destiny # ", "value": `${AstroDetails?.Numerology?.BirthNumber} / ${AstroDetails?.Numerology?.DestinyNumber} (${AstroDetails?.Numerology?.DestinyYearNumber})` },
                 { "label": "Destiny Year ", "value": ` ${AstroDetails?.Numerology?.DestinyYear - 1} - ${AstroDetails?.Numerology?.DestinyYear}` },
+                { "label": "Lat, Lng ", "value": `${BirthDetails?.Latitude}, ${BirthDetails?.Longitude}` },
+                { "label": "Timezone ", "value": ` ${BirthDetails?.Timezone}` },
+              ]} isPrintDiv={isPrintDiv} />
+            </div>
+            <div className='flex flex-row block-detail'>
+              <InfoTable InfoTableTextArr={[
+                { "label": "Reference", "value": `${BirthDetails?.Reference}` },
+                { "label": "Remark", "value": `${BirthDetails?.Remark}` },
+                { "label": "Group ", "value": ` ${BirthDetails?.Group}` },
                 { "label": "Prakriti", "value": `${BirthDetails?.Gender} / ${BirthDetails?.Prakriti}` },
               ]} isPrintDiv={isPrintDiv} />
             </div>
@@ -687,7 +692,6 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       {openJCK && <JaiminiCharKarakasPopUp open={openJCK} handleClose={handleJCK} JaiminiCharKarakasData={JaiminiCharKarakas} />}
       {openNTC && <NavTaraChakra open={openNTC} handleClose={handleNTC} NavTaraChakraData={NavTaraChakraData} />}
       {openRotation && <Rotation open={openRotation} handleClose={handleRoatationClose} rotationType={rotationType} hanldeRotationChange={hanldeRotationChange} />}
-      {openEvent && <Event setEventValue={setEventValue} open={openEvent} handleClose={handleEventClose} JaiminiCharKarakasData={JaiminiCharKarakas} />}
     </>
   )
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Button, Checkbox, createTheme, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControlLabel, IconButton, ThemeProvider } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 
@@ -124,6 +124,13 @@ function PrakritiPopUp({ open, handlePraClose }) {
   // State to track checkbox selections
   const [selectedOptions, setSelectedOptions] = useState({});
 
+  useEffect(() => {
+    const storedOptions = localStorage.getItem('prakritiSelections');
+    if (storedOptions) {
+      setSelectedOptions(JSON.parse(storedOptions));
+    }
+  }, []);
+
   const handleCheck = (name, optionType) => (event) => {
     const { checked } = event.target;
     setSelectedOptions((prev) => ({
@@ -136,15 +143,20 @@ function PrakritiPopUp({ open, handlePraClose }) {
     {
       field: 'name', headerName: '', width: 150, align: 'end',
       headerClassName: 'rowheader',
-
     },
     {
       field: 'vata',
-      headerName: 'Vata',
+      headerName: (
+        <>
+          Air <span className="planet-col-title-small">(Vata)</span>
+        </>
+      ),
+      // headerName: 'Vata (Air)',
       flex: 1,
       headerClassName: 'rowheader',
       renderCell: (params) => (
         <FormControlLabel
+          className='prakritiLabel'
           label={params.row.vata}
           control={
             <Checkbox
@@ -157,12 +169,18 @@ function PrakritiPopUp({ open, handlePraClose }) {
     },
     {
       field: 'pitta',
-      headerName: 'Pitta',
+      // headerName: 'Pitta (Fire)',
+      headerName: (
+        <>
+          Fire <span className="planet-col-title-small">(Pitta)</span>
+        </>
+      ),
       flex: 1,
       headerClassName: 'rowheader',
       renderCell: (params) => (
         <FormControlLabel
           label={params.row.pitta}
+          className='prakritiLabel'
           control={
             <Checkbox
               checked={selectedOptions[params.row.name]?.pitta || false}
@@ -174,12 +192,18 @@ function PrakritiPopUp({ open, handlePraClose }) {
     },
     {
       field: 'kapha',
-      headerName: 'Kapha',
+      // headerName: 'Kapha (Water)',
+      headerName: (
+        <>
+          Water <span className="planet-col-title-small">(Kapha)</span>
+        </>
+      ),
       flex: 1,
       headerClassName: 'rowheader',
       renderCell: (params) => (
         <FormControlLabel
           label={params.row.kapha}
+          className='prakritiLabel'
           control={
             <Checkbox
               checked={selectedOptions[params.row.name]?.kapha || false}
@@ -198,6 +222,34 @@ function PrakritiPopUp({ open, handlePraClose }) {
     pitta: observation.options.pitta,
     kapha: observation.options.kapha,
   }));
+
+  const handleSave = () => {
+    localStorage.setItem('prakritiSelections', JSON.stringify(selectedOptions));
+    // console.log('Saved options:', selectedOptions);
+    // Calculate checked counts
+    const counts = { vata: 0, pitta: 0, kapha: 0 };
+    Object.values(selectedOptions).forEach((options) => {
+      Object.keys(counts).forEach((key) => {
+        if (options[key]) counts[key]++;
+      });
+    });
+
+    const prakritiElements = {
+      vata: 'Air',
+      pitta: 'Fire',
+      kapha: 'Water',
+    };
+
+    // Sort and create the string in descending order
+    const sortedTypes = Object.entries(counts)
+      .sort(([, a], [, b]) => b - a) // Sort descending
+      .map(([type]) => prakritiElements[type]);
+    const resultString = sortedTypes.join('-');
+
+    // console.log('Selected Options:', selectedOptions);
+    console.log('Sorted Counts String:', resultString);
+    handlePraClose(); // Close the popup
+  };
 
   return (
     <Dialog open={open} onClose={handlePraClose} maxWidth="md" fullWidth>
@@ -219,24 +271,24 @@ function PrakritiPopUp({ open, handlePraClose }) {
       </DialogTitle>
       <DialogContent className='p-0'>
         <Box>
-            <DataGrid
-              rows={rows}
-              columns={columns}
-              pageSize={5}
-              disableSelectionOnClick
-              hideFooter
-              rowHeight={30}
-              columnHeaderHeight={38}
-              disableColumnSorting
-              disableColumnMenu
-              showCellVerticalBorder
-            />
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            pageSize={5}
+            disableSelectionOnClick
+            hideFooter
+            rowHeight={30}
+            columnHeaderHeight={38}
+            disableColumnSorting
+            disableColumnMenu
+            showCellVerticalBorder
+          />
         </Box>
       </DialogContent>
       <DialogActions className='p-0'>
         <div className='p-4'>
           {/* <Button variant='contained' type='submit' disabled={false} onClick={() => console.log(selectedOptions)} > */}
-          <Button variant='contained' type='submit' disabled={false} >
+          <Button variant='contained' type='submit' disabled={false} onClick={handleSave} >
             Save
           </Button>
           <Button variant='contained' className='bg-secondary' onClick={handlePraClose}>Cancel</Button>

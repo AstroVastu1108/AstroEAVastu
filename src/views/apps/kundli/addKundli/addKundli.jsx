@@ -19,10 +19,11 @@ import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplaye
 // Import Style
 import "./addKundli.css"
 
-function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserData }) {
+function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserData, GroupData }) {
 
   const [isDisable, setIsDisable] = useState(false);
   const [formData, setFormData] = useState(userData);
+  const [TextFeildSize] = useState("");
   const fetchData = async () => {
     try {
       const response = await getCountries()
@@ -121,12 +122,17 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
   const fetchCityData = debounce(async (query) => {
     if (query.length > 0) {
       await fetchCities(query);
+    }else{
+      setCityData([]);
     }
   }, 500)
 
   const handleCityChange = (filterModel) => {
     if (filterModel) {
       fetchCityData(filterModel);
+    } else {
+      fetchCityData.clear();
+      setCityData([]);
     }
   }
 
@@ -163,9 +169,8 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
         DChart: "",
         Reference: formData?.Reference,
         Remark: formData?.Remark,
-        Group: "Client"
+        Group: formData?.Group
       }
-      console.log("payload : ", formattedData)
       if (!formData.isUpdate) {
         setIsDisable(false);
         const response = await CreateKundli(formattedData)
@@ -270,7 +275,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
           },
         }}
       >
-        <DialogTitle className="PopupHeader text-white p-3">
+        <DialogTitle className="PopupHeader text-white p-3 py-2">
           <div className='w-100' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span className='text-primary text-2xl font-ea-sb !pl-3'>
               {!formData.isUpdate ? "New Kundali" : "Update Kundali"}
@@ -295,6 +300,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                 autoFocus
                 inputRef={fnameRef}
                 value={formData?.FirstName}
+                size={TextFeildSize}
                 onChange={e => {
                   handleInputChange('FirstName', e.target.value, 'FirstName');
                 }}
@@ -306,7 +312,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                 label='Middle Name'
                 value={formData?.MiddleName}
                 onChange={e => handleInputChange('MiddleName', e.target.value, 'MiddleName')}
-
+                size={TextFeildSize}
               />
             </Grid>
             <Grid item xs={12} sm={4}>
@@ -315,9 +321,12 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                 label='Last Name'
                 value={formData?.LastName}
                 onChange={e => handleInputChange('LastName', e.target.value, 'LastName')}
+                size={TextFeildSize}
               />
             </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={4}
+            // className='pt-6'
+            >
               <FormControl fullWidth>
                 <InputLabel id="Gender-select-label">Gender</InputLabel>
                 <Select
@@ -326,6 +335,9 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                   value={formData?.Gender?.toLowerCase() || ''}
                   onChange={e => handleInputChange('Gender', e.target.value, 'Gender')}
                   label="Gender"
+                  size={TextFeildSize}
+
+
                 >
                   <MenuItem value="male">Male</MenuItem>
                   <MenuItem value="female">Female</MenuItem>
@@ -334,7 +346,9 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
               </FormControl>
             </Grid>
 
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={4}
+              className='!pt-4'
+            >
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['DatePicker']}>
                   <DatePicker
@@ -347,21 +361,35 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                     onChange={date => {
                       handleInputChange('date', date, 'BirthDate')
                     }}
+                  // sx={{
+                  //   height: '2.5rem',
+                  //   minHeight: '2.5rem',
+                  //   '& .MuiInputBase-root': { height: '2.5rem' },
+                  // }}
                   />
                 </DemoContainer>
               </LocalizationProvider>
             </Grid>
-            <Grid item xs={12} sm={4}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={['TimePicker']}>
+            <Grid item xs={12} sm={4}
+              className='!pt-4'
+            >
+              <LocalizationProvider dateAdapter={AdapterDayjs}
+              // size={TextFeildSize}
+              >
+                <DemoContainer components={['TimePicker']}
+                >
                   <TimePicker
                     label="Birth Time"
                     ampm={false} // 24-hour format
                     views={['hours', 'minutes', 'seconds']}
                     format="HH:mm:ss"
-                    // value={dayjs()}
                     value={formData.time}
                     onChange={date => handleInputChange('time', date, 'BirthTime', true)}
+                  // sx={{
+                  //   height: '2.5rem',
+                  //   minHeight: '2.5rem',
+                  //   '& .MuiInputBase-root': { height: '2.5rem' },
+                  // }}
                   />
                 </DemoContainer>
               </LocalizationProvider>
@@ -379,6 +407,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                     {...(errors.Country && { error: true })}
                   />
                 )}
+                size={TextFeildSize}
               />
             </Grid>
             <Grid item xs={12} sm={4}>
@@ -389,6 +418,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                 InputProps={{
                   readOnly: true, // Makes the TextField read-only
                 }}
+                size={TextFeildSize}
               />
             </Grid>
             <Grid item xs={12} sm={8}>
@@ -406,6 +436,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                   />
                 )}
                 filterOptions={(x) => x} // Disable frontend filtering
+                size={TextFeildSize}
               />
 
             </Grid>
@@ -413,6 +444,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
               <TextField
                 fullWidth
                 label='Lat, Lng '
+                size={TextFeildSize}
               // placeholder='John'
               // value={formData?.MiddleName}
               // onChange={e => handleInputChange('MiddleName', e.target.value, 'MiddleName')}
@@ -420,18 +452,52 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
               // {...(errors.MiddleName && { error: true, helperText: 'MiddleName is required.' })}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={8}>
               <TextField
                 fullWidth
                 label="Reference"
                 // inputRef={fnameRef}
                 value={formData?.Reference}
-                onChange={e => {
-                  handleInputChange('Reference', e.target.value, 'Reference');
-                }}
+                size={TextFeildSize}
+                onChange={e => handleInputChange('Reference', e.target.value, 'Reference')}
+              // sx={{
+              //   '& .MuiInputBase-root': {
+              //     height: '30px', // Adjust height
+              //   },
+              //   '& .MuiInputBase-input': {
+              //     padding: '0 10px', // Adjust padding inside the text field
+              //     fontSize: '14px', // Adjust font size
+              //     border:'2px solid red'
+              //   },
+              //   '& .MuiInputLabel-root': {
+              //     padding:'4px'
+              //     // fontSize: '12px', // Adjust label font size if needed
+              //   },
+              // }}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4}>
+              <FormControl fullWidth>
+                <InputLabel id="group-select-label">Select Group</InputLabel>
+                <Select
+                  labelId="group-select-label"
+                  fullWidth
+                  id="group-select"
+                  label="Select Group"
+                  value={formData?.Group}
+                  onChange={e => handleInputChange('Group', e.target.value, 'Group')}
+                  size={TextFeildSize}
+                >
+                  {GroupData.map((item, index) => (
+                    <MenuItem key={index} value={item}>
+                      {item}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+            </Grid>
+            <Grid item xs={12} sm={12}>
               <TextField
                 fullWidth
                 label="Remark"
@@ -440,6 +506,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                 onChange={e => {
                   handleInputChange('Remark', e.target.value, 'Remark');
                 }}
+                size={TextFeildSize}
               />
             </Grid>
           </Grid>

@@ -4,6 +4,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import './preview.css';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 
 function TimeTool({ handleDateChange, kundliBirthData, handleTimeTool, handleTimeToolOptChange, datePicker, setDatePicker, TimeToolOpt }) {
   const [timeValue, setTimeValue] = useState("Y"); // "Y" for year, "M" for month, etc.
@@ -187,6 +188,11 @@ function TimeTool({ handleDateChange, kundliBirthData, handleTimeTool, handleTim
                 height: '2.5rem',
                 minHeight: '2.5rem',
                 '& .MuiInputBase-root': { height: '2.5rem' },
+              }}
+              DialogProps={{
+                PaperProps: {
+                  sx: { '& .MuiDialogActions-root': { display: 'none !important' } }, // Hide the action buttons
+                },
               }}
               renderInput={(params) => (
                 <TextField
