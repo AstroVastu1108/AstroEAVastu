@@ -4,6 +4,50 @@ import { DataGrid } from '@mui/x-data-grid';
 
 function JaiminiCharKarakasPopUp({ open, handleClose, JaiminiCharKarakasData }) {
 
+  const planetClass = {
+    ketu: "ketu",
+    venus: "venus",
+    sun: "sun",
+    moon: "moon",
+    mars: "mars",
+    rahu: "rahu",
+    jupiter: "jupiter",
+    saturn: "saturn",
+    mercury: "mercury",
+    uranus: "uranus",
+    neptune: "neptune",
+    pluto: "pluto"
+  };
+
+  const shorthandMap = {
+    Ke: planetClass.ketu,
+    Ve: planetClass.venus,
+    Su: planetClass.sun,
+    Mo: planetClass.moon,
+    Ma: planetClass.mars,
+    Ra: planetClass.rahu,
+    Ju: planetClass.jupiter,
+    Sa: planetClass.saturn,
+    Me: planetClass.mercury,
+    Ur: planetClass.uranus,
+    Ne: planetClass.neptune,
+    Pl: planetClass.pluto
+  };
+
+  const highlightText = (value) => {
+    const abbreviation = value.trim().slice(0, 2); // Remove any extra whitespace
+    const fullName = shorthandMap[abbreviation];
+
+    // Split the value by `-` to get individual planet abbreviations
+
+    // Return the elements separated by " - "
+    return (
+      <div className={`pl-${fullName} row-title font-ea-sb`} key={abbreviation}>
+        {value}
+      </div>
+    );
+  };
+
   // Transforming Data: Making each 'Karak' a column
   const columns = [
     ...JaiminiCharKarakasData.map(item => ({
@@ -12,6 +56,12 @@ function JaiminiCharKarakasPopUp({ open, handleClose, JaiminiCharKarakasData }) 
       flex: 1,
       sortable: false,
       headerClassName: 'rowheader',
+      renderCell: (params) => {
+        if (params.row.rowLabel === 'Planet') {
+          return highlightText(params.value);
+        }
+        return params.value;
+      },
     })),
   ];
 

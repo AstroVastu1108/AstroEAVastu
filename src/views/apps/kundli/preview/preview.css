@@ -911,17 +911,16 @@
 .MuiDataGrid-columnHeader:focus {
   outline: none !important;
 }
-.MuiDataGrid-scrollbar--vertical {
+/* .MuiDataGrid-scrollbar--vertical {
   display: none;
 }
 .MuiDataGrid-filler {
   display: none;
 }
 .MuiDataGrid-scrollbarFiller--header {
-  /* display: none !important; */
   background-color: var(--primary-color);
   border-bottom: none !important;
-}
+} */
 .MuiDataGrid-row.Mui-selected {
   background-color: #99e27b65 !important;
 }
