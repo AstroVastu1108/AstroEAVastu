@@ -159,7 +159,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     const titleArr = DashaTitle.split("-");
     if (DashaValue == "PranDasha") {
       const payload = {
-        "BirthDate": BirthDetails?.Date,
+        "BirthDate": BirthDetails?.BirthDate,
         "BirthTime": BirthDetails?.BirthTime,
         "DashaStartDate": DashaDate,
         "Planet": `${titleArr[0]}-${titleArr[1]}-${titleArr[2]}`
@@ -173,7 +173,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     }
     else if (DashaValue == "SookshmaDasha") {
       const payload = {
-        "BirthDate": BirthDetails?.Date,
+        "BirthDate": BirthDetails?.BirthDate,
         "BirthTime": BirthDetails?.BirthTime,
         "DashaStartDate": DashaDate,
         "Planet": `${titleArr[0]}-${titleArr[1]}`
@@ -187,7 +187,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     }
     else if (DashaValue == "PratyantarDasha") {
       const payload = {
-        "BirthDate": BirthDetails?.Date,
+        "BirthDate": BirthDetails?.BirthDate,
         "BirthTime": BirthDetails?.BirthTime,
         "DashaStartDate": DashaDate,
         "Planet": DashaDetailData?.CurrentMD
@@ -210,7 +210,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     if (DashaValue == "MahaDasha") {
       setDashaDate(row?.StartDt)
       const payload = {
-        "BirthDate": BirthDetails?.Date,
+        "BirthDate": BirthDetails?.BirthDate,
         "BirthTime": BirthDetails?.BirthTime,
         "DashaStartDate": row?.StartDt,
         "Planet": row?.DashaPlanet
@@ -225,7 +225,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     }
     else if (DashaValue == "AntarDasha") {
       const payload = {
-        "BirthDate": BirthDetails?.Date,
+        "BirthDate": BirthDetails?.BirthDate,
         "BirthTime": BirthDetails?.BirthTime,
         "DashaStartDate": DashaDate,
         "Planet": row?.DashaPlanet
@@ -242,7 +242,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     }
     else if (DashaValue == "PratyantarDasha") {
       const payload = {
-        "BirthDate": BirthDetails?.Date,
+        "BirthDate": BirthDetails?.BirthDate,
         "BirthTime": BirthDetails?.BirthTime,
         "DashaStartDate": DashaDate,
         "Planet": row?.DashaPlanet
@@ -257,7 +257,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       }
     } else if (DashaValue == "SookshmaDasha") {
       const payload = {
-        "BirthDate": BirthDetails?.Date,
+        "BirthDate": BirthDetails?.BirthDate,
         "BirthTime": BirthDetails?.BirthTime,
         "DashaStartDate": DashaDate,
         "Planet": row?.Planet

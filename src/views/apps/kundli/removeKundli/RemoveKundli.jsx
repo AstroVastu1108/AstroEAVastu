@@ -23,6 +23,24 @@ function RemoveKundli({ open, handleClose, userData, handleDeleteClick }) {
     }, 500);
   }, [open]);
 
+  const handleCopy = () => {
+    var fullName = `${userData?.FirstName} ${userData?.LastName}`;
+    if (userData?.MiddleName != "") {
+      fullName = `${userData?.FirstName} ${userData?.MiddleName} ${userData?.LastName}`;
+    }
+
+    //             if (data && prevData && data.trim() == prevData.trim()) {
+    //               setIsNameValid(true);
+    //             } else {
+    //               setIsNameValid(false);
+    //             }
+    // const fullName = `${userData?.FirstName || ''} ${userData?.MiddleName || ''} ${userData?.LastName || ''}`.trim();
+    navigator.clipboard.writeText(fullName);
+  };
+
+  // const handlePaste = (event) => {
+  //   setPastedValue(event.clipboardData.getData('Text'));
+  // };
 
   return (
     <>
@@ -41,8 +59,8 @@ function RemoveKundli({ open, handleClose, userData, handleDeleteClick }) {
               // const newData = inputRef?.current?.value;
               // const prevData = `${userData?.FirstName} ${userData?.MiddleName} ${userData?.LastName}`;
               // if (newData && prevData && newData.trim() == prevData.trim()) {
-                handleDeleteClick(userData?.KundaliID);
-                handleClose();
+              handleDeleteClick(userData?.KundaliID);
+              handleClose();
               // }
             },
           }}
@@ -69,6 +87,7 @@ function RemoveKundli({ open, handleClose, userData, handleDeleteClick }) {
                 </div>
                 <div className='font-ea-sb text-red-700 text-xl mt-2 mb-2'>
                   {userData?.FirstName} {userData?.MiddleName} {userData?.LastName}
+                  <Button className='p-1 min-w-6 w-6 ml-2 ' onClick={handleCopy}><i className='tabler-copy text-secondary text-[18px]'></i></Button>
                 </div>
                 <div className='font-ea-n text-black'>
                   <span className='font-ea-sb'>{userData?.BirthDate} </span>{userData?.BirthTime.substring(0, 2)}:{userData?.BirthTime.substring(2, 4)}:{(userData?.BirthTime.substring(4, 6) ? userData?.BirthTime.substring(4, 6) : '00')}

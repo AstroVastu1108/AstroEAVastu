@@ -52,7 +52,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
     CityID: false,
     Prakriti: false
   });
-  const [conutryData, setConutryData] = useState([])
+  const [conutryData, setConutryData] = useState([]);
   const [cityData, setCityData] = useState([{
     "CityID": 1255364,
     "FormattedCity": "Surat, Gujarat"
@@ -106,6 +106,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
   const fetchCities = async (query) => {
     if (query.length > 1 && formData.Country) {
       try {
+        setCityData([]);
         const CountryCode = formData.Country.CountryCode
         const response = await getCities(CountryCode, query)
         if (response.hasError) {
@@ -125,13 +126,13 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
     }else{
       setCityData([]);
     }
-  }, 500)
+  }, 300)
 
   const handleCityChange = (filterModel) => {
     if (filterModel) {
       fetchCityData(filterModel);
     } else {
-      fetchCityData.clear();
+      // fetchCityData.clear();
       setCityData([]);
     }
   }

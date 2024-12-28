@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Button, createTheme, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControl, Grid, IconButton, InputLabel, List, ListItem, ListItemButton, ListItemText, MenuItem, Select, TextField, ThemeProvider } from '@mui/material'
+import { Autocomplete, Box, Button, createTheme, debounce, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControl, Grid, IconButton, InputLabel, List, ListItem, ListItemButton, ListItemText, MenuItem, Select, TextField, ThemeProvider } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import "./Event.css";
 import { DataGrid, GridToolbarContainer, GridToolbarQuickFilter } from '@mui/x-data-grid';
@@ -6,6 +6,7 @@ import { EventOptionsData } from '@/app/Server/API/kundliAPI';
 import { DatePicker, DateTimePicker, LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { getCities, getCountries } from '@/app/Server/API/common';
 
 function Event({ setEventValue, open, handleClose, JaiminiCharKarakasData }) {
 
@@ -14,6 +15,12 @@ function Event({ setEventValue, open, handleClose, JaiminiCharKarakasData }) {
   const [loading, setLoading] = useState([]);
 
   const [selectedRow, setSelectedRow] = useState(null);
+
+  const [cityData, setCityData] = useState([{
+    "CityID": 1255364,
+    "FormattedCity": "Surat, Gujarat"
+  }])
+  const [conutryData, setConutryData] = useState([]);
 
   const columns = [
     ...JaiminiCharKarakasData.map(item => ({
@@ -45,6 +52,23 @@ function Event({ setEventValue, open, handleClose, JaiminiCharKarakasData }) {
     },
   ];
 
+  const fetchData = async () => {
+    try {
+      const response = await getCountries()
+      if (response.hasError) {
+        // return toastDisplayer("error", response.error)
+      }
+      const result = response.responseData
+      setConutryData(result.Result.Countries)
+    } catch (error) {
+      return toastDisplayer("error", `There was a problem with the fetch operation: ${error}`)
+    }
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, []);
+
   const handleSelect = () => {
     // setEventValue(selectedRow);
     handleClose(); // Close the dialog after selecting an item
@@ -65,6 +89,38 @@ function Event({ setEventValue, open, handleClose, JaiminiCharKarakasData }) {
     getEventOpions();
   }, [])
 
+  const fetchCities = async (query) => {
+    // if (query.length > 1 && formData.Country) {
+      try {
+        const CountryCode = "IN";
+        setCityData([]);
+        const response = await getCities(CountryCode, query);
+        if (response.hasError) {
+          return toastDisplayer("error", response.error)
+        }
+        const result = await response.responseData
+        setCityData(result.Result.Cities || [])
+      } catch (error) {
+        return toastDisplayer("error", `There was a problem with the fetch operation:${error}`)
+      }
+    // }
+  }
+
+  const fetchCityData = debounce(async (query) => {
+    if (query.length > 0) {
+      await fetchCities(query);
+    } else {
+      setCityData([]);
+    }
+  }, 300)
+
+  const handleCityChange = (filterModel) => {
+    if (filterModel) {
+      fetchCityData(filterModel);
+    } else {
+      setCityData([]);
+    }
+  }
 
   return (
     <>
@@ -137,7 +193,7 @@ function Event({ setEventValue, open, handleClose, JaiminiCharKarakasData }) {
                     <DateTimePicker
                       label="Event Date & Time"
                       name="startDate"
-                      views={['year', 'month', 'day', 'hours', 'minutes']}
+                      views={['year', 'month', 'day', 'hours', 'minutes', "seconds"]}
                       format="DD-MM-YYYY HH:mm:ss"
                       ampm={false}
                       onChange={(date) => {
@@ -155,10 +211,10 @@ function Event({ setEventValue, open, handleClose, JaiminiCharKarakasData }) {
               </Grid><Grid item xs={12} sm={12}>
                 <Autocomplete
                   id='country-select'
-                  // options={conutryData && conutryData}
+                  options={conutryData && conutryData}
                   // defaultValue={formData && formData.Country}
-                  // getOptionLabel={(option) => option?.Country}
-                  // getOptionKey={(option) => option?.CountryCode}
+                  getOptionLabel={(option) => option?.Country}
+                  getOptionKey={(option) => option?.CountryCode}
                   // onChange={(event, newValue) => handleInputChange('Country', newValue, 'Country', true)}
                   renderInput={(params) => (
                     <TextField {...params} label='Select Country' variant='outlined'
@@ -171,18 +227,18 @@ function Event({ setEventValue, open, handleClose, JaiminiCharKarakasData }) {
               <Grid item xs={12} sm={12}>
                 <Autocomplete
                   id='city-autocomplete'
-                  // options={cityData}
+                  options={cityData}
                   // value={formData.CityID || null}  // Ensure city is cleared when CityID is null
-                  // getOptionLabel={(option) => option?.FormattedCity || ''}
+                  getOptionLabel={(option) => option?.FormattedCity || ''}
                   // onInputChange={(event, newQuery) => setQuery(newQuery)}
-                  // onInputChange={(event, newQuery) => handleCityChange(newQuery)}
+                  onInputChange={(event, newQuery) => handleCityChange(newQuery)}
                   // onChange={(event, newValue) => handleInputChange('CityID', newValue, 'CityID', true)}
                   renderInput={(params) => (
                     <TextField {...params} label='Select City' variant='outlined'
                     // {...(errors.CityID && { error: true })}
                     />
                   )}
-                  // filterOptions={(x) => x} // Disable frontend filtering
+                  filterOptions={(x) => x} // Disable frontend filtering
                 // size={TextFeildSize}
                 />
 
