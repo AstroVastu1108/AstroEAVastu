@@ -212,3 +212,41 @@ code {
 .MuiAutocomplete-option{
   font-family: 'ea-n' !important;
 }
+
+
+.pl-ketu {
+  color: #7d3434 !important;
+}
+.pl-venus {
+  color: #d646a1 !important;
+}
+.pl-sun {
+  color: #cd0008 !important;
+}
+.pl-moon {
+  color: #0db1c7 !important;
+}
+.pl-mars {
+  color: #e6151d !important;
+}
+.pl-rahu {
+  color: #555555 !important;
+}
+.pl-jupiter {
+  color: #f48d25 !important;
+}
+.pl-saturn {
+  color: #3652ba !important;
+}
+.pl-mercury {
+  color: #1c8946 !important;
+}
+.pl-uranus {
+  color: #4e6f73 !important;
+}
+.pl-neptune {
+  color: #6b8ac6 !important;
+}
+.pl-pluto {
+  color: #a6705c !important;
+}

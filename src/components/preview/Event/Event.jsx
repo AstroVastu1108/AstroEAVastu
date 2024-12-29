@@ -7,50 +7,31 @@ import { DatePicker, DateTimePicker, LocalizationProvider, TimePicker } from '@m
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { getCities, getCountries } from '@/app/Server/API/common';
+import dayjs from 'dayjs';
+import { CreateEvent } from '@/app/Server/API/EventAPI';
 
-function Event({ setEventValue, open, handleClose, JaiminiCharKarakasData }) {
+function AddEvent({ NewEventData, open, handleClose,getAllEvent }) {
 
 
-  const [EventData, setEventData] = useState([]);
+  const [EventOptionData, setEventOptionData] = useState([]);
+  const [RequiredFields] = useState(["Event", "EventDate", "EventTime", "City"]);
+  const [AddEventData, setAddEventData] = useState(NewEventData);
   const [loading, setLoading] = useState([]);
-
-  const [selectedRow, setSelectedRow] = useState(null);
-
+  const [errors, setErrors] = useState({
+    "Client": false,
+    "KundaliID": false,
+    "EventID": false,
+    "Event": false,
+    "EventDate": false,
+    "EventTime": false,
+    "CityID": false,
+    "Remark": false
+  });
   const [cityData, setCityData] = useState([{
     "CityID": 1255364,
     "FormattedCity": "Surat, Gujarat"
   }])
   const [conutryData, setConutryData] = useState([]);
-
-  const columns = [
-    ...JaiminiCharKarakasData.map(item => ({
-      field: item.Karak,
-      headerName: `${item.Karak} Karaka`,
-      flex: 1,
-      sortable: false,
-      headerClassName: 'rowheader',
-    })),
-  ];
-
-  // Creating rows for 'Planet' and 'Degree'
-  const rows = [
-    {
-      id: 1,
-      rowLabel: 'Planet',
-      ...JaiminiCharKarakasData.reduce((acc, item) => {
-        acc[item.Karak] = item.Planet;
-        return acc;
-      }, {}),
-    },
-    {
-      id: 2,
-      rowLabel: 'Degree',
-      ...JaiminiCharKarakasData.reduce((acc, item) => {
-        acc[item.Karak] = item.Degree;
-        return acc;
-      }, {}),
-    },
-  ];
 
   const fetchData = async () => {
     try {
@@ -61,7 +42,7 @@ function Event({ setEventValue, open, handleClose, JaiminiCharKarakasData }) {
       const result = response.responseData
       setConutryData(result.Result.Countries)
     } catch (error) {
-      return toastDisplayer("error", `There was a problem with the fetch operation: ${error}`)
+      // return toastDisplayer("error", `There was a problem with the fetch operation: ${error}`)
     }
   }
 
@@ -69,18 +50,13 @@ function Event({ setEventValue, open, handleClose, JaiminiCharKarakasData }) {
     fetchData()
   }, []);
 
-  const handleSelect = () => {
-    // setEventValue(selectedRow);
-    handleClose(); // Close the dialog after selecting an item
-  };
-
   const getEventOpions = async () => {
     const response = await EventOptionsData();
     if (response.hasError) {
       setLoading(false);
-      return toastDisplayer("error", response.error);
+      // return toastDisplayer("error", response.error);
     } else {
-      setEventData(response?.responseData?.Result?.Events);
+      setEventOptionData(response?.responseData?.Result?.Events);
       setLoading(false);
     }
   }
@@ -90,20 +66,20 @@ function Event({ setEventValue, open, handleClose, JaiminiCharKarakasData }) {
   }, [])
 
   const fetchCities = async (query) => {
-    // if (query.length > 1 && formData.Country) {
+    if (query.length > 1 && AddEventData.Country) {
       try {
-        const CountryCode = "IN";
+        const CountryCode = AddEventData.Country.CountryCode;
         setCityData([]);
         const response = await getCities(CountryCode, query);
         if (response.hasError) {
-          return toastDisplayer("error", response.error)
+          // return toastDisplayer("error", response.error)
         }
-        const result = await response.responseData
-        setCityData(result.Result.Cities || [])
+        const result = await response.responseData;
+        setCityData(result.Result.Cities || []);
       } catch (error) {
-        return toastDisplayer("error", `There was a problem with the fetch operation:${error}`)
+        // return toastDisplayer("error", `There was a problem with the fetch operation:${error}`);
       }
-    // }
+    }
   }
 
   const fetchCityData = debounce(async (query) => {
@@ -122,11 +98,141 @@ function Event({ setEventValue, open, handleClose, JaiminiCharKarakasData }) {
     }
   }
 
+  const handleSaveEvent = async () => {
+    var flag = 0;
+    RequiredFields.map((e) => {
+      if (AddEventData[e] == "") {
+        setErrors((prev) => ({
+          ...prev,
+          [`${e}`]: true
+        }))
+        flag = 1;
+      }
+    })
+
+    if (flag == 1) {
+      return;
+    }
+
+    const hasErrors = Object.values(errors).some(error => error === true);
+    if (hasErrors) {
+      return;
+    }
+    const eventDateTime = AddEventData?.EventDate;
+    if (!eventDateTime.isValid()) {
+      return;
+    }
+    const EventDate = eventDateTime.format("DD-MM-YYYY");
+
+    const EventTime = eventDateTime.format("HHmmss")
+
+    const payload = {
+      "ClientID": "",
+      "KundaliID": AddEventData?.KundaliID,
+      "EventID": AddEventData?.EventID,
+      "Event": AddEventData?.Event,
+      "EventDate": EventDate,
+      "EventTime": EventTime,
+      "CityID": AddEventData?.City?.CityID,
+      "Remark": AddEventData?.Remark
+    }
+    if (!AddEventData.isUpdate) {
+      // setIsDisable(false);
+      const response = await CreateEvent(payload)
+
+      if (response.hasError) {
+        // setIsDisable(false)
+        // return toastDisplayer("error", response.error)
+      }
+      // var kId = response?.responseData?.Result?.KundaliID;
+      // setIsDisable(false)
+      // getAllKundli(1, "");
+      getAllEvent(AddEventData?.KundaliID);
+      handleClose();
+      // toastDisplayer("success", `kundli data is saved successfully.`)
+      // return kId;
+    } else {
+      // setIsDisable(false)
+      // const response = await UpdateKundli(formattedData)
+
+      // if (response.hasError) {
+      //   setIsDisable(false)
+      //   return toastDisplayer("error", response.error)
+      // }
+      // var kId = response?.responseData?.Result?.KundaliID;
+      // setIsDisable(false)
+      // getAllKundli(1, "");
+      // handleAddClose();
+      // // toastDisplayer("success", `Kundli data is updated successfully.`)
+      // return kId;
+    }
+  }
+
+  const handleInputChange = (field, value, key, isRequired = false) => {
+    if (isRequired) {
+      if (!value) {
+        setErrors(prev => ({
+          ...prev,
+          [key]: true
+        }))
+      } else {
+        setErrors(prev => ({
+          ...prev,
+          [key]: false
+        }))
+      }
+    }
+
+    if (field === "Remark") {
+      const newVal = value.replace(/^\w/, char => char.toUpperCase());
+      setAddEventData(prev => ({
+        ...prev,
+        [field]: newVal
+      }))
+      return;
+    }
+    if (field === "Event") {
+      setAddEventData(prev => ({
+        ...prev,
+        [field]: value.EventName
+      }))
+      return;
+    }
+
+
+    if (field === "Country") {
+      // Clear the city data and reset selected city when the country changes
+      setCityData([]); // Clear city options
+      setAddEventData(prev => ({
+        ...prev,
+        CityID: null, // Reset the selected city
+        [field]: value
+      }));
+      setErrors(prev => ({
+        ...prev,
+        ["City"]: true
+      }))
+      return; // Ensure that city is reset before proceeding
+    }
+
+
+    setAddEventData(prev => ({
+      ...prev,
+      [field]: value
+    }))
+  }
+
   return (
     <>
       <Dialog
         open={open}
-        onClose={handleClose}
+        // onClose={handleClose}
+        onClose={(event, reason) => {
+          if (reason === 'backdropClick') {
+            return; // Do nothing when clicking outside
+          }
+          handleClose(); // Allow closing for other reasons like pressing the escape key
+        }}
         maxWidth="sm"   // 'xs', 'sm', 'md', 'lg', 'xl' or false for custom width
         fullWidth={true}  // Ensures the dialog takes up full width of the container
         PaperProps={{
@@ -147,7 +253,7 @@ function Event({ setEventValue, open, handleClose, JaiminiCharKarakasData }) {
         <DialogTitle className="PopupHeader text-white p-3">
           <div className='w-100' style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span className='text-primary text-2xl font-ea-sb !pl-3'>
-              New Event
+              {AddEventData.isUpdate ? "Edit Event" : "New Event"}
             </span>
             <IconButton
               aria-label="close"
@@ -165,21 +271,17 @@ function Event({ setEventValue, open, handleClose, JaiminiCharKarakasData }) {
             <Grid className='' container spacing={5}>
               <Grid item xs={12} sm={6}>
                 <Autocomplete
+                  label="Select Event"
+                  title="Select Event"
                   id='event-select'
-                  options={EventData && EventData}
-
-                  // defaultValue={userData && userData.Country}
+                  options={EventOptionData && EventOptionData}
+                  // defaultValue={EventOptionData && AddEventData && AddEventData.Event}
                   getOptionLabel={(option) => option?.EventName}
                   getOptionKey={(option) => option?.Event}
-                  // onChange={(event, newValue) => handleInputChange('Country', newValue, 'Country', true)}
-                  // sx={{
-                  //   '& .MuiOutlinedInput-root': {
-                  //     height: '56px', // Adjust height as needed
-                  //   },
-                  // }}
+                  onChange={(event, newValue) => handleInputChange('Event', newValue, 'Event', true)}
                   renderInput={(params) => (
-                    <TextField {...params} label='Select Event' variant='outlined'
-                    // {...(errors.Country && { error: true })}
+                    <TextField {...params} label='Select Event' title='Select Event' variant='outlined'
+                      {...(errors.Event && { error: true })}
 
                     />
                   )}
@@ -192,33 +294,41 @@ function Event({ setEventValue, open, handleClose, JaiminiCharKarakasData }) {
                   <DemoContainer components={['DateTimePicker']}>
                     <DateTimePicker
                       label="Event Date & Time"
+                      title="Event Date & Time"
                       name="startDate"
                       views={['year', 'month', 'day', 'hours', 'minutes', "seconds"]}
                       format="DD-MM-YYYY HH:mm:ss"
                       ampm={false}
-                      onChange={(date) => {
-                        // Handle date and time changes
-                        // handleInputChange('date', date, 'BirthDate');
+                      onChange={(e) => {
+                        handleInputChange('EventDate', e, 'EventDate');
                       }}
                       slots={{
                         actionBar: () => null, // Hide the action bar, including the OK button
                       }}
-                    // Uncomment and use the value if necessary
-                    // value={userData.date}
+                      // Uncomment and use the value if necessary
+                      value={AddEventData?.EventDate}
+                      selected={AddEventData?.EventDate}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          error={!!errors.EventDate}
+                        />
+                      )}
                     />
+
                   </DemoContainer>
                 </LocalizationProvider>
               </Grid><Grid item xs={12} sm={12}>
                 <Autocomplete
                   id='country-select'
                   options={conutryData && conutryData}
-                  // defaultValue={formData && formData.Country}
+                  defaultValue={AddEventData && AddEventData.Country}
                   getOptionLabel={(option) => option?.Country}
                   getOptionKey={(option) => option?.CountryCode}
-                  // onChange={(event, newValue) => handleInputChange('Country', newValue, 'Country', true)}
+                  onChange={(event, newValue) => handleInputChange('Country', newValue, 'Country', true)}
                   renderInput={(params) => (
                     <TextField {...params} label='Select Country' variant='outlined'
-                    // {...(errors.Country && { error: true })}
+                      {...(errors.Country && { error: true })}
                     />
                   )}
                 // size={TextFeildSize}
@@ -228,14 +338,14 @@ function Event({ setEventValue, open, handleClose, JaiminiCharKarakasData }) {
                 <Autocomplete
                   id='city-autocomplete'
                   options={cityData}
-                  // value={formData.CityID || null}  // Ensure city is cleared when CityID is null
+                  value={AddEventData.City || null}  // Ensure city is cleared when CityID is null
                   getOptionLabel={(option) => option?.FormattedCity || ''}
                   // onInputChange={(event, newQuery) => setQuery(newQuery)}
                   onInputChange={(event, newQuery) => handleCityChange(newQuery)}
-                  // onChange={(event, newValue) => handleInputChange('CityID', newValue, 'CityID', true)}
+                  onChange={(event, newValue) => handleInputChange('City', newValue, 'City', true)}
                   renderInput={(params) => (
                     <TextField {...params} label='Select City' variant='outlined'
-                    // {...(errors.CityID && { error: true })}
+                      {...(errors.City && { error: true })}
                     />
                   )}
                   filterOptions={(x) => x} // Disable frontend filtering
@@ -248,6 +358,10 @@ function Event({ setEventValue, open, handleClose, JaiminiCharKarakasData }) {
                 <TextField
                   fullWidth
                   label="Remark"
+                  onChange={e => {
+                    handleInputChange('Remark', e.target.value, 'Remark');
+                  }}
+
                 />
               </Grid>
             </Grid>
@@ -258,7 +372,7 @@ function Event({ setEventValue, open, handleClose, JaiminiCharKarakasData }) {
             {/* <Button variant='contained' type='submit' disabled={false} onClick={handleSelect} >
               Transit
             </Button> */}
-            <Button variant='contained' type='submit' disabled={false} onClick={handleSelect} >
+            <Button variant='contained' type='submit' disabled={false} onClick={handleSaveEvent} >
               Save
             </Button>
             <Button variant='contained' className='bg-secondary' onClick={handleClose}>Cancel</Button>
@@ -269,82 +383,5 @@ function Event({ setEventValue, open, handleClose, JaiminiCharKarakasData }) {
   )
 }
 
-export default Event
+export default AddEvent
 
-
-
-// import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, InputLabel, List, ListItem, ListItemButton, ListItemText, MenuItem, Select } from '@mui/material'
-// import React from 'react'
-// import "./Event.css";
-
-// function Event({eventValue,setEventValue,eventData,open,handleClose}) {
-//   const handleSelect = (value) => {
-//     setEventValue(value);
-//     handleClose(); // Close the dialog after selecting an item
-//   };
-//   return (
-//     <>
-//       <Dialog open={open} onClose={handleClose} >
-//         <DialogTitle className='ps-3 py-2 text-primary'>Select an Event</DialogTitle>
-//         <Divider />
-//         <DialogContent className='py-2 px-3 pt-0 max-h-80'
-//         sx={{
-//           // maxHeight: '400px',
-//           overflow: 'auto',
-//           '&::-webkit-scrollbar': {
-//             width: '8px',
-//           },
-//           '&::-webkit-scrollbar-track': {
-//             backgroundColor: '#fff',
-//             borderRadius: '10px',
-//           },
-//           '&::-webkit-scrollbar-thumb': {
-//             backgroundColor: '#999',
-//             borderRadius: '10px',
-//           },
-//           '&::-webkit-scrollbar-thumb:hover': {
-//             backgroundColor: '#555',
-//           },
-//         }}>
-//           <List className='list-container'>
-//             {eventData.map((event) => (
-//               <ListItem key={event.id} disablePadding className='min-w-40 event-list-item'>
-//                 <ListItemButton onClick={() => handleSelect(event.value)}
-//                   sx={{
-//                     '&:hover': {
-//                       backgroundColor: 'var(--primary-soft-color)', // Set your custom hover color here
-//                     },
-//                   }}>
-//                   <ListItemText primary={event.name} className='list-text' />
-//                 </ListItemButton>
-//               </ListItem>
-//             ))}
-//           </List>
-//         </DialogContent>
-//         {/* <DialogActions>
-//           <Button onClick={handleClose}>Cancel</Button>
-//         </DialogActions> */}
-//       </Dialog>
-//     </>
-//   )
-// }
-
-// export default Event
-
-// {/* <FormControl className='w-[33%] mb-2'>
-// <InputLabel id="event-label">Select Event</InputLabel>
-// <Select
-//   labelId="event-label"
-//   id="event"
-//   label="Select Event"
-//   onChange={(e) => { setEventValue(e.target.value) }}
-//   defaultValue={eventValue}
-//   value={eventValue && eventValue}
-//   sx={{ height: '2.9rem !important', minHeight: '1rem !important' }}
-// >
-//   <MenuItem value="E1">Event1</MenuItem>
-//   <MenuItem value="E2">Event2</MenuItem>
-//   <MenuItem value="E3">Event3</MenuItem>
-//   <MenuItem value="E4">Event4</MenuItem>
-// </Select>
-// </FormControl> */}

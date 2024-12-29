@@ -911,7 +911,7 @@
 .MuiDataGrid-columnHeader:focus {
   outline: none !important;
 }
-/* .MuiDataGrid-scrollbar--vertical {
+.MuiDataGrid-scrollbar--vertical {
   display: none;
 }
 .MuiDataGrid-filler {
@@ -920,7 +920,7 @@
 .MuiDataGrid-scrollbarFiller--header {
   background-color: var(--primary-color);
   border-bottom: none !important;
-} */
+}
 .MuiDataGrid-row.Mui-selected {
   background-color: #99e27b65 !important;
 }

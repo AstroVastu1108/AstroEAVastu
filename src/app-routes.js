@@ -11,6 +11,7 @@ import UserConfig from "./app/(dashboard)/userConfig/userConfig";
 import Logout from "./views/Logout";
 import TransitPage from "./app/(dashboard)/kundli/transit/transit";
 import EventPage from "./app/(dashboard)/kundli/event/event";
+import kundaliEvent from "./app/(dashboard)/kundli/kundaliEvent/kundaliEvent";
 
 export const routes = [
     {
@@ -26,8 +27,8 @@ export const routes = [
       element: PreviewPage,
     },
     {
-      path: "event/:id",
-      element: EventPage,
+      path: "kevent/:id",
+      element: kundaliEvent,
     },
     {
       path: "transit/:id",

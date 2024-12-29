@@ -96,8 +96,8 @@ export default async function Page({ params }) {
           const idSegment = slug.split('/')[1];
           return slug.startsWith(basePath) && idSegment;
         }
-        if (route.path.startsWith("event")) {
-          const basePath = "event";
+        if (route.path.startsWith("kevent/")) {
+          const basePath = "kevent";
           const idSegment = slug.split('/')[1];
           return slug.startsWith(basePath) && idSegment;
         }

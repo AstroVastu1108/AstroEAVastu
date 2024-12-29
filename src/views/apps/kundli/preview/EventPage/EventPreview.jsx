@@ -1,22 +1,83 @@
 import { LoadingButton } from '@mui/lab';
 import { Grid, InputAdornment, TextField } from '@mui/material';
-import { GridToolbarQuickFilter } from '@mui/x-data-grid';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import EventCard from './EventCard';
-import Event from '@/components/preview/Event/Event';
+import dayjs from 'dayjs';
+import AddEvent from '@/components/preview/Event/Event';
 
-function EventPreview({ kundliData }) {
-  const BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
-  const JaiminiCharKarakas = kundliData?.AstroVastuReport?.JaiminiCharKarakas;
+function EventPreview({ EventsData, KID }) {
+  const BirthDetails = EventsData?.BirthDetails;
+  const AllEventsData = EventsData?.EventList;
   const [openEvent, setOpenEvent] = useState(false);
+  const [newEventData, setNewEventData] = useState(
+    {
+      ClientID: "",
+      KundaliID: KID,
+      EventID: "",
+      Event: "",
+      EventDate: dayjs(),
+      City: { CityID: 1255364, FormattedCity: 'Surat, Gujarat' },
+      Country: { CountryCode: 'IN', Country: 'India' },
+      Remark: "",
+      isUpdate: false
+    }
+  );
+
+  // var newEventData = {
+  //   ClientID: "",
+  //   KundaliID: KID,
+  //   EventID: "",
+  //   Event: "",
+  //   EventDate: dayjs(),
+  //   City: { CityID: 1255364, FormattedCity: 'Surat, Gujarat' },
+  //   Country: { CountryCode: 'IN', Country: 'India' },
+  //   Remark: "",
+  //   isUpdate: false
+  // };
 
   const handleEventClose = () => {
     setOpenEvent(false);
   }
 
   const handleEventOpen = () => {
-    // handleClose();
     setOpenEvent(true);
+  }
+
+  const handleEventEdit = (data) => {
+    // var formData = data;
+    var formData = data;
+    const dateParts = formData.EventDate.split('-');
+    const timeParts = formData.EventTime;
+
+    const day = parseInt(dateParts[0], 10);
+    const month = parseInt(dateParts[1], 10) - 1; // month is 0-indexed in JS
+    const year = parseInt(dateParts[2], 10);
+
+    let hours, minutes, sec;
+    if (timeParts && timeParts.length === 6) {
+      hours = parseInt(timeParts.substring(0, 2), 10);
+      minutes = parseInt(timeParts.substring(2, 4), 10);
+      sec = parseInt(timeParts.substring(2, 4), 10);
+      console.log(hours, minutes, sec)
+    } else {
+      // Use current time if BirthTime is not in the correct format
+      const now = new Date();
+      hours = now.getHours();
+      minutes = now.getMinutes();
+    }
+
+    const eventDate = new Date(year, month, day, hours, minutes);
+    console.log(eventDate)
+    // formData.EventDate = dayjs(new Date(year, month, day, hours, minutes));
+    formData.isUpdate = true;
+    // formData.City = { CityID: formData.CityID, FormattedCity: formData.City };
+    // formData.Country = { CountryCode: formData.CountryCode, Country: formData.Country };
+    console.log("formData : ", { CityID: formData.CityID, FormattedCity: formData.City })
+    console.log("formData : ", formData.City)
+    console.log("formData : ", formData.CityID)
+    // newEventData = formData;
+    console.log(newEventData)
+    handleEventOpen();
   }
 
   return (
@@ -38,37 +99,6 @@ function EventPreview({ kundliData }) {
                 <span className='label font-ea-n'>Place: </span>
                 <span className='value font-ea-sb'>{BirthDetails?.City}</span>
               </div>
-              {/* <div className='flex justify-end'>
-                <>
-                  <IconButton onClick={handleClick}>
-                    <i className={'tabler-dots-vertical bg-white'} />
-                  </IconButton>
-                  <Menu
-                    anchorEl={anchorEl}
-                    open={open}
-                    onClose={handleClose}
-                    anchorOrigin={{
-                      vertical: 'bottom',
-                      horizontal: 'right',
-                    }}
-                    transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                  >
-                    <MenuItem onClick={handleEventOpen} className="flex gap-1"><i className={'tabler-browser-check me-2'} />Events</MenuItem>
-                    <MenuItem onClick={handleJCK} className="flex gap-1"><i className={'tabler-aspect-ratio me-2'} />Jaimini Char Karakas</MenuItem>
-                    <MenuItem onClick={handleNTC} className="flex gap-1"><i className={'tabler-jewish-star me-2'} />NavTara Chakra</MenuItem>
-                    <MenuItem onClick={handleIsPraOpen} className="flex gap-1"><i className={'tabler-arrow-up-right me-2'} />Prakriti</MenuItem>
-
-                    <MenuItem onClick={handleMenuTimeTool} className="flex gap-1"><i className={'tabler-calendar-share me-2'} />TimeTool</MenuItem>
-                    <MenuItem className="flex gap-1"><i className={'tabler-calendar-share me-2'} />Transit Analysis</MenuItem>
-                    <Divider />
-                    <MenuItem onClick={saveKundaliDateTime} className="flex gap-1"><i className={'tabler-copy-plus me-2'} />Save Kundali</MenuItem>
-                    <MenuItem onClick={handleMenuDownload} className="flex gap-1"><i className={'tabler-download me-2'} />Download</MenuItem>
-                  </Menu>
-                </>
-              </div> */}
             </div>
           </div>
           <div className='flex gap-4 justify-between px-5 w-full py-3'>
@@ -97,8 +127,8 @@ function EventPreview({ kundliData }) {
               <LoadingButton
                 variant='contained'
                 fullWidth
-              // sx={{ width: '180px', textTransform: 'none' }}
-              onClick={handleEventOpen}
+                // sx={{ width: '180px', textTransform: 'none' }}
+                onClick={handleEventOpen}
               // loading={loading}
               // loadingPosition="start"
               // className='w-5/12 lg:w-12/12 md:w-3/12 sm:w-4/12'
@@ -108,19 +138,24 @@ function EventPreview({ kundliData }) {
             </div>
           </div>
           <div className='px-3 flex flex-col gap-3'>
-            <EventCard BirthDetails={BirthDetails} JaiminiCharKarakas={JaiminiCharKarakas} />
-            <EventCard BirthDetails={BirthDetails} JaiminiCharKarakas={JaiminiCharKarakas} />
-            <EventCard BirthDetails={BirthDetails} JaiminiCharKarakas={JaiminiCharKarakas} />
-            <EventCard BirthDetails={BirthDetails} JaiminiCharKarakas={JaiminiCharKarakas} />
-            <EventCard BirthDetails={BirthDetails} JaiminiCharKarakas={JaiminiCharKarakas} />
-            <EventCard BirthDetails={BirthDetails} JaiminiCharKarakas={JaiminiCharKarakas} />
-            <EventCard BirthDetails={BirthDetails} JaiminiCharKarakas={JaiminiCharKarakas} />
-            <EventCard BirthDetails={BirthDetails} JaiminiCharKarakas={JaiminiCharKarakas} />
+            {AllEventsData && AllEventsData.length &&
+              <EventCard AllEventsData={AllEventsData} handleEventEdit={handleEventEdit} />
+            }
           </div>
+          {/* <div className='px-3 flex flex-col gap-3'>
+            {AllEventsData && AllEventsData.length
+              ? AllEventsData.map((element, index) => (
+                <div key={index} className=''>
+                  <EventCard Element={element} Key={index + 1} handleEventEdit={handleEventEdit} />
+                </div>
+              ))
+              : null
+            }
+          </div> */}
         </Grid>
       </Grid>
-      {openEvent && <Event setEventValue={""} open={openEvent} handleClose={handleEventClose} JaiminiCharKarakasData={JaiminiCharKarakas} />}
-      </>
+      {openEvent && <AddEvent NewEventData={newEventData} open={openEvent} handleClose={handleEventClose} />}
+    </>
   )
 }
 
