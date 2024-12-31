@@ -82,10 +82,9 @@ function KundaliEventCard({ EventElement, index, handleEditEvent }) {
       field: `col${index + 1}`,
       headerName: header, // Use the provided header names
       // minWidth: 105,
-      flex:1,
+      flex: 1,
       headerClassName: 'rowheader',
       renderCell: (params) => {
-        console.log(params)
         const row = params.row?.id;
         if (row == "row2") {
           // const data = params?.value?.split(" ");
@@ -101,53 +100,40 @@ function KundaliEventCard({ EventElement, index, handleEditEvent }) {
             </span>
           </>
         }
-         else if (row == "row4") {
-          console.log(params)
-          const NL =  params?.formattedValue?.NL;
-          const SL =  params?.formattedValue?.SL;
-          // const data = params?.value?.split(" / ");
+        else if (row == "row4") {
+          const NL = params?.formattedValue?.NL;
+          const SL = params?.formattedValue?.SL;
           return <>
-            {/* <span className='font-ea-sb'>{data[0]}</span> */}
-            <span className=''>{NL}🡒{SL}</span>
+            <span className='break-words whitespace-normal overflow-visible !leading-relaxed'>{NL} 🡒 {SL}</span>
           </>
         }
-        //  else if (row == "row3") {
-        //   const data = params?.value?.split(" / ");
-        //   return <>
-        //     <span className='font-ea-sb'>{data[0]}</span>
-        //     <span className=''> / {data[1]}</span>
-        //   </>
-        // }
       }
     })),
   ];
 
   const getRowHeight = (params) => {
-    // console.log(params)
-    if (params.id == "row4") {
-      return 80;
+    if (params.id == "row5" || params.id == "row7" || params.id == "row4") {
+      return "auto";
     } else {
-      return 38;
+      return 30;
     }
-    // const rahudataValue = params?.model?.rahuScriptFull;
-    // const ketudataValue = params?.model?.ketuScriptFull;
+  };
 
-    // // Check if both values are arrays, and take the maximum length
-    // const rahuLength = Array.isArray(rahudataValue) ? rahudataValue.length : 0;
-    // const ketuLength = Array.isArray(ketudataValue) ? ketudataValue.length : 0;
-
-    // // Get the maximum length from both arrays
-    // const maxLength = Math.max(rahuLength, ketuLength);
-
-    // Adjust the row height based on the maximum length, otherwise return default height
-    return 30;
+  const getRowClassName = (params) => {
+    if (params.id === "row5" || params.id == "row4") {
+      return 'row5-style';
+    }else if( params.id == "row7"){
+      return 'row7-style';
+    }
+    return '';
   };
 
 
   return (
     <>
-      <div className='flex flex-col gap-1 mb-4'>
-        <div className={`text-black font-ea-n px-2 md:items-center gap-y-2 lg:flex-row sm:flex-row flex-col`}>
+      <div className='flex flex-col mb-6 border-t border-[var(--border-color)]'>
+        <div className={`text-black font-ea-n px-2 md:items-center gap-y-2 lg:flex-row sm:flex-row flex-col bg-[#f5f5f5]`}>
+          <div>
           <div className='flex items-center text-xl'>
             <span className='text-primary font-ea-sb'>{index + 1}. {EventElement.Event}</span>
 
@@ -169,26 +155,31 @@ function KundaliEventCard({ EventElement, index, handleEditEvent }) {
               <span className='value font-ea-n'>{EventElement?.City}, {EventElement?.Country}</span>
             </div>
           </div>
+          </div>
         </div>
         <div className='p-0 pt-0'>
           <DataGrid
+            showCellVerticalBorder
             rows={rows}
             columns={columns}
-            pageSize={5}
+            // pageSize={5}
             hideFooter={true}
             disableColumnSorting
             disableColumnMenu
-            rowHeight={40}
+            // rowHeight={40}
             columnHeaderHeight={38}
             disableColumnResize
             hideFooterPagination={true}
             showColumnVerticalBorder
             getCellClassName={(params) => (params.field === 'key' ? 'font-ea-sb text-primary' : 'text-black')}
-            // getRowHeight={getRowHeight}
+            getRowHeight={getRowHeight}
+            // className='RahuKetuGrid'
+            getRowClassName={getRowClassName}
+            className='eventGrid'
           />
         </div>
       </div>
-      {/* <Divider /> */}
+      {/* <Divider  /> */}
     </>
   )
 }

@@ -268,6 +268,7 @@ function RahuKetu({ RahuData, KetuData, SelectedEventVal }) {
           hideFooterPagination={true}
           hideFooter={true}
           getRowHeight={getRowHeight}
+          className='RahuKetuGrid'
         />
 
       </Box>

@@ -89,7 +89,7 @@ function DashaDetails({ title, DashaData, handleDashadbClick, divref }) {
 
   const rowHeight = () => {
     if (divref.current) {
-      const height = ((divref.current.offsetHeight) - 30) / 9;
+      const height = ((divref.current.offsetHeight) - 32) / 9;
       return height;
     }
     return 25
@@ -116,6 +116,7 @@ function DashaDetails({ title, DashaData, handleDashadbClick, divref }) {
             disableRowSelectionOnClick
             hideFooterPagination={true}
             hideFooter={true}
+            className='dasha-div'
           />
 
       </Box>

@@ -6,7 +6,6 @@ import React, { useState } from 'react'
 import KundaliEventCard from './KundaliEventCard';
 
 function KundaliEvent({ EventsData, KID, getAllEvent }) {
-  console.log("===========> ", EventsData);
 
   const BirthDetails = EventsData?.BirthDetails;
   // const BirthDetails = EventsData?.BirthDetails;
@@ -84,10 +83,9 @@ function KundaliEvent({ EventsData, KID, getAllEvent }) {
                   <>
                     <Grid className='previewCard' item xs={12} md={12}>
                       <Grid item xs={12} className='flex gap-2 flex-col pb-2'>
-                        <div className={`chart-name sticky top-0 z-50 font-ea-sb rounded-t flex justify-between md:items-center gap-y-2 lg:flex-row sm:flex-row flex-col`}>
-                          <div>
+                        <div className={`chart-name sticky top-0 z-50 font-ea-sb rounded-t flex justify-between md:items-center gap-y-2 lg:flex-row sm:flex-row flex-col py-2`}>
+                          <div className='uppercase'>
                             {BirthDetails?.FirstName ? `${BirthDetails.FirstName} ${BirthDetails.MiddleName} ${BirthDetails.LastName}` : 'Prashna Kundali'}
-                            {/* <span className='text-white font-ea-sb'> # Good</span> */}
                           </div>
                           <div className={`flex justify-between md-items-center lg:gap-1 lg:flex-row md:flex-row sm:flex-row sm:gap-1 flex-col birthDateTime-Div`} >
                             <div className='flex flex-row gap-1 chart-date items-center'>

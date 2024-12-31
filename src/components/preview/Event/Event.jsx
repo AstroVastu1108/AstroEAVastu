@@ -9,8 +9,9 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { getCities, getCountries } from '@/app/Server/API/common';
 import dayjs from 'dayjs';
 import { CreateEvent } from '@/app/Server/API/EventAPI';
+import Loader from '@/components/common/Loader/Loader';
 
-function AddEvent({ NewEventData, open, handleClose,getAllEvent }) {
+function AddEvent({ NewEventData, open, handleClose, getAllEvent }) {
 
 
   const [EventOptionData, setEventOptionData] = useState([]);
@@ -35,7 +36,9 @@ function AddEvent({ NewEventData, open, handleClose,getAllEvent }) {
 
   const fetchData = async () => {
     try {
-      const response = await getCountries()
+      // setLoading(true);
+      const response = await getCountries();
+      setLoading(false);
       if (response.hasError) {
         // return toastDisplayer("error", response.error)
       }
@@ -51,6 +54,7 @@ function AddEvent({ NewEventData, open, handleClose,getAllEvent }) {
   }, []);
 
   const getEventOpions = async () => {
+    // setLoading(true);
     const response = await EventOptionsData();
     if (response.hasError) {
       setLoading(false);
@@ -138,8 +142,9 @@ function AddEvent({ NewEventData, open, handleClose,getAllEvent }) {
     }
     if (!AddEventData.isUpdate) {
       // setIsDisable(false);
+      setLoading(true);
       const response = await CreateEvent(payload)
-
+      setLoading(false);
       if (response.hasError) {
         // setIsDisable(false)
         // return toastDisplayer("error", response.error)
@@ -224,6 +229,8 @@ function AddEvent({ NewEventData, open, handleClose,getAllEvent }) {
 
   return (
     <>
+      {loading && <Loader />}
+
       <Dialog
         open={open}
         // onClose={handleClose}

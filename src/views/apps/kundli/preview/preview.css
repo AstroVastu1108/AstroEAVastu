@@ -911,12 +911,12 @@
 .MuiDataGrid-columnHeader:focus {
   outline: none !important;
 }
-.MuiDataGrid-scrollbar--vertical {
+/* .MuiDataGrid-scrollbar--vertical {
   display: none;
 }
 .MuiDataGrid-filler {
   display: none;
-}
+}*/
 .MuiDataGrid-scrollbarFiller--header {
   background-color: var(--primary-color);
   border-bottom: none !important;
@@ -942,9 +942,9 @@
   padding: 8px;
 } */
 
-.MuiDataGrid-scrollbar {
+/* .MuiDataGrid-scrollbar {
   display: none;
-}
+} */
 /*
 .MuiInputBase-root{
   height: 42px;
@@ -988,4 +988,42 @@
 
 .MuiDivider-root{
   border: 1px solid var(--border-color) !important;
+}
+
+.RahuKetuGrid{
+  .MuiDataGrid-cell {
+    line-height: 30px !important;
+  }
+}
+
+
+.eventGrid{
+  .row5-style{
+    .MuiDataGrid-cell {
+      line-height: 30px !important;
+    }
+  }
+  .row7-style{
+    /* border: 1px solid red; */
+    border-right: none !important;
+  }
+  .MuiDataGrid-filler{
+    height: 0px !important;
+    div{
+
+      border-top: none !important;
+    }
+  }
+
+  .MuiDataGrid-scrollbar{
+    display: none;
+  }
+
+  div[data-field="col9"] {
+    border-right: none !important;
+  }
+
+  div.MuiDataGrid-columnHeader[data-field="col9"] {
+    border-right: var(--primary-color) !important;
+  }
 }

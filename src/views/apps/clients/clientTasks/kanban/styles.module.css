@@ -27,7 +27,7 @@
   }
 }
 
-.scroll::-webkit-scrollbar {
+/* .scroll::-webkit-scrollbar {
   inline-size: 6px;
   block-size: 6px;
 }
@@ -39,4 +39,4 @@
 .scroll::-webkit-scrollbar-thumb {
   background-color: var(--mui-palette-divider);
   border-radius: 6px;
-}
+} */
