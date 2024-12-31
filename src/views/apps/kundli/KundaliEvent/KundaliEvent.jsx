@@ -1,15 +1,18 @@
 import AddEvent from '@/components/preview/Event/Event';
 import { LoadingButton } from '@mui/lab';
-import { Button, Card, CardContent, Grid, InputAdornment, TextField } from '@mui/material'
+import { Autocomplete, Button, Card, CardContent, Grid, InputAdornment, TextField } from '@mui/material'
 import dayjs from 'dayjs';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import KundaliEventCard from './KundaliEventCard';
+import { EventOptionsData } from '@/app/Server/API/kundliAPI';
+import Loader from '@/components/common/Loader/Loader';
 
 function KundaliEvent({ EventsData, KID, getAllEvent }) {
 
   const BirthDetails = EventsData?.BirthDetails;
-  // const BirthDetails = EventsData?.BirthDetails;
   const AllEventsData = EventsData?.EventList;
+
+  const [EventOptionData, setEventOptionData] = useState([]);
   const [openAddEvent, setOpenAddEvent] = useState(false);
   const [newEventData, setNewEventData] = useState(
     {
@@ -24,6 +27,26 @@ function KundaliEvent({ EventsData, KID, getAllEvent }) {
       isUpdate: false
     }
   );
+  const [loading, setLoading] = useState(false);
+
+
+  const getEventOpions = async () => {
+    setLoading(true);
+    const response = await EventOptionsData();
+    if (response.hasError) {
+      setLoading(false);
+      // return toastDisplayer("error", response.error);
+    } else {
+      const data = response?.responseData?.Result?.Events;
+      const otherData = [{ EventName: "Other", Event: "Other" }]
+      setEventOptionData([...data, ...otherData]);
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    getEventOpions();
+  }, [])
 
   const handleAddEventClose = () => {
     setOpenAddEvent(false);
@@ -73,6 +96,8 @@ function KundaliEvent({ EventsData, KID, getAllEvent }) {
 
   return (
     <>
+      {loading && <Loader />}
+
       <Grid container spacing={6}>
         <Grid item xs={12} md={12}>
           <Card>
@@ -83,7 +108,7 @@ function KundaliEvent({ EventsData, KID, getAllEvent }) {
                   <>
                     <Grid className='previewCard' item xs={12} md={12}>
                       <Grid item xs={12} className='flex gap-2 flex-col pb-2'>
-                        <div className={`chart-name sticky top-0 z-50 font-ea-sb rounded-t flex justify-between md:items-center gap-y-2 lg:flex-row sm:flex-row flex-col py-2`}>
+                        <div className={`chart-name sticky top-0 z-drawer font-ea-sb rounded-t flex justify-between md:items-center gap-y-2 lg:flex-row sm:flex-row flex-col py-2`}>
                           <div className='uppercase'>
                             {BirthDetails?.FirstName ? `${BirthDetails.FirstName} ${BirthDetails.MiddleName} ${BirthDetails.LastName}` : 'Prashna Kundali'}
                           </div>
@@ -117,6 +142,24 @@ function KundaliEvent({ EventsData, KID, getAllEvent }) {
                               size="small"
                             />
                           </div>
+                          <div className='w-2/12'>
+                            <Autocomplete
+                              label="Select Event"
+                              title="Select Event"
+                              id='event-select'
+                              options={EventOptionData && EventOptionData}
+                              getOptionLabel={(option) => option?.EventName}
+                              getOptionKey={(option) => option?.Event}
+                              // onChange={(event, newValue) => handleInputChange('Event', newValue, 'Event', true)}
+                              renderInput={(params) => (
+                                <TextField {...params} fullWidth label='Select Event' title='Select Event' variant='outlined'
+                                />
+                              )}
+                              fullWidth
+                              // className='w-[12rem]'
+                              size='small'
+                            />
+                          </div>
                           <div className='w-3/12 lg:w-2/12'>
                             <LoadingButton
                               variant='contained'
@@ -147,7 +190,7 @@ function KundaliEvent({ EventsData, KID, getAllEvent }) {
           </Card>
         </Grid>
       </Grid>
-      {openAddEvent && <AddEvent getAllEvent={getAllEvent} NewEventData={newEventData} open={openAddEvent} handleClose={handleAddEventClose} />}
+      {openAddEvent && <AddEvent getAllEvent={getAllEvent} NewEventData={newEventData} open={openAddEvent} handleClose={handleAddEventClose} EventOptionData={EventOptionData} />}
 
     </>
   )

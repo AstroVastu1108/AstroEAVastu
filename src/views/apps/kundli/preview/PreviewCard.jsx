@@ -106,9 +106,9 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   }
 
   const handleEventOpen = () => {
+    handleClose();
     window.open(`../kevent/${BirthDetails.KundaliID}`, '_blank');
 
-    // handleClose();
     // setOpenEvent(true);
   }
 

@@ -1,4 +1,4 @@
-import { Button, Divider } from '@mui/material'
+import { Button, Chip, Divider } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
@@ -45,14 +45,17 @@ function KundaliEventCard({ EventElement, index, handleEditEvent }) {
       const abbreviation = value.trim().slice(0, 2);
       const fullName = shorthandMap[abbreviation];
       const isLast = index === dataArr.length - 1;
+      const planet = value;
 
       return (
         <span
           className={`pl-${fullName} row-title font-ea-sb`}
           key={abbreviation}
         >
-          {value}
-          {!isLast && ", "}
+          {planet}
+          <span className='text-black'>
+            {!isLast && ", "}
+          </span>
         </span>
       );
     });
@@ -67,14 +70,31 @@ function KundaliEventCard({ EventElement, index, handleEditEvent }) {
 
   const rows = [
     // { id: 'row1', key: 'Influence', ...Object.fromEntries(originalData.map((item, index) => [`col${index + 1}`, item.Planet])) },
-    { id: 'row2', key: 'Sign', ...Object.fromEntries(originalData.map((item, index) => [`col${index + 1}`, item.RashiDegree])) },
+    { id: 'row2', key: 'Sign', ...Object.fromEntries(originalData.map((item, index) => [`col${index + 1}`, item])) },
     { id: 'row3', key: 'Nakshatra', ...Object.fromEntries(originalData.map((item, index) => [`col${index + 1}`, item.Nakshatra])) },
-    { id: 'row4', key: 'NL🡒SL', ...Object.fromEntries(originalData.map((item, index) => [`col${index + 1}`, item])) },
+    { id: 'row4', key: 'NL 🡒 SL', ...Object.fromEntries(originalData.map((item, index) => [`col${index + 1}`, item])) },
     { id: 'row5', key: 'Planet', ...Object.fromEntries(originalData.map((item, index) => [`col${index + 1}`, item.AspectPlanet])) },
     { id: 'row6', key: 'House', ...Object.fromEntries(originalData.map((item, index) => [`col${index + 1}`, item.AspectHouse])) },
     { id: 'row7', key: 'Cumulative', ...Object.fromEntries(originalData.map((item, index) => [`col${index + 1}`, item.AspectCumulativeHouse])) },
   ];
-  const columnHeaders = [...originalData.map(item => item.Planet)];
+  // const columnHeaders = [...originalData.map(item => item.Planet)];
+
+  // const columnHeaders = originalData.map(item =>
+  //   item.Planet.replace(/ R\b/, ' ⦿') // Replace " R" with " ⮌"
+  // );
+
+  const columnHeaders = originalData.map(item => {
+    const symbol = ' ⮌'; // Define your symbol
+    if (item.Planet.includes(' R')) {
+      return (
+        <span>
+          {item.Planet.replace(/ R\b/, '')}
+          <span className='text-white'>{symbol}</span>
+        </span>
+      );
+    }
+    return item.Planet;
+  });
 
   const columns = [
     { field: 'key', headerName: "Influence", width: 100, headerClassName: 'rowheader' }, // First column header
@@ -87,11 +107,17 @@ function KundaliEventCard({ EventElement, index, handleEditEvent }) {
       renderCell: (params) => {
         const row = params.row?.id;
         if (row == "row2") {
-          // const data = params?.value?.split(" ");
-          // return <>
-          //   <span className='font-ea-sb'>{data[0]} </span>
-          //   {data[1]}{data[2]}
-          // </>
+          const Rashi = params?.formattedValue?.Rashi?.slice(0, 3) || "";
+          // const Rashi = params?.formattedValue?.Rashi || "";
+          const Degree = params?.formattedValue?.Degree?.split(":")[0] || "";
+          const Min = params?.formattedValue?.Degree?.split(":")[1] || "";
+          // console.log(data)
+          return <>
+            <div className='flex'>
+              <div className='text-primary pe-3'>{Rashi}.</div>
+              <div>{Degree}° {Min}'</div>
+            </div>
+          </>
         } else if (row == "row5") {
           const data = params?.value?.split(", ");
           return <>
@@ -101,10 +127,10 @@ function KundaliEventCard({ EventElement, index, handleEditEvent }) {
           </>
         }
         else if (row == "row4") {
-          const NL = params?.formattedValue?.NL;
-          const SL = params?.formattedValue?.SL;
+          const NL = params?.formattedValue?.NL?.slice(0, 3);
+          const SL = params?.formattedValue?.SL?.slice(0, 3);
           return <>
-            <span className='break-words whitespace-normal overflow-visible !leading-relaxed'>{NL} 🡒 {SL}</span>
+            <span className='break-words whitespace-normal overflow-visible !leading-relaxed'>{highlightText(NL)} 🡒 {highlightText(SL)}</span>
           </>
         }
       }
@@ -112,7 +138,7 @@ function KundaliEventCard({ EventElement, index, handleEditEvent }) {
   ];
 
   const getRowHeight = (params) => {
-    if (params.id == "row5" || params.id == "row7" || params.id == "row4") {
+    if (params.id == "row5" || params.id == "row7") {
       return "auto";
     } else {
       return 30;
@@ -120,9 +146,9 @@ function KundaliEventCard({ EventElement, index, handleEditEvent }) {
   };
 
   const getRowClassName = (params) => {
-    if (params.id === "row5" || params.id == "row4") {
+    if (params.id === "row5") {
       return 'row5-style';
-    }else if( params.id == "row7"){
+    } else if (params.id == "row7") {
       return 'row7-style';
     }
     return '';
@@ -133,31 +159,40 @@ function KundaliEventCard({ EventElement, index, handleEditEvent }) {
     <>
       <div className='flex flex-col mb-6 border-t border-[var(--border-color)]'>
         <div className={`text-black font-ea-n px-2 md:items-center gap-y-2 lg:flex-row sm:flex-row flex-col bg-[#f5f5f5]`}>
-          <div>
-          <div className='flex items-center text-xl'>
-            <span className='text-primary font-ea-sb'>{index + 1}. {EventElement.Event}</span>
+          <div className='mb-2'>
+            <div className='flex items-center text-xl'>
+              <span className='text-primary font-ea-sb'>{index + 1}. {EventElement.Event}</span>
 
-            <div>
-              <Button className='p-1 min-w-6 w-6 ml-2' onClick={() => handleEdit(EventElement.EventID)}><i className='tabler-edit text-black text-[20px]'></i></Button>
+              <div>
+                <Button className='p-1 min-w-6 w-6 ml-2' onClick={() => handleEdit(EventElement.EventID)}><i className='tabler-edit text-black text-[20px]'></i></Button>
+              </div>
             </div>
-          </div>
-          <div className={`flex items-center`} >
-            <div className='flex flex-col gap-1 chart-date'>
-              {/* <span className='label font-ea-n'>Event Date & Time: </span> */}
-              <span className='value font-ea-sb text-black'>
-                {EventElement?.EventDate}
-                <span className='font-ea-n'> {EventElement?.EventTime.substring(0, 2)}:{EventElement?.EventTime.substring(2, 4)}:{(EventElement?.EventTime.substring(4, 6) ? EventElement?.EventTime.substring(4, 6) : '00')},
+            <div className={`flex items-center`} >
+              <div className='flex flex-col gap-1 chart-date'>
+                {/* <span className='label font-ea-n'>Event Date & Time: </span> */}
+                <span className='value font-ea-sb text-black'>
+                  {EventElement?.EventDate}
+                  <span className='font-ea-n'> {EventElement?.EventTime.substring(0, 2)}:{EventElement?.EventTime.substring(2, 4)}:{(EventElement?.EventTime.substring(4, 6) ? EventElement?.EventTime.substring(4, 6) : '00')},
+                  </span>
                 </span>
-              </span>
+              </div>
+              <div className='flex flex-col'>
+                {/* <span className='label font-ea-n'>Place: </span> */}
+                <span className='value font-ea-n'>{EventElement?.City}, {EventElement?.Country}</span>
+              </div>
             </div>
-            <div className='flex flex-col'>
-              {/* <span className='label font-ea-n'>Place: </span> */}
-              <span className='value font-ea-n'>{EventElement?.City}, {EventElement?.Country}</span>
+            <div>
+              <Chip label={
+                <sapn className="px-2">{highlightText(EventElement?.CurrentMD)} - {highlightText(EventElement?.CurrentPD)} - {highlightText(EventElement?.CurrentAD)}
+                </sapn>
+              } className='text-base' color='primary' variant='tonal' />
             </div>
-          </div>
+            {/* <div>
+              {highlightText(EventElement?.CurrentMD)} - {highlightText(EventElement?.CurrentAD)} - {highlightText(EventElement?.CurrentPD)}
+            </div> */}
           </div>
         </div>
-        <div className='p-0 pt-0'>
+        <div className='p-0 pt-0 mb-2'>
           <DataGrid
             showCellVerticalBorder
             rows={rows}
@@ -178,6 +213,13 @@ function KundaliEventCard({ EventElement, index, handleEditEvent }) {
             className='eventGrid'
           />
         </div>
+        {/* <div className='ps-2'>
+          <Chip label={
+            <sapn className="px-2">{highlightText(EventElement?.CurrentMD)} - {highlightText(EventElement?.CurrentPD)} - {highlightText(EventElement?.CurrentAD)}
+            </sapn>
+          } className='text-base' color='primary' variant='tonal' />
+        </div> */}
+
       </div>
       {/* <Divider  /> */}
     </>

@@ -56,6 +56,8 @@ function JaiminiCharKarakasPopUp({ open, handleClose, JaiminiCharKarakasData }) 
       flex: 1,
       sortable: false,
       headerClassName: 'rowheader',
+      align: 'center',
+      headerAlign: 'center',
       renderCell: (params) => {
         if (params.row.rowLabel === 'Planet') {
           return highlightText(params.value);
@@ -122,6 +124,7 @@ function JaiminiCharKarakasPopUp({ open, handleClose, JaiminiCharKarakasData }) 
         <DialogContent className=' flex justify-center'>
           <Box width={"100%"}>
               <DataGrid
+                showCellVerticalBorder
                 rows={rows}
                 columns={columns}
                 pageSize={5}

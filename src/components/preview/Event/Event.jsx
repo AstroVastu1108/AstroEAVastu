@@ -11,10 +11,10 @@ import dayjs from 'dayjs';
 import { CreateEvent } from '@/app/Server/API/EventAPI';
 import Loader from '@/components/common/Loader/Loader';
 
-function AddEvent({ NewEventData, open, handleClose, getAllEvent }) {
+function AddEvent({ NewEventData, open, handleClose, getAllEvent, EventOptionData }) {
 
 
-  const [EventOptionData, setEventOptionData] = useState([]);
+  // const [EventOptionData, setEventOptionData] = useState([]);
   const [RequiredFields] = useState(["Event", "EventDate", "EventTime", "City"]);
   const [AddEventData, setAddEventData] = useState(NewEventData);
   const [loading, setLoading] = useState([]);
@@ -53,21 +53,21 @@ function AddEvent({ NewEventData, open, handleClose, getAllEvent }) {
     fetchData()
   }, []);
 
-  const getEventOpions = async () => {
-    // setLoading(true);
-    const response = await EventOptionsData();
-    if (response.hasError) {
-      setLoading(false);
-      // return toastDisplayer("error", response.error);
-    } else {
-      setEventOptionData(response?.responseData?.Result?.Events);
-      setLoading(false);
-    }
-  }
+  // const getEventOpions = async () => {
+  //   // setLoading(true);
+  //   const response = await EventOptionsData();
+  //   if (response.hasError) {
+  //     setLoading(false);
+  //     // return toastDisplayer("error", response.error);
+  //   } else {
+  //     setEventOptionData(response?.responseData?.Result?.Events);
+  //     setLoading(false);
+  //   }
+  // }
 
-  useEffect(() => {
-    getEventOpions();
-  }, [])
+  // useEffect(() => {
+  //   getEventOpions();
+  // }, [])
 
   const fetchCities = async (query) => {
     if (query.length > 1 && AddEventData.Country) {
