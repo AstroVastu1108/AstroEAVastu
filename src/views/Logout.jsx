@@ -1,14 +1,21 @@
-'use client'
-import { useAuth } from '@/@core/contexts/authContext'
-import React from 'react'
+'use client';
+import { useAuth } from '@/@core/contexts/authContext';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
-import { useRouter } from 'next/navigation'
 function Logout() {
-    
-  const router = useRouter()
-    const { logout } = useAuth();
+  const router = useRouter();
+  const { logout } = useAuth();
+
+  useEffect(() => {
+    // Perform the logout operation
     logout();
-  return router.push('/login');
+
+    // Redirect to login after logout is performed
+    router.push('/login');
+  }, []);
+
+  return null; // You can return null or a loading indicator
 }
 
-export default Logout
+export default Logout;

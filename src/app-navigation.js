@@ -35,8 +35,13 @@ export const navigation = [
     icon: 'tabler-settings'
   },
   {
-    label: 'Courses',
-    href: '/my-courses',
-    icon: 'tabler-school'
-  }
+    label: 'Activity Log',
+    href: '/activity',
+    icon: 'tabler-calendar-bolt'
+  },
+  // {
+  //   label: 'Courses',
+  //   href: '/my-courses',
+  //   icon: 'tabler-school'
+  // }
 ]

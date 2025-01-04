@@ -11,9 +11,9 @@ function TimeTool({ handleDateChange, kundliBirthData, handleTimeTool, handleTim
 
   useEffect(() => {
     if (TimeToolOpt == "B") {
-      if (kundliBirthData?.Date && kundliBirthData?.Time) {
+      if (kundliBirthData?.BirthDate && kundliBirthData?.BirthTime) {
         // Extract date and time from the object
-        const { Date: birthDate, Time: birthTime } = kundliBirthData;
+        const { BirthDate: birthDate, BirthTime: birthTime } = kundliBirthData;
 
         // Convert date and time into a format that dayjs can understand
         const formattedDate = dayjs(`${birthDate} ${birthTime}`, 'DD-MM-YYYY HHmmss');

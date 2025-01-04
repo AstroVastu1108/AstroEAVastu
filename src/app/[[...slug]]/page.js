@@ -113,6 +113,11 @@ export default async function Page({ params }) {
           const idSegment = slug.split('/')[1];
           return slug.startsWith(basePath) && idSegment;
         }
+        if (route.path.startsWith("activity/")) {
+          const basePath = "activity";
+          const idSegment = slug.split('/')[1];
+          return slug.startsWith(basePath) && idSegment;
+        }
         return false;
       });
 

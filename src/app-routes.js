@@ -11,6 +11,7 @@ import UserConfig from "./app/(dashboard)/userConfig/userConfig";
 import Logout from "./views/Logout";
 import TransitPage from "./app/(dashboard)/kundli/transit/transit";
 import kundaliEvent from "./app/(dashboard)/kundli/kundaliEvent/kundaliEvent";
+import ActivityPage from "./app/(dashboard)/AactivityLog/activityLog";
 
 export const routes = [
     {
@@ -60,6 +61,10 @@ export const routes = [
     {
       path: "settings",
       element: MainSettings,
+    },
+    {
+      path: "activity",
+      element: ActivityPage,
     },
     {
       path: "Logout",

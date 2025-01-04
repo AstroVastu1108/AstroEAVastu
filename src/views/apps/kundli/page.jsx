@@ -409,7 +409,7 @@ export default function KundliMain() {
             <Select
               labelId="country-select-label"
               id="country-select"
-              value={selectedGroup} // Set default value as 'All'
+              value={selectedGroup}
               onChange={(e) => {
                 setSelectedGroup(e.target.value);
                 getAllKundli(1, searchInputRef.current?.value, e.target.value);
@@ -418,16 +418,8 @@ export default function KundliMain() {
               disableClearable
               className="w-6/12 lg:w-3/12 md:w-3/12 sm:w-4/12"
               size="small"
-              // sx={{
-              //   // height: '42px',
-              //   '& .MuiSelect-select': {
-              //     // height:"auto !important"
-              //   }
-              // }}
             >
-              {/* 'All' option */}
               <MenuItem value="All">ALL</MenuItem>
-              {/* Group data options */}
               {groupData.map((item, index) => (
                 <MenuItem key={index} value={item}>
                   {item}

@@ -20,7 +20,7 @@ function House({ houseArr, Symbols }) {
   function formatRashiDescAstro(desc) {
     const parts = desc.split(':'); // Split the string by colons
     if (parts.length >= 2) {
-      return `${parts[0]}° ${parts[1]}''`;
+      return `${parts[0]}° ${parts[1]}'`;
     }
     return desc; // Return the original string if it doesn't match the expected format
   }

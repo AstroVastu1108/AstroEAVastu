@@ -1,6 +1,6 @@
 import AddEvent from '@/components/preview/Event/Event';
 import { LoadingButton } from '@mui/lab';
-import { Autocomplete, Button, Card, CardContent, Grid, InputAdornment, TextField } from '@mui/material'
+import { Autocomplete, Button, Card, CardContent, Grid, IconButton, InputAdornment, Menu, MenuItem, TextField } from '@mui/material'
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react'
 import KundaliEventCard from './KundaliEventCard';
@@ -28,6 +28,7 @@ function KundaliEvent({ EventsData, KID, getAllEvent }) {
     }
   );
   const [loading, setLoading] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
 
 
   const getEventOpions = async () => {
@@ -53,6 +54,17 @@ function KundaliEvent({ EventsData, KID, getAllEvent }) {
   }
 
   const handleAddEventOpen = () => {
+    setNewEventData({
+      ClientID: "",
+      KundaliID: KID,
+      EventID: "",
+      Event: "",
+      EventDate: dayjs(),
+      City: { CityID: 1255364, FormattedCity: 'Surat, Gujarat' },
+      Country: { CountryCode: 'IN', Country: 'India' },
+      Remark: "",
+      isUpdate: false
+    });
     setOpenAddEvent(true);
   }
 
@@ -92,104 +104,139 @@ function KundaliEvent({ EventsData, KID, getAllEvent }) {
     handleAddEventOpen();
   };
 
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleRefresh = () => {
+    getAllEvent(KID);
+    handleClose();
+  }
 
 
   return (
     <>
-      {loading && <Loader />}
+      {loading ? <Loader /> :
+        <>
+          <Grid container spacing={6}>
+            <Grid item xs={12} md={12}>
+              <Card>
+                <CardContent className='flex flex-col p-0'>
 
-      <Grid container spacing={6}>
-        <Grid item xs={12} md={12}>
-          <Card>
-            <CardContent className='flex flex-col p-0'>
-
-              <div className='flex justify-center'>
-                {EventsData &&
-                  <>
-                    <Grid className='previewCard' item xs={12} md={12}>
-                      <Grid item xs={12} className='flex gap-2 flex-col pb-2'>
-                        <div className={`chart-name sticky top-0 z-drawer font-ea-sb rounded-t flex justify-between md:items-center gap-y-2 lg:flex-row sm:flex-row flex-col py-2`}>
-                          <div className='uppercase'>
-                            {BirthDetails?.FirstName ? `${BirthDetails.FirstName} ${BirthDetails.MiddleName} ${BirthDetails.LastName}` : 'Prashna Kundali'}
-                          </div>
-                          <div className={`flex justify-between md-items-center lg:gap-1 lg:flex-row md:flex-row sm:flex-row sm:gap-1 flex-col birthDateTime-Div`} >
-                            <div className='flex flex-row gap-1 chart-date items-center'>
-                              <span className='label font-ea-n'>Birth Date & Time: </span>
-                              <span className='value font-ea-sb'>{BirthDetails?.BirthDate} {BirthDetails?.BirthTime.substring(0, 2)}:{BirthDetails?.BirthTime.substring(2, 4)}:{(BirthDetails?.BirthTime.substring(4, 6) ? BirthDetails?.BirthTime.substring(4, 6) : '00')}
-                              </span>
-                            </div>
-                            <div className='flex flex-row gap-1 chart-date items-center'>
-                              <span className='label font-ea-n'>Place: </span>
-                              <span className='value font-ea-sb'>{BirthDetails?.City}, {BirthDetails?.Country}</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className='flex gap-4 justify-between px-5 w-full py-3'>
-                          <div className='w-9/12 lg:w-10/12'>
-                            <TextField
-                              variant="outlined"
-                              placeholder="Search..."
-                              fullWidth
-                              autoFocus
-                              InputProps={{
-                                startAdornment: (
-                                  <InputAdornment position="start">
-                                    <i className='tabler-search text-primary'></i>
-                                    {/* <SearchIcon /> */}
-                                  </InputAdornment>
-                                ),
-                              }}
-                              size="small"
-                            />
-                          </div>
-                          <div className='w-2/12'>
-                            <Autocomplete
-                              label="Select Event"
-                              title="Select Event"
-                              id='event-select'
-                              options={EventOptionData && EventOptionData}
-                              getOptionLabel={(option) => option?.EventName}
-                              getOptionKey={(option) => option?.Event}
-                              // onChange={(event, newValue) => handleInputChange('Event', newValue, 'Event', true)}
-                              renderInput={(params) => (
-                                <TextField {...params} fullWidth label='Select Event' title='Select Event' variant='outlined'
-                                />
-                              )}
-                              fullWidth
-                              // className='w-[12rem]'
-                              size='small'
-                            />
-                          </div>
-                          <div className='w-3/12 lg:w-2/12'>
-                            <LoadingButton
-                              variant='contained'
-                              fullWidth
-                              onClick={handleAddEventOpen}
-                            >
-                              Add Event
-                            </LoadingButton>
-                          </div>
-                        </div>
-                        <div>
-                          {AllEventsData && AllEventsData.length
-                            ? AllEventsData.map((element, index) => (
-                              <div key={index} className=''>
-                                <KundaliEventCard EventElement={element} index={index} handleEditEvent={handleEdit} />
+                  <div className='flex justify-center'>
+                    {EventsData &&
+                      <>
+                        <Grid className='previewCard' item xs={12} md={12}>
+                          <Grid item xs={12} className='flex gap-2 flex-col'>
+                            <div className={`chart-name sticky top-0 z-50 font-ea-sb rounded-t flex justify-between md:items-center gap-y-2 lg:flex-row sm:flex-row flex-col`}>
+                              <div className='uppercase'>
+                                {BirthDetails?.FirstName ? `${BirthDetails.FirstName} ${BirthDetails.MiddleName} ${BirthDetails.LastName}` : 'Prashna Kundali'}
                               </div>
-                            )) : null
-                          }
-                        </div>
-                      </Grid>
-                    </Grid>
-                  </>
+                              <div className={`flex justify-between md-items-center lg:gap-1 lg:flex-row md:flex-row sm:flex-row sm:gap-1 flex-col birthDateTime-Div`} >
+                                <div className='flex flex-row gap-1 chart-date items-center'>
+                                  <span className='label font-ea-n'>Birth Date & Time: </span>
+                                  <span className='value font-ea-sb'>{BirthDetails?.BirthDate} {BirthDetails?.BirthTime.substring(0, 2)}:{BirthDetails?.BirthTime.substring(2, 4)}:{(BirthDetails?.BirthTime.substring(4, 6) ? BirthDetails?.BirthTime.substring(4, 6) : '00')}
+                                  </span>
+                                </div>
+                                <div className='flex flex-row gap-1 chart-date items-center'>
+                                  <span className='label font-ea-n'>Place: </span>
+                                  <span className='value font-ea-sb'>{BirthDetails?.City}, {BirthDetails?.Country}</span>
+                                </div>
+                                <div className='flex justify-end'>
+                                  <>
+                                    <IconButton onClick={handleClick}>
+                                      <i className={'tabler-dots-vertical bg-white'} />
+                                    </IconButton>
+                                    <Menu
+                                      anchorEl={anchorEl}
+                                      open={anchorEl}
+                                      onClose={handleClose}
+                                      anchorOrigin={{
+                                        vertical: 'bottom',
+                                        horizontal: 'right',
+                                      }}
+                                      transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                      }}
+                                    >
+                                      <MenuItem onClick={handleRefresh} className="flex gap-1"><i className={'tabler-refresh me-2'} />Refresh</MenuItem>
+                                    </Menu>
+                                  </>
+                                </div>
+                              </div>
+                            </div>
+                            <div className='flex gap-4 justify-between px-5 w-full py-3'>
+                              <div className='w-9/12 lg:w-10/12'>
+                                <TextField
+                                  variant="outlined"
+                                  placeholder="Search..."
+                                  fullWidth
+                                  autoFocus
+                                  InputProps={{
+                                    startAdornment: (
+                                      <InputAdornment position="start">
+                                        <i className='tabler-search text-primary'></i>
+                                        {/* <SearchIcon /> */}
+                                      </InputAdornment>
+                                    ),
+                                  }}
+                                  size="small"
+                                />
+                              </div>
+                              <div className='w-2/12'>
+                                <Autocomplete
+                                  label="Select Event"
+                                  title="Select Event"
+                                  id='event-select'
+                                  options={EventOptionData && EventOptionData}
+                                  getOptionLabel={(option) => option?.EventName}
+                                  getOptionKey={(option) => option?.Event}
+                                  // onChange={(event, newValue) => handleInputChange('Event', newValue, 'Event', true)}
+                                  renderInput={(params) => (
+                                    <TextField {...params} fullWidth label='Select Event' title='Select Event' variant='outlined'
+                                    />
+                                  )}
+                                  fullWidth
+                                  // className='w-[12rem]'
+                                  size='small'
+                                />
+                              </div>
+                              <div className='w-3/12 lg:w-2/12'>
+                                <LoadingButton
+                                  variant='contained'
+                                  fullWidth
+                                  onClick={handleAddEventOpen}
+                                >
+                                  Add Event
+                                </LoadingButton>
+                              </div>
+                            </div>
+                            <div>
+                              {AllEventsData && AllEventsData.length
+                                ? AllEventsData.map((element, index) => (
+                                  <div key={index} className=''>
+                                    <KundaliEventCard EventElement={element} index={index} handleEditEvent={handleEdit} />
+                                  </div>
+                                )) : null
+                              }
+                            </div>
+                          </Grid>
+                        </Grid>
+                      </>
+                    }
+                  </div>
 
-                }
-              </div>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        </>}
 
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
       {openAddEvent && <AddEvent getAllEvent={getAllEvent} NewEventData={newEventData} open={openAddEvent} handleClose={handleAddEventClose} EventOptionData={EventOptionData} />}
 
     </>
