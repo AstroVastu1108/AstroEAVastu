@@ -31,6 +31,7 @@ const Preview = ({ kundliData, setKundliData }) => {
   const [loading, setLoading] = useState(false);
   const [TransitData, setTransitData] = useState(null);
   const [DivisionalData, setDivisionalData] = useState("D2");
+  const [isTransit, setIsTransit] = useState(null);
   const [datePicker, setDatePicker] = useState(dayjs());
 
   const handleKundliApi = () => {
@@ -45,43 +46,45 @@ const Preview = ({ kundliData, setKundliData }) => {
     }
   };
 
-  const handleButtonClick = () => {
-    setDownloadLoading(true);
-    if (printRef.current) {
-      html2canvas(printRef.current).then(canvas => {
-        const imgData = canvas.toDataURL('image/jpeg', 2); // Convert to JPEG with lower quality
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        const imgWidth = 200; // A4 width in mm
-        const pageHeight = 297; // A4 height in mm
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        let heightLeft = imgHeight;
-        let position = 4;
+  // const handleButtonClick = () => {
+  //   setDownloadLoading(true);
+  //   if (printRef.current) {
+  //     html2canvas(printRef.current).then(canvas => {
+  //       const imgData = canvas.toDataURL('image/jpeg', 2); // Convert to JPEG with lower quality
+  //       const pdf = new jsPDF('p', 'mm', 'a4');
+  //       const imgWidth = 200; // A4 width in mm
+  //       const pageHeight = 297; // A4 height in mm
+  //       const imgHeight = (canvas.height * imgWidth) / canvas.width;
+  //       let heightLeft = imgHeight;
+  //       let position = 4;
 
-        pdf.addImage(imgData, 'JPEG', 4, position, imgWidth, imgHeight, '', 'FAST');
-        heightLeft -= pageHeight;
+  //       pdf.addImage(imgData, 'JPEG', 4, position, imgWidth, imgHeight, '', 'FAST');
+  //       heightLeft -= pageHeight;
 
-        while (heightLeft > 0) {
-          position = heightLeft - imgHeight;
-          pdf.addPage();
-          pdf.addImage(imgData, 'JPEG', 4, position, imgWidth, imgHeight, '', 'FAST');
-          heightLeft -= pageHeight;
-        }
+  //       while (heightLeft > 0) {
+  //         position = heightLeft - imgHeight;
+  //         pdf.addPage();
+  //         pdf.addImage(imgData, 'JPEG', 4, position, imgWidth, imgHeight, '', 'FAST');
+  //         heightLeft -= pageHeight;
+  //       }
 
-        pdf.save('document.pdf');
-      });
-      // setDownloadLoading(false);
-    }
-    setTimeout(() => {
+  //       pdf.save('document.pdf');
+  //     });
+  //     // setDownloadLoading(false);
+  //   }
+  //   setTimeout(() => {
 
-      setDownloadLoading(false);
-    }, 2000);
-  };
+  //     setDownloadLoading(false);
+  //   }, 2000);
+  // };
 
   const handleTimeTool = () => {
     setTimeToolPopUp(!timeToolPopUp)
   }
 
   const getTransitData = async (fdate, ftime, option) => {
+    // return console.log(option);
+    setIsTransit(option);
     var BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
     var date = "";
     var time = "";
@@ -132,6 +135,7 @@ const Preview = ({ kundliData, setKundliData }) => {
   }
 
   const getDivisionalChartData = async (option) => {
+    setIsTransit(option);
     if (option && option != "undefined" && option != "" && option != "V") {
       var BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
 
@@ -229,7 +233,7 @@ const Preview = ({ kundliData, setKundliData }) => {
         setDatePicker(dayjs(TransiteTime, 'DD-MM-YYYY HHmmss'));
       }
     } else if (e.target.value == "B") {
-      const { Date: birthDate, Time: birthTime } = kundliData?.AstroVastuReport?.BirthDetails;
+      const { BirthDate: birthDate, BirthTime: birthTime } = kundliData?.AstroVastuReport?.BirthDetails;
       const formattedDate = dayjs(`${birthDate} ${birthTime}`, 'DD-MM-YYYY HHmmss');
       setDatePicker(formattedDate);
     }
