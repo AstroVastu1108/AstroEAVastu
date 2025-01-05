@@ -53,6 +53,7 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
   };
 
   const applyOccupancyColor = (Occupancy) => {
+    console.log(Occupancy)
     if (SelectedEventVal) {
       const positive = SelectedEventVal.Positive?.split(", ").map(Number) || [];
       const negative = SelectedEventVal.Negative?.split(", ").map(Number) || [];

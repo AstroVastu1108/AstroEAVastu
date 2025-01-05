@@ -6,11 +6,13 @@ import React, { useEffect, useState } from 'react'
 import KundaliEventCard from './KundaliEventCard';
 import { EventOptionsData } from '@/app/Server/API/kundliAPI';
 import Loader from '@/components/common/Loader/Loader';
+import LifeEvent from '@/components/preview/LifeEvent/LifeEvent';
 
 function KundaliEvent({ EventsData, KID, getAllEvent }) {
 
   const BirthDetails = EventsData?.BirthDetails;
   const AllEventsData = EventsData?.EventList;
+  const Summary = EventsData?.Summary;
 
   const [EventOptionData, setEventOptionData] = useState([]);
   const [openAddEvent, setOpenAddEvent] = useState(false);
@@ -29,6 +31,8 @@ function KundaliEvent({ EventsData, KID, getAllEvent }) {
   );
   const [loading, setLoading] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [openLifeEvent, setOpenLifeEvent] = useState(false);
+  const [LifeEventValue, setLifeEventValue] = useState(null);
 
 
   const getEventOpions = async () => {
@@ -117,6 +121,14 @@ function KundaliEvent({ EventsData, KID, getAllEvent }) {
     handleClose();
   }
 
+  const handleLifeEventClose = () => {
+    setOpenLifeEvent(false);
+  }
+
+  const handleLifeEventOpen = () => {
+    // handleClose();
+    setOpenLifeEvent(true);
+  }
 
   return (
     <>
@@ -133,9 +145,12 @@ function KundaliEvent({ EventsData, KID, getAllEvent }) {
                         <Grid className='previewCard' item xs={12} md={12}>
                           <Grid item xs={12} className='flex gap-2 flex-col'>
                             <div className={`chart-name sticky top-0 z-50 font-ea-sb rounded-t flex justify-between md:items-center gap-y-2 lg:flex-row sm:flex-row flex-col`}>
-                              <div className='uppercase'>
-                                {BirthDetails?.FirstName ? `${BirthDetails.FirstName} ${BirthDetails.MiddleName} ${BirthDetails.LastName}` : 'Prashna Kundali'}
-                              </div>
+                              <span className='text-white flex items-center uppercase'>
+                                Events ↠
+                                <div className='uppercase text-[var(--secondary-color)] ms-2'>
+                                  {BirthDetails?.FirstName ? `${BirthDetails.FirstName} ${BirthDetails.MiddleName} ${BirthDetails.LastName}` : 'Prashna Kundali'}
+                                </div>
+                              </span>
                               <div className={`flex justify-between md-items-center lg:gap-1 lg:flex-row md:flex-row sm:flex-row sm:gap-1 flex-col birthDateTime-Div`} >
                                 <div className='flex flex-row gap-1 chart-date items-center'>
                                   <span className='label font-ea-n'>Birth Date & Time: </span>
@@ -164,7 +179,7 @@ function KundaliEvent({ EventsData, KID, getAllEvent }) {
                                         horizontal: 'right',
                                       }}
                                     >
-                                      <MenuItem onClick={handleRefresh} className="flex gap-1"><i className={'tabler-refresh me-2'} />Refresh</MenuItem>
+                                      <MenuItem onClick={handleRefresh} className="flex gap-1"><i className={'tabler-refresh me-2'} />Recalculate</MenuItem>
                                     </Menu>
                                   </>
                                 </div>
@@ -188,7 +203,7 @@ function KundaliEvent({ EventsData, KID, getAllEvent }) {
                                   size="small"
                                 />
                               </div>
-                              <div className='w-2/12'>
+                              <div className='w-3/12'>
                                 <Autocomplete
                                   label="Select Event"
                                   title="Select Event"
@@ -206,6 +221,15 @@ function KundaliEvent({ EventsData, KID, getAllEvent }) {
                                   size='small'
                                 />
                               </div>
+                              <div className='mb-1 w-3/12 flex justify-center'>
+                                <Button variant='outlined' className='' fullWidth onClick={handleLifeEventOpen}>
+                                  <span className='text-[var(--green-color)]'>Life Event</span>
+                                  <span className='arrow text-black'>🡒</span>
+                                  <span>
+                                    {LifeEventValue ? `${LifeEventValue.EventName}` : "NA"}
+                                  </span>
+                                </Button>
+                              </div>
                               <div className='w-3/12 lg:w-2/12'>
                                 <LoadingButton
                                   variant='contained'
@@ -220,7 +244,7 @@ function KundaliEvent({ EventsData, KID, getAllEvent }) {
                               {AllEventsData && AllEventsData.length
                                 ? AllEventsData.map((element, index) => (
                                   <div key={index} className=''>
-                                    <KundaliEventCard EventElement={element} index={index} handleEditEvent={handleEdit} />
+                                    <KundaliEventCard EventElement={element} index={index} handleEditEvent={handleEdit} SelectedEventVal={LifeEventValue} />
                                   </div>
                                 )) : null
                               }
@@ -238,6 +262,9 @@ function KundaliEvent({ EventsData, KID, getAllEvent }) {
         </>}
 
       {openAddEvent && <AddEvent getAllEvent={getAllEvent} NewEventData={newEventData} open={openAddEvent} handleClose={handleAddEventClose} EventOptionData={EventOptionData} />}
+      {openLifeEvent &&
+        <LifeEvent setLifeEventValue={setLifeEventValue} open={openLifeEvent} handleClose={handleLifeEventClose} />
+      }
 
     </>
   )
