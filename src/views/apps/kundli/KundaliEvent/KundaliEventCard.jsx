@@ -56,7 +56,7 @@ function KundaliEventCard({ EventElement, index, handleEditEvent, SelectedEventV
           className={`pl-${fullName} row-title ${isHeader ? `font-ea-n` : `font-ea-sb`} `}
           key={abbreviation}
         >
-          {planet}
+          {planet.slice(0, 3)}
           <span className='text-black'>
             {!isLast && ", "}
           </span>
@@ -216,7 +216,7 @@ function KundaliEventCard({ EventElement, index, handleEditEvent, SelectedEventV
                 <span
                   className={`pl-${fullName} row-title font-ea-n`}
                 >
-                  {item.trim()}
+                  {item.trim().slice(0, 3)}
                 </span>
                 {!isLast && <span>, </span>}
               </React.Fragment>
@@ -345,8 +345,8 @@ function KundaliEventCard({ EventElement, index, handleEditEvent, SelectedEventV
     <>
       <div className='flex flex-col mb-6 border-t border-[var(--border-color)]'>
         <div className={`text-black font-ea-n ps-2 md:items-center gap-y-2 lg:flex-row sm:flex-row flex-col bg-[#f5f5f5]`}>
-          <div className='flex text-[14px]'>
-            <div className='w-2/12 border-r border-[var(--border-color)] pe-2 pb-2'>
+          <div className='flex justify-between text-[14px]'>
+            <div className='pe-2 pb-2  w-[20%]'>
               <table>
                 <tr>
                   <td className='pe-2 text-xl w-1'>
@@ -369,7 +369,7 @@ function KundaliEventCard({ EventElement, index, handleEditEvent, SelectedEventV
                         {/* <span className='label font-ea-n'>Event Date & Time: </span> */}
                         <span className='value font-ea-sb text-black'>
                           {EventElement?.EventDate}
-                          <span className='font-ea-n'> {EventElement?.EventTime.substring(0, 2)}:{EventElement?.EventTime.substring(2, 4)}:{(EventElement?.EventTime.substring(4, 6) ? EventElement?.EventTime.substring(4, 6) : '00')},
+                          <span className='font-ea-n'> {EventElement?.EventTime.substring(0, 2)}:{EventElement?.EventTime.substring(2, 4)}:{(EventElement?.EventTime.substring(4, 6) ? EventElement?.EventTime.substring(4, 6) : '00')}
                           </span>
                         </span>
                       </div>
@@ -385,7 +385,7 @@ function KundaliEventCard({ EventElement, index, handleEditEvent, SelectedEventV
                   <td></td>
                   <td>
                     <div>
-                      {EventElement?.Remark}
+                      {EventElement?.Remark && <>({EventElement?.Remark})</>}
                       {/* <sapn className="pe-2">{highlightText(EventElement?.CurrentMD)} - {highlightText(EventElement?.CurrentPD)} - {highlightText(EventElement?.CurrentAD)}
                       </sapn> */}
                     </div>
@@ -393,103 +393,105 @@ function KundaliEventCard({ EventElement, index, handleEditEvent, SelectedEventV
                 </tr>
               </table>
             </div>
-            <div className='w-5/12 px-2 pb-2 border-r border-[var(--border-color)]'>
+            <div className='w-[40%] px-2 pb-2 border-l border-[var(--border-color)]'>
               <table>
                 <tr>
-                  <td className='pe-2 text-primary font-ea-sb w-5/12'>Saturn + Jupiter </td>
+                  <td className=' text-primary font-ea-sb w-[30%]'>Sat + Jup </td>
                   <td className='flex'> <div className='pe-2'>🡒</div>  {applyPlanetAndOccupancyColor(Summary?.SatJup, true)}</td>
                 </tr>
                 <tr>
-                  <td className='pe-2 text-primary font-ea-sb'>Saturn + Jupiter + Sun</td>
+                  <td className=' text-primary font-ea-sb'>Sat + Jup + Sun</td>
                   <td className='flex'> <div className='pe-2'>🡒</div> {applyPlanetAndOccupancyColor(Summary?.SatJupSun, true)}</td>
                 </tr>
                 <tr>
-                  <td className='pe-2 text-primary font-ea-sb'>Saturn + Jupiter + Rahu</td>
+                  <td className=' text-primary font-ea-sb'>Sat + Jup + Rahu</td>
                   <td className='flex'> <div className='pe-2'>🡒</div> {applyPlanetAndOccupancyColor(Summary?.SatJupRah, true)}</td>
                 </tr>
                 <tr>
-                  <td className='pe-2 text-primary font-ea-sb'>Saturn + Jupiter + Ketu</td>
+                  <td className=' text-primary font-ea-sb'>Sat + Jup + Ketu</td>
                   <td className='flex'> <div className='pe-2'>🡒</div> {applyPlanetAndOccupancyColor(Summary?.SatJupKet, true)}</td>
                 </tr>
               </table>
             </div>
-            <div className='w-2/12 pb-2 border-r border-[var(--border-color)]'>
-              <table>
-                <tr className='bg-[var(--primary-soft-color)]'>
-                  {/* <td><div className='px-2 py-1'>Dasha 🡒</div></td> */}
-                  <td className='px-2 py-1 font-ea-sb' colSpan={4}>MahaDasha</td>
-                </tr>
-                <tr>
-                  <td className='ps-2'>PL</td>
-                  <td className='px-2'>🡒</td>
-                  <td className='pe-2 text-black font-ea-sb'>{highlightText(CurrentMDScript?.PL?.Planet)} </td>
-                  <td className='px-2'>{applyOccupancyColor(CurrentMDScript?.PL?.ScriptFull)}</td>
-                </tr>
-                <tr>
-                  <td className='ps-2'>NL</td>
-                  <td className='px-2'>🡒</td>
-                  <td className=' pe-2 text-black font-ea-sb'>{highlightText(CurrentMDScript?.NL?.Planet)}</td>
-                  <td className='px-2'>{applyOccupancyColor(CurrentMDScript?.NL?.ScriptFull)}</td>
-                </tr>
-                <tr>
-                  <td className='ps-2'>SL</td>
-                  <td className='px-2'>🡒</td>
-                  <td className=' pe-2 text-black font-ea-sb'>{highlightText(CurrentMDScript?.SL?.Planet)} </td>
-                  <td className='px-2'>{applyOccupancyColor(CurrentMDScript?.SL?.ScriptFull)}</td>
-                </tr>
-              </table>
-            </div>
-            <div className='w-2/12 pb-2 border-r border-[var(--border-color)]'>
-              <table>
-                <tr className='bg-[var(--primary-soft-color)]'>
-                  <td className='px-2 py-1 font-ea-sb' colSpan={4}>AntarDasha</td>
-                </tr>
-                <tr>
-                  {/* <td className='pe-2 text-primary font-ea-sb'>{highlightText(EventElement?.CurrentAD)}</td> */}
-                  <td className='ps-2'>PL</td>
-                  <td className='px-2'>🡒</td>
-                  <td className='px-2 text-black font-ea-sb'>{highlightText(CurrentADScript?.PL?.Planet)} </td>
-                  <td className='pe-2'>{applyOccupancyColor(CurrentADScript?.PL?.ScriptFull)}</td>
-                </tr>
-                <tr>
-                  <td className='ps-2'>NL</td>
-                  <td className='px-2'>🡒</td>
-                  <td className='px-2 text-black font-ea-sb'>{highlightText(CurrentADScript?.NL?.Planet)} </td>
-                  <td className='pe-2'>{applyOccupancyColor(CurrentADScript?.NL?.ScriptFull)}</td>
-                </tr>
-                <tr>
-                  <td className='ps-2'>SL</td>
-                  <td className='px-2'>🡒</td>
-                  <td className='px-2 text-black font-ea-sb'>{highlightText(CurrentADScript?.SL?.Planet)} </td>
-                  <td className='pe-2'>{applyOccupancyColor(CurrentADScript?.SL?.ScriptFull)}</td>
-                </tr>
-              </table>
-            </div>
-            <div className='w-2/12 pb-2'>
-              <table>
-                <tr className='bg-[var(--primary-soft-color)]'>
-                  <td className='px-2 py-1 font-ea-sb' colSpan={4}>PratyantarDasha</td>
-                </tr>
-                <tr>
-                  {/* <td className='pe-2 text-primary font-ea-sb'>{highlightText(EventElement?.CurrentAD)}</td> */}
-                  <td className='ps-2'>PL</td>
-                  <td className='px-2'>🡒</td>
-                  <td className='px-2 text-black font-ea-sb'>{highlightText(CurrentPDScript?.PL?.Planet)}</td>
-                  <td className='pe-2'> {applyOccupancyColor(CurrentPDScript?.PL?.ScriptFull)}</td>
-                </tr>
-                <tr>
-                  <td className='ps-2'>NL</td>
-                  <td className='px-2'>🡒</td>
-                  <td className='px-2 text-black font-ea-sb'>{highlightText(CurrentPDScript?.NL?.Planet)} </td>
-                  <td className='pe-2'> {applyOccupancyColor(CurrentPDScript?.NL?.ScriptFull)}</td>
-                </tr>
-                <tr>
-                  <td className='ps-2'>SL</td>
-                  <td className='px-2'>🡒</td>
-                  <td className='px-2 text-black font-ea-sb'>{highlightText(CurrentPDScript?.SL?.Planet)} </td>
-                  <td className='pe-2'> {applyOccupancyColor(CurrentPDScript?.SL?.ScriptFull)}</td>
-                </tr>
-              </table>
+            <div className='flex w-[40%] justify-between'>
+              <div className='w-[33.33%] pb-2 border-l border-[var(--border-color)]'>
+                <table>
+                  <tr className='bg-[var(--primary-soft-color)]'>
+                    {/* <td><div className='px-2 py-1'>Dasha 🡒</div></td> */}
+                    <td className='px-2 py-1 font-ea-sb text-primary' colSpan={4}>MahaDasha</td>
+                  </tr>
+                  <tr>
+                    <td className='ps-2 font-ea-sb text-primary'>PL</td>
+                    <td className='px-2'>🡒</td>
+                    <td className='pe-2 text-black font-ea-sb'>{highlightText(CurrentMDScript?.PL?.Planet)} </td>
+                    <td className='px-2'>{applyOccupancyColor(CurrentMDScript?.PL?.ScriptFull)}</td>
+                  </tr>
+                  <tr>
+                    <td className='ps-2 font-ea-sb text-primary'>NL</td>
+                    <td className='px-2'>🡒</td>
+                    <td className=' pe-2 text-black font-ea-sb'>{highlightText(CurrentMDScript?.NL?.Planet)}</td>
+                    <td className='px-2'>{applyOccupancyColor(CurrentMDScript?.NL?.ScriptFull)}</td>
+                  </tr>
+                  <tr>
+                    <td className='ps-2 font-ea-sb text-primary'>SL</td>
+                    <td className='px-2'>🡒</td>
+                    <td className=' pe-2 text-black font-ea-sb'>{highlightText(CurrentMDScript?.SL?.Planet)} </td>
+                    <td className='px-2'>{applyOccupancyColor(CurrentMDScript?.SL?.ScriptFull)}</td>
+                  </tr>
+                </table>
+              </div>
+              <div className='w-[33.33%] pb-2 border-l border-[var(--border-color)]'>
+                <table>
+                  <tr className='bg-[var(--primary-soft-color)]'>
+                    <td className='px-2 py-1 font-ea-sb  text-primary' colSpan={4}>AntarDasha</td>
+                  </tr>
+                  <tr>
+                    {/* <td className='pe-2 text-primary font-ea-sb'>{highlightText(EventElement?.CurrentAD)}</td> */}
+                    {/* <td className='ps-2'>PL</td>
+                  <td className='px-2'>🡒</td> */}
+                    <td className='px-2 text-black font-ea-sb'>{highlightText(CurrentADScript?.PL?.Planet)} </td>
+                    <td className='pe-2'>{applyOccupancyColor(CurrentADScript?.PL?.ScriptFull)}</td>
+                  </tr>
+                  <tr>
+                    {/* <td className='ps-2'>NL</td>
+                  <td className='px-2'>🡒</td> */}
+                    <td className='px-2 text-black font-ea-sb'>{highlightText(CurrentADScript?.NL?.Planet)} </td>
+                    <td className='pe-2'>{applyOccupancyColor(CurrentADScript?.NL?.ScriptFull)}</td>
+                  </tr>
+                  <tr>
+                    {/* <td className='ps-2'>SL</td>
+                  <td className='px-2'>🡒</td> */}
+                    <td className='px-2 text-black font-ea-sb'>{highlightText(CurrentADScript?.SL?.Planet)} </td>
+                    <td className='pe-2'>{applyOccupancyColor(CurrentADScript?.SL?.ScriptFull)}</td>
+                  </tr>
+                </table>
+              </div>
+              <div className='w-[33.33%] pb-2 border-l border-[var(--border-color)]'>
+                <table>
+                  <tr className='bg-[var(--primary-soft-color)]'>
+                    <td className='px-2 py-1 font-ea-sb  text-primary' colSpan={4}>PratyantarDasha</td>
+                  </tr>
+                  <tr>
+                    {/* <td className='pe-2 text-primary font-ea-sb'>{highlightText(EventElement?.CurrentAD)}</td> */}
+                    {/* <td className='ps-2'>PL</td>
+                  <td className='px-2'>🡒</td> */}
+                    <td className='px-2 text-black font-ea-sb'>{highlightText(CurrentPDScript?.PL?.Planet)}</td>
+                    <td className='pe-2'> {applyOccupancyColor(CurrentPDScript?.PL?.ScriptFull)}</td>
+                  </tr>
+                  <tr>
+                    {/* <td className='ps-2'>NL</td>
+                  <td className='px-2'>🡒</td> */}
+                    <td className='px-2 text-black font-ea-sb'>{highlightText(CurrentPDScript?.NL?.Planet)} </td>
+                    <td className='pe-2'> {applyOccupancyColor(CurrentPDScript?.NL?.ScriptFull)}</td>
+                  </tr>
+                  <tr>
+                    {/* <td className='ps-2'>SL</td>
+                  <td className='px-2'>🡒</td> */}
+                    <td className='px-2 text-black font-ea-sb'>{highlightText(CurrentPDScript?.SL?.Planet)} </td>
+                    <td className='pe-2'> {applyOccupancyColor(CurrentPDScript?.SL?.ScriptFull)}</td>
+                  </tr>
+                </table>
+              </div>
             </div>
             {/* <div className='flex items-center'>
               <div className='flex '>
