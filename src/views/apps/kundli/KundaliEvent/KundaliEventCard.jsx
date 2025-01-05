@@ -414,7 +414,7 @@ function KundaliEventCard({ EventElement, index, handleEditEvent, SelectedEventV
               </table>
             </div>
             <div className='flex w-[40%] justify-between'>
-              <div className='w-[33.33%] pb-2 border-l border-[var(--border-color)]'>
+              <div className='w-auto grow pb-2 border-l border-[var(--border-color)]'>
                 <table>
                   <tr className='bg-[var(--primary-soft-color)]'>
                     {/* <td><div className='px-2 py-1'>Dasha 🡒</div></td> */}
@@ -440,7 +440,7 @@ function KundaliEventCard({ EventElement, index, handleEditEvent, SelectedEventV
                   </tr>
                 </table>
               </div>
-              <div className='w-[33.33%] pb-2 border-l border-[var(--border-color)]'>
+              <div className='w-auto grow pb-2 border-l border-[var(--border-color)]'>
                 <table>
                   <tr className='bg-[var(--primary-soft-color)]'>
                     <td className='px-2 py-1 font-ea-sb  text-primary' colSpan={4}>AntarDasha</td>
@@ -466,7 +466,7 @@ function KundaliEventCard({ EventElement, index, handleEditEvent, SelectedEventV
                   </tr>
                 </table>
               </div>
-              <div className='w-[33.33%] pb-2 border-l border-[var(--border-color)]'>
+              <div className='w-auto grow pb-2 border-l border-[var(--border-color)]'>
                 <table>
                   <tr className='bg-[var(--primary-soft-color)]'>
                     <td className='px-2 py-1 font-ea-sb  text-primary' colSpan={4}>PratyantarDasha</td>
