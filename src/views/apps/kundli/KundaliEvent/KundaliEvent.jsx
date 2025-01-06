@@ -146,7 +146,7 @@ function KundaliEvent({ EventsData, KID, getAllEvent }) {
                           <Grid item xs={12} className='flex gap-2 flex-col'>
                             <div className={`chart-name sticky top-0 z-50 font-ea-sb rounded-t flex justify-between md:items-center gap-y-2 lg:flex-row sm:flex-row flex-col`}>
                               <span className='text-white flex items-center uppercase'>
-                                Events ↠
+                              Event Analysis ↠
                                 <div className='uppercase text-[var(--secondary-color)] ms-2'>
                                   {BirthDetails?.FirstName ? `${BirthDetails.FirstName} ${BirthDetails.MiddleName} ${BirthDetails.LastName}` : 'Prashna Kundali'}
                                 </div>

@@ -344,20 +344,20 @@ function KundaliEventCard({ EventElement, index, handleEditEvent, SelectedEventV
   return (
     <>
       <div className='flex flex-col mb-6 border-t border-[var(--border-color)]'>
-        <div className={`text-black font-ea-n ps-2 md:items-center gap-y-2 lg:flex-row sm:flex-row flex-col bg-[#f5f5f5]`}>
+        <div className={`text-black font-ea-n md:items-center gap-y-2 lg:flex-row sm:flex-row flex-col bg-[#f5f5f5]`}>
           <div className='flex justify-between text-[14px]'>
-            <div className='pe-2 pb-2  w-[20%]'>
+            <div className=' pb-2 w-[20%]'>
               <table>
-                <tr>
-                  <td className='pe-2 text-xl w-1'>
+                <tr className='bg-[var(--primary-soft-color)] text-[18px] '>
+                  <td className='px-2 w-1 py-[1px] '>
                     {(index + 1) < 10 ? `0${index + 1}` : index + 1}.
                   </td>
                   <td>
-                    <div className='flex items-center text-xl'>
+                    <div className='flex items-center'>
                       <span className='text-primary font-ea-sb'> {EventElement.Event}</span>
-                      <div>
+                      {/* <div>
                         <Button className='p-1 min-w-6 w-6 ml-2' onClick={() => handleEdit(EventElement.EventID)}><i className='tabler-edit text-black text-[20px]'></i></Button>
-                      </div>
+                      </div> */}
                     </div>
                   </td>
                 </tr>
@@ -393,22 +393,25 @@ function KundaliEventCard({ EventElement, index, handleEditEvent, SelectedEventV
                 </tr>
               </table>
             </div>
-            <div className='w-[40%] px-2 pb-2 border-l border-[var(--border-color)]'>
+            <div className='w-[40%]  pb-2 border-l border-[var(--border-color)]'>
               <table>
-                <tr>
-                  <td className=' text-primary font-ea-sb w-[30%]'>Sat + Jup </td>
+                <tr className='bg-[var(--primary-soft-color)]'>
+                  <td colSpan={2} className='text-primary font-ea-sb px-2 py-1'>Combined Planetary Influence</td>
+                </tr>
+                <tr className='px-2'>
+                  <td className='ps-2 text-primary font-ea-sb w-[27%]'>Sat + Jup </td>
                   <td className='flex'> <div className='pe-2'>🡒</div>  {applyPlanetAndOccupancyColor(Summary?.SatJup, true)}</td>
                 </tr>
-                <tr>
-                  <td className=' text-primary font-ea-sb'>Sat + Jup + Sun</td>
+                <tr className='px-2'>
+                  <td className='ps-2 text-primary font-ea-sb'>Sat + Jup + Sun</td>
                   <td className='flex'> <div className='pe-2'>🡒</div> {applyPlanetAndOccupancyColor(Summary?.SatJupSun, true)}</td>
                 </tr>
-                <tr>
-                  <td className=' text-primary font-ea-sb'>Sat + Jup + Rahu</td>
+                <tr className='px-2'>
+                  <td className='ps-2 text-primary font-ea-sb'>Sat + Jup + Rahu</td>
                   <td className='flex'> <div className='pe-2'>🡒</div> {applyPlanetAndOccupancyColor(Summary?.SatJupRah, true)}</td>
                 </tr>
-                <tr>
-                  <td className=' text-primary font-ea-sb'>Sat + Jup + Ketu</td>
+                <tr className='px-2'>
+                  <td className='ps-2 text-primary font-ea-sb'>Sat + Jup + Ketu</td>
                   <td className='flex'> <div className='pe-2'>🡒</div> {applyPlanetAndOccupancyColor(Summary?.SatJupKet, true)}</td>
                 </tr>
               </table>
