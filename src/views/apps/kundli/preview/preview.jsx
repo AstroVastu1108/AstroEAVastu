@@ -84,7 +84,7 @@ const Preview = ({ kundliData, setKundliData }) => {
 
   const getTransitData = async (fdate, ftime, option) => {
     // return console.log(option);
-    setIsTransit(option);
+    setIsTransit("T");
     var BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
     var date = "";
     var time = "";
@@ -135,10 +135,12 @@ const Preview = ({ kundliData, setKundliData }) => {
   }
 
   const getDivisionalChartData = async (option) => {
+    console.log("==========>",option)
     setIsTransit(option);
+    var BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
+    setDatePicker(dayjs(`${BirthDetails?.BirthDate} ${BirthDetails?.BirthTime}`, 'DD-MM-YYYY HHmmss'))
     if (option && option != "undefined" && option != "" && option != "V") {
-      var BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
-
+      // const chkDate = dayjs(`${kdata?.BirthDate} ${kdata?.BirthTime}`, 'DD-MM-YYYY HHmmss');
       const payload = {
         "KundaliID": BirthDetails.KundaliID,
         "FirstName": BirthDetails.FirstName,
@@ -225,6 +227,7 @@ const Preview = ({ kundliData, setKundliData }) => {
   }
 
   const handleTimeToolOptChange = (e) => {
+    console.log(e.target.value);
     setTimeToolOpt(e.target.value);
     if (e.target.value == "T") {
       if (!TransiteTime) {
@@ -255,7 +258,7 @@ const Preview = ({ kundliData, setKundliData }) => {
                   </>
                 }
                 {timeToolPopUp &&
-                  <TimeTool handleTimeTool={handleTimeTool} handleDateChange={handleDateChange} kundliBirthData={kundliData?.AstroVastuReport?.BirthDetails} handleTimeToolOptChange={handleTimeToolOptChange} setDatePicker={setDatePicker} datePicker={datePicker} TimeToolOpt={TimeToolOpt} />
+                  <TimeTool isTransit={isTransit} handleTimeTool={handleTimeTool} handleDateChange={handleDateChange} kundliBirthData={kundliData?.AstroVastuReport?.BirthDetails} handleTimeToolOptChange={handleTimeToolOptChange} setDatePicker={setDatePicker} datePicker={datePicker} TimeToolOpt={TimeToolOpt} />
                 }
               </div>
 

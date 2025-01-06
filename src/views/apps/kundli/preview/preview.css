@@ -1010,7 +1010,6 @@
   .MuiDataGrid-filler{
     height: 0px !important;
     div{
-
       border-top: none !important;
     }
   }

@@ -221,7 +221,7 @@ function KundaliEvent({ EventsData, KID, getAllEvent }) {
                                   size='small'
                                 />
                               </div>
-                              <div className='mb-1 w-3/12 flex justify-center'>
+                              <div className='mb-1 w-3/12 flex justify-center md:w-4/12'>
                                 <Button variant='outlined' className='' fullWidth onClick={handleLifeEventOpen}>
                                   <span className='text-[var(--green-color)]'>Life Event</span>
                                   <span className='arrow text-black'>🡒</span>

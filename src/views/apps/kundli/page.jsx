@@ -191,6 +191,12 @@ export default function KundliMain() {
           handleClose();
         }
 
+        const handleDuplicateOpen = () => {
+          setUserData(params?.row)
+          setSetDuplicatPopUp(true);
+          handleClose();
+        }
+
         // const handleDownload = () => {
         //   getAKundliData(params?.row?.KundaliID)
         //   handleClose();
@@ -233,6 +239,7 @@ export default function KundliMain() {
             >
               <MenuItem onClick={handleRemoveOpen} className="flex gap-1"><i className={'tabler-trash me-2'} />Delete</MenuItem>
               <MenuItem onClick={handleEdit} className="flex gap-1"><i className={'tabler-edit me-2'} />Edit</MenuItem>
+              <MenuItem onClick={handleDuplicateOpen} className="flex gap-1"><i className={'tabler-copy me-2'} />Duplicat</MenuItem>
               <MenuItem onClick={handlePreview} className="flex gap-1"><i className={'tabler-arrow-up-right me-2'} />Open</MenuItem>
               <Divider />
               <MenuItem onClick={handleDownload} className="flex gap-1"><i className={'tabler-download me-2'} />Download</MenuItem>
@@ -246,6 +253,7 @@ export default function KundliMain() {
   const { user } = useAuth()
   const [open, setOpen] = useState(false);
   const [removePopUp, setSetRemovePopUp] = useState(false);
+  const [duplicatPopUp, setSetDuplicatPopUp] = useState(false);
   const [kundliData, setKundliData] = useState([]);
   const [groupData, setGroupData] = useState(["All"]);
   const [selectedGroup, setSelectedGroup] = useState("All");
@@ -353,6 +361,10 @@ export default function KundliMain() {
 
   const handleRemoveClose = () => {
     setSetRemovePopUp(false)
+  }
+
+  const handleDuplicatClose = () => {
+    setSetDuplicatPopUp(false)
   }
 
 
@@ -613,7 +625,10 @@ export default function KundliMain() {
         <AddKundliPopUp open={open} handleAddClose={handleAddClose} getAllKundli={getAllKundli} setUserData={setUserData} userData={userData} GroupData={groupData} />
       )}
       {removePopUp && (
-        <RemoveKundli open={removePopUp} handleClose={handleRemoveClose} userData={userData} handleDeleteClick={handleDeleteClick}/>
+        <RemoveKundli open={removePopUp} isDelete={true} handleClose={handleRemoveClose} userData={userData} handleDeleteClick={handleDeleteClick}/>
+      )}
+      {duplicatPopUp && (
+        <RemoveKundli open={duplicatPopUp} isDelete={false} handleClose={handleDuplicatClose} userData={userData} handleDeleteClick={handleDeleteClick}/>
       )}
 
     </>

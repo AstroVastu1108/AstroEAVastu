@@ -75,20 +75,26 @@ function RahuKetu({ RahuData, KetuData, SelectedEventVal }) {
         // Apply green color if ownership is in Positive, red if in Negative
         if (positiveValues.includes(ownershipNumber)) {
           return (
-            <div className='bg-[var(--green-bg-color)] px-[2px]'>
-              <span key={index} className="text-[var(--green-text-color)] font-ea-sb">
-                {ownershipItem}
-                {index < OwnershipArray.length - 1 && ', '}
-              </span>
+            <div className="flex">
+              <div className='bg-[var(--green-bg-color)] px-[2px]'>
+                <span key={index} className="text-[var(--green-text-color)] font-ea-sb">
+                  {ownershipItem}
+                  {/* {index < OwnershipArray.length - 1 && ', '} */}
+                </span>
+              </div>
+              {index < OwnershipArray.length - 1 && <span>,&nbsp;</span>}
             </div>
           );
         } else if (negativeValues.includes(ownershipNumber)) {
           return (
-            <div className='bg-[var(--red-bg-color)] px-[2px]'>
-              <span key={index} className="text-[var(--red-text-color)] font-ea-sb">
-                {ownershipItem}
-                {index < OwnershipArray.length - 1 && ', '}
-              </span>
+            <div className="flex">
+              <div className='bg-[var(--red-bg-color)] px-[2px]'>
+                <span key={index} className="text-[var(--red-text-color)] font-ea-sb">
+                  {ownershipItem}
+                  {/* {index < OwnershipArray.length - 1 && ', '} */}
+                </span>
+              </div>
+              {index < OwnershipArray.length - 1 && <span>,&nbsp;</span>}
             </div>
           );
         }
@@ -97,7 +103,8 @@ function RahuKetu({ RahuData, KetuData, SelectedEventVal }) {
       return (
         <span key={index}>
           {ownershipItem}
-          {index < OwnershipArray.length - 1 && ', '}
+          {/* {index < OwnershipArray.length - 1 && ', '} */}
+          {index < OwnershipArray.length - 1 && <span>,&nbsp;</span>}
         </span>
       );
     });
@@ -286,6 +293,7 @@ function RahuKetu({ RahuData, KetuData, SelectedEventVal }) {
           hideFooterPagination={true}
           hideFooter={true}
           getRowHeight={getRowHeight}
+          className='RahuKetuGrid'
         />
       </Box>
     </>

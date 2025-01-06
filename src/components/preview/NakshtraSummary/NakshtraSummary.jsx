@@ -53,7 +53,6 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
   };
 
   const applyOccupancyColor = (Occupancy) => {
-    console.log(Occupancy)
     if (SelectedEventVal) {
       const positive = SelectedEventVal.Positive?.split(", ").map(Number) || [];
       const negative = SelectedEventVal.Negative?.split(", ").map(Number) || [];
@@ -83,20 +82,25 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
         // Apply green color if ownership is in Positive, red if in Negative
         if (positiveValues.includes(ownershipNumber)) {
           return (
-            <div className='bg-[var(--green-bg-color)] px-[2px]'>
-              <span key={index} className="text-[var(--green-text-color)] font-ea-sb">
-                {ownershipItem}
-                {index < OwnershipArray.length - 1 && ', '}
-              </span>
+            <div className='flex'>
+              <div className='bg-[var(--green-bg-color)] px-[2px]'>
+                <span key={index} className="text-[var(--green-text-color)] font-ea-sb">
+                  {ownershipItem}
+                  {/* {index < OwnershipArray.length - 1 && ', '} */}
+                </span>
+              </div>
+              {index < OwnershipArray.length - 1 && <span>,&nbsp;</span>}
             </div>
           );
         } else if (negativeValues.includes(ownershipNumber)) {
           return (
-            <div className='bg-[var(--red-bg-color)] px-[2px]'>
-              <span key={index} className="text-[var(--red-text-color)] font-ea-sb">
-                {ownershipItem}
-                {index < OwnershipArray.length - 1 && ', '}
-              </span>
+            <div className='flex'>
+              <div className='bg-[var(--red-bg-color)] px-[2px]'>
+                <span key={index} className="text-[var(--red-text-color)] font-ea-sb">
+                  {ownershipItem}
+                </span>
+              </div>
+              {index < OwnershipArray.length - 1 && <span>,&nbsp;</span>}
             </div>
           );
         }
@@ -105,7 +109,7 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
       return (
         <span key={index}>
           {ownershipItem}
-          {index < OwnershipArray.length - 1 && ', '}
+          {index < OwnershipArray.length - 1 && <span>,&nbsp;</span>}
         </span>
       );
     });
@@ -214,7 +218,7 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
             {highlightText(planetName)}
             <div className="degreeDiv">
               {applyOccupancyColor(Occupancy)}
-              {OwnershipArray.length ? <span style={{display:"flex"}}>&nbsp;/&nbsp;{applyOwnerShipColor(OwnershipArray)}</span> : ""}
+              {OwnershipArray.length ? <span style={{ display: "flex" }}>&nbsp;/&nbsp;{applyOwnerShipColor(OwnershipArray)}</span> : ""}
             </div>
           </div>
         );
@@ -242,7 +246,7 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
             <div className="planet-col-planet-text  font-ea-sb">{planetName}</div>
             <div className="degreeDiv">
               {applyOccupancyColor(Occupancy)}
-              {OwnershipArray.length ? <span style={{display:"flex"}}> &nbsp;/&nbsp; {applyOwnerShipColor(OwnershipArray)}</span> : ""}
+              {OwnershipArray.length ? <span style={{ display: "flex" }}> &nbsp;/&nbsp; {applyOwnerShipColor(OwnershipArray)}</span> : ""}
             </div>
           </div>
         );
@@ -269,7 +273,7 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
             <div className="planet-col-planet-text  font-ea-sb">{planetName}</div>
             <div className="degreeDiv">
               {applyOccupancyColor(Occupancy)}
-              {OwnershipArray.length ? <span style={{display:"flex"}}>&nbsp;/&nbsp;{applyOwnerShipColor(OwnershipArray)}</span> : ""}
+              {OwnershipArray.length ? <span style={{ display: "flex" }}>&nbsp;/&nbsp;{applyOwnerShipColor(OwnershipArray)}</span> : ""}
             </div>
           </div>
         );
@@ -302,7 +306,7 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
             <div className="planet-col-planet-text font-ea-sb">{planetName}</div>
             <div className="degreeDiv">
               {applyOccupancyColor(Occupancy)}
-              {OwnershipArray.length ? <span style={{display:"flex"}}>&nbsp;/&nbsp;{applyOwnerShipColor(OwnershipArray)}</span> : ""}
+              {OwnershipArray.length ? <span style={{ display: "flex" }}>&nbsp;/&nbsp;{applyOwnerShipColor(OwnershipArray)}</span> : ""}
             </div>
           </div>
         );
@@ -337,25 +341,25 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
       )}
       <Box width={"100%"}>
 
-          <DataGrid
-            showCellVerticalBorder
-            rows={rowsSummaryData}
-            columns={columns}
-            initialState={{
-              pinnedColumns: { left: ['id', 'Planet'] } // Combine both columns here
-            }}
-            disableColumnSorting
-            disableColumnMenu
-            rowHeight={30}
-            columnHeaderHeight={38}
-            disableColumnResize
-            disableRowSelectionOnClick
-            hideFooterPagination={true}
-            hideFooter={true}
-            onRowClick={(params) => setSelectedRowId(params.id)}
-            onCellDoubleClick={(params) => handleEvent("cell", params.field, `${params?.value?.Planet ? params?.value?.Planet : ""} ${params?.value?.ScriptFull ? params?.value?.ScriptFull : params?.value}`, `${params?.value?.Planet ? params?.value?.Planet : ""} ${params?.value?.ScriptFull ? params?.value?.ScriptFull : params?.value}`)}
-            getRowClassName={(params) => params.id === selectedRowId ? 'Mui-selected' : ''}
-          />
+        <DataGrid
+          showCellVerticalBorder
+          rows={rowsSummaryData}
+          columns={columns}
+          initialState={{
+            pinnedColumns: { left: ['id', 'Planet'] } // Combine both columns here
+          }}
+          disableColumnSorting
+          disableColumnMenu
+          rowHeight={30}
+          columnHeaderHeight={38}
+          disableColumnResize
+          disableRowSelectionOnClick
+          hideFooterPagination={true}
+          hideFooter={true}
+          onRowClick={(params) => setSelectedRowId(params.id)}
+          onCellDoubleClick={(params) => handleEvent("cell", params.field, `${params?.value?.Planet ? params?.value?.Planet : ""} ${params?.value?.ScriptFull ? params?.value?.ScriptFull : params?.value}`, `${params?.value?.Planet ? params?.value?.Planet : ""} ${params?.value?.ScriptFull ? params?.value?.ScriptFull : params?.value}`)}
+          getRowClassName={(params) => params.id === selectedRowId ? 'Mui-selected' : ''}
+        />
 
       </Box>
     </>

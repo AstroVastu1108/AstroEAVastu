@@ -6,8 +6,10 @@ import React, { useEffect, useState } from 'react';
 import './preview.css';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 
-function TimeTool({ handleDateChange, kundliBirthData, handleTimeTool, handleTimeToolOptChange, datePicker, setDatePicker, TimeToolOpt }) {
+function TimeTool({ handleDateChange, kundliBirthData, handleTimeTool, handleTimeToolOptChange, datePicker, setDatePicker, TimeToolOpt, isTransit }) {
   const [timeValue, setTimeValue] = useState("Y"); // "Y" for year, "M" for month, etc.
+
+  console.log("----------->", isTransit)
 
   useEffect(() => {
     if (TimeToolOpt == "B") {
@@ -63,7 +65,7 @@ function TimeTool({ handleDateChange, kundliBirthData, handleTimeTool, handleTim
     return () => {
       getNewData.clear();
     };
-  }, 500)
+  }, 20)
 
   useEffect(() => {
     getNewData(datePicker);
@@ -99,10 +101,10 @@ function TimeTool({ handleDateChange, kundliBirthData, handleTimeTool, handleTim
                 minHeight: '2.5rem',
               }}
               onChange={handleTimeToolOptChange}
-              value={TimeToolOpt}
+              value={isTransit == "T" ? TimeToolOpt : "B"}
             >
               <MenuItem value="B">Birth Chart</MenuItem>
-              <MenuItem value="T">Transit</MenuItem>
+              {isTransit == "T" && <MenuItem value="T">Transit</MenuItem>}
             </Select>
           </div>
 

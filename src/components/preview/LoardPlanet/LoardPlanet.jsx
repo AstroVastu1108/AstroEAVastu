@@ -38,11 +38,14 @@ function LoardPlanet({ LoardData, SelectedEventVal, symbols }) {
         // Apply green color if ownership is in Positive, red if in Negative
         if (positiveValues.includes(ownershipNumber)) {
           return (
-            <div className='bg-[var(--green-bg-color)] px-[2px]'>
-              <span key={index} className="text-[var(--green-text-color)] font-ea-sb">
-                {ownershipItem}
-                {index < OwnershipArray.length - 1 && ', '}
-              </span>
+            <div className="flex">
+              <div className='bg-[var(--green-bg-color)] px-[2px]'>
+                <span key={index} className="text-[var(--green-text-color)] font-ea-sb">
+                  {ownershipItem}
+                  {/* {index < OwnershipArray.length - 1 && ', '} */}
+                </span>
+              </div>
+              {index < OwnershipArray.length - 1 && <span>,&nbsp;</span>}
             </div>
             // <span key={index} className="text-[var(--green-text-color)] font-ea-sb">
             //   {ownershipItem}
@@ -51,11 +54,14 @@ function LoardPlanet({ LoardData, SelectedEventVal, symbols }) {
           );
         } else if (negativeValues.includes(ownershipNumber)) {
           return (
-            <div className='bg-[var(--red-bg-color)] px-[2px]'>
-              <span key={index} className="text-[var(--red-text-color)] font-ea-sb">
-                {ownershipItem}
-                {index < OwnershipArray.length - 1 && ', '}
-              </span>
+            <div className="flex">
+              <div className='bg-[var(--red-bg-color)] px-[2px]'>
+                <span key={index} className="text-[var(--red-text-color)] font-ea-sb">
+                  {ownershipItem}
+                  {/* {index < OwnershipArray.length - 1 && ', '} */}
+                </span>
+              </div>
+              {index < OwnershipArray.length - 1 && <span>,&nbsp;</span>}
             </div>
             // <span key={index} className="text-[var(--red-text-color)] font-ea-sb">
             //   {ownershipItem}
@@ -68,7 +74,8 @@ function LoardPlanet({ LoardData, SelectedEventVal, symbols }) {
       return (
         <span key={index}>
           {ownershipItem}
-          {index < OwnershipArray.length - 1 && ', '}
+          {index < OwnershipArray.length - 1 && <span>,&nbsp;</span>}
+          {/* {index < OwnershipArray.length - 1 && ', '} */}
         </span>
       );
     });
@@ -157,7 +164,7 @@ function LoardPlanet({ LoardData, SelectedEventVal, symbols }) {
       headerClassName: 'rowheader',
       headerName: (
         <div className='valueHeader'>
-          <div className='me-1'>{LoardData.Nakshatra}</div> /{' '}
+          <div className='me-1'>{LoardData.Nakshatra}</div>/{' '}
           <div className='ms-1'>{LoardData.NakshatraPada}</div>
         </div>
       ),
@@ -167,7 +174,7 @@ function LoardPlanet({ LoardData, SelectedEventVal, symbols }) {
         const scriptFull = params.value || '';
         let formattedScript = scriptFull.split(" / ");
         let ownership = Array(formattedScript[1]?.split(", "))
-        return <div className='degreeDiv'>{applyOccupancyColor(formattedScript[0])} &nbsp;/&nbsp; {applyOwnerShipColor(ownership[0])}
+        return <div className='degreeDiv'>{applyOccupancyColor(formattedScript[0])}&nbsp;/&nbsp; {applyOwnerShipColor(ownership[0])}
         </div>;
       },
     },
@@ -188,21 +195,21 @@ function LoardPlanet({ LoardData, SelectedEventVal, symbols }) {
   return (
     <Box >
 
-        <DataGrid
-          showCellVerticalBorder
-          // getRowId={(row) => row.rahuId}
-          getRowId={rowsSummaryData.id}
-          rows={rowsSummaryData}
-          columns={columns1}
-          disableColumnSorting
-          disableColumnMenu
-          rowHeight={30}
-          columnHeaderHeight={38}
-          disableColumnResize
-          disableRowSelectionOnClick
-          hideFooterPagination={true}
-          hideFooter={true}
-        />
+      <DataGrid
+        showCellVerticalBorder
+        // getRowId={(row) => row.rahuId}
+        getRowId={rowsSummaryData.id}
+        rows={rowsSummaryData}
+        columns={columns1}
+        disableColumnSorting
+        disableColumnMenu
+        rowHeight={30}
+        columnHeaderHeight={38}
+        disableColumnResize
+        disableRowSelectionOnClick
+        hideFooterPagination={true}
+        hideFooter={true}
+      />
 
     </Box>
   )

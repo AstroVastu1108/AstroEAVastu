@@ -1,0 +1,6 @@
+.ActivityGrid{
+  .MuiDataGrid-cell{
+    font-family: 'ea-n';
+    font-size: 13px;
+  }
+}

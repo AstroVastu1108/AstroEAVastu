@@ -1,7 +1,7 @@
 import { Button, createTheme, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, TextField, ThemeProvider } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react'
 
-function RemoveKundli({ open, handleClose, userData, handleDeleteClick }) {
+function RemoveKundli({ open, handleClose, userData, handleDeleteClick, isDelete }) {
 
   const [isNameValid, setIsNameValid] = useState(false);
 
@@ -28,13 +28,6 @@ function RemoveKundli({ open, handleClose, userData, handleDeleteClick }) {
     if (userData?.MiddleName != "") {
       fullName = `${userData?.FirstName} ${userData?.MiddleName} ${userData?.LastName}`;
     }
-
-    //             if (data && prevData && data.trim() == prevData.trim()) {
-    //               setIsNameValid(true);
-    //             } else {
-    //               setIsNameValid(false);
-    //             }
-    // const fullName = `${userData?.FirstName || ''} ${userData?.MiddleName || ''} ${userData?.LastName || ''}`.trim();
     navigator.clipboard.writeText(fullName);
   };
 
@@ -67,7 +60,7 @@ function RemoveKundli({ open, handleClose, userData, handleDeleteClick }) {
         >
           <DialogTitle className='text-primary text-2xl p-3 bg-[var(--secondary-color)] rounded-t-lg flex justify-between items-center'>
             <span className='text-primary text-2xl font-ea-sb !pl-3'>
-              Delete Kundali?
+              {isDelete ? `Delete Kundali?` : `Make a Duplicate Kundali`}
             </span>
             <IconButton
               aria-label="close"
@@ -98,7 +91,7 @@ function RemoveKundli({ open, handleClose, userData, handleDeleteClick }) {
                 <div className='mt-5 font-ea-n text-black'>
                   To confirm, enter the <span className='font-ea-sb underline text-red-700 mt-2 mb-2'>
                     {userData?.FirstName} {userData?.MiddleName} {userData?.LastName}
-                  </span> and click Delete.
+                  </span> and click {isDelete ? "Delete" : "Save"}.
                 </div>
               </div>
             </DialogContentText>
@@ -128,7 +121,7 @@ function RemoveKundli({ open, handleClose, userData, handleDeleteClick }) {
             />
           </DialogContent>
           <DialogActions className='p-4 pt-0'>
-            <Button variant='contained' className={`${!isNameValid ? 'bg-secondary text-white' : 'bg-primary'}`} type="submit" disabled={!isNameValid}>Remove</Button>
+            <Button variant='contained' className={`${!isNameValid ? 'bg-secondary text-white' : 'bg-primary'}`} type="submit" disabled={!isNameValid}>{isDelete ? `Delete` : "Save"}</Button>
             {/* <Button variant='contained' className='bg-primary text-white' type="submit" disabled={!isNameValid}>Remove</Button> */}
             <Button variant='contained' className='bg-secondary' onClick={handleClose}>Cancel</Button>
           </DialogActions>
