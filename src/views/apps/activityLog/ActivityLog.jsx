@@ -37,12 +37,24 @@ function ActivityLog() {
 
   const columns = [
     {
-      field: 'DT', headerName: 'Date & Time', headerClassName: 'rowheader', width: 140, renderCell: (param) => {
+      field: 'DT', headerName: 'Date & Time', headerClassName: 'rowheader', width: 180, renderCell: (param) => {
+        const DateNew = new Date(param.value);
+
+        const year = DateNew.getFullYear();
+        const month = String(DateNew.getMonth() + 1).padStart(2, '0');  // Months are 0-indexed
+        const day = String(DateNew.getDate()).padStart(2, '0');
+        const hours = String(DateNew.getHours()).padStart(2, '0');
+        const minutes = String(DateNew.getMinutes()).padStart(2, '0');
+        const seconds = String(DateNew.getSeconds()).padStart(2, '0');
+
+        // Format the date in the desired format
+        const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
         const [date, timeWithZ] = param.value.split("T");
         const time = timeWithZ.replace("Z", "").split(".")[0];
         const searchText = searchInputRef.current.value;
         return <>
-          <span className='font-ea-sb'>{highlightText(date, searchText)}</span> {time}
+          <span className='font-ea-sb'>{highlightText(`${day}-${month}-${year}`, searchText)}</span>  {hours}:{minutes}:{seconds}
         </>
       }
     },
@@ -68,7 +80,15 @@ function ActivityLog() {
     {
       field: 'Detail', headerName: 'Detail', flex: 1, headerClassName: 'rowheader', width: 120, renderCell: (param) => {
         const data = param.value;
+        const eventData = data.split("@");
         const searchText = searchInputRef.current.value;
+        if (eventData !== "" && eventData !== "undefined" && eventData.length > 1) {
+          return (<div>
+            {highlightText(data.split("#")[0], searchText)}
+            <a target='blank' href={`${process.env.NEXT_PUBLIC_APP_URL}/kevent/${eventData[1]}`} className='text-primary font-ea-sb'>#{highlightText(eventData[0].split("#")[1], searchText)} <span className='text-red-700'>@{highlightText(eventData[1], searchText)}</span>
+            </a>
+          </div>)
+        }
         if (data) {
           return (<div>
             {highlightText(data.split("#")[0], searchText)}
@@ -120,7 +140,6 @@ function ActivityLog() {
     if (res.hasError) {
       setLoading(false);
     } else {
-      console.log(res?.responseData?.data?.Result?.LogList)
       setLogData(res?.responseData?.data?.Result?.LogList);
       setTotalRowCount(res?.responseData?.data?.Result?.LogCount)
       setLoading(false);
@@ -176,8 +195,8 @@ function ActivityLog() {
                     rows={LogData}
                     columns={columns}
                     disableColumnMenu
-                    rowHeight={32}
-                    columnHeaderHeight={34}
+                    rowHeight={45}
+                    columnHeaderHeight={45}
                     disableColumnResize
                     disableRowSelectionOnClick
                     pageSizeOptions={[10]}

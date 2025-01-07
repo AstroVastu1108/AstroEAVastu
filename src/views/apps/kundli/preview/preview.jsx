@@ -135,7 +135,6 @@ const Preview = ({ kundliData, setKundliData }) => {
   }
 
   const getDivisionalChartData = async (option) => {
-    console.log("==========>",option)
     setIsTransit(option);
     var BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
     setDatePicker(dayjs(`${BirthDetails?.BirthDate} ${BirthDetails?.BirthTime}`, 'DD-MM-YYYY HHmmss'))

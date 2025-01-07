@@ -334,7 +334,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       ClientID: "",
       DChart: "",
       BirthDate: BirthDetails.BirthDate,
-      BirthTime: BirthDetails.Time,
+      BirthTime: BirthDetails.BirthTime,
       IsRotate: payload.IsRotate,
       RotateType: payload.RotateType,
       RotateFrom: payload.RotateFrom

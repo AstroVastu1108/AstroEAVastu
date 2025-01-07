@@ -261,3 +261,23 @@ export async function RotateChartEvent(payload) {
     return responseBody
   }
 }
+
+
+// save duplicate kundli data and get kundli id
+export async function DuplicateKundli(payload) {
+  const responseBody = {
+    responseData: null,
+    hasError: false,
+    error: null
+  }
+  try {
+    const response = await astroInstance.post(`/astro/new-place-kundali`, payload)
+    responseBody.responseData = response.data
+    return responseBody
+  } catch (error) {
+    responseBody.hasError = true
+    responseBody.errorMessage = responseBody.errorMessage =
+      error.response?.data?.statusMsg || error.response?.data?.errors
+    return responseBody
+  }
+}

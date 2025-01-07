@@ -44,7 +44,7 @@ function Rotation({ open, handleClose, rotationType, hanldeRotationChange }) {
   const highlightText = (value, tb) => {
     const abbreviation = value.trim().slice(0, 2);
     const fullName = shorthandMap[abbreviation];
-
+    // console.log(value)
     return (
       <div onClick={(e) => setSelectedRow({ value, "table": tb, "formattedStr": value })} className={`pl-${fullName} planetName`} key={abbreviation}>
         {value}
@@ -54,6 +54,7 @@ function Rotation({ open, handleClose, rotationType, hanldeRotationChange }) {
 
   const houseText = (value, tb) => {
     const houseValue = value.split(" ")[1];
+    // console.log(houseValue)
     return (
       <div onClick={(e) => setSelectedRow({ "value": houseValue, "table": tb, "formattedStr": value })}>
         {value}
@@ -114,7 +115,8 @@ function Rotation({ open, handleClose, rotationType, hanldeRotationChange }) {
   ];
 
   const handleRowSelection = (table, params) => {
-    setSelectedRow({ table, params })
+    // console.log("here")
+    // setSelectedRow({ table, params })
     // if (table === 'table1') {
     //   setSelectedRowsTable1([params.id]);
     //   setSelectedRowsTable2([]); // Clear selection of table 2
@@ -187,10 +189,10 @@ function Rotation({ open, handleClose, rotationType, hanldeRotationChange }) {
           className="flex"
           sx={{
             '& .MuiDataGrid-row.Mui-selected:nth-of-type(even)': {
-              backgroundColor: selectedRow?.table == "table1" ? '#99e27b65 !important' : '#f5f5f5 !important', // Change background for selected cell only
+              backgroundColor: selectedRow?.table == "t1" ? '#99e27b65 !important' : '#f5f5f5 !important', // Change background for selected cell only
             },
             '& .MuiDataGrid-row.Mui-selected:nth-of-type(odd)': {
-              backgroundColor: selectedRow?.table == "table1" ? '#99e27b65 !important' : '#ffffff !important', // Change background for selected cell only
+              backgroundColor: selectedRow?.table == "t1" ? '#99e27b65 !important' : '#ffffff !important', // Change background for selected cell only
             }
           }}
         >
@@ -205,7 +207,7 @@ function Rotation({ open, handleClose, rotationType, hanldeRotationChange }) {
             disableColumnMenu
             rowHeight={30}
             columnHeaderHeight={38}
-            onRowClick={(params) => handleRowSelection('table1', params)}
+            onRowClick={(params) => handleRowSelection('t1', params)}
           // selectionModel={selectedRowsTable1}
           // getRowClassName={(params) => params.id == selectedRow?.id ? 'Mui-selected1' : ''}
           />
@@ -215,10 +217,10 @@ function Rotation({ open, handleClose, rotationType, hanldeRotationChange }) {
           className="flex"
           sx={{
             '& .MuiDataGrid-row.Mui-selected:nth-of-type(even)': {
-              backgroundColor: selectedRow?.table == "table2" ? '#99e27b65 !important' : '#f5f5f5 !important', // Change background for selected cell only
+              backgroundColor: selectedRow?.table == "t2" ? '#99e27b65 !important' : '#f5f5f5 !important', // Change background for selected cell only
             },
             '& .MuiDataGrid-row.Mui-selected:nth-of-type(odd)': {
-              backgroundColor: selectedRow?.table == "table2" ? '#99e27b65 !important' : '#ffffff !important', // Change background for selected cell only
+              backgroundColor: selectedRow?.table == "t2" ? '#99e27b65 !important' : '#ffffff !important', // Change background for selected cell only
             }
           }}
         >
@@ -233,7 +235,7 @@ function Rotation({ open, handleClose, rotationType, hanldeRotationChange }) {
             disableColumnMenu
             rowHeight={30}
             columnHeaderHeight={38}
-            onRowClick={(params) => handleRowSelection('table2', params)}
+            onRowClick={(params) => handleRowSelection('t2', params)}
           // selectionModel={selectedRowsTable2}
           />
         </Box>
@@ -242,10 +244,10 @@ function Rotation({ open, handleClose, rotationType, hanldeRotationChange }) {
           className="flex"
           sx={{
             '& .MuiDataGrid-row.Mui-selected:nth-of-type(even)': {
-              backgroundColor: selectedRow?.table == "table3" ? '#99e27b65 !important' : '#f5f5f5 !important', // Change background for selected cell only
+              backgroundColor: selectedRow?.table == "t3" ? '#99e27b65 !important' : '#f5f5f5 !important', // Change background for selected cell only
             },
             '& .MuiDataGrid-row.Mui-selected:nth-of-type(odd)': {
-              backgroundColor: selectedRow?.table == "table3" ? '#99e27b65 !important' : '#ffffff !important', // Change background for selected cell only
+              backgroundColor: selectedRow?.table == "t3" ? '#99e27b65 !important' : '#ffffff !important', // Change background for selected cell only
             }
           }}
         >
@@ -260,7 +262,7 @@ function Rotation({ open, handleClose, rotationType, hanldeRotationChange }) {
             disableColumnMenu
             rowHeight={30}
             columnHeaderHeight={38}
-            onRowClick={(params) => handleRowSelection('table3', params)}
+            onRowClick={(params) => handleRowSelection('t3', params)}
           // selectionModel={selectedRowsTable3}
           />
         </Box>
@@ -269,10 +271,10 @@ function Rotation({ open, handleClose, rotationType, hanldeRotationChange }) {
           className="flex"
           sx={{
             '& .MuiDataGrid-row.Mui-selected:nth-of-type(even)': {
-              backgroundColor: selectedRow?.table == "table4" ? '#99e27b65 !important' : '#f5f5f5 !important', // Change background for selected cell only
+              backgroundColor: selectedRow?.table == "t4" ? '#99e27b65 !important' : '#f5f5f5 !important', // Change background for selected cell only
             },
             '& .MuiDataGrid-row.Mui-selected:nth-of-type(odd)': {
-              backgroundColor: selectedRow?.table == "table4" ? '#99e27b65 !important' : '#ffffff !important', // Change background for selected cell only
+              backgroundColor: selectedRow?.table == "t4" ? '#99e27b65 !important' : '#ffffff !important', // Change background for selected cell only
             }
           }}
         >
@@ -287,7 +289,7 @@ function Rotation({ open, handleClose, rotationType, hanldeRotationChange }) {
             disableColumnMenu
             rowHeight={30}
             columnHeaderHeight={38}
-            onRowClick={(params) => handleRowSelection('table4', params)}
+            onRowClick={(params) => handleRowSelection('t4', params)}
           // selectionModel={selectedRowsTable4}
           />
         </Box>

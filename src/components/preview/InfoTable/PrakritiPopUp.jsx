@@ -246,8 +246,6 @@ function PrakritiPopUp({ open, handlePraClose }) {
       .map(([type]) => prakritiElements[type]);
     const resultString = sortedTypes.join('-');
 
-    // console.log('Selected Options:', selectedOptions);
-    console.log('Sorted Counts String:', resultString);
     handlePraClose(); // Close the popup
   };
 

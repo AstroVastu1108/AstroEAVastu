@@ -19,7 +19,7 @@ import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplaye
 // Import Style
 import "./addKundli.css"
 
-function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserData, GroupData }) {
+function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserData, GroupData, setKundliData, kundliData }) {
 
   const [isDisable, setIsDisable] = useState(false);
   const [formData, setFormData] = useState(userData);
@@ -123,7 +123,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
   const fetchCityData = debounce(async (query) => {
     if (query.length > 0) {
       await fetchCities(query);
-    }else{
+    } else {
       setCityData([]);
     }
   }, 300)
@@ -187,18 +187,25 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
         // toastDisplayer("success", `kundli data is saved successfully.`)
         return kId;
       } else {
-        setIsDisable(false)
-        const response = await UpdateKundli(formattedData)
+        setIsDisable(false);
+        const response = await UpdateKundli(formattedData);
 
         if (response.hasError) {
-          setIsDisable(false)
-          return toastDisplayer("error", response.error)
+          setIsDisable(false);
+          return toastDisplayer("error", response.error);
         }
+
         var kId = response?.responseData?.Result?.KundaliID;
-        setIsDisable(false)
-        getAllKundli(1, "");
+        setIsDisable(false);
+
+        const index = kundliData.findIndex(item => item.KundaliID === kId.KundaliID);
+
+        if (index !== -1) {
+          const updatedKundliData = [...kundliData];
+          updatedKundliData[index] = kId;
+          setKundliData(updatedKundliData);
+        }
         handleAddClose();
-        // toastDisplayer("success", `Kundli data is updated successfully.`)
         return kId;
       }
     } catch (error) {
@@ -395,7 +402,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                 </DemoContainer>
               </LocalizationProvider>
             </Grid>
-            <Grid item xs={12} sm={8}>
+            <Grid item xs={12} sm={12}>
               <Autocomplete
                 id='country-select'
                 options={conutryData && conutryData}
@@ -404,24 +411,31 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                 getOptionKey={(option) => option?.CountryCode}
                 onChange={(event, newValue) => handleInputChange('Country', newValue, 'Country', true)}
                 renderInput={(params) => (
-                  <TextField {...params} label='Select Country' variant='outlined'
+                  <TextField {...params} label='Country' variant='outlined'
                     {...(errors.Country && { error: true })}
                   />
                 )}
                 size={TextFeildSize}
               />
             </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField
+            {/* <Grid item xs={12} sm={4}> */}
+              {/* <div className='ps-3'>
+                <div>{formData?.CityID?.Timezone}</div>
+                <a href={`https://www.google.com/search?q=${formData?.CityID?.Latitude},${formData?.CityID?.Longitude}`} target='_blank'>
+                <div>{formData?.CityID?.Latitude}, {formData?.CityID?.Longitude}</div>
+                </a>
+              </div> */}
+              {/* <TextField
                 fullWidth
                 label='Timezone'
-                value={"UTC+05:30 > Asia/Kolkata"}
+                // value={"UTC+05:30 > Asia/Kolkata"}
                 InputProps={{
                   readOnly: true, // Makes the TextField read-only
                 }}
                 size={TextFeildSize}
-              />
-            </Grid>
+                value={formData?.CityID?.Timezone}
+              /> */}
+            {/* </Grid> */}
             <Grid item xs={12} sm={8}>
               <Autocomplete
                 id='city-autocomplete'
@@ -432,26 +446,41 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                 onInputChange={(event, newQuery) => handleCityChange(newQuery)}
                 onChange={(event, newValue) => handleInputChange('CityID', newValue, 'CityID', true)}
                 renderInput={(params) => (
-                  <TextField {...params} label='Select City' variant='outlined'
+                  <TextField {...params} label='Place / Location' variant='outlined'
                     {...(errors.CityID && { error: true })}
                   />
                 )}
+                // renderOption={(props, option) => (
+                //   <li {...props} className="custom-dropdown-item">
+                //     <span className="text-red-200">{option?.FormattedCity}</span>
+                //     <span className="text-blue">{option?.Timezone}</span>
+                //   </li>
+                // )}
                 filterOptions={(x) => x} // Disable frontend filtering
                 size={TextFeildSize}
               />
 
             </Grid>
             <Grid item xs={12} sm={4}>
-              <TextField
+            <div className='ps-3'>
+                <div>{formData?.CityID?.Timezone}</div>
+                <a href={`https://www.google.com/search?q=${formData?.CityID?.Latitude},${formData?.CityID?.Longitude}`} target='_blank'>
+                <div>{formData?.CityID?.Latitude}, {formData?.CityID?.Longitude}</div>
+                </a>
+              </div>
+              {/* <TextField
                 fullWidth
                 label='Lat, Lng '
                 size={TextFeildSize}
-              // placeholder='John'
-              // value={formData?.MiddleName}
+                // placeholder='John'
+                value={formData?.CityID?.Timezone}
+                InputProps={{
+                  readOnly: true, // Makes the TextField read-only
+                }}
               // onChange={e => handleInputChange('MiddleName', e.target.value, 'MiddleName')}
               // onChange={e => setFormData({ ...formData, MiddleName: e.target.value })}
               // {...(errors.MiddleName && { error: true, helperText: 'MiddleName is required.' })}
-              />
+              /> */}
             </Grid>
             <Grid item xs={12} sm={8}>
               <TextField
@@ -479,12 +508,12 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
             </Grid>
             <Grid item xs={12} sm={4}>
               <FormControl fullWidth>
-                <InputLabel id="group-select-label">Select Group</InputLabel>
+                <InputLabel id="group-select-label">Group</InputLabel>
                 <Select
                   labelId="group-select-label"
                   fullWidth
                   id="group-select"
-                  label="Select Group"
+                  label="Group"
                   value={formData?.Group}
                   onChange={e => handleInputChange('Group', e.target.value, 'Group')}
                   size={TextFeildSize}

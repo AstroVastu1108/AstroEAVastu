@@ -9,8 +9,6 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 function TimeTool({ handleDateChange, kundliBirthData, handleTimeTool, handleTimeToolOptChange, datePicker, setDatePicker, TimeToolOpt, isTransit }) {
   const [timeValue, setTimeValue] = useState("Y"); // "Y" for year, "M" for month, etc.
 
-  console.log("----------->", isTransit)
-
   useEffect(() => {
     if (TimeToolOpt == "B") {
       if (kundliBirthData?.BirthDate && kundliBirthData?.BirthTime) {
@@ -77,10 +75,10 @@ function TimeTool({ handleDateChange, kundliBirthData, handleTimeTool, handleTim
   return (
     <>
 
-      <Box className="timeTool-div bg-[var(--secondary-color)]  lg:w-[calc(100%-125px)] md:w-[calc(100%-40px)] sm:w-[calc(100%-50px)]">
+      <Box className="timeTool-div bg-[#f5f5f5]  lg:w-[calc(100%-115px)] md:w-[calc(100%-30px)] sm:w-[calc(100%-50px)] border-primary border">
         <div className='w-full flex justify-between items-center'>
           <div>
-            <span className='text-primary text-sm font-medium'>Time Tool</span>
+            <span className='text-primary font-ea-sb'>Time Tool</span>
           </div>
           <IconButton
             aria-label="close"

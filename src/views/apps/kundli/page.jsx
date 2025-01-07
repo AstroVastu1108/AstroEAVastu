@@ -23,6 +23,7 @@ import { useAuth } from "@/@core/contexts/authContext";
 import { GetConfig } from "@/app/Server/API/configuration";
 import dayjs from "dayjs";
 import { null_ } from "valibot";
+import DuplicateKundali from "./duplicateKundali/DuplicateKundali";
 
 
 
@@ -62,7 +63,10 @@ export default function KundliMain() {
       flex: 2,
       headerAlign: 'left',
       renderCell: (params) => {
-        const fullName = `${params.row.FirstName} ${params.row.MiddleName} ${params.row.LastName}`;
+        var fullName = `${params.row.FirstName} ${params.row.LastName}`;
+        if (params.row.MiddleName != "") {
+          fullName = `${params.row.FirstName} ${params.row.MiddleName} ${params.row.LastName}`;
+        }
         const searchText = searchInputRef.current.value;
         return <span className="font-ea-sb">{highlightText(fullName, searchText)}</span>;
       },
@@ -237,10 +241,10 @@ export default function KundliMain() {
                 horizontal: 'right',
               }}
             >
-              <MenuItem onClick={handleRemoveOpen} className="flex gap-1"><i className={'tabler-trash me-2'} />Delete</MenuItem>
-              <MenuItem onClick={handleEdit} className="flex gap-1"><i className={'tabler-edit me-2'} />Edit</MenuItem>
-              <MenuItem onClick={handleDuplicateOpen} className="flex gap-1"><i className={'tabler-copy me-2'} />Duplicat</MenuItem>
               <MenuItem onClick={handlePreview} className="flex gap-1"><i className={'tabler-arrow-up-right me-2'} />Open</MenuItem>
+              <MenuItem onClick={handleEdit} className="flex gap-1"><i className={'tabler-edit me-2'} />Edit</MenuItem>
+              <MenuItem onClick={handleRemoveOpen} className="flex gap-1"><i className={'tabler-trash me-2'} />Delete</MenuItem>
+              <MenuItem onClick={handleDuplicateOpen} className="flex gap-1"><i className={'tabler-copy me-2'} />New &gt; Location Chart</MenuItem>
               <Divider />
               <MenuItem onClick={handleDownload} className="flex gap-1"><i className={'tabler-download me-2'} />Download</MenuItem>
             </Menu>
@@ -269,11 +273,15 @@ export default function KundliMain() {
     BirthDate: dayjs(),
     Country: { CountryCode: 'IN', Country: 'India' },
     BirthTime: dayjs(),
-    CityID: { CityID: 1255364, FormattedCity: 'Surat, Gujarat' },
+    CityID: {
+      CityID: 1255364, FormattedCity: 'Surat, Gujarat', "Latitude": 21.19594,
+      "Longitude": 72.83023,
+      "Timezone": "Asia/Kolkata"
+    },
     // City:'Surat, Gujarat',
     // CityID: 'A1AE28185ED49D47211760BF32D40EB742C84998',
     isUpdate: false,
-    Group:"Client"
+    Group: "Client"
     // City: 'Surat'
   })
   const [totalRowCount, setTotalRowCount] = useState(0);
@@ -329,11 +337,15 @@ export default function KundliMain() {
       BirthDate: null,
       Country: { CountryCode: 'IN', Country: 'India' },
       BirthTime: null,
-      CityID: { CityID: 1255364, FormattedCity: 'Surat, Gujarat' },
+      CityID: {
+        CityID: 1255364, FormattedCity: 'Surat, Gujarat', "Latitude": 21.19594,
+        "Longitude": 72.83023,
+        "Timezone": "Asia/Kolkata"
+      },
       isUpdate: false,
-      Remark:"",
-      Reference:"",
-      Group:"Client"
+      Remark: "",
+      Reference: "",
+      Group: "Client"
       // City: 'Surat'
     })
     // setUserData(userData)
@@ -341,16 +353,19 @@ export default function KundliMain() {
     setOpen(true);
   }
 
-  const handleDeleteClick =async (kid) => {
+  const handleDeleteClick = async (kid) => {
     const res = await DeleteKundli(kid);
     if (res.hasError) {
       setLoading(false);
       return toastDisplayer("error", res.error);
     } else {
-      getAllKundli(1,"", selectedGroup);
-      // setKundliData(res?.responseData?.data?.Result?.KundaliList);
-      // setGroupData(res?.responseData?.data?.Result?.Group);
-      // setTotalRowCount(res?.responseData?.data?.Result?.KundaliCount)
+      const index = kundliData.findIndex(item => item.KundaliID === kid);
+      if (index !== -1) {
+        const updatedKundliData = [...kundliData];
+        updatedKundliData.splice(index, 1);
+        setKundliData(updatedKundliData);
+        setTotalRowCount(totalRowCount - 1);
+      }
       setLoading(false);
     }
   }
@@ -393,7 +408,7 @@ export default function KundliMain() {
   const handleEditClick = (data) => {
     setLoading(true);
     data.isUpdate = true;
-    if(!data.Group)
+    if (!data.Group)
       data.Group = "Client";
     const birthTime = data.BirthTime;
     const hours = parseInt(birthTime?.slice(0, 2), 10);   // First 2 characters (HH)
@@ -622,13 +637,13 @@ export default function KundliMain() {
         </Grid>
       </Grid>
       {open && (
-        <AddKundliPopUp open={open} handleAddClose={handleAddClose} getAllKundli={getAllKundli} setUserData={setUserData} userData={userData} GroupData={groupData} />
+        <AddKundliPopUp open={open} handleAddClose={handleAddClose} getAllKundli={getAllKundli} setUserData={setUserData} userData={userData} GroupData={groupData} setKundliData={setKundliData} kundliData={kundliData} />
       )}
       {removePopUp && (
-        <RemoveKundli open={removePopUp} isDelete={true} handleClose={handleRemoveClose} userData={userData} handleDeleteClick={handleDeleteClick}/>
+        <RemoveKundli open={removePopUp} isDelete={true} handleClose={handleRemoveClose} userData={userData} handleDeleteClick={handleDeleteClick} />
       )}
       {duplicatPopUp && (
-        <RemoveKundli open={duplicatPopUp} isDelete={false} handleClose={handleDuplicatClose} userData={userData} handleDeleteClick={handleDeleteClick}/>
+        <DuplicateKundali open={duplicatPopUp} isDelete={false} handleClose={handleDuplicatClose} userData={userData} handleDeleteClick={handleDeleteClick} getAllKundli={getAllKundli} />
       )}
 
     </>
