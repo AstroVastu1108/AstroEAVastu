@@ -11,7 +11,7 @@ import html2canvas from 'html2canvas'
 import { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import { getKundliPdf } from '@/app/Server/API/common'
-import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
+// import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
 import { Box, Button, Card, CardContent, Grid } from '@mui/material'
 import PageTitle from '@/components/common/PageTitle/PageTitle'
 import TimeTool from './TimeTool'
@@ -85,6 +85,7 @@ const Preview = ({ kundliData, setKundliData }) => {
   const getTransitData = async (fdate, ftime, option) => {
     // return console.log(option);
     setIsTransit("T");
+    console.log("transit change from getTransitData : T")
     var BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
     var date = "";
     var time = "";
@@ -120,7 +121,7 @@ const Preview = ({ kundliData, setKundliData }) => {
     const response = await TransitClickEvent(payload);
     if (response.hasError) {
       // setLoading(false);
-      return toastDisplayer("error", response.error);
+      // return toastDisplayer("error", response.error);
     } else {
       const data = response?.responseData?.Result?.Transit;
       setTransiteTime(data?.TransitDateTime)
@@ -136,7 +137,9 @@ const Preview = ({ kundliData, setKundliData }) => {
 
   const getDivisionalChartData = async (option) => {
     setIsTransit(option);
+    console.log("transit change from getDivisionalChartData : ", option)
     var BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
+
     setDatePicker(dayjs(`${BirthDetails?.BirthDate} ${BirthDetails?.BirthTime}`, 'DD-MM-YYYY HHmmss'))
     if (option && option != "undefined" && option != "" && option != "V") {
       // const chkDate = dayjs(`${kdata?.BirthDate} ${kdata?.BirthTime}`, 'DD-MM-YYYY HHmmss');
@@ -155,7 +158,7 @@ const Preview = ({ kundliData, setKundliData }) => {
       }
       const response = await DivisionalChartEvent(payload, option);
       if (response.hasError) {
-        return toastDisplayer("error", response.error);
+        // return toastDisplayer("error", response.error);
       } else {
         const data = response?.responseData?.Result;
         setDivisionalData(data);
@@ -207,7 +210,7 @@ const Preview = ({ kundliData, setKundliData }) => {
 
         if (response.hasError) {
           setIsDisable(false)
-          return toastDisplayer("error", response.error)
+          // return toastDisplayer("error", response.error)
         }
         setKundliData(response?.responseData?.Result)
         // return setLoading(false);
@@ -218,7 +221,9 @@ const Preview = ({ kundliData, setKundliData }) => {
       if (TransiteTime) {
         const formatedString = dayjs(TransiteTime, 'DD-MM-YYYY HHmmss');
         if (!formatedString.isSame(datePicker1, 'second')) {
-          getTransitData(formattedDate, formattedTime);
+          console.log("api call from here", isTransit);
+          if(isTransit !="V")
+            getTransitData(formattedDate, formattedTime);
         }
 
       }
@@ -230,6 +235,7 @@ const Preview = ({ kundliData, setKundliData }) => {
     setTimeToolOpt(e.target.value);
     if (e.target.value == "T") {
       if (!TransiteTime) {
+        console.log("api call from here")
         getTransitData(null, null, "T");
       } else {
         setDatePicker(dayjs(TransiteTime, 'DD-MM-YYYY HHmmss'));

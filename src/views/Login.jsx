@@ -27,7 +27,7 @@ import themeConfig from '@configs/themeConfig'
 import { useImageVariant } from '@core/hooks/useImageVariant'
 import { useSettings } from '@core/hooks/useSettings'
 import { useAuth } from '@/@core/contexts/authContext'
-import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
+// import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
 import { TextField } from '@mui/material'
 import Loader from '@/components/common/Loader/Loader'
 import OTPverify from '@/components/common/OTPVerify/OTPverify'
@@ -279,7 +279,7 @@ const LoginV2 = ({ mode }) => {
         setErrors(true)
         emailRef.current.focus();
         setErrorMessage("Email is required.")
-        return toastDisplayer("error", "Email is required.")
+        // return toastDisplayer("error", "Email is required.")
       }
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!formData.email || !emailRegex.test(formData.email)) {

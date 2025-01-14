@@ -1,15 +1,17 @@
 import { toast } from "react-toastify";
+import "toastdisplayer.css";
 export const toastDisplayer = async (toastType, toastMsg) => {
     if (toastType === "error") {
       return toast.error(`${toastMsg}`, {
         position: "top-right",
-        autoClose: 5000,
+        autoClose: 20000,
         hideProgressBar: false,
-        closeOnClick: true,
+        closeOnClick: false,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined,
+        progress: false,
         theme: "light",
+        style: { ...commonStyle, backgroundColor: "#f44336", color: "#fff" },
       });
     } else if (toastType === "success" || toastType === "success") {
       return toast.success(
@@ -17,13 +19,14 @@ export const toastDisplayer = async (toastType, toastMsg) => {
         <div dangerouslySetInnerHTML={{ __html: toastMsg }} />,
         {
           position: "top-right",
-          autoClose: 5000,
+          autoClose: 20000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
           theme: "light",
+          style: { ...commonStyle, backgroundColor: "#f44336", color: "#fff" },
         });
     }
     else if (toastType === "info") {
@@ -36,8 +39,9 @@ export const toastDisplayer = async (toastType, toastMsg) => {
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          progress: undefined,
+          progress: false,
           theme: "light",
+          style: { ...commonStyle, backgroundColor: "#f44336", color: "#fff" },
         }
       );
     }

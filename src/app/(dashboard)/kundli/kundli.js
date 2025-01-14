@@ -11,7 +11,7 @@ import KundliMain from '@/views/apps/kundli/page'
 // API Imports
 import { GetKundliDataAPI } from '@/app/Server/API/kundliAPI';
 import Loader from '@/components/common/Loader/Loader';
-import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer';
+// import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer';
 
 
 export default function KundliPage() {
@@ -25,7 +25,7 @@ export default function KundliPage() {
     const res = await GetKundliDataAPI(1000, 1,"");
     setLoading(false);
     if (res.hasError) {
-      return toastDisplayer("error", res.error);
+      // return toastDisplayer("error", res.error);
     } else {
       setKundliData(res?.responseData?.data?.Result?.KundaliList);
     }

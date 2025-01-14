@@ -1,0 +1,52 @@
+/* toastdisplayer.css */
+
+/* General toast container styles */
+.Toastify__toast-container {
+  font-family: 'Segoe UI', Arial, sans-serif; /* Example: custom font */
+  z-index: 9999; /* Ensure it's above other UI elements */
+}
+
+/* Toast styles */
+.Toastify__toast {
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  padding: 16px; /* Add padding */
+}
+
+/* Success toast */
+.Toastify__toast--success {
+  background-color: #4caf50; /* Green background */
+  color: #fff; /* White text */
+}
+
+/* Error toast */
+.Toastify__toast--error {
+  background-color: #f44336; /* Red background */
+  color: #fff; /* White text */
+}
+
+/* Info toast */
+.Toastify__toast--info {
+  background-color: #2196f3; /* Blue background */
+  color: #fff; /* White text */
+}
+
+/* Toast body text */
+.Toastify__toast-body {
+  font-size: 16px; /* Custom font size */
+  line-height: 1.5; /* Improve readability */
+}
+
+/* Toast close button */
+.Toastify__close-button {
+  color: #fff; /* White close button */
+  opacity: 0.8; /* Slight transparency */
+}
+.Toastify__close-button:hover {
+  opacity: 1; /* Full opacity on hover */
+}
+
+/* Progress bar customization */
+.Toastify__progress-bar {
+  background-color: #76ff03; /* Custom color for progress bar */
+}

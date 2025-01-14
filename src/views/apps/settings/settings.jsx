@@ -1,5 +1,5 @@
 'use client'
-import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
+// import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
 import { useAuth } from '@/@core/contexts/authContext'
 import { getCities, getCountries } from '@/app/Server/API/common'
 import { GetConfig, SaveConfig } from '@/app/Server/API/configuration'
@@ -27,12 +27,12 @@ function Settings() {
     try {
       const response = await getCountries()
       if (response.hasError) {
-        return toastDisplayer("error", response.error)
+        // return toastDisplayer("error", response.error)
       }
       const result = await response.responseData
       setConutryData(result.Result.Countries)
     } catch (error) {
-      return toastDisplayer("error", `There was a problem with the fetch operation: ${error}`)
+      // return toastDisplayer("error", `There was a problem with the fetch operation: ${error}`)
     }
   }
 
@@ -48,12 +48,12 @@ function Settings() {
         const CountryCode = selectedCountry.CountryCode
         const response = await getCities(CountryCode, query)
         if (response.hasError) {
-          return toastDisplayer("error", response.error)
+          // return toastDisplayer("error", response.error)
         }
         const result = await response.responseData
         setCityData(result.Result.Cities || [])
       } catch (error) {
-        return toastDisplayer("error", `There was a problem with the fetch operation:${error}`)
+        // return toastDisplayer("error", `There was a problem with the fetch operation:${error}`)
       }
     }
   }, 300)
@@ -66,7 +66,7 @@ function Settings() {
     const res = await GetConfig();
     if (res.hasError) {
       setLoading(false);
-      return toastDisplayer("error", res.error);
+      // return toastDisplayer("error", res.error);
     } else {
       setLoading(false);
       const response = res.responseData
@@ -108,7 +108,7 @@ function Settings() {
     const res = await SaveConfig(configureID, user?.transactionID, selectedCity, selectedCountry);
     if (res.hasError) {
       setLoading(false);
-      return toastDisplayer("error", res.error);
+      // return toastDisplayer("error", res.error);
     } else {
       return setLoading(false);
       // return toastDisplayer("success", "Configuration updated.");

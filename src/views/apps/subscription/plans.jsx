@@ -21,7 +21,7 @@ import classnames from 'classnames'
 import CustomAvatar from '@core/components/mui/Avatar'
 import { CreateOrder, VerifyOrder } from '@/app/Server/API/subscription'
 import { useAuth } from '@/@core/contexts/authContext'
-import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
+// import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
 import { LoadingButton } from '@mui/lab'
 
 import { useRouter } from 'next/navigation'
@@ -104,7 +104,7 @@ const PricingPlan = () => {
       alert('Failed to load Razorpay SDK.');
       return;
     }
-    const amount = pricingPlan == "monthly" ? 250 : 3000 
+    const amount = pricingPlan == "monthly" ? 250 : 3000
     // Fetch the payment order ID from your backend
     const response = await CreateOrder({
       "companyId":user?.transactionID,
@@ -112,12 +112,12 @@ const PricingPlan = () => {
     });
     if(response.hasError){
       setIsDisable(false)
-      return toastDisplayer("error",response.errorMessage)
+      // return toastDisplayer("error",response.errorMessage)
     }
     const data = await response.responseData.result;
-    
+
     const options = {
-      key: "rzp_test_0yCaQoC8hI6DCW", 
+      key: "rzp_test_0yCaQoC8hI6DCW",
       amount: data.amount,
       currency: data.currency,
       name: "Your Product Name",
@@ -135,9 +135,9 @@ const PricingPlan = () => {
         });
         if(verifyResponse.hasError){
           setIsDisable(false)
-          return toastDisplayer("error",response.errorMessage)
+          // return toastDisplayer("error",response.errorMessage)
         }
-        
+
 
         const verifyData = verifyResponse.responseData;
 
@@ -145,12 +145,12 @@ const PricingPlan = () => {
           setIsDisable(false)
           setPaymentStatus("Payment Successful!");
           // logout();
-          return toastDisplayer("success","Payment Successful!")
+          // return toastDisplayer("success","Payment Successful!")
           // return router.push("login")
         } else {
           setIsDisable(false)
           setPaymentStatus("Payment Failed. Please try again.");
-          return toastDisplayer("error","Payment Failed. Please try again.");
+          // return toastDisplayer("error","Payment Failed. Please try again.");
         }
       },
       prefill: {
@@ -159,7 +159,7 @@ const PricingPlan = () => {
         contact: "9999999999",
       },
     };
-    
+
     const rzp1 = new window.Razorpay(options);
     rzp1.open();
     setIsDisable(false)
@@ -173,7 +173,7 @@ const PricingPlan = () => {
         <div className='flex flex-col gap-y-4 items-center justify-center'>
           <Chip size='small' variant='tonal' color='primary' label='Pricing Plans' />
           <div className='flex flex-col items-center gap-y-1 justify-center flex-wrap'>
-            
+
             <Typography className='text-center'>
               Choose the best plan to fit your needs.
             </Typography>

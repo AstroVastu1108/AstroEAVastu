@@ -68,12 +68,12 @@ function DuplicateKundali({ open, handleClose, userData, getAllKundli, isDelete 
         const CountryCode = formData.Country.CountryCode
         const response = await getCities(CountryCode, query)
         if (response.hasError) {
-          return toastDisplayer("error", response.error)
+          // return toastDisplayer("error", response.error)
         }
         const result = await response.responseData
         setCityData(result.Result.Cities || [])
       } catch (error) {
-        return toastDisplayer("error", `There was a problem with the fetch operation:${error}`)
+        // return toastDisplayer("error", `There was a problem with the fetch operation:${error}`)
       }
     }
   }

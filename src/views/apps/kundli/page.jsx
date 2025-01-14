@@ -18,7 +18,7 @@ import { getKundliPdf } from "@/app/Server/API/common";
 
 import RemoveKundli from "./removeKundli/RemoveKundli";
 
-import { toastDisplayer } from "@/@core/components/toast-displayer/toastdisplayer";
+// import { toastDisplayer } from "@/@core/components/toast-displayer/toastdisplayer";
 import { useAuth } from "@/@core/contexts/authContext";
 import { GetConfig } from "@/app/Server/API/configuration";
 import dayjs from "dayjs";
@@ -292,7 +292,7 @@ export default function KundliMain() {
     const res = await GetConfig();
     if (res.hasError) {
       setLoading(false);
-      return toastDisplayer("error", res.error);
+      // return toastDisplayer("error", res.error);
     } else {
       setLoading(false);
       const response = await res.responseData
@@ -357,7 +357,7 @@ export default function KundliMain() {
     const res = await DeleteKundli(kid);
     if (res.hasError) {
       setLoading(false);
-      return toastDisplayer("error", res.error);
+      // return toastDisplayer("error", res.error);
     } else {
       const index = kundliData.findIndex(item => item.KundaliID === kid);
       if (index !== -1) {
@@ -388,7 +388,7 @@ export default function KundliMain() {
     const res = await GetKundliDataAPI(10, pageNo, searchValue, group);
     if (res.hasError) {
       setLoading(false);
-      return toastDisplayer("error", res.error);
+      // return toastDisplayer("error", res.error);
     } else {
       setKundliData(res?.responseData?.data?.Result?.KundaliList);
       setGroupData(res?.responseData?.data?.Result?.Group);

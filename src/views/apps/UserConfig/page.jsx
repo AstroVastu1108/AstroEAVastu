@@ -8,7 +8,7 @@ import AddKundliPopUp from "../kundli/addKundli/addKundli";
 import PreviewActions from "../kundli/preview/PreviewActions";
 import { GetUsers } from "@/app/Server/API/userPermission";
 import { useAuth } from "@/@core/contexts/authContext";
-import { toastDisplayer } from "@/@core/components/toast-displayer/toastdisplayer";
+// import { toastDisplayer } from "@/@core/components/toast-displayer/toastdisplayer";
 import AddUserPopUp from "./addUser/addUser";
 import { useImageVariant } from "@/@core/hooks/useImageVariant";
 
@@ -114,7 +114,7 @@ export default function UserListing({mode}) {
     const response = await GetUsers(user?.transactionID)
     if (response.hasError) {
       setLoading(false)
-      return toastDisplayer("error", response?.errorMessage)
+      // return toastDisplayer("error", response?.errorMessage)
     }
     setLoading(false)
     setAllUserData(response.responseData)

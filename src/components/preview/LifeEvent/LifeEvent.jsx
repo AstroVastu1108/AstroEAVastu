@@ -67,7 +67,7 @@ function LifeEvent({ setLifeEventValue, open, handleClose }) {
     const response = await EventOptionsData();
     if (response.hasError) {
       setLoading(false);
-      return toastDisplayer("error", response.error);
+      // return toastDisplayer("error", response.error);
     } else {
       setEventData(response?.responseData?.Result?.Events);
       setLoading(false);

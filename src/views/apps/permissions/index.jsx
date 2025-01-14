@@ -10,7 +10,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/@core/contexts/authContext';
 import Loader from '@/components/common/Loader/Loader';
 import { GetUserAuthRule, GetUsers, saveUserAuthRule } from '@/app/Server/API/userPermission';
-import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer';
+// import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer';
 import UserPopUp from './user-popup/selectUser';
 import PageTitle from '@/components/common/PageTitle/PageTitle';
 import { LoadingButton } from '@mui/lab';
@@ -86,7 +86,7 @@ export default function EnhancedTable() {
     try {
       const response = await GetUsers(transactionID);
       if (response.hasError) {
-        toastDisplayer("error", response.errorMessage);
+        // toastDisplayer("error", response.errorMessage);
       } else {
         setUsersData(response.responseData);
       }
@@ -103,7 +103,7 @@ export default function EnhancedTable() {
     try {
       const response = await GetUserAuthRule(transactionID, email);
       if (response.hasError) {
-        toastDisplayer("error", response.errorMessage);
+        // toastDisplayer("error", response.errorMessage);
       } else {
         setIsVisible(true);
         const updatedRows = initialRows.map(row => {
@@ -126,8 +126,10 @@ export default function EnhancedTable() {
   };
 
   const handleButtonClick = async () => {
-    if (!user?.transactionID) return toastDisplayer("error", "User Transaction ID not found.");
-    if (!selectedValue.email) return toastDisplayer("error", "Selected user not found.");
+    if (!user?.transactionID)
+      // return toastDisplayer("error", "User Transaction ID not found.");
+    if (!selectedValue.email)
+      // return toastDisplayer("error", "Selected user not found.");
 
     setLoading(true);
     try {
@@ -137,7 +139,7 @@ export default function EnhancedTable() {
       }));
       const response = await saveUserAuthRule(user.transactionID, selectedValue.email, updatedRows);
       if (response.hasError) {
-        toastDisplayer("error", response.errorMessage);
+        // toastDisplayer("error", response.errorMessage);
       } else {
         setIsVisible(false);
         setSelectedValue("");

@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
 // API Imports
 import { GetKundliDataAPI } from '@/app/Server/API/kundliAPI';
 import Loader from '@/components/common/Loader/Loader';
-import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer';
+// import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer';
 import ClientMain from '@/views/apps/clients';
 
 

@@ -7,7 +7,7 @@ import PageTitle from '@/components/common/PageTitle/PageTitle';
 import ClientKundli from '../clientKundli/clientKundli';
 import { useAuth } from '@/@core/contexts/authContext';
 import { GetClientById } from '@/app/Server/API/client';
-import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer';
+// import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer';
 import InfoTable from '@/components/preview/InfoTable/InfoTable';
 function DetailClientData({ cid }) {
   const [value, setValue] = useState('1');
@@ -21,11 +21,11 @@ function DetailClientData({ cid }) {
     try {
       const response = await GetClientById(transactionID, cid);
       if (response.hasError) {
-        return toastDisplayer("error", response.errorMessage);
+        // return toastDisplayer("error", response.errorMessage);
       }
       setClient(response.responseData)
     } catch (error) {
-      return toastDisplayer("error", error);
+      // return toastDisplayer("error", error);
     }
 
   }

@@ -14,7 +14,7 @@ import KanbanList from './KanbanList'
 import NewColumn from './NewColumn'
 import KanbanDrawer from './KanbanDrawer'
 import { GetColumns, GetTasks } from '@/app/Server/API/tasks'
-import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
+// import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
 import { useAuth } from '@/@core/contexts/authContext'
 
 const KanbanBoard = ({cid}) => {
@@ -60,7 +60,7 @@ const KanbanBoard = ({cid}) => {
     }));
       return updatedData
     } catch (error) {
-      return toastDisplayer("error",error)
+      // return toastDisplayer("error",error)
     }
   }
 
@@ -75,7 +75,7 @@ const KanbanBoard = ({cid}) => {
     // }));
       return await response.responseData
     } catch (error) {
-      return toastDisplayer("error",error)
+      // return toastDisplayer("error",error)
     }
   }
 

@@ -8,7 +8,7 @@ import AddClientPopUp from "./addClient/addClient";
 import PreviewActions from "../kundli/preview/PreviewActions";
 import { CreateClient, DeleteClient, GetClients } from "@/app/Server/API/client";
 import { useAuth } from "@/@core/contexts/authContext";
-import { toastDisplayer } from "@/@core/components/toast-displayer/toastdisplayer";
+// import { toastDisplayer } from "@/@core/components/toast-displayer/toastdisplayer";
 import VerificationPopup from "@/@core/components/custom-verification/verification-popup";
 
 export default function ClientMain() {
@@ -104,7 +104,7 @@ export default function ClientMain() {
     const res = await GetClients(transactionID);
     if (res.hasError) {
       setLoading(false);
-      return toastDisplayer("error", res.error);
+      // return toastDisplayer("error", res.error);
     } else {
       setClientData(res?.responseData);
       setLoading(false);
@@ -122,7 +122,7 @@ export default function ClientMain() {
       const response = await CreateClient(payload);
       if (response.hasError) {
         setIsSaving(false)
-        return toastDisplayer("error", response.errorMessage);
+        // return toastDisplayer("error", response.errorMessage);
       } else {
         setOpen(false);
         // toastDisplayer("success", "Client added successfully.");
@@ -131,7 +131,7 @@ export default function ClientMain() {
         }
       }
     } catch (error) {
-      return toastDisplayer("error", error);
+      // return toastDisplayer("error", error);
     }
   }
 
@@ -175,7 +175,7 @@ export default function ClientMain() {
       if (selectedClientData != null && user?.transactionID) {
         const response = await DeleteClient(selectedClientData?.clientID, user?.transactionID);
         if (response.hasError) {
-          return toastDisplayer("error", response.errorMessage);
+          // return toastDisplayer("error", response.errorMessage);
         } else {
           setOpenDelete(false);
           // toastDisplayer("success", "Client deleted successfully.");
@@ -185,7 +185,7 @@ export default function ClientMain() {
         }
       }
     } catch (error) {
-      return toastDisplayer("error", error);
+      // return toastDisplayer("error", error);
     }
   }
 

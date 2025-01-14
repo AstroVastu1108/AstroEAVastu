@@ -14,7 +14,7 @@ import { CreateKundli, UpdateKundli } from '@/app/Server/API/kundliAPI';
 import { getCities, getCountries } from '@/app/Server/API/common';
 
 // Import Components
-import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer';
+// import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer';
 
 // Import Style
 import "./addKundli.css"
@@ -28,12 +28,12 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
     try {
       const response = await getCountries()
       if (response.hasError) {
-        return toastDisplayer("error", response.error)
+        // return toastDisplayer("error", response.error)
       }
       const result = response.responseData
       setConutryData(result.Result.Countries)
     } catch (error) {
-      return toastDisplayer("error", `There was a problem with the fetch operation: ${error}`)
+      // return toastDisplayer("error", `There was a problem with the fetch operation: ${error}`)
     }
   }
 
@@ -110,12 +110,12 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
         const CountryCode = formData.Country.CountryCode
         const response = await getCities(CountryCode, query)
         if (response.hasError) {
-          return toastDisplayer("error", response.error)
+          // return toastDisplayer("error", response.error)
         }
         const result = await response.responseData
         setCityData(result.Result.Cities || [])
       } catch (error) {
-        return toastDisplayer("error", `There was a problem with the fetch operation:${error}`)
+        // return toastDisplayer("error", `There was a problem with the fetch operation:${error}`)
       }
     }
   }
@@ -142,7 +142,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
 
     if (hasErrors) {
       // Display an error message or alert
-      toastDisplayer("error", "Please fill out all required fields correctly before submitting.");
+      // toastDisplayer("error", "Please fill out all required fields correctly before submitting.");
       return; // Prevent submission
     }
     const birthDate = formData.date ? new Date(formData.date).toLocaleDateString('en-GB').split('/').join('-') : null
@@ -178,7 +178,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
 
         if (response.hasError) {
           setIsDisable(false)
-          return toastDisplayer("error", response.error)
+          // return toastDisplayer("error", response.error)
         }
         var kId = response?.responseData?.Result?.KundaliID;
         setIsDisable(false)
@@ -192,7 +192,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
 
         if (response.hasError) {
           setIsDisable(false);
-          return toastDisplayer("error", response.error);
+          // return toastDisplayer("error", response.error);
         }
 
         var kId = response?.responseData?.Result?.KundaliID;

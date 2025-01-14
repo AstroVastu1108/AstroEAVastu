@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Autocomplete, Box, Button, Card, CardContent, CardHeader, CircularProgress, debounce, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, Grid, Icon, IconButton, InputAdornment, InputLabel, MenuItem, Radio, RadioGroup, Select, TextField, Typography } from "@mui/material";
 import Checkbox from '@mui/material/Checkbox';
 import { CreateUser } from '@/app/Server/API/userPermission';
-import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer';
+// import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer';
 
 function AddUserPopUp({ open, handleAddClose, getAllUsers, userData, setUserData }) {
 
@@ -44,7 +44,7 @@ function AddUserPopUp({ open, handleAddClose, getAllUsers, userData, setUserData
           const response = await CreateUser(userData)
           if (response.hasError) {
             setIsDisable(false)
-            return toastDisplayer("error", response.errorMessage)
+            // return toastDisplayer("error", response.errorMessage)
           }
           setIsDisable(false)
           getAllUsers();
@@ -112,7 +112,7 @@ function AddUserPopUp({ open, handleAddClose, getAllUsers, userData, setUserData
         ["userAvatar"]: base64,
       }));
     } else {
-      toastDisplayer('error', 'Only JPG, JPEG, and PNG files are allowed.')
+      // toastDisplayer('error', 'Only JPG, JPEG, and PNG files are allowed.')
     }
   }
 
@@ -144,7 +144,7 @@ function AddUserPopUp({ open, handleAddClose, getAllUsers, userData, setUserData
       }));
 
     } else {
-      toastDisplayer('error', 'Only JPG, JPEG, and PNG files are allowed.')
+      // toastDisplayer('error', 'Only JPG, JPEG, and PNG files are allowed.')
     }
   }
 

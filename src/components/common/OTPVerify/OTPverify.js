@@ -128,7 +128,7 @@ function OTPverify({ email, role, setIsOtpVerified, handleVerifyOtp, ErrorMessag
       //   return toastDisplayer('error', result.error)
       // }
       setOtp(['', '', '', '', '', ''])
-      toastDisplayer('success', 'OTP sent successfully')
+      // toastDisplayer('success', 'OTP sent successfully')
     } catch (error) {
       setErrors(true)
       return setErrorMessage(error.error || 'Failed to resend OTP')

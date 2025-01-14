@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import KanbanDrawer from '../kanban/KanbanDrawer'
 import { LoadingButton } from '@mui/lab'
 import Loader from '@/components/common/Loader/Loader'
-import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
+// import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
 
 function Listing({ cid, from }) {
   const { user } = useAuth()
@@ -56,7 +56,7 @@ function Listing({ cid, from }) {
       // return await setTasks(response.responseData)
     } catch (error) {
       setLoading(false)
-      return toastDisplayer('error', error)
+      // return toastDisplayer('error', error)
     }
   }
 
@@ -101,13 +101,13 @@ function Listing({ cid, from }) {
         }
       const response = await AddTasks(payload);
       if(response.hasError){
-        return toastDisplayer("error",response.errorMessage)
+        // return toastDisplayer("error",response.errorMessage)
       }
       setTasks((prevList) => [...prevList, payload]);
       return setNewTask("");
       // return toastDisplayer("success",response.responseData.statusMsg)
     }catch(error){
-      return toastDisplayer("error",error)
+      // return toastDisplayer("error",error)
     }
     // handleOpenKundliPopup(newKundli, false);
   };

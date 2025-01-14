@@ -239,7 +239,7 @@ import { GetKundliDataAPI, SearchKundli } from '@/app/Server/API/kundliAPI'
 import Loader from '@/components/common/Loader/Loader'
 import { Box, createTheme, ThemeProvider, Button, debounce, TextField } from '@mui/material'
 import { DataGrid, GridToolbarContainer, GridToolbarQuickFilter } from '@mui/x-data-grid'
-import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
+// import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer'
 
 function KundliDataGrid({ columns, pageSize = 5, checkboxSelection = false, onRowClick }) {
   const [loading, setLoading] = useState(false)
@@ -339,7 +339,7 @@ function CustomToolbar() {
     const res = await GetKundliDataAPI(pageSize, pageNo,"")
     if (res.hasError) {
       setLoading(false)
-      return toastDisplayer('error', res.error)
+      // return toastDisplayer('error', res.error)
     } else {
       setKundliData(res?.responseData?.data?.Result?.KundaliList || [])
       setTotalRowCount(res?.responseData?.data?.Result?.TotalCount || 1000)

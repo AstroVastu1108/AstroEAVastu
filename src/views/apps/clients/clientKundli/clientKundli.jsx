@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 import { GetKundliDataAPI } from "@/app/Server/API/kundliAPI";
 import KundliPopUp from "./kundliPopup/kundliPopup";
 import { DeleteClientKundli, GetClientKundli, SaveClientKundli } from "@/app/Server/API/client";
-import { toastDisplayer } from "@/@core/components/toast-displayer/toastdisplayer";
+// import { toastDisplayer } from "@/@core/components/toast-displayer/toastdisplayer";
 import { useAuth } from "@/@core/contexts/authContext";
 import Loader from "@/components/common/Loader/Loader";
 
@@ -34,10 +34,10 @@ export default function ClientKundli({ cid }) {
   const fetchClientKundliList = useCallback(async () => {
     try {
       const data = await GetClientKundli(user?.transactionID, cid);
-      if (data.hasError) return toastDisplayer("error", data.error);
+      // if (data.hasError) return toastDisplayer("error", data.error);
       setClientKundliList(data.responseData);
     } catch (error) {
-      toastDisplayer("error", error.message);
+      // toastDisplayer("error", error.message);
     }
   }, [cid, user?.transactionID]);
 
@@ -52,7 +52,7 @@ export default function ClientKundli({ cid }) {
       if (res.hasError) throw new Error(res.error);
       setKundliData(res?.responseData?.data?.Result?.KundaliList);
     } catch (error) {
-      toastDisplayer("error", error.message);
+      // toastDisplayer("error", error.message);
     } finally {
       setLoading(false);
     }
@@ -88,7 +88,7 @@ export default function ClientKundli({ cid }) {
       setClientKundliList((prevList) => prevList.filter((item) => item.id !== id));
       // toastDisplayer("success", response.responseData.statusMsg);
     } catch (error) {
-      toastDisplayer("error", error.message);
+      // toastDisplayer("error", error.message);
     }
   };
 
@@ -121,7 +121,7 @@ export default function ClientKundli({ cid }) {
       setKundliType(false);
       // toastDisplayer("success", response.responseData.statusMsg);
     } catch (error) {
-      toastDisplayer("error", error.message);
+      // toastDisplayer("error", error.message);
     }
   };
 
@@ -133,7 +133,7 @@ export default function ClientKundli({ cid }) {
 
   const handleSubmit = async (selectedData, client) => {
     // console.log("SelectedData : ",selectedData)
-    if (!selectedData) return toastDisplayer("error", "Select the kundli to add client.");
+    // if (!selectedData) return toastDisplayer("error", "Select the kundli to add client.");
     const payload = {
       id: kundliType ? selectedKundliClient?.id : undefined,
       clientKundaliId: kundliType ? selectedKundliClient?.clientKundaliId : undefined,
@@ -161,7 +161,7 @@ export default function ClientKundli({ cid }) {
       return setKundliType(false)
       // return toastDisplayer("success", response.responseData.statusMsg);
     } catch (error) {
-      toastDisplayer("error", error.message);
+      // toastDisplayer("error", error.message);
     }
   };
 

@@ -9,6 +9,9 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 function TimeTool({ handleDateChange, kundliBirthData, handleTimeTool, handleTimeToolOptChange, datePicker, setDatePicker, TimeToolOpt, isTransit }) {
   const [timeValue, setTimeValue] = useState("Y"); // "Y" for year, "M" for month, etc.
 
+  console.log("timetool opt:", TimeToolOpt);
+  console.log("isTransit:", isTransit);
+
   useEffect(() => {
     if (TimeToolOpt == "B") {
       if (kundliBirthData?.BirthDate && kundliBirthData?.BirthTime) {
@@ -75,11 +78,13 @@ function TimeTool({ handleDateChange, kundliBirthData, handleTimeTool, handleTim
   return (
     <>
 
-      <Box className="timeTool-div bg-[#f5f5f5]  lg:w-[calc(100%-115px)] md:w-[calc(100%-30px)] sm:w-[calc(100%-50px)] border-primary border">
-        <div className='w-full flex justify-between items-center'>
-          <div>
-            <span className='text-primary font-ea-sb'>Time Tool</span>
-          </div>
+      {/* <Box className="timeTool-div bg-[#f3dea5] shadow-lg shadow-white  lg:w-[calc(100%-75px)] md:w-[calc(100%-0px)] sm:w-[calc(100%-0px)] border-primary border-t-[5px] flex flex-row-reverse justify-between "> */}
+      <Box className="timeTool-div bg-[#f3dea5] lg:w-[calc(100%-75px)] md:w-[calc(100%-0px)] sm:w-[calc(100%-0px)] border-primary border-t-[5px] flex flex-row-reverse justify-between"
+      sx={{
+        boxShadow: "0px -4px 6px rgba(255, 255, 255, 0.2)"
+      }}>
+
+        <div className='w-[5%] flex justify-end items-start'>
           <IconButton
             aria-label="close"
             onClick={handleTimeTool} // Replace with your close handler function
@@ -88,8 +93,11 @@ function TimeTool({ handleDateChange, kundliBirthData, handleTimeTool, handleTim
             <i className='tabler-x text-primary'></i>
           </IconButton>
         </div>
-        <div className="flex items-center gap-3 flex-wrap lg:flex-nowrap">
-          <div className="w-full sm:w-[25%] md:w-[30%] lg:w-[15%]">
+        <div className="flex items-center gap-3 pt-2 flex-wrap lg:flex-nowrap">
+          {/* <div className='flex items-center justify-center border border-1'> */}
+          <div className='text-primary font-ea-sb chart-title flex items-center justify-center p-0'><i className={'tabler-calendar-share me-2'} /> Time Tool</div>
+          {/* </div> */}
+          <div className="w-full sm:w-[25%] md:w-[30%] lg:w-[12%]">
             <Select
               id="time-select"
               fullWidth
@@ -102,7 +110,7 @@ function TimeTool({ handleDateChange, kundliBirthData, handleTimeTool, handleTim
               value={isTransit == "T" ? TimeToolOpt : "B"}
             >
               <MenuItem value="B">Birth Chart</MenuItem>
-              {isTransit == "T" && <MenuItem value="T">Transit</MenuItem>}
+              {isTransit == "T" && <MenuItem value="T">Transit Chart</MenuItem>}
             </Select>
           </div>
 
@@ -173,41 +181,44 @@ function TimeTool({ handleDateChange, kundliBirthData, handleTimeTool, handleTim
             Second
           </Button>
 
-          <LocalizationProvider dateAdapter={AdapterDayjs} className="w-full sm:w-[25%] md:w-[40%] lg:w-[18%]">
-            <DateTimePicker
-              openTo="day"
-              className="w-[225px]"
-              // className="w-full sm:w-[25%] md:w-[40%] lg:w-[18%]"
-              views={["year", "month", "day", "hours", "minutes"]}
-              value={datePicker}
-              onChange={(newDate) => handleDateChange(newDate)}
-              inputFormat="DD-MM-YYYY HH:mm:ss"
-              format='DD-MM-YYYY HH:mm:ss'
-              ampm={false}
-              sx={{
-                height: '2.5rem',
-                minHeight: '2.5rem',
-                '& .MuiInputBase-root': { height: '2.5rem' },
-              }}
-              DialogProps={{
-                PaperProps: {
-                  sx: { '& .MuiDialogActions-root': { display: 'none !important' } }, // Hide the action buttons
-                },
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  sx={{
-                    height: '2.5rem',
-                    minHeight: '2.5rem',
-                    '& .MuiInputBase-root': { height: '2.5rem' },
-                  }}
-                  className="w-[225px]"
+          <div className="w-full sm:w-[25%] md:w-[40%] lg:w-[20%]">
+
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DateTimePicker
+                openTo="day"
+                // className="w-[225px]"
                 // className="w-full sm:w-[25%] md:w-[40%] lg:w-[18%]"
-                />
-              )}
-            />
-          </LocalizationProvider>
+                views={["year", "month", "day", "hours", "minutes", "seconds"]}
+                value={datePicker}
+                onChange={(newDate) => handleDateChange(newDate)}
+                inputFormat="DD-MM-YYYY HH:mm:ss"
+                format='DD-MM-YYYY HH:mm:ss'
+                ampm={false}
+                sx={{
+                  height: '2.5rem',
+                  minHeight: '2.5rem',
+                  '& .MuiInputBase-root': { height: '2.5rem' },
+                }}
+                DialogProps={{
+                  PaperProps: {
+                    sx: { '& .MuiDialogActions-root': { display: 'none !important' } }, // Hide the action buttons
+                  },
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    sx={{
+                      height: '2.5rem',
+                      minHeight: '2.5rem',
+                      '& .MuiInputBase-root': { height: '2.5rem' },
+                    }}
+                    className="w-[75%]"
+                  // className="w-full sm:w-[25%] md:w-[40%] lg:w-[18%]"
+                  />
+                )}
+              />
+            </LocalizationProvider>
+          </div>
 
           <IconButton onClick={() => handleArrows("I")} >
             <i className={'tabler-plus bg-primary'} />

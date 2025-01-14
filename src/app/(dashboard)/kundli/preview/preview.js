@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 // import Preview from '@/views/apps/kundli/preview/preview';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { GetKundliIDDataAPI } from '@/app/Server/API/kundliAPI';
-import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer';
+// import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer';
 import Loader from '@/components/common/Loader/Loader';
 import Preview from '@/views/apps/kundli/preview/preview';
 
@@ -29,13 +29,13 @@ const PreviewPage = ({id}) => {
       setLoading(false);
       if (res.hasError) {
         router.push('/kundali-list')
-        return toastDisplayer("error", res.error);
+        // return toastDisplayer("error", res.error);
       } else {
         SetKundliData(res?.responseData?.data?.Result)
       }
     } else {
       router.push('/kundali-list')
-      return toastDisplayer("error", "Kundli Id not found.");
+      // return toastDisplayer("error", "Kundli Id not found.");
     }
 
   }

@@ -4,7 +4,7 @@ import {
     Button, CircularProgress, debounce, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
     FormControl, Grid, IconButton, InputLabel, MenuItem, Select, TextField
 } from "@mui/material";
-import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer';
+// import { toastDisplayer } from '@/@core/components/toast-displayer/toastdisplayer';
 import { getCities, getCountries } from '@/app/Server/API/common';
 import { useAuth } from '@/@core/contexts/authContext';
 import { CreateClient } from '@/app/Server/API/client';
@@ -157,12 +157,12 @@ function AddClientPopUp({ open, handleAddClose,saveClient }) {
         try {
             const response = await getCountries()
             if (response.hasError) {
-                return toastDisplayer("error", response.error)
+                // return toastDisplayer("error", response.error)
             }
             const result = await response.responseData
             setConutryData(result.Result.Countries)
         } catch (error) {
-            return toastDisplayer("error", `There was a problem with the fetch operation: ${error}`)
+            // return toastDisplayer("error", `There was a problem with the fetch operation: ${error}`)
         }
     }
 
@@ -178,12 +178,12 @@ function AddClientPopUp({ open, handleAddClose,saveClient }) {
                 const CountryCode = data.country.CountryCode
                 const response = await getCities(CountryCode, query)
                 if (response.hasError) {
-                    return toastDisplayer("error", response.error)
+                    // return toastDisplayer("error", response.error)
                 }
                 const result = await response.responseData
                 setCityData(result.Result.Cities || [])
             } catch (error) {
-                return toastDisplayer("error", `There was a problem with the fetch operation:${error}`)
+                // return toastDisplayer("error", `There was a problem with the fetch operation:${error}`)
             }
         }
     }, 300)
