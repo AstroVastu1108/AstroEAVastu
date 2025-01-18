@@ -443,7 +443,7 @@ export default function KundliMain() {
       <GridToolbarContainer className="d-flex justify-content-between p-0 w-full align-items-center">
         <PageTitle title={"Kundali / Birth Charts"} endCmp={
           <>
-            <GridToolbarQuickFilter autoFocus={!open} className="SearchBar w-full lg:w-9/12 sm:w-5/12 md:w-6/12" />
+            <GridToolbarQuickFilter value={searchValue} autoFocus={!open} className="SearchBar w-full lg:w-9/12 sm:w-5/12 md:w-6/12" />
             <Select
               labelId="country-select-label"
               id="country-select"
@@ -451,7 +451,7 @@ export default function KundliMain() {
               onChange={(e) => {
                 setSelectedGroup(e.target.value);
                 // getAllKundli(1, searchInputRef.current?.value, e.target.value);
-                getAllKundli(1, searchValue , e.target.value);
+                getAllKundli(1, searchValue, e.target.value);
                 resetPagination();
               }}
               disableClearable
@@ -477,15 +477,20 @@ export default function KundliMain() {
       await getAllKundli(1, query, selectedGroup);
       resetPagination();
     }
-  }, 500)
+  }, 300)
 
-  const handleFilterModelChange = (filterModel) => {
+  const handleFilterModelChange = async (filterModel) => {
+    console.log(filterModel.quickFilterValues);
     if (filterModel.quickFilterValues.length) {
       let query = filterModel.quickFilterValues.join(' ');
       query = query.replace(/:/g, '');
       setSearchValue(query);
-      if (query.length >= 3)
-        fetchData(query);
+      if (query.length >= 3) {
+        await getAllKundli(1, query, selectedGroup);
+        resetPagination();
+      }
+      // if (query.length >= 3)
+      //   fetchData(query);
     } else {
       setSearchValue("");
       getAllKundli(1, "", selectedGroup);
