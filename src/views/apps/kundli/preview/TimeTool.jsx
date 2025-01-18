@@ -6,11 +6,8 @@ import React, { useEffect, useState } from 'react';
 import './preview.css';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 
-function TimeTool({ handleDateChange, kundliBirthData, handleTimeTool, handleTimeToolOptChange, datePicker, setDatePicker, TimeToolOpt, isTransit }) {
+function TimeTool({ handleDateChange, kundliBirthData, handleTimeTool, handleTimeToolOptChange, datePicker, setDatePicker, TimeToolOpt, isTransit, handleRefresh }) {
   const [timeValue, setTimeValue] = useState("Y"); // "Y" for year, "M" for month, etc.
-
-  console.log("timetool opt:", TimeToolOpt);
-  console.log("isTransit:", isTransit);
 
   useEffect(() => {
     if (TimeToolOpt == "B") {
@@ -226,6 +223,10 @@ function TimeTool({ handleDateChange, kundliBirthData, handleTimeTool, handleTim
 
           <IconButton onClick={() => handleArrows("D")} >
             <i className={'tabler-minus bg-primary'} />
+          </IconButton>
+
+          <IconButton onClick={() => handleRefresh()} >
+            <i className={'tabler-refresh bg-primary'} />
           </IconButton>
 
         </div>

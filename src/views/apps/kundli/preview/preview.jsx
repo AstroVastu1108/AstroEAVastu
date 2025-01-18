@@ -19,7 +19,7 @@ import { ChangeDateTimeKundli, DivisionalChartEvent, TransitClickEvent } from '@
 import Loader from '@/components/common/Loader/Loader'
 import dayjs from 'dayjs'
 
-const Preview = ({ kundliData, setKundliData }) => {
+const Preview = ({ kundliData, setKundliData, kundliConstData }) => {
   const printRef = useRef()
 
   const [downloadLoading, setDownloadLoading] = useState(false);
@@ -85,7 +85,6 @@ const Preview = ({ kundliData, setKundliData }) => {
   const getTransitData = async (fdate, ftime, option) => {
     // return console.log(option);
     setIsTransit("T");
-    console.log("transit change from getTransitData : T")
     var BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
     var date = "";
     var time = "";
@@ -135,9 +134,42 @@ const Preview = ({ kundliData, setKundliData }) => {
     }
   }
 
+  const resetTransit = async()=>{
+    var BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
+    const payload = {
+      "KundaliID": BirthDetails.KundaliID,
+      "FirstName": BirthDetails.FirstName,
+      "MiddleName": BirthDetails.MiddleName,
+      "LastName": BirthDetails.LastName,
+      "Gender": BirthDetails.Gender,
+      "Prakriti": BirthDetails.Prakriti,
+      "BirthDate": BirthDetails.BirthDate,
+      "BirthTime": BirthDetails.BirthTime,
+      "Country": BirthDetails.Country,
+      "CityID": BirthDetails.CityID,
+      "TransitTime": "",
+      "TransitDate": "",
+      "City": BirthDetails.City,
+    }
+    const response = await TransitClickEvent(payload);
+    if (response.hasError) {
+      // setLoading(false);
+      // return toastDisplayer("error", response.error);
+    } else {
+      const data = response?.responseData?.Result?.Transit;
+      setTransiteTime(data?.TransitDateTime)
+      if (TimeToolOpt == "T" || option == "T") {
+        setDatePicker(dayjs(data?.TransitDateTime, 'DD-MM-YYYY HH:mm:ss'))
+      } else {
+        const { Date: birthDate, Time: birthTime } = kundliData?.AstroVastuReport?.BirthDetails;
+        const formattedDate = dayjs(`${birthDate} ${birthTime}`, 'DD-MM-YYYY HHmmss');
+      }
+      setTransitData(data);
+    }
+  }
+
   const getDivisionalChartData = async (option) => {
     setIsTransit(option);
-    console.log("transit change from getDivisionalChartData : ", option)
     var BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
 
     setDatePicker(dayjs(`${BirthDetails?.BirthDate} ${BirthDetails?.BirthTime}`, 'DD-MM-YYYY HHmmss'))
@@ -221,7 +253,6 @@ const Preview = ({ kundliData, setKundliData }) => {
       if (TransiteTime) {
         const formatedString = dayjs(TransiteTime, 'DD-MM-YYYY HHmmss');
         if (!formatedString.isSame(datePicker1, 'second')) {
-          console.log("api call from here", isTransit);
           if(isTransit !="V")
             getTransitData(formattedDate, formattedTime);
         }
@@ -231,11 +262,9 @@ const Preview = ({ kundliData, setKundliData }) => {
   }
 
   const handleTimeToolOptChange = (e) => {
-    console.log(e.target.value);
     setTimeToolOpt(e.target.value);
     if (e.target.value == "T") {
       if (!TransiteTime) {
-        console.log("api call from here")
         getTransitData(null, null, "T");
       } else {
         setDatePicker(dayjs(TransiteTime, 'DD-MM-YYYY HHmmss'));
@@ -244,6 +273,14 @@ const Preview = ({ kundliData, setKundliData }) => {
       const { BirthDate: birthDate, BirthTime: birthTime } = kundliData?.AstroVastuReport?.BirthDetails;
       const formattedDate = dayjs(`${birthDate} ${birthTime}`, 'DD-MM-YYYY HHmmss');
       setDatePicker(formattedDate);
+    }
+  }
+
+  const handleRefresh=()=>{
+    if(TimeToolOpt=="T" && isTransit=="T"){
+      resetTransit();
+    }else{
+      setKundliData(kundliConstData);
     }
   }
 
@@ -263,7 +300,7 @@ const Preview = ({ kundliData, setKundliData }) => {
                   </>
                 }
                 {timeToolPopUp &&
-                  <TimeTool isTransit={isTransit} handleTimeTool={handleTimeTool} handleDateChange={handleDateChange} kundliBirthData={kundliData?.AstroVastuReport?.BirthDetails} handleTimeToolOptChange={handleTimeToolOptChange} setDatePicker={setDatePicker} datePicker={datePicker} TimeToolOpt={TimeToolOpt} />
+                  <TimeTool isTransit={isTransit} handleTimeTool={handleTimeTool} handleDateChange={handleDateChange} kundliBirthData={kundliData?.AstroVastuReport?.BirthDetails} handleTimeToolOptChange={handleTimeToolOptChange} setDatePicker={setDatePicker} datePicker={datePicker} TimeToolOpt={TimeToolOpt} handleRefresh={handleRefresh} />
                 }
               </div>
 

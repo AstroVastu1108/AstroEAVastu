@@ -54,9 +54,9 @@ export default async function Page({ params }) {
     useremail: cookieStore.get('astrovastu_auth_useremail')?.value,
     userRole: cookieStore.get('astrovastu_auth_userRole')?.value,
     DID: cookieStore.get('M-DID')?.value,
-    ClientID: cookieStore.get('astrovastu_auth_ClientID')?.value,
-    InstanceID: cookieStore.get('astrovastu_auth_InstanceID')?.value,
-    SecureRoute: cookieStore.get('astrovastu_auth_SecureRoute')?.value
+    ClientID: cookieStore.get('M-CID')?.value,
+    InstanceID: cookieStore.get('M-IID')?.value,
+    SecureRoute: cookieStore.get('M-SECURE-ROUTE')?.value
 };
 
   if (!(authData.useremail && authData.DID)) {

@@ -12,6 +12,7 @@ const PreviewPage = ({id}) => {
   // var
   const searchParams = useSearchParams();
   const [kundliData, SetKundliData] = useState(null);
+  const [kundliConstData, SetKundliConstData] = useState(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter()
 
@@ -32,6 +33,7 @@ const PreviewPage = ({id}) => {
         // return toastDisplayer("error", res.error);
       } else {
         SetKundliData(res?.responseData?.data?.Result)
+        SetKundliConstData(res?.responseData?.data?.Result)
       }
     } else {
       router.push('/kundali-list')
@@ -44,7 +46,7 @@ const PreviewPage = ({id}) => {
     <>
       {loading && <Loader />}
 
-      {kundliData && (<Preview kundliData={kundliData} setKundliData={SetKundliData} />)}
+      {kundliData && (<Preview kundliData={kundliData} setKundliData={SetKundliData} kundliConstData={kundliConstData} />)}
     </>);
 }
 

@@ -58,9 +58,9 @@ export const AuthProvider = ({ children }) => {
   const intervalDID = async () => {
     const DID = Cookies.get('M-DID');
     const DID_INCR = Cookies.get('M-DIDC');
-    const ClientID = Cookies.get('astrovastu_auth_ClientID');
-    const InstanceID = Cookies.get('astrovastu_auth_InstanceID');
-    const SecureRoute = Cookies.get('astrovastu_auth_SecureRoute');
+    const ClientID = Cookies.get('M-CID');
+    const InstanceID = Cookies.get('M-IID');
+    const SecureRoute = Cookies.get('M-SECURE-ROUTE');
     if (DID) {
       getDID();
       if (ClientID && InstanceID && SecureRoute) {
@@ -135,9 +135,9 @@ export const AuthProvider = ({ children }) => {
       };
       Cookies.set(`astrovastu_auth_useremail`, useremail, { expires: 1 });
       // Cookies.set(`astrovastu_auth_userRole`, userRole, { expires: 1 });
-      Cookies.set(`astrovastu_auth_ClientID`, ClientID, { expires: 1 });
-      Cookies.set(`astrovastu_auth_InstanceID`, InstanceID, { expires: 1 });
-      Cookies.set(`astrovastu_auth_SecureRoute`, SecureRoute, { expires: 1 });
+      Cookies.set(`M-CID`, ClientID, { expires: 1 });
+      Cookies.set(`M-IID`, InstanceID, { expires: 1 });
+      Cookies.set(`M-SECURE-ROUTE`, SecureRoute, { expires: 1 });
       // Cookies.set(`astrovastu_auth_userAvatar`, userAvatar, { expires: 1 });
       setIsLoggedIn(true);
       return {
@@ -166,9 +166,9 @@ export const AuthProvider = ({ children }) => {
       };
 
       Cookies.set(`astrovastu_auth_useremail`, useremail, { expires: 1 });
-      Cookies.set(`astrovastu_auth_ClientID`, ClientID, { expires: 1 });
-      Cookies.set(`astrovastu_auth_InstanceID`, InstanceID, { expires: 1 });
-      Cookies.set(`astrovastu_auth_SecureRoute`, SecureRoute, { expires: 1 });
+      Cookies.set(`M-CID`, ClientID, { expires: 1 });
+      Cookies.set(`M-IID`, InstanceID, { expires: 1 });
+      Cookies.set(`M-SECURE-ROUTE`, SecureRoute, { expires: 1 });
       setIsLoggedIn(true);
       return {
         error: false,
@@ -213,9 +213,9 @@ export const AuthProvider = ({ children }) => {
 
       // Cookies.remove('astrovastu_auth_accessToken'),
       Cookies.remove('astrovastu_auth_userRole'),
-      Cookies.remove('astrovastu_auth_SecureRoute'),
-      Cookies.remove('astrovastu_auth_InstanceID'),
-      Cookies.remove('astrovastu_auth_ClientID'),
+      Cookies.remove('M-SECURE-ROUTE'),
+      Cookies.remove('M-IID'),
+      Cookies.remove('M-CID'),
       // Cookies.remove('astrovastu_auth_expirationTime'),
       // Cookies.remove('astrovastu_auth_refreshToken')
 

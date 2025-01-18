@@ -152,7 +152,6 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
 
   useEffect(() => {
     if (kundliOptValue.Option == "T") {
-      console.log("api call from here")
       getTransitData("", "");
     }
     else
@@ -514,18 +513,18 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               </tr>
               <tr className=''>
                 <td className='w-1/3'>
-                  <div className='flex justify-center items-center px-1' ref={divRef}>
+                  <div className='flex justify-center items-center px-2' ref={divRef}>
                     <img src={`data:image/svg+xml;base64,${ChartSVG?.BirthChart}`} className='flex-auto' alt="birthChart" />
                   </div>
                 </td>
                 <td className='w-1/3 myDiv'>
-                  <div className='flex justify-center items-center px-1'>
+                  <div className='flex justify-center items-center px-2'>
                     <img src={`data:image/svg+xml;base64,${ChartSVG?.HouseChart}`} className='flex-auto' alt="birthChart" />
                   </div>
                 </td>
                 <td className='w-1/3'>
                   {kundliOptValue && kundliOptValue.Option == "V" ? (
-                    <div className='flex justify-center items-center px-1 flex-auto w-[calc(100vw - 80vw)] '>
+                    <div className='flex justify-center items-center px-2 flex-auto w-[calc(100vw - 80vw)] '>
                       <div className='lg:w-[calc(100vw-71vw)] md:w-[40vw] sm:w-[40vw] w-[75vw] '>
                         <DashaDetails title={DashaTitle} DashaData={DashaGridData} handleDashadbClick={handleDashaDoubleClick} divref={divRef} />
                       </div>
@@ -562,7 +561,6 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               <tr>
                 <td className='mx-2 px-2'>
                   <div className='pt-2'>
-
                     {rotationTital && <Chip label={rotationTital} className='text-sm' color='primary' variant='tonal' />}
                   </div>
                 </td>

@@ -67,7 +67,8 @@ export default function KundliMain() {
         if (params.row.MiddleName != "") {
           fullName = `${params.row.FirstName} ${params.row.MiddleName} ${params.row.LastName}`;
         }
-        const searchText = searchInputRef.current.value;
+        const searchText = searchValue;
+        // const searchText = searchInputRef.current.value;
         return <span className="font-ea-sb">{highlightText(fullName, searchText)}</span>;
       },
     },
@@ -80,7 +81,8 @@ export default function KundliMain() {
       headerAlign: 'left',
       renderCell: (params) => {
         const genderValue = params.value || '';
-        const searchText = searchInputRef.current.value;
+        // const searchText = searchInputRef.current.value;
+        const searchText = searchValue;
         return <span>{highlightText(genderValue, searchText)}</span>;
       }
     },
@@ -95,7 +97,8 @@ export default function KundliMain() {
         const dateValue = params.row.BirthDate;
         const timeValue = params.value.toString();
         const formattedTime = timeValue?.slice(0, 2) + ':' + timeValue?.slice(2, 4) + ':' + (timeValue?.slice(4, 6) ? timeValue?.slice(4, 6) : '00');
-        const searchText = searchInputRef.current.value;
+        // const searchText = searchInputRef.current.value;
+        const searchText = searchValue;
 
         const fullValue = `${dateValue} ${formattedTime}`;
         const dateVal = highlightText(dateValue, searchText)
@@ -116,7 +119,8 @@ export default function KundliMain() {
       headerAlign: 'left',
       renderCell: (params) => {
         const cityValue = params.value || '';
-        const searchText = searchInputRef.current.value;
+        // const searchText = searchInputRef.current.value;
+        const searchText = searchValue;
         return highlightText(cityValue, searchText);
       }
     },
@@ -129,7 +133,8 @@ export default function KundliMain() {
       headerAlign: 'left',
       renderCell: (params) => {
         const countryValue = params.value || '';
-        const searchText = searchInputRef.current.value;
+        // const searchText = searchInputRef.current.value;
+        const searchText = searchValue;
         return highlightText(countryValue, searchText);
       }
     },
@@ -142,7 +147,8 @@ export default function KundliMain() {
       headerAlign: 'left',
       renderCell: (params) => {
         const prakritiValue = params.value || '';
-        const searchText = searchInputRef.current.value;
+        // const searchText = searchInputRef.current.value;
+        const searchText = searchValue;
         return highlightText(prakritiValue, searchText);
       }
     },
@@ -155,7 +161,8 @@ export default function KundliMain() {
       headerAlign: 'left',
       renderCell: (params) => {
         const prakritiValue = params.value || '';
-        const searchText = searchInputRef.current.value;
+        // const searchText = searchInputRef.current.value;
+        const searchText = searchValue;
         return highlightText(prakritiValue, searchText);
       }
     },
@@ -286,6 +293,7 @@ export default function KundliMain() {
   })
   const [totalRowCount, setTotalRowCount] = useState(0);
   const [pageNo, setPageNo] = useState(1);
+  const [searchValue, setSearchValue] = useState("");
   const searchInputRef = useRef(null);
   const printRef = useRef(null);
   const fetchConfig = async (id) => {
@@ -391,7 +399,10 @@ export default function KundliMain() {
       // return toastDisplayer("error", res.error);
     } else {
       setKundliData(res?.responseData?.data?.Result?.KundaliList);
-      setGroupData(res?.responseData?.data?.Result?.Group);
+      var Groupdata = res?.responseData?.data?.Result?.Group;
+      var filteredData = Groupdata.filter(item => item != null && item !== "");
+      console.log(filteredData);
+      setGroupData(filteredData);
       setTotalRowCount(res?.responseData?.data?.Result?.KundaliCount)
       setLoading(false);
     }
@@ -425,21 +436,22 @@ export default function KundliMain() {
   // Hooks
   useEffect(() => {
     getAllKundli(1, "", selectedGroup);
-  }, [])
+  }, []);
 
   function CustomToolbar() {
     return (
       <GridToolbarContainer className="d-flex justify-content-between p-0 w-full align-items-center">
         <PageTitle title={"Kundali / Birth Charts"} endCmp={
           <>
-            <GridToolbarQuickFilter inputRef={searchInputRef} autoFocus={!open} className="SearchBar w-full lg:w-9/12 sm:w-5/12 md:w-6/12" />
+            <GridToolbarQuickFilter autoFocus={!open} className="SearchBar w-full lg:w-9/12 sm:w-5/12 md:w-6/12" />
             <Select
               labelId="country-select-label"
               id="country-select"
               value={selectedGroup}
               onChange={(e) => {
                 setSelectedGroup(e.target.value);
-                getAllKundli(1, searchInputRef.current?.value, e.target.value);
+                // getAllKundli(1, searchInputRef.current?.value, e.target.value);
+                getAllKundli(1, searchValue , e.target.value);
                 resetPagination();
               }}
               disableClearable
@@ -462,7 +474,7 @@ export default function KundliMain() {
 
   const fetchData = debounce(async (query) => {
     if (query.length > 0 || query.length == 0) {
-      await getAllKundli(pageNo, query, selectedGroup);
+      await getAllKundli(1, query, selectedGroup);
       resetPagination();
     }
   }, 500)
@@ -471,17 +483,19 @@ export default function KundliMain() {
     if (filterModel.quickFilterValues.length) {
       let query = filterModel.quickFilterValues.join(' ');
       query = query.replace(/:/g, '');
+      setSearchValue(query);
       if (query.length >= 3)
-
         fetchData(query);
     } else {
-      getAllKundli(pageNo, "", selectedGroup);
+      setSearchValue("");
+      getAllKundli(1, "", selectedGroup);
     }
   }
 
   const fetchDataForPage = (e) => {
     setPageNo(parseInt(e) + 1)
-    getAllKundli(parseInt(e) + 1, searchInputRef.current?.value ? searchInputRef.current?.value : "", selectedGroup);
+    getAllKundli(parseInt(e) + 1, searchValue, selectedGroup);
+    // getAllKundli(parseInt(e) + 1, searchInputRef.current?.value ? searchInputRef.current?.value : "", selectedGroup);
   }
 
   // Func
@@ -599,7 +613,7 @@ export default function KundliMain() {
                       params.row.IsCurrent ? 'highlight-row' : ''
                     }
                     onRowDoubleClick={(e) => { handlePreviewClick(e, e.row.KundaliID) }}
-                    onFilterModelChange={(e) => handleFilterModelChange(e, searchInputRef)}
+                    onFilterModelChange={(e) => handleFilterModelChange(e)}
                     getRowId={(row) => row.KundaliID}
                     rows={kundliData}
                     columns={columns}
