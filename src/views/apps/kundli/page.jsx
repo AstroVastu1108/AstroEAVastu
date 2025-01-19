@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Button, Card, CardContent, createTheme, debounce, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid, IconButton, Menu, MenuItem, Select, TextField, ThemeProvider } from "@mui/material";
+import { Autocomplete, Box, Button, Card, CardContent, createTheme, debounce, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid, IconButton, InputAdornment, Menu, MenuItem, Select, TextField, ThemeProvider } from "@mui/material";
 import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarQuickFilter } from "@mui/x-data-grid"
 import PreviewActions from "./preview/PreviewActions";
 import { useEffect, useRef, useState } from "react";
@@ -329,6 +329,7 @@ export default function KundliMain() {
       }
     }
   }
+  const [searchQuery, setSearchQuery] = useState("");
   useEffect(() => {
     fetchConfig()
   }, [])
@@ -401,7 +402,6 @@ export default function KundliMain() {
       setKundliData(res?.responseData?.data?.Result?.KundaliList);
       var Groupdata = res?.responseData?.data?.Result?.Group;
       var filteredData = Groupdata.filter(item => item != null && item !== "");
-      console.log(filteredData);
       setGroupData(filteredData);
       setTotalRowCount(res?.responseData?.data?.Result?.KundaliCount)
       setLoading(false);
@@ -438,12 +438,37 @@ export default function KundliMain() {
     getAllKundli(1, "", selectedGroup);
   }, []);
 
+  const handleClearSearch = () => {
+    setSearchQuery("")
+    setSearchValue("");
+    getAllKundli(1, "", selectedGroup);
+  }
+
   function CustomToolbar() {
     return (
       <GridToolbarContainer className="d-flex justify-content-between p-0 w-full align-items-center">
         <PageTitle title={"Kundali / Birth Charts"} endCmp={
           <>
-            <GridToolbarQuickFilter value={searchValue} autoFocus={!open} className="SearchBar w-full lg:w-9/12 sm:w-5/12 md:w-6/12" />
+            <TextField
+              label="Search"
+              variant="outlined"
+              fullWidth
+              // sx={{ mb: 2 }}
+              value={searchValue}
+              onChange={handleInputChange}
+              autoFocus={!open}
+              size="small"
+              InputProps={{
+                endAdornment: searchValue && (
+                  <InputAdornment position="end">
+                    <IconButton onClick={handleClearSearch} edge="end" aria-label="clear search">
+                      <i className="tabler-cancel"></i>
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+            {/* <GridToolbarQuickFilter autoFocus={!open} className="SearchBar w-full lg:w-9/12 sm:w-5/12 md:w-6/12" /> */}
             <Select
               labelId="country-select-label"
               id="country-select"
@@ -477,20 +502,28 @@ export default function KundliMain() {
       await getAllKundli(1, query, selectedGroup);
       resetPagination();
     }
-  }, 300)
+  }, 500)
+
+  const handleInputChange = (e) => {
+    const query = e.target.value;
+    // console.log(e.target.value)
+    setSearchValue(e.target.value);
+    if (query.length > 3) {
+      fetchData(query);
+    }
+  }
 
   const handleFilterModelChange = async (filterModel) => {
-    console.log(filterModel.quickFilterValues);
     if (filterModel.quickFilterValues.length) {
       let query = filterModel.quickFilterValues.join(' ');
       query = query.replace(/:/g, '');
       setSearchValue(query);
-      if (query.length >= 3) {
-        await getAllKundli(1, query, selectedGroup);
-        resetPagination();
-      }
-      // if (query.length >= 3)
-      //   fetchData(query);
+      // if (query.length >= 3) {
+      //   await getAllKundli(1, query, selectedGroup);
+      //   resetPagination();
+      // }
+      if (query.length >= 3)
+        fetchData(query);
     } else {
       setSearchValue("");
       getAllKundli(1, "", selectedGroup);
@@ -595,6 +628,7 @@ export default function KundliMain() {
     setPaginationModel({ page: 0, pageSize: paginationModel.pageSize });
   };
 
+
   return (
     <>
 
@@ -618,7 +652,7 @@ export default function KundliMain() {
                       params.row.IsCurrent ? 'highlight-row' : ''
                     }
                     onRowDoubleClick={(e) => { handlePreviewClick(e, e.row.KundaliID) }}
-                    onFilterModelChange={(e) => handleFilterModelChange(e)}
+                    onFilterModelChange={handleFilterModelChange}
                     getRowId={(row) => row.KundaliID}
                     rows={kundliData}
                     columns={columns}
@@ -640,7 +674,7 @@ export default function KundliMain() {
                       fetchDataForPage(paginationModel.page);
                     }}
                     slots={{ toolbar: CustomToolbar }}
-                    slotProps={{ toolbar: { showQuickFilter: true } }}
+                  // slotProps={{ toolbar: { showQuickFilter: true } }}
                   // showFirstButton
                   // showLastButton
                   // pagination
