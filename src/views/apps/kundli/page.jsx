@@ -450,10 +450,10 @@ export default function KundliMain() {
         <PageTitle title={"Kundali / Birth Charts"} endCmp={
           <>
             <TextField
-              label="Search"
-              variant="outlined"
+              label=""
+              variant="standard"
               fullWidth
-              // sx={{ mb: 2 }}
+              sx={{ border: 1, borderColor: "var(--border-color)", padding:"5px 8px", borderRadius:"4px" }}
               value={searchValue}
               onChange={handleInputChange}
               autoFocus={!open}
@@ -462,7 +462,7 @@ export default function KundliMain() {
                 endAdornment: searchValue && (
                   <InputAdornment position="end">
                     <IconButton onClick={handleClearSearch} edge="end" aria-label="clear search">
-                      <i className="tabler-cancel"></i>
+                      <i className="tabler-cross"></i>
                     </IconButton>
                   </InputAdornment>
                 ),
@@ -498,18 +498,23 @@ export default function KundliMain() {
   }
 
   const fetchData = debounce(async (query) => {
-    if (query.length > 0 || query.length == 0) {
+    console.log(query)
+    if (query.length > 0 || query.length !== 0) {
       await getAllKundli(1, query, selectedGroup);
       resetPagination();
     }
   }, 500)
 
   const handleInputChange = (e) => {
+    console.log("here")
     const query = e.target.value;
     // console.log(e.target.value)
     setSearchValue(e.target.value);
-    if (query.length > 3) {
+    if (query.length >= 3) {
       fetchData(query);
+    }else{
+      // setSearchValue("");
+      getAllKundli(1, "", selectedGroup);
     }
   }
 

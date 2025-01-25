@@ -1,0 +1,14 @@
+.uplaod_btn {
+  cursor: pointer;
+  /* width: 304px; */
+  height: 56px;
+  border: 1px dashed #9d9b9b;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  word-spacing: 2px;
+  font-size: 14px;
+  border-radius: 4px;
+  /* margin-top: 6px; */
+}
