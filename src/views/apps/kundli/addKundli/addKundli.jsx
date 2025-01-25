@@ -18,6 +18,7 @@ import { getCities, getCountries } from '@/app/Server/API/common';
 
 // Import Style
 import "./addKundli.css"
+import { toast } from 'react-toastify';
 
 function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserData, GroupData, setKundliData, kundliData }) {
 
@@ -152,7 +153,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
     try {
       setIsDisable(true)
       const formattedData = {
-        KundaliID: formData.KundaliID,
+        // KundaliID: formData.KundaliID,
         FirstName: formData.FirstName || "Prashna",
         LastName: formData.LastName || "Kundali",
         MiddleName: formData.MiddleName,
@@ -175,24 +176,36 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
       if (!formData.isUpdate) {
         setIsDisable(false);
         const response = await CreateKundli(formattedData)
+        console.log(response)
 
         if (response.hasError) {
           setIsDisable(false)
-          // return toastDisplayer("error", response.error)
+          return toast.error(response.error)
         }
         var kId = response?.responseData?.Result?.KundaliID;
         setIsDisable(false)
         getAllKundli(1, "");
         handleAddClose();
-        // toastDisplayer("success", `kundli data is saved successfully.`)
+
+        toast.success('Kundli data saved successfully.');
+
         return kId;
       } else {
         setIsDisable(false);
         const response = await UpdateKundli(formattedData);
+        console.log(response)
 
         if (response.hasError) {
+          console.log("here")
           setIsDisable(false);
-          // return toastDisplayer("error", response.error);
+          if (response.errorMessage) {
+            Object.keys(response.errorMessage).forEach((key) => {
+              response.errorMessage[key].forEach((message) => {
+                toast.error(`${key}: ${message}`);
+              });
+            });
+          }
+          return toast.error(response.errorMessage);
         }
 
         var kId = response?.responseData?.Result?.KundaliID;
@@ -205,6 +218,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
           updatedKundliData[index] = kId;
           setKundliData(updatedKundliData);
         }
+        toast.success('Kundli data updated successfully.');
         handleAddClose();
         return kId;
       }
@@ -419,13 +433,13 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
               />
             </Grid>
             {/* <Grid item xs={12} sm={4}> */}
-              {/* <div className='ps-3'>
+            {/* <div className='ps-3'>
                 <div>{formData?.CityID?.Timezone}</div>
                 <a href={`https://www.google.com/search?q=${formData?.CityID?.Latitude},${formData?.CityID?.Longitude}`} target='_blank'>
                 <div>{formData?.CityID?.Latitude}, {formData?.CityID?.Longitude}</div>
                 </a>
               </div> */}
-              {/* <TextField
+            {/* <TextField
                 fullWidth
                 label='Timezone'
                 // value={"UTC+05:30 > Asia/Kolkata"}
@@ -462,10 +476,10 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
 
             </Grid>
             <Grid item xs={12} sm={4}>
-            <div className='ps-3'>
+              <div className='ps-3'>
                 <div>{formData?.CityID?.Timezone}</div>
                 <a href={`https://www.google.com/search?q=${formData?.CityID?.Latitude},${formData?.CityID?.Longitude}`} target='_blank'>
-                <div>{formData?.CityID?.Latitude}, {formData?.CityID?.Longitude}</div>
+                  <div>{formData?.CityID?.Latitude}, {formData?.CityID?.Longitude}</div>
                 </a>
               </div>
               {/* <TextField

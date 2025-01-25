@@ -443,11 +443,11 @@ export default function KundliMain() {
     getAllKundli(1, "", selectedGroup);
   }
 
-  useEffect(()=>{
-    if(searchValue ==""){
-      getAllKundli(1,"",selectedGroup);
+  useEffect(() => {
+    if (searchValue == "") {
+      getAllKundli(1, "", selectedGroup);
     }
-  },[searchValue])
+  }, [searchValue])
 
   function CustomToolbar() {
     return (
@@ -455,19 +455,25 @@ export default function KundliMain() {
         <PageTitle title={"Kundali / Birth Charts"} endCmp={
           <>
             <TextField
+              placeholder="Search..."
               label=""
               variant="standard"
               fullWidth
-              sx={{ border: 1, borderColor: "var(--border-color)", padding:"5px 8px", borderRadius:"4px" }}
+              sx={{ border: 1, borderColor: "var(--border-color)", padding: "5px 8px", borderRadius: "4px" }}
               value={searchValue}
               onChange={handleInputChange}
               autoFocus={!open}
               size="small"
               InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <i className="tabler-search" aria-label="search icon"></i>
+                  </InputAdornment>
+                ),
                 endAdornment: searchValue && (
                   <InputAdornment position="end">
                     <IconButton onClick={handleClearSearch} edge="end" aria-label="clear search">
-                      <i className="tabler-cross"></i>
+                      <i className="tabler-x"></i>
                     </IconButton>
                   </InputAdornment>
                 ),
@@ -503,10 +509,10 @@ export default function KundliMain() {
   }
 
   const fetchData = debounce(async (query) => {
-    if (query.length > 0 || query.length !== 0 && searchValue != "" ) {
+    if (query.length > 0 || query.length !== 0 && searchValue != "") {
       await getAllKundli(1, query, selectedGroup);
       resetPagination();
-    }else{
+    } else {
       getAllKundli(1, "", selectedGroup);
     }
   }, 100)
@@ -517,7 +523,7 @@ export default function KundliMain() {
     setSearchValue(e.target.value);
     if (query.length > 3) {
       fetchData(query);
-    }else{
+    } else {
       // setSearchValue("");
       getAllKundli(1, "", selectedGroup);
     }

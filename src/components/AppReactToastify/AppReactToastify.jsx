@@ -122,7 +122,7 @@ const AppReactToastify = props => {
 
   return (
     <ToastifyWrapper {...boxProps}>
-      <ToastContainer rtl={direction === 'rtl'} autoClose={1000} position={"top-right"} {...rest} />
+      <ToastContainer rtl={direction === 'rtl'} autoClose={3000} position={"top-right"} {...rest} />
     </ToastifyWrapper>
   )
 }
