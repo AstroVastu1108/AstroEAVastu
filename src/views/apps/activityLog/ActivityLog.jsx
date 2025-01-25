@@ -85,7 +85,7 @@ function ActivityLog() {
         if (eventData !== "" && eventData !== "undefined" && eventData.length > 1) {
           return (<div>
             {highlightText(data.split("#")[0], searchText)}
-            <a target='blank' href={`${process.env.NEXT_PUBLIC_APP_URL}/kevent/${eventData[1]}`} className='text-primary font-ea-sb'>#{highlightText(eventData[0].split("#")[1], searchText)} <span className='text-red-700'>@{highlightText(eventData[1], searchText)}</span>
+            <a target='blank' href={`${process.env.NEXT_PUBLIC_APP_URL}/kevent/${eventData[1].trim()}`} className='text-primary font-ea-sb'>#{highlightText(eventData[0].split("#")[1], searchText)} <span className='text-red-700'>@{highlightText(eventData[1], searchText)}</span>
             </a>
           </div>)
         }
