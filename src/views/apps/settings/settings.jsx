@@ -141,6 +141,79 @@ function Settings() {
       </Card>
       {/* <div className='flex'> */}
       <Grid container spacing={2} paddingTop={2}>
+
+
+        {/* Right Side: Billing Information */}
+        <Grid item md={6}>
+          <Card elevation={3}>
+            <div className="px-4 py-6 flex flex-col gap-4">
+              <div>
+                <span className="text-primary font-ea-sb">Billing Information</span>
+              </div>
+              <div className="flex gap-4">
+                <div className="w-1/2">
+                  <TextField fullWidth label="First Name" title="First Name" />
+                </div>
+                <div className="w-1/2">
+                  <TextField fullWidth label="Middle Name" title="Middle Name" />
+                </div>
+
+              </div>
+              <div className=" flex gap-4">
+                <div className="w-1/2">
+                  <TextField fullWidth label="Last Name" title="Last Name" />
+                </div>
+                <div className="w-1/2">
+                  <TextField fullWidth label="Building" title="Building" />
+                </div>
+              </div>
+
+              <div className="flex gap-4">
+                <div className="w-1/2">
+                  <TextField fullWidth label="LAN" title="LAN" />
+                </div>
+                <div className="w-1/2">
+                  <TextField fullWidth label="Area" title="Area" />
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <div className="w-1/2">
+                  <TextField fullWidth label="Pincode" title="Pincode" />
+                </div>
+                <div className="w-1/2">
+                  <TextField fullWidth label="GSTIN" title="GSTIN" />
+                </div>
+              </div>
+
+              <div className="flex-col flex gap-4">
+                <Autocomplete
+                  fullWidth
+                  id="country-select"
+                  options={conutryData}
+                  value={selectedCountry || null}
+                  getOptionLabel={(option) => option?.Country}
+                  onChange={(event, newValue) => setSelectedCountry(newValue)}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Country" variant="outlined" />
+                  )}
+                />
+                <Autocomplete
+                  fullWidth
+                  id="city-autocomplete"
+                  options={cityData}
+                  value={selectedCity || null}
+                  getOptionLabel={(option) => option?.FormattedCity || ''}
+                  onInputChange={(event, newQuery) => setQuery(newQuery)}
+                  onChange={(event, newValue) => setSelectedCity(newValue)}
+                  renderInput={(params) => (
+                    <TextField {...params} label="City" variant="outlined" />
+                  )}
+                />
+              </div>
+
+            </div>
+          </Card>
+        </Grid>
         {/* Left Side: General Setting and Report Information */}
         <Grid item md={6} container spacing={2} direction="column">
           {/* General Setting */}
@@ -225,78 +298,6 @@ function Settings() {
               </div>
             </Card>
           </Grid>
-        </Grid>
-
-        {/* Right Side: Billing Information */}
-        <Grid item md={6}>
-          <Card elevation={3}>
-            <div className="px-4 py-6 flex flex-col gap-4">
-              <div>
-                <span className="text-primary font-ea-sb">Billing Information</span>
-              </div>
-              <div className="flex gap-4">
-                <div className="w-1/2">
-                  <TextField fullWidth label="First Name" title="First Name" />
-                </div>
-                <div className="w-1/2">
-                  <TextField fullWidth label="Middle Name" title="Middle Name" />
-                </div>
-
-              </div>
-              <div className=" flex gap-4">
-                <div className="w-1/2">
-                  <TextField fullWidth label="Last Name" title="Last Name" />
-                </div>
-                <div className="w-1/2">
-                  <TextField fullWidth label="Building" title="Building" />
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <div className="w-1/2">
-                  <TextField fullWidth label="LAN" title="LAN" />
-                </div>
-                <div className="w-1/2">
-                  <TextField fullWidth label="Area" title="Area" />
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="w-1/2">
-                  <TextField fullWidth label="Pincode" title="Pincode" />
-                </div>
-                <div className="w-1/2">
-                  <TextField fullWidth label="GSTIN" title="GSTIN" />
-                </div>
-              </div>
-
-              <div className="flex-col flex gap-4">
-                <Autocomplete
-                  fullWidth
-                  id="country-select"
-                  options={conutryData}
-                  value={selectedCountry || null}
-                  getOptionLabel={(option) => option?.Country}
-                  onChange={(event, newValue) => setSelectedCountry(newValue)}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Country" variant="outlined" />
-                  )}
-                />
-                <Autocomplete
-                  fullWidth
-                  id="city-autocomplete"
-                  options={cityData}
-                  value={selectedCity || null}
-                  getOptionLabel={(option) => option?.FormattedCity || ''}
-                  onInputChange={(event, newQuery) => setQuery(newQuery)}
-                  onChange={(event, newValue) => setSelectedCity(newValue)}
-                  renderInput={(params) => (
-                    <TextField {...params} label="City" variant="outlined" />
-                  )}
-                />
-              </div>
-
-            </div>
-          </Card>
         </Grid>
       </Grid>
 

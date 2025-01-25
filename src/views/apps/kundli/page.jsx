@@ -329,11 +329,10 @@ export default function KundliMain() {
       }
     }
   }
-  const [searchQuery, setSearchQuery] = useState("");
+  // const [searchQuery, setSearchQuery] = useState("");
   useEffect(() => {
     fetchConfig()
   }, [])
-
 
   // func
   const handleAddClick = () => {
@@ -439,10 +438,16 @@ export default function KundliMain() {
   }, []);
 
   const handleClearSearch = () => {
-    setSearchQuery("")
+    // setSearchQuery("")
     setSearchValue("");
     getAllKundli(1, "", selectedGroup);
   }
+
+  useEffect(()=>{
+    if(searchValue ==""){
+      getAllKundli(1,"",selectedGroup);
+    }
+  },[searchValue])
 
   function CustomToolbar() {
     return (
@@ -480,7 +485,7 @@ export default function KundliMain() {
                 resetPagination();
               }}
               disableClearable
-              className="w-6/12 lg:w-3/12 md:w-3/12 sm:w-4/12"
+              className="w-6/12 lg:w-3/12 md:w-4/12 sm:w-4/12"
               size="small"
             >
               <MenuItem value="All">ALL</MenuItem>
@@ -498,19 +503,19 @@ export default function KundliMain() {
   }
 
   const fetchData = debounce(async (query) => {
-    console.log(query)
-    if (query.length > 0 || query.length !== 0) {
+    if (query.length > 0 || query.length !== 0 && searchValue != "" ) {
       await getAllKundli(1, query, selectedGroup);
       resetPagination();
+    }else{
+      getAllKundli(1, "", selectedGroup);
     }
-  }, 500)
+  }, 100)
 
   const handleInputChange = (e) => {
-    console.log("here")
     const query = e.target.value;
     // console.log(e.target.value)
     setSearchValue(e.target.value);
-    if (query.length >= 3) {
+    if (query.length > 3) {
       fetchData(query);
     }else{
       // setSearchValue("");
