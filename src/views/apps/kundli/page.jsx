@@ -24,6 +24,7 @@ import { GetConfig } from "@/app/Server/API/configuration";
 import dayjs from "dayjs";
 import { null_ } from "valibot";
 import DuplicateKundali from "./duplicateKundali/DuplicateKundali";
+import { toast } from "react-toastify";
 
 
 
@@ -365,14 +366,25 @@ export default function KundliMain() {
     const res = await DeleteKundli(kid);
     if (res.hasError) {
       setLoading(false);
+      if (response.errorMessage) {
+        Object.keys(response.errorMessage).forEach((key) => {
+          response.errorMessage[key].forEach((message) => {
+            toast.error(`${key}: ${message}`);
+          });
+        });
+      }
+      return;
       // return toastDisplayer("error", res.error);
     } else {
       const index = kundliData.findIndex(item => item.KundaliID === kid);
       if (index !== -1) {
-        const updatedKundliData = [...kundliData];
-        updatedKundliData.splice(index, 1);
-        setKundliData(updatedKundliData);
-        setTotalRowCount(totalRowCount - 1);
+        getAllKundli(1, searchValue, selectedGroup);
+
+        // const updatedKundliData = [...kundliData];
+        // updatedKundliData.splice(index, 1);
+        // setKundliData(updatedKundliData);
+        // setTotalRowCount(totalRowCount - 1);
+        toast.success("Kundli deleted successfully.");
       }
       setLoading(false);
     }

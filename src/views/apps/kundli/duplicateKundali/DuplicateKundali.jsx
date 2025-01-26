@@ -2,6 +2,7 @@ import { getCities, getCountries } from '@/app/Server/API/common';
 import { DuplicateKundli } from '@/app/Server/API/kundliAPI';
 import { Autocomplete, Button, createTheme, debounce, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, IconButton, TextField, ThemeProvider } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react'
+import { toast } from 'react-toastify';
 
 function DuplicateKundali({ open, handleClose, userData, getAllKundli, isDelete }) {
 
@@ -146,11 +147,20 @@ function DuplicateKundali({ open, handleClose, userData, getAllKundli, isDelete 
     if (response.hasError) {
       // setIsDisable(false)
       // return toastDisplayer("error", response.error)
+      if (response.errorMessage) {
+        Object.keys(response.errorMessage).forEach((key) => {
+          response.errorMessage[key].forEach((message) => {
+            toast.error(`${key}: ${message}`);
+          });
+        });
+      }
+      return;
     }
     var kId = response?.responseData?.Result?.KundaliID;
     // setIsDisable(false)
     getAllKundli(1, "");
     handleClose();
+    toast.success("Kundli duplicated successfully.");
     return kId;
   }
 

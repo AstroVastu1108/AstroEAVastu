@@ -145,15 +145,25 @@ function AddEvent({ NewEventData, open, handleClose, getAllEvent, EventOptionDat
       setLoading(true);
       const response = await CreateEvent(payload)
       setLoading(false);
-      if (response.hasError) {
-        // setIsDisable(false)
-        // return toastDisplayer("error", response.error)
+      if (response.errorMessage) {
+        Object.keys(response.errorMessage).forEach((key) => {
+          response.errorMessage[key].forEach((message) => {
+            toast.error(`${key}: ${message}`);
+          });
+        });
+        return;
       }
+      // if (response.hasError) {
+
+      //   // setIsDisable(false)
+      //   // return toastDisplayer("error", response.error)
+      // }
       // var kId = response?.responseData?.Result?.KundaliID;
       // setIsDisable(false)
       // getAllKundli(1, "");
       getAllEvent(AddEventData?.KundaliID);
       handleClose();
+      toast.success("Event saved successfully.");
       // toastDisplayer("success", `kundli data is saved successfully.`)
       // return kId;
     } else {

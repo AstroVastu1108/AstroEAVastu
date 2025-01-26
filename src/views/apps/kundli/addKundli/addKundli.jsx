@@ -67,6 +67,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
       const now = new Date();
       setFormData((prev) => ({ ...prev, ["date"]: dayjs(), ["time"]: dayjs() }));
     } else {
+      console.log(userData)
       const dateParts = formData.BirthDate.split('-');
       const timeParts = formData.BirthTime;
 
@@ -153,7 +154,7 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
     try {
       setIsDisable(true)
       const formattedData = {
-        // KundaliID: formData.KundaliID,
+        KundaliID: formData.KundaliID,
         FirstName: formData.FirstName || "Prashna",
         LastName: formData.LastName || "Kundali",
         MiddleName: formData.MiddleName,
@@ -175,13 +176,21 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
       }
       if (!formData.isUpdate) {
         setIsDisable(false);
-        const response = await CreateKundli(formattedData)
-        console.log(response)
+        const response = await CreateKundli(formattedData);
 
-        if (response.hasError) {
-          setIsDisable(false)
-          return toast.error(response.error)
+        if (response.errorMessage) {
+          Object.keys(response.errorMessage).forEach((key) => {
+            response.errorMessage[key].forEach((message) => {
+              toast.error(`${key}: ${message}`);
+            });
+          });
+          return;
         }
+
+        // if (response.hasError) {
+        //   setIsDisable(false)
+        //   return toast.error(response.error)
+        // }
         var kId = response?.responseData?.Result?.KundaliID;
         setIsDisable(false)
         getAllKundli(1, "");
