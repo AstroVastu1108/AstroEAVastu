@@ -12,6 +12,7 @@ import Logout from "./views/Logout";
 import TransitPage from "./app/(dashboard)/kundli/transit/transit";
 import kundaliEvent from "./app/(dashboard)/kundli/kundaliEvent/kundaliEvent";
 import ActivityPage from "./app/(dashboard)/AactivityLog/activityLog";
+import DevtaVastuPage from "./app/(dashboard)/DevtaVastu/devtaVastu";
 
 export const routes = [
     {
@@ -65,6 +66,10 @@ export const routes = [
     {
       path: "activity",
       element: ActivityPage,
+    },
+    {
+      path: "devta-vastu",
+      element: DevtaVastuPage,
     },
     {
       path: "Logout",

@@ -39,6 +39,11 @@ export const navigation = [
     href: '/activity',
     icon: 'tabler-calendar-bolt'
   },
+  {
+    label: 'Devta Vastu',
+    href: '/devta-vastu',
+    icon: 'tabler-brand-graphql'
+  },
   // {
   //   label: 'Courses',
   //   href: '/my-courses',
