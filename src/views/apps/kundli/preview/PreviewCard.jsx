@@ -282,32 +282,36 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
 
   const saveKundaliDateTime = async () => {
     try {
-      // let formattedData = {
-      //   KundaliID: BirthDetails.KundaliID,
-      //   FirstName: BirthDetails.FirstName,
-      //   LastName: BirthDetails.LastName,
-      //   MiddleName: BirthDetails.MiddleName,
-      //   Gender: BirthDetails.Gender,
-      //   Country: BirthDetails.Country,
-      //   CityID: BirthDetails.CityID,
-      //   Prakriti: BirthDetails.prakriti || '',
-      //   City: BirthDetails.City,
-      //   BirthDate: BirthDetails.BirthDate,
-      //   BirthTime: BirthDetails.BirthTime,
-      //   TransitTime: "",
-      //   TransitDate: "",
-      //   ClientID: "",
-      //   DChart: "",
-      // }
-      // if (TransitData?.TransitDateTime) {
-      //   formattedData.TransitDate = TransitData?.TransitDateTime.split(" ")[0];
-      //   formattedData.TransitTime = TransitData?.TransitDateTime.split(" ")[1].replace(/:/g, "");
-      // }
-      // const response = await UpdateKundli(formattedData);
-      // if (response.hasError) {
-      //   setIsDisable(false)
-      //   // return toastDisplayer("error", response.error)
-      // }
+      let formattedData = {
+        KundaliID: BirthDetails.KundaliID,
+        FirstName: BirthDetails.FirstName,
+        LastName: BirthDetails.LastName,
+        MiddleName: BirthDetails.MiddleName,
+        Gender: BirthDetails.Gender,
+        Country: BirthDetails.Country,
+        CityID: BirthDetails.CityID,
+        Prakriti: BirthDetails.prakriti || '',
+        City: BirthDetails.City,
+        BirthDate: BirthDetails.BirthDate,
+        BirthTime: BirthDetails.BirthTime,
+        TransitTime: "",
+        TransitDate: "",
+        ClientID: "",
+        DChart: "",
+      }
+      if (TransitData?.TransitDateTime) {
+        formattedData.TransitDate = TransitData?.TransitDateTime.split(" ")[0];
+        formattedData.TransitTime = TransitData?.TransitDateTime.split(" ")[1].replace(/:/g, "");
+      }
+      const response = await UpdateKundli(formattedData);
+      if (response.hasError) {
+        setIsDisable(false)
+        toast.error(response.error);
+        return;
+        // return toastDisplayer("error", response.error)
+      }
+      console.log(kundliData);
+      setKundliData(kundliData);
       toast.success('Kundali updated successfully.');
       handleClose();
     } catch (error) {

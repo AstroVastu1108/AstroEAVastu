@@ -19,7 +19,7 @@ import { ChangeDateTimeKundli, DivisionalChartEvent, TransitClickEvent } from '@
 import Loader from '@/components/common/Loader/Loader'
 import dayjs from 'dayjs'
 
-const Preview = ({ kundliData, setKundliData, kundliConstData }) => {
+const Preview = ({ kundliData, setKundliData, kundliConstData, SetKundliConstData }) => {
   const printRef = useRef()
 
   const [downloadLoading, setDownloadLoading] = useState(false);
@@ -296,7 +296,7 @@ const Preview = ({ kundliData, setKundliData, kundliConstData }) => {
               <div className='previewPDF flex justify-center'>
                 {kundliData &&
                   <>
-                    <PreviewCard kundliData={kundliData} handleDownload={handleKundliApi} isPrintDiv={false} loading={existdownloadLoading} handleTimeTool={handleTimeTool} setTransitData={setTransitData} TransitData={TransitData} getTransitData={getTransitData} getDivisionalChartData={getDivisionalChartData} DivisionalData={DivisionalData} setDivisionalData={setDivisionalData} birthDate={datePicker} setKundliData={setKundliData} />
+                    <PreviewCard kundliData={kundliData} handleDownload={handleKundliApi} isPrintDiv={false} loading={existdownloadLoading} handleTimeTool={handleTimeTool} setTransitData={setTransitData} TransitData={TransitData} getTransitData={getTransitData} getDivisionalChartData={getDivisionalChartData} DivisionalData={DivisionalData} setDivisionalData={setDivisionalData} birthDate={datePicker} setKundliData={setKundliData} SetKundliConstData={SetKundliConstData} />
                   </>
                 }
                 {timeToolPopUp &&

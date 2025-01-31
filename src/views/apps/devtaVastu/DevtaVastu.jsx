@@ -10,6 +10,11 @@ import './DevtaVastu.css'
 import html2canvas from 'html2canvas';
 import { Upload } from 'lucide-react';
 import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist/build/pdf';
+import Loader from '@/components/common/Loader/Loader';
+import SkeletonLoader from '@/components/common/SkeletonLoader/SkeletonLoader';
+import { LoadingButton } from '@mui/lab';
+import { Card } from '@mui/material';
+import PageTitle from '@/components/common/PageTitle/PageTitle';
 // Set the worker source using a CDN
 GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js'; // Match this with your installed version
 // Adjust to the version you need
@@ -78,6 +83,7 @@ const DevtaVastu = ({
   const [disableDraw, setDisableDraw] = useState(false);
   const [lockCentroid, setLockCentroid] = useState(false);
   const [graphDraw, setGraphDraw] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const svgRef = useRef(null);
   const printRef = useRef(null);
@@ -107,6 +113,7 @@ const DevtaVastu = ({
   }, [isReadyToCapture]);
 
   const capturePDF = async () => {
+    setLoading(true);
     const scale = 2; // Better performance
     const leftDivRef = document.getElementById('hiddenDiv');
     const rightDivRef = printRef.current; // First page
@@ -163,12 +170,15 @@ const DevtaVastu = ({
     pdf.save('artwork.pdf');
 
     setIsReadyToCapture(false); // Reset the flag
+    setLoading(false);
   };
 
   const downloadPDF = () => {
+    // setLoading(true);
     setHide16Circle(true);
     setHideCircle(true);
     setIsReadyToCapture(true);
+    // setLoading(false);
   };
 
   const getMousePosition = (e) => {
@@ -2035,11 +2045,49 @@ const DevtaVastu = ({
   ];
 
   return (
+    <>
+    {loading && <Loader />}
+    <Card>
+        <PageTitle title={"Devta Vastu"} endCmp={
+          <>
+            <div>
+              <LoadingButton
+                //   fullWidth
+                variant='outlined'
+                onClick={downloadPDF}
+                loading={loading}
+                loadingPosition="start"
+                type='submit'
+                sx={{
+                  width: "200px"
+                }}
+              >
+                Download Report
+              </LoadingButton>
+            </div>
+            <div>
+              <LoadingButton
+                //   fullWidth
+                variant='contained'
+                onClick={handleSave}
+                // loading={loading}
+                loadingPosition="start"
+                type='submit'
+                sx={{
+                  width: "150px"
+                }}
+              >
+                Save
+              </LoadingButton>
+            </div>
+          </>
+        } />
+      </Card>
+    {/* {loading && <SkeletonLoader width={"80vw"} height={"80vh"} />} */}
+      
     <div className="flex flex-row p-4 ">
-     
-
-      {/* SVG */}
-      <div ref={printRef}>
+     {/* <div className="flex-grow"> */}
+      <div ref={printRef} >
         <div className="flex-grow p-4" >
           <div className="flex mb-1 ms-2.5">
             {Array.from({ length: 26 }, (_, i) => (
@@ -2060,6 +2108,9 @@ const DevtaVastu = ({
               ))}
             </div>
 
+            
+    {/* {loading && <SkeletonLoader width={width} height={height} />}
+            */}
             <svg
               ref={svgRef}
               width={width}
@@ -2775,7 +2826,8 @@ const DevtaVastu = ({
           </div>
         </div>
       </div>
-      <div className="flex flex-col w-1/4 p-6 bg-white rounded-lg space-y-6 h-[100vh] overflow-y-auto">
+     {/* </div> */}
+      <div className="flex flex-col p-6 bg-white rounded-lg  h-[100vh] overflow-y-auto">
         <div id="hiddenDiv" className="hidden-print">
           <div className="design-card">
             <img src="/path/to/your/logo.png" alt="Logo" className="card-logo" />
@@ -2792,13 +2844,13 @@ const DevtaVastu = ({
         </div>
 
         <div
-          className="p-4 border-2 border-dashed border-gray-300 rounded-lg text-center hover:border-blue-500 transition-colors"
+          className="p-4 border-2 border-dashed border-gray-300 rounded-lg text-center hover:border-purple-500 transition-colors"
           onDragOver={(e) => e.preventDefault()}
           onDrop={handleFileUpload}
         >
           <label className="flex flex-col items-center gap-2 cursor-pointer">
-            <Upload size={24} className="text-blue-600" />
-            <span className="text-blue-600 font-medium">Upload File</span>
+            <Upload size={24} className="text-primary font-ea-sb" />
+            <span className="text-primary font-ea-sb">Upload File</span>
             <input
               type="file"
               className="hidden"
@@ -2808,6 +2860,23 @@ const DevtaVastu = ({
           </label>
           <p className="text-sm text-gray-500 mt-2">Supported: .jpg, .jpeg, .png, .pdf</p>
         </div>
+
+        <div className="flex justify-between gap-2 p-3">
+            <LoadingButton
+              onClick={handleZoomIn}
+              variant="contained"
+              className=" text-white px-3 py-2 rounded transition w-full"
+            >
+              Zoom In
+            </LoadingButton>
+            <LoadingButton
+              onClick={handleZoomOut}
+              variant="outlined"
+              className="px-3 py-2 rounded transition w-full"
+            >
+              Zoom Out
+            </LoadingButton>
+          </div>
         
         <label htmlFor="line-select" className="text-sm font-medium text-gray-600">
           Default Options
@@ -2920,7 +2989,7 @@ const DevtaVastu = ({
 
 
 
-        <button
+        {/* <button
           onClick={downloadPDF}
           className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition w-full"
         >
@@ -2931,9 +3000,10 @@ const DevtaVastu = ({
           className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition w-full"
         >
           Save
-        </button>
+        </button> */}
       </div>
     </div>
+    </>
 
   );
 
