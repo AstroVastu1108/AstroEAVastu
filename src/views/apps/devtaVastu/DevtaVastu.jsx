@@ -2148,12 +2148,12 @@ const DevtaVastu = ({
   return (
     <>
       {loading ? <Loader /> : <>
-        <div>
+        {/* <div>
           <span className='value font-ea-sb'>{selectedGroup}</span>
-        </div>
-        <div className="flex flex-row pt-4 ">
+        </div> */}
+        <div className="flex flex-row pt-4 gap-4">
           {/* <div className="flex-grow"> */}
-          <div ref={printRef} >
+          <div ref={printRef} className=' bg-white' >
             <div className="flex-grow p-2" >
               <div className="flex ms-3.5">
                 {Array.from({ length: 23 }, (_, i) => (
@@ -2653,7 +2653,7 @@ const DevtaVastu = ({
                         const rotationIndex = index % totalLines;
                         const angle = rotationIndex * angleIncrement + (270 + inputDegree);
                         const radian = (angle * Math.PI) / 180;
-  
+
 
                         // Dynamic centroid-based calculation
                         const svgWidth = width; // SVG width
@@ -2675,20 +2675,20 @@ const DevtaVastu = ({
                           yMin: (svgHeight - minBoundary) / 2,
                           yMax: svgHeight - (svgHeight - minBoundary) / 2,
                         };
-  
+
                         const slope = Math.tan(radian);
                         const direction = index % 2 === 0 ? DIRECTION_DATA[index / 2] : null;
-  
+
                         let endX, endY;
                         let labelX, labelY;
                         const labelOffset = 1.04; // Label position offset
-  
+
 
                         if (Math.abs(slope) <= 1) {
                           // Horizontal placement
                           endX = Math.cos(radian) > 0 ? outerBounds.xMax : outerBounds.xMin;
                           endY = centroid.y + slope * (endX - centroid.x);
-  
+
                           // Adjust label position dynamically
                           labelX = Math.min(
                             Math.max(outerBounds.xMin, centroid?.x + (endX - centroid.x) * labelOffset),
@@ -2702,7 +2702,7 @@ const DevtaVastu = ({
                           // Vertical placement
                           endY = Math.sin(radian) > 0 ? outerBounds.yMax : outerBounds.yMin;
                           endX = centroid?.x + (1 / slope) * (endY - centroid.y);
-  
+
 
                           // Adjust label position dynamically
                           labelX = Math.min(
@@ -2805,7 +2805,7 @@ const DevtaVastu = ({
                             </g>
                           );
                         }
-  
+
                       })
                     )}
                     {/* {(
