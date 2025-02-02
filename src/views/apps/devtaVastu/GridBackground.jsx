@@ -1,6 +1,8 @@
 import React from 'react';
 
-const GridBackground = ({ width, height, gridSize }) => {
+const GridBackground = ({ width, height }) => {
+  const gridSize = 9 * 3.78; // 9 mm in pixels
+
   return (
     <g>
       {/* Vertical lines */}

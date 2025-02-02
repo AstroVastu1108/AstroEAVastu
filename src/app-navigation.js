@@ -40,7 +40,7 @@ export const navigation = [
     icon: 'tabler-calendar-bolt'
   },
   {
-    label: 'Devta Vastu',
+    label: 'Vastu Layout Griding',
     href: '/devta-vastu',
     icon: 'tabler-brand-graphql'
   },
