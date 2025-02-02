@@ -11,6 +11,7 @@ function DevtaVastuPage() {
   const [downloadPDFLoading, setDownloadPDFLoading] = useState(false)
   const [saveLoading, setSaveLoading] = useState(false)
 
+
   useEffect(() => {
     setLoading(false)
   }, [])
@@ -143,6 +144,7 @@ function DevtaVastuPage() {
       setInputDegree: null
     }
   ])
+
   const [selectedGroup, setSelectedGroup] = useState('1')
   const [savedGroups, setSavedGroups] = useState(['House Plan'])
   const [activeTab, setActiveTab] = useState(0)
@@ -250,6 +252,7 @@ function DevtaVastuPage() {
   }
 
   const handleSave = () => {
+
     if (selectedGroup != 1) {
       setSaveLoading(true)
       setSavedGroups(prev => {
@@ -301,6 +304,16 @@ function DevtaVastuPage() {
     })
   }
 
+  const updatePointsForAllTabs = (selectedGroup, newPoints) => {
+    if (selectedGroup == 'House Plan') {
+      setTabGroup(prevTabGroup =>
+        prevTabGroup.map(tab => ({
+          ...tab,
+          points: newPoints
+        }))
+      )
+    }
+  }
   const handleRemoveGroup = (value) => {
     if(savedGroups.length > 1){
       setSavedGroups((prev) => prev.filter((group) => group !== value));
@@ -311,6 +324,7 @@ function DevtaVastuPage() {
 
   return (
     <>
+
       {loading ? (
         <Loader />
       ) : (
@@ -444,6 +458,7 @@ function DevtaVastuPage() {
                       setSnapToCentroid={newSnapToCentroid => handleSnapToCentroidChange(index, newSnapToCentroid)}
                       inputDegree={tabGroup[index].inputDegree}
                       setInputDegree={newInputDegree => handleInputDegreeChange(index, newInputDegree)}
+                      updatePointsForAllTabs={updatePointsForAllTabs}
                     />
                   )
               )}
