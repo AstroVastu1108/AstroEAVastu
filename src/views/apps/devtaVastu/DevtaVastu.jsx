@@ -2148,42 +2148,30 @@ const DevtaVastu = ({
 
   return (
     <>
-      {/* {loading ? "" : <> */}
-      {/* <div>
+
+      {/* {loading ? <Loader /> : <> */}
+        {/* <div>
           <span className='value font-ea-sb'>{selectedGroup}</span>
         </div> */}
-      <div className="flex flex-row pt-4 ">
-        {/* <div className="flex-grow"> */}
-        <div ref={printRef} >
-          <div className="flex-grow p-2" >
-            <div className="flex ms-3.5">
-              {Array.from({ length: 23 }, (_, i) => (
-                <div
-                  key={i}
-                  className="text-sm ms-3.5 w-5  text-primary"
-                  style={{
-                    userSelect: 'none',
-                    cursor: 'default',
-                    position: 'relative',
-                    zIndex: 9,
-                    top: '10px'
-                  }}
-                >
-                  {i + 1}
-                </div>
-              ))}
-            </div>
-
-            <div className="relative flex">
-              <div className="flex flex-col mt-2">
-                {'ABCDEFGHIJKLMNOPQRSTUVW'.split('').map((letter, i) => (
-                  <div key={i} className="text-sm mb-3.5 w-5 text-primary " style={{
-                    userSelect: 'none', // Prevent text selection
-                    cursor: 'default', // Optional: Make the cursor non-interactive
-                    position: 'relative',
-                    zIndex: 9,
-                    right: '-15px'
-                  }}>{letter}</div>
+        <div className="flex flex-row pt-4 gap-4 justify-center px-2">
+          {/* <div className="flex-grow"> */}
+          <div ref={printRef} className=' bg-white' >
+            <div className="flex-grow p-2" >
+              <div className="flex ms-3.5">
+                {Array.from({ length: 23 }, (_, i) => (
+                  <div
+                    key={i}
+                    className="text-sm ms-3.5 w-5  text-primary"
+                    style={{
+                      userSelect: 'none',
+                      cursor: 'default',
+                      position: 'relative',
+                      zIndex: 9,
+                      top: '10px'
+                    }}
+                  >
+                    {i + 1}
+                  </div>
                 ))}
               </div>
 
@@ -2963,19 +2951,20 @@ const DevtaVastu = ({
               ))}
             </div>
           </div>
-        </div>
-        {/* </div> */}
-        <div className="flex flex-col p-6 bg-white rounded-lg  h-[100vh] overflow-y-auto">
-          <div id="hiddenDiv" className="hidden-print">
-            <div className="design-card">
-              <img src="/path/to/your/logo.png" alt="Logo" className="card-logo" />
-              <div className="card-content">
-                <h2>Artwork Title</h2>
-                <p>Created by: Artist Name</p>
-                <p>Date: {new Date().toLocaleDateString()}</p>
-                <div className="artwork-details">
-                  <p>Medium: Digital</p>
-                  <p>Dimensions: 550x550</p>
+
+          {/* </div> */}
+          <div className="flex flex-col border p-6 bg-white rounded-lg ">
+            <div id="hiddenDiv" className="hidden-print">
+              <div className="design-card">
+                <img src="/path/to/your/logo.png" alt="Logo" className="card-logo" />
+                <div className="card-content">
+                  <h2>Artwork Title</h2>
+                  <p>Created by: Artist Name</p>
+                  <p>Date: {new Date().toLocaleDateString()}</p>
+                  <div className="artwork-details">
+                    <p>Medium: Digital</p>
+                    <p>Dimensions: 550x550</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2986,6 +2975,9 @@ const DevtaVastu = ({
               className="p-4 border-2 border-dashed border-gray-300 rounded-lg text-center hover:border-purple-500 transition-colors"
               onDragOver={(e) => e.preventDefault()}
               onDrop={handleFileUpload}
+              style={{
+                padding:"30px 90px"
+              }}
             >
               <label className="flex flex-col items-center gap-2 cursor-pointer">
                 <Upload size={24} className="text-primary font-ea-sb" />
@@ -3144,7 +3136,6 @@ const DevtaVastu = ({
 
         </div>
 
-      </div>
       {/* </>} */}
     </>
 

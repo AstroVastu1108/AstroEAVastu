@@ -1,14 +1,20 @@
 'use client'
+import Loader from '@/components/common/Loader/Loader'
 import PageTitle from '@/components/common/PageTitle/PageTitle'
 import DevtaVastu from '@/views/apps/devtaVastu/DevtaVastu'
 import { LoadingButton } from '@mui/lab'
-import { Card, MenuItem, Select, Tabs, Tab } from '@mui/material'
-import React, { useState } from 'react'
+import { Card, MenuItem, Select, Tabs, Tab, IconButton } from '@mui/material'
+import React, { useEffect, useState } from 'react'
 
 function DevtaVastuPage() {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [downloadPDFLoading, setDownloadPDFLoading] = useState(false)
   const [saveLoading, setSaveLoading] = useState(false)
+
+
+  useEffect(() => {
+    setLoading(false)
+  }, [])
 
   const DEFAULT_POINTS = [
     { x: 220, y: 220 },
@@ -138,8 +144,9 @@ function DevtaVastuPage() {
       setInputDegree: null
     }
   ])
-  const [selectedGroup, setSelectedGroup] = useState('House Plan')
-  const [savedGroups, setSavedGroups] = useState([])
+
+  const [selectedGroup, setSelectedGroup] = useState('1')
+  const [savedGroups, setSavedGroups] = useState(['House Plan'])
   const [activeTab, setActiveTab] = useState(0)
   const [fileUploaded, setFileUploaded] = useState(false)
   // const [points, setPoints] = useState(DEFAULT_POINTS);
@@ -245,14 +252,20 @@ function DevtaVastuPage() {
   }
 
   const handleSave = () => {
-    setSaveLoading(true)
-    setSavedGroups(prev => {
-      if (!prev.includes(selectedGroup)) {
-        return [...prev, selectedGroup]
-      }
-      return prev
-    })
-    setTabGroup(prev => prev.filter(item => item.label !== selectedGroup))
+
+    if (selectedGroup != 1) {
+      setSaveLoading(true)
+      setSavedGroups(prev => {
+        if (!prev.includes(selectedGroup)) {
+          return [...prev, selectedGroup]
+        }
+        return prev
+      })
+      // console.log(tabGroup.filter(item => item.label !== selectedGroup));
+      // setTabGroup(prev => prev.filter(item => item.label !== selectedGroup))
+      setSelectedGroup(1)
+      setActiveTab(savedGroups.length)
+    }
   }
 
   const handleTabChange = (event, newValue) => {
@@ -301,102 +314,157 @@ function DevtaVastuPage() {
       )
     }
   }
+  const handleRemoveGroup = (value) => {
+    if(savedGroups.length > 1){
+      setSavedGroups((prev) => prev.filter((group) => group !== value));
+      setActiveTab(activeTab-1)
+    }
+  };
+
 
   return (
     <>
-      <Card>
-        <PageTitle
-          title={'Vastu Layout Griding'}
-          endCmp={
-            <>
-              <div>
-                <Select
-                  labelId='tab-select-label'
-                  id='tab-select'
-                  value={selectedGroup}
-                  onChange={e => {
-                    setSelectedGroup(e.target.value)
-                  }}
-                  disableClearable
-                  size='small'
-                  sx={{
-                    width: '200px'
-                  }}
-                >
-                  {/* <MenuItem value="">Select Group</MenuItem> */}
-                  {tabGroup.map((item, index) => (
-                    <MenuItem key={index} value={item.label}>
-                      {item.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </div>
-              <div>
-                <LoadingButton
-                  variant='outlined'
-                  onClick={downloadPDF}
-                  loading={loading}
-                  loadingPosition='start'
-                  type='submit'
-                  sx={{
-                    width: '200px'
-                  }}
-                >
-                  Download Report
-                </LoadingButton>
-              </div>
-              <div>
-                <LoadingButton
-                  variant='contained'
-                  onClick={handleSave}
-                  loadingPosition='start'
-                  type='submit'
-                  sx={{
-                    width: '150px'
-                  }}
-                >
-                  Add
-                </LoadingButton>
-              </div>
-            </>
-          }
-        />
-        {savedGroups.length > 0 && (
-          <>
-            <Tabs value={activeTab} onChange={handleTabChange} aria-label='saved groups tabs'>
-              {savedGroups.map((group, index) => (
-                <Tab key={index} label={group} />
-              ))}
-            </Tabs>
-          </>
-        )}
-      </Card>
-      {savedGroups.map(
-        (group, index) =>
-          activeTab === index && (
-            <DevtaVastu
-              key={index}
-              downloadPDFLoading={downloadPDFLoading}
-              setDownloadPDFLoading={setDownloadPDFLoading}
-              saveLoading={saveLoading}
-              setSaveLoading={setSaveLoading}
-              selectedGroup={group}
-              fileUploaded={fileUploaded}
-              setFileUploaded={setFileUploaded}
-              handleFileUpload={handleFileUpload}
-              previewUrl={previewUrl}
-              setPreviewUrl={setPreviewUrl}
-              points={tabGroup[index].points}
-              setPoints={newPoints => handlePointsChange(index, newPoints)}
-              centroid={tabGroup[index].centroid}
-              setCentroid={newCentroid => handleCentroidChange(index, newCentroid)}
-              snapToCentroid={tabGroup[index].snapToCentroid}
-              setSnapToCentroid={newSnapToCentroid => handleSnapToCentroidChange(index, newSnapToCentroid)}
-              inputDegree={tabGroup[index].inputDegree}
-              setInputDegree={newInputDegree => handleInputDegreeChange(index, newInputDegree)}
-              updatePointsForAllTabs={updatePointsForAllTabs}
-            />
-          )
+
+      {loading ? (
+        <Loader />
+      ) : (
+        <>
+          <div className='flex flex-col gap-4'>
+            <Card>
+              <PageTitle
+                title={'Vastu Layout Griding'}
+                endCmp={
+                  <>
+                    <div>
+                      <LoadingButton
+                        variant='outlined'
+                        onClick={downloadPDF}
+                        loading={loading}
+                        loadingPosition='start'
+                        type='submit'
+                        sx={{
+                          width: '200px'
+                        }}
+                      >
+                        Download Report
+                      </LoadingButton>
+                    </div>
+                    <div>
+                      <Select
+                        labelId='tab-select-label'
+                        id='tab-select'
+                        value={selectedGroup || []}
+                        onChange={e => {
+                          setSelectedGroup(e.target.value)
+                        }}
+                        disableClearable
+                        size='small'
+                        sx={{
+                          width: '200px'
+                        }}
+                      >
+                        <MenuItem value='1' disabled>
+                          Select Group
+                        </MenuItem>
+                        {tabGroup
+                          .filter(item => !savedGroups.includes(item.label)) // Filter out saved groups
+                          .map((item, index) => (
+                            <MenuItem key={index} value={item.label}>
+                              {item.label}
+                            </MenuItem>
+                          ))}
+                        {/* {tabGroup.map((item, index) => (
+                      <MenuItem key={index} value={item.label}>
+                        {item.label}
+                      </MenuItem>
+                    ))} */}
+                      </Select>
+                    </div>
+                    <div>
+                      <LoadingButton
+                        variant='contained'
+                        onClick={handleSave}
+                        loadingPosition='start'
+                        type='submit'
+                        sx={{
+                          width: '150px'
+                        }}
+                      >
+                        Add New
+                      </LoadingButton>
+                    </div>
+                  </>
+                }
+              />
+            </Card>
+            <Card>
+              {savedGroups.length > 0 && (
+                <>
+                  <div className='flex items-center space-x-2 overflow-auto'>
+                    <Tabs
+                      className='pt-1 flex-1 overflow-auto'
+                      value={activeTab}
+                      onChange={handleTabChange}
+                      aria-label='saved groups tabs'
+                      variant='scrollable' // Enables horizontal scrolling
+                      scrollButtons='false' // Shows scroll buttons when needed
+                    >
+                      {savedGroups.map((group, index) => (
+                        <Tab
+                          key={index}
+                          className='px-2'
+                          label={
+                            <div className='flex items-center gap-2 justify-between'>
+                              <span>{group}</span>
+                              <IconButton
+                                size='small'
+                                onClick={e => {
+                                  e.stopPropagation() // Prevent tab change on button click
+                                  handleRemoveGroup(group)
+                                }}
+                              >
+                                <i className='tabler-x text-xs'></i>
+                              </IconButton>
+                            </div>
+                          }
+                        />
+                      ))}
+                    </Tabs>
+                  </div>
+
+                  {/* Render DevtaVastu component for the active tab */}
+                </>
+              )}
+              {savedGroups.map(
+                (group, index) =>
+                  activeTab === index && (
+                    <DevtaVastu
+                      key={index}
+                      downloadPDFLoading={downloadPDFLoading}
+                      setDownloadPDFLoading={setDownloadPDFLoading}
+                      saveLoading={saveLoading}
+                      setSaveLoading={setSaveLoading}
+                      selectedGroup={group}
+                      fileUploaded={fileUploaded}
+                      setFileUploaded={setFileUploaded}
+                      handleFileUpload={handleFileUpload}
+                      previewUrl={previewUrl}
+                      setPreviewUrl={setPreviewUrl}
+                      points={tabGroup[index].points}
+                      setPoints={newPoints => handlePointsChange(index, newPoints)}
+                      centroid={tabGroup[index].centroid}
+                      setCentroid={newCentroid => handleCentroidChange(index, newCentroid)}
+                      snapToCentroid={tabGroup[index].snapToCentroid}
+                      setSnapToCentroid={newSnapToCentroid => handleSnapToCentroidChange(index, newSnapToCentroid)}
+                      inputDegree={tabGroup[index].inputDegree}
+                      setInputDegree={newInputDegree => handleInputDegreeChange(index, newInputDegree)}
+                      updatePointsForAllTabs={updatePointsForAllTabs}
+                    />
+                  )
+              )}
+            </Card>
+          </div>
+        </>
       )}
     </>
   )
