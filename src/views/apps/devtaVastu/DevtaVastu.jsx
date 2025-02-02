@@ -2147,11 +2147,11 @@ const DevtaVastu = ({
 
   return (
     <>
-      {loading ? <Loader /> : <>
+      {/* {loading ? <Loader /> : <> */}
         {/* <div>
           <span className='value font-ea-sb'>{selectedGroup}</span>
         </div> */}
-        <div className="flex flex-row pt-4 gap-4">
+        <div className="flex flex-row pt-4 gap-4 justify-center px-2">
           {/* <div className="flex-grow"> */}
           <div ref={printRef} className=' bg-white' >
             <div className="flex-grow p-2" >
@@ -2964,7 +2964,7 @@ const DevtaVastu = ({
             </div>
           </div>
           {/* </div> */}
-          <div className="flex flex-col p-6 bg-white rounded-lg  h-[100vh] overflow-y-auto">
+          <div className="flex flex-col border p-6 bg-white rounded-lg ">
             <div id="hiddenDiv" className="hidden-print">
               <div className="design-card">
                 <img src="/path/to/your/logo.png" alt="Logo" className="card-logo" />
@@ -2984,6 +2984,9 @@ const DevtaVastu = ({
               className="p-4 border-2 border-dashed border-gray-300 rounded-lg text-center hover:border-purple-500 transition-colors"
               onDragOver={(e) => e.preventDefault()}
               onDrop={handleFileUpload}
+              style={{
+                padding:"30px 90px"
+              }}
             >
               <label className="flex flex-col items-center gap-2 cursor-pointer">
                 <Upload size={24} className="text-primary font-ea-sb" />
@@ -3127,7 +3130,7 @@ const DevtaVastu = ({
           </div>
 
         </div>
-      </>}
+      {/* </>} */}
     </>
 
   );
