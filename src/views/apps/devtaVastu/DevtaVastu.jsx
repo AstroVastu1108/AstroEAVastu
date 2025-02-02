@@ -52,7 +52,20 @@ const DevtaVastu = ({
   saveLoading,
   setDownloadPDFLoading,
   setSaveLoading,
-  selectedGroup
+  selectedGroup,
+  fileUploaded,
+  setFileUploaded,
+  handleFileUpload,
+  previewUrl,
+  setPreviewUrl,
+  points,
+  setPoints,
+  centroid,
+  setCentroid,
+  snapToCentroid,
+  setSnapToCentroid,
+  inputDegree,
+  setInputDegree
 }) => {
   const [lineSets, setLineSets] = useState(DEFAULT_LINE_SETS);
   const [selectedLineIndex, setSelectedLineIndex] = useState(0); // Default to the first line
@@ -64,15 +77,15 @@ const DevtaVastu = ({
       )
     );
   };
-  const [points, setPoints] = useState(DEFAULT_POINTS);
-  const [centroid, setCentroid] = useState(null);
-  const [snapToCentroid, setSnapToCentroid] = useState(false);
+  // const [points, setPoints] = useState(DEFAULT_POINTS);
+  // const [centroid, setCentroid] = useState(null);
+  // const [snapToCentroid, setSnapToCentroid] = useState(false);
   // Show Marma lines
   const [hideMarmaLines, setHideMarmaLines] = useState(false);
   // Show Marma points
   const [hideMarmapoints, setHideMarmapoints] = useState(false);
   // file upload state
-  const [fileUploaded, setFileUploaded] = useState(false);
+  // const [fileUploaded, setFileUploaded] = useState(false);
   // circle visible state
   const [hideCircle, setHideCircle] = useState(false);
   const [hide16Circle, setHide16Circle] = useState(false);
@@ -100,6 +113,7 @@ const DevtaVastu = ({
   const printRef1 = useRef(null);
   const selectedPointRef = useRef(null);
   const movingCentroidRef = useRef(false);
+
   useEffect(() => {
     if (snapToCentroid) {
       if (!lockCentroid) {
@@ -109,10 +123,12 @@ const DevtaVastu = ({
   }, [points, snapToCentroid]);
 
   useEffect(() => {
+    console.log("points : ",points)
+    console.log("centroid : ",centroid)
+    console.log("lockCentroid : ",lockCentroid)
     if (!lockCentroid) {
       setCentroid(calculateCentroid(points));
     }
-
   }, []);
 
   useEffect(() => {
@@ -277,103 +293,103 @@ const DevtaVastu = ({
     return { x: transformed.x, y: transformed.y };
   };
 
-  const [previewUrl, setPreviewUrl] = useState(null);
+  // const [previewUrl, setPreviewUrl] = useState(null);
 
-  async function readFileData(uploadedFile) {
-    const fileReader = new FileReader();
+  // async function readFileData(uploadedFile) {
+  //   const fileReader = new FileReader();
 
-    return new Promise((resolve, reject) => {
-      fileReader.onload = async () => {
-        try {
-          const typedArray = new Uint8Array(fileReader.result);
-          const pdf = await pdfjsLib.getDocument(typedArray).promise;
-          const images = [];
+  //   return new Promise((resolve, reject) => {
+  //     fileReader.onload = async () => {
+  //       try {
+  //         const typedArray = new Uint8Array(fileReader.result);
+  //         const pdf = await pdfjsLib.getDocument(typedArray).promise;
+  //         const images = [];
 
-          for (let i = 1; i <= pdf.numPages; i++) {
-            const page = await pdf.getPage(i);
+  //         for (let i = 1; i <= pdf.numPages; i++) {
+  //           const page = await pdf.getPage(i);
 
-            // Increase the scale factor for higher resolution
-            const scale = 4; // Adjust this as needed (e.g., 2 for 2x resolution)
-            const viewport = page.getViewport({ scale });
+  //           // Increase the scale factor for higher resolution
+  //           const scale = 4; // Adjust this as needed (e.g., 2 for 2x resolution)
+  //           const viewport = page.getViewport({ scale });
 
-            // Create a canvas with updated dimensions
-            const canvas = document.createElement('canvas');
-            canvas.width = viewport.width;
-            canvas.height = viewport.height;
+  //           // Create a canvas with updated dimensions
+  //           const canvas = document.createElement('canvas');
+  //           canvas.width = viewport.width;
+  //           canvas.height = viewport.height;
 
-            const context = canvas.getContext('2d');
+  //           const context = canvas.getContext('2d');
 
-            // Render the page with higher quality
-            await page.render({ canvasContext: context, viewport }).promise;
+  //           // Render the page with higher quality
+  //           await page.render({ canvasContext: context, viewport }).promise;
 
-            // Convert canvas to Base64
-            const base64 = canvas.toDataURL();
-            images.push(base64);
-          }
+  //           // Convert canvas to Base64
+  //           const base64 = canvas.toDataURL();
+  //           images.push(base64);
+  //         }
 
-          resolve(images);
-        } catch (error) {
-          console.error("Error extracting images:", error);
-          reject(error);
-        }
-      };
+  //         resolve(images);
+  //       } catch (error) {
+  //         console.error("Error extracting images:", error);
+  //         reject(error);
+  //       }
+  //     };
 
-      fileReader.onerror = () => {
-        console.error("FileReader error:", fileReader.error);
-        reject(fileReader.error);
-      };
+  //     fileReader.onerror = () => {
+  //       console.error("FileReader error:", fileReader.error);
+  //       reject(fileReader.error);
+  //     };
 
-      fileReader.readAsArrayBuffer(uploadedFile);
-    });
-  }
+  //     fileReader.readAsArrayBuffer(uploadedFile);
+  //   });
+  // }
 
-  const handleFileUpload = async (event) => {
-    const uploadedFile = event.target.files[0];
+  // const handleFileUpload = async (event) => {
+  //   const uploadedFile = event.target.files[0];
 
-    if (uploadedFile) {
-      const fileType = uploadedFile.type;
+  //   if (uploadedFile) {
+  //     const fileType = uploadedFile.type;
 
-      if (fileType.includes("image")) {
-        // If the uploaded file is an image
-        setFileUploaded(true)
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          // console.log("reader : ", reader.result)
-          setPreviewUrl(reader.result);
-        };
-        reader.readAsDataURL(uploadedFile);
-      }
-      else if (fileType === "application/pdf") {
+  //     if (fileType.includes("image")) {
+  //       // If the uploaded file is an image
+  //       setFileUploaded(true)
+  //       const reader = new FileReader();
+  //       reader.onloadend = () => {
+  //         // console.log("reader : ", reader.result)
+  //         setPreviewUrl(reader.result);
+  //       };
+  //       reader.readAsDataURL(uploadedFile);
+  //     }
+  //     else if (fileType === "application/pdf") {
 
-        // Extract all pages as images
-        const images = await readFileData(uploadedFile);
+  //       // Extract all pages as images
+  //       const images = await readFileData(uploadedFile);
 
-        if (images.length > 0) {
-          // Default to the first page
-          setPreviewUrl(images[0]);
-          setFileUploaded(true);
+  //       if (images.length > 0) {
+  //         // Default to the first page
+  //         setPreviewUrl(images[0]);
+  //         setFileUploaded(true);
 
-          // Prompt the user for page selection
-          const pageNumber = prompt(`Enter the page number (1 to ${images.length}):`, "1");
+  //         // Prompt the user for page selection
+  //         const pageNumber = prompt(`Enter the page number (1 to ${images.length}):`, "1");
 
-          if (pageNumber) {
-            const pageIndex = parseInt(pageNumber, 10) - 1;
+  //         if (pageNumber) {
+  //           const pageIndex = parseInt(pageNumber, 10) - 1;
 
-            if (pageIndex >= 0 && pageIndex < images.length) {
-              setPreviewUrl(images[pageIndex]);
-            } else {
-              alert("Invalid page number. Showing the first page.");
-            }
-          }
-        } else {
-          alert("No pages found in the PDF.");
-        }
-      }
-      else {
-        alert("Unsupported file type. Please upload an image or PDF.");
-      }
-    }
-  };
+  //           if (pageIndex >= 0 && pageIndex < images.length) {
+  //             setPreviewUrl(images[pageIndex]);
+  //           } else {
+  //             alert("Invalid page number. Showing the first page.");
+  //           }
+  //         }
+  //       } else {
+  //         alert("No pages found in the PDF.");
+  //       }
+  //     }
+  //     else {
+  //       alert("Unsupported file type. Please upload an image or PDF.");
+  //     }
+  //   }
+  // };
 
   const isPointNear = (x, y, point, threshold = 10) => {
     return Math.sqrt((x - point.x) ** 2 + (y - point.y) ** 2) < threshold;
@@ -494,7 +510,7 @@ const DevtaVastu = ({
 
   const DIRECTION_DATA = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
 
-  const [inputDegree, setInputDegree] = useState(0);
+  // const [inputDegree, setInputDegree] = useState(0);
 
   const handleInputChange = (e) => {
     let value = parseFloat(e.target.value) || 0;
@@ -2614,28 +2630,30 @@ const DevtaVastu = ({
                           }
                         }
 
-                        const style = lineSets[index % lineSets.length];
+                      const style = lineSets[index % lineSets.length];
 
-                        return (
-                          <g key={index}>
-                            {index % lineSets.length &&
-                              <line
-                                x1={centroid.x}
-                                y1={centroid.y}
-                                x2={endX}
-                                y2={endY}
-                                stroke={style.stroke}
-                                strokeWidth={style.strokeWidth}
-                                strokeDasharray={style.strokeDasharray}
-                              />
-                            }
-                          </g>
-                        );
-                      })}
-                      {Array.from({ length: totalLines }).map((_, index) => {
+                      return (
+                        <g key={index}>
+                          {index % lineSets.length &&
+                            <line
+                              x1={centroid.x}
+                              y1={centroid.y}
+                              x2={endX}
+                              y2={endY}
+                              stroke={style.stroke}
+                              strokeWidth={style.strokeWidth}
+                              strokeDasharray={style.strokeDasharray}
+                            />
+                          }
+                        </g>
+                      );
+                    })}
+                    {centroid && (
+                      Array.from({ length: totalLines }).map((_, index) => {
                         const rotationIndex = index % totalLines;
                         const angle = rotationIndex * angleIncrement + (270 + inputDegree);
                         const radian = (angle * Math.PI) / 180;
+  
 
                         // Dynamic centroid-based calculation
                         const svgWidth = width; // SVG width
@@ -2657,22 +2675,23 @@ const DevtaVastu = ({
                           yMin: (svgHeight - minBoundary) / 2,
                           yMax: svgHeight - (svgHeight - minBoundary) / 2,
                         };
-
+  
                         const slope = Math.tan(radian);
                         const direction = index % 2 === 0 ? DIRECTION_DATA[index / 2] : null;
-
+  
                         let endX, endY;
                         let labelX, labelY;
                         const labelOffset = 1.04; // Label position offset
+  
 
                         if (Math.abs(slope) <= 1) {
                           // Horizontal placement
                           endX = Math.cos(radian) > 0 ? outerBounds.xMax : outerBounds.xMin;
                           endY = centroid.y + slope * (endX - centroid.x);
-
+  
                           // Adjust label position dynamically
                           labelX = Math.min(
-                            Math.max(outerBounds.xMin, centroid.x + (endX - centroid.x) * labelOffset),
+                            Math.max(outerBounds.xMin, centroid?.x + (endX - centroid.x) * labelOffset),
                             outerBounds.xMax
                           );
                           labelY = Math.min(
@@ -2682,7 +2701,8 @@ const DevtaVastu = ({
                         } else {
                           // Vertical placement
                           endY = Math.sin(radian) > 0 ? outerBounds.yMax : outerBounds.yMin;
-                          endX = centroid.x + (1 / slope) * (endY - centroid.y);
+                          endX = centroid?.x + (1 / slope) * (endY - centroid.y);
+  
 
                           // Adjust label position dynamically
                           labelX = Math.min(
@@ -2715,6 +2735,7 @@ const DevtaVastu = ({
                           return (
                             <g key={index}>
                               {direction && (
+
                                 <>
                                   <rect
                                     x={Math.cos(radian) > 0 ? labelX : labelX - 40}
@@ -2751,6 +2772,7 @@ const DevtaVastu = ({
                           return (
                             <g key={index}>
                               {direction && (
+
                                 <>
                                   <rect
                                     x={Math.cos(radian) > 0 ? labelX - 40 : labelX + 0}
@@ -2783,10 +2805,11 @@ const DevtaVastu = ({
                             </g>
                           );
                         }
+  
+                      })
+                    )}
+                    {/* {(
 
-
-                      })}
-                      {/* {(
                     allResults.map((item) => {
                       console.log("item : ", item)
                       return (
