@@ -28,7 +28,7 @@ import Loader from '@/components/common/Loader/Loader'
 import ConfirmationPopup from '@/components/common/ConfirmationPopup/ConfirmationPopup'
 import { toast } from 'react-toastify'
 
-const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, TransitData, setTransitData, getTransitData, getDivisionalChartData, DivisionalData, setDivisionalData, birthDate, setKundliData }) => {
+const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, TransitData, setTransitData, getTransitData, getDivisionalChartData, DivisionalData, setDivisionalData, birthDate, setKundliData, SetKundliConstData }) => {
   // var
   const BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
   const AstroDetails = kundliData?.AstroVastuReport?.AstroDetails;
@@ -276,14 +276,14 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     }
   }
 
-  const handleSaveKundaliBtn = ()=>{
+  const handleSaveKundaliBtn = () => {
     handleSaveKundaliOpen();
   }
 
   const saveKundaliDateTime = async () => {
     try {
       let formattedData = {
-        KundaliID: BirthDetails.KundaliID,
+        // KundaliID: BirthDetails.KundaliID,
         FirstName: BirthDetails.FirstName,
         LastName: BirthDetails.LastName,
         MiddleName: BirthDetails.MiddleName,
@@ -305,12 +305,17 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       }
       const response = await UpdateKundli(formattedData);
       if (response.hasError) {
-        setIsDisable(false)
-        toast.error(response.error);
-        return;
+        if (response.errorMessage) {
+          Object.keys(response.errorMessage).forEach((key) => {
+            response.errorMessage[key].forEach((message) => {
+              toast.error(`${key}: ${message}`);
+            });
+          });
+        }
+        return toast.error(response.errorMessage);
         // return toastDisplayer("error", response.error)
       }
-      console.log(kundliData);
+      SetKundliConstData(kundliData);
       setKundliData(kundliData);
       toast.success('Kundali updated successfully.');
       handleClose();
@@ -368,11 +373,11 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     }
   }
 
-  const handleSaveKundaliOpen=()=>{
+  const handleSaveKundaliOpen = () => {
     setSaveKundali(true);
     handleClose();
   }
-  const handleSaveKundaliClose=()=>{
+  const handleSaveKundaliClose = () => {
     setSaveKundali(false);
   }
 
@@ -495,14 +500,14 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
                   <div className='chart-title flex'>
                     <div className='flex px-2 w-full'>
                       <div className='flex items-center w-1/12'>
-                      {DashaValue != "MahaDasha" && kundliOptValue && kundliOptValue.Option == "V" && (
+                        {DashaValue != "MahaDasha" && kundliOptValue && kundliOptValue.Option == "V" && (
                           <IconButton onClick={handleDashaChange} className='h-[38px] text-primary'>
                             🠜
                             {/* <i className='tabler-arrow-big-left text-primary'></i> */}
                           </IconButton>
-                      )}
+                        )}
                       </div>
-                      <div  className='flex items-center w-10/12 justify-center'>
+                      <div className='flex items-center w-10/12 justify-center'>
                         <Button className='cursor-pointer flex items-center' onClick={handleKundliOpt}>
                           <span className='font-ea-sb text-xl'>
                             ❋ {kundliOptValue && kundliOptValue.Option == "V" ? DashaValue : kundliOptValue.OptionName} ❋
@@ -719,7 +724,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       {openNTC && <NavTaraChakra open={openNTC} handleClose={handleNTC} NavTaraChakraData={NavTaraChakraData} />}
       {openRotation && <Rotation open={openRotation} handleClose={handleRoatationClose} rotationType={rotationType} hanldeRotationChange={hanldeRotationChange} />}
       {SaveKundali && (
-        <ConfirmationPopup open={SaveKundali} isDelete={true} handleClose={handleSaveKundaliClose} userData={kundliData?.AstroVastuReport?.BirthDetails} handleClick={saveKundaliDateTime} subTitle={"Are you sure want to update this kundali?"} title={"Update Kundali"}/>
+        <ConfirmationPopup open={SaveKundali} isDelete={true} handleClose={handleSaveKundaliClose} userData={kundliData?.AstroVastuReport?.BirthDetails} handleClick={saveKundaliDateTime} subTitle={"Are you sure want to update this kundali?"} title={"Update Kundali"} />
       )}
     </>
   )

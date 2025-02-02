@@ -280,6 +280,7 @@ const Preview = ({ kundliData, setKundliData, kundliConstData, SetKundliConstDat
     if(TimeToolOpt=="T" && isTransit=="T"){
       resetTransit();
     }else{
+      console.log(kundliConstData)
       setKundliData(kundliConstData);
     }
   }

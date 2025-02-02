@@ -67,7 +67,6 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
       const now = new Date();
       setFormData((prev) => ({ ...prev, ["date"]: dayjs(), ["time"]: dayjs() }));
     } else {
-      console.log(userData)
       const dateParts = formData.BirthDate.split('-');
       const timeParts = formData.BirthTime;
 
@@ -202,10 +201,8 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
       } else {
         setIsDisable(false);
         const response = await UpdateKundli(formattedData);
-        console.log(response)
 
         if (response.hasError) {
-          console.log("here")
           setIsDisable(false);
           if (response.errorMessage) {
             Object.keys(response.errorMessage).forEach((key) => {
