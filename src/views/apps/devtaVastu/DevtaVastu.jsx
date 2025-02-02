@@ -1950,14 +1950,14 @@ const DevtaVastu = ({
   // };
 
   // const data = [
-  //   // fire element 
+  //   // fire element
   //   ["E4", "E6", "E", "green"],
   //   ["E6", "E8", "ESE", "green"],
   //   ["E8", "S2", "SE", "red"],
   //   ["S2", "S4", "SSE", "red"],
   //   ["S4", "S6", "S", "red"],
   //   ["S6", "S8", "SSW", "yellow"],
-  //   // air element 
+  //   // air element
   //   ["S8", "W2", "SW", "yellow"],
   //   ["W2", "W4", "WSW", "gray"],
   //   ["W4", "W6", "W", "gray"],
@@ -2058,14 +2058,14 @@ const DevtaVastu = ({
   };
 
   const data = [
-    // fire element 
+    // fire element
     ["E4", "E6", "E", "green"],
     ["E6", "E8", "ESE", "green"],
     ["E8", "S2", "SE", "red"],
     ["S2", "S4", "SSE", "red"],
     ["S4", "S6", "S", "red"],
     ["S6", "S8", "SSW", "yellow"],
-    // air element 
+    // air element
     ["S8", "W2", "SW", "yellow"],
     ["W2", "W4", "WSW", "gray"],
     ["W4", "W6", "W", "gray"],
@@ -2179,6 +2179,9 @@ const DevtaVastu = ({
                   style={{
                     userSelect: 'none',
                     cursor: 'default',
+                    position: 'relative',
+                    zIndex: 9,
+                    top: '10px'
                   }}
                 >
                   {i + 1}
@@ -2191,7 +2194,10 @@ const DevtaVastu = ({
                 {'ABCDEFGHIJKLMNOPQRSTUVW'.split('').map((letter, i) => (
                   <div key={i} className="text-sm mb-3.5 w-5" style={{
                     userSelect: 'none', // Prevent text selection
-                    cursor: 'default' // Optional: Make the cursor non-interactive
+                    cursor: 'default', // Optional: Make the cursor non-interactive
+                    position: 'relative',
+                    zIndex: 9,
+                    right: '-15px'
                   }}>{letter}</div>
                 ))}
               </div>
@@ -2201,8 +2207,8 @@ const DevtaVastu = ({
             */}
               <svg
                 ref={svgRef}
-                width={width}
-                height={height}
+                width={780}
+                height={780}
                 className="cursor-pointer border border-gray-200 bg-white"
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
@@ -2458,15 +2464,15 @@ const DevtaVastu = ({
                                   drawDevtaLineData(item.point1, item.point2)
                                 )
                               })}
-                              {/* <polygon 
+                              {/* <polygon
                                   points="450,230 450,294.44 486.67,279.25 486.67,193.33"
-                                  fill="lightblue" 
-                                  stroke="blue" 
+                                  fill="lightblue"
+                                  stroke="blue"
                                   stroke-width="2" /> */}
-                              {/* <polygon 
+                              {/* <polygon
                                   points="450,230 550,230 550,330 450,330"
-                                  fill="lightblue" 
-                                  stroke="blue" 
+                                  fill="lightblue"
+                                  stroke="blue"
                                   stroke-width="2" /> */}
 
                               {/* {drawDevtaLineData()} */}
@@ -2522,8 +2528,8 @@ const DevtaVastu = ({
                                   textAnchor="middle"
                                   alignmentBaseline="middle"
                                   style={{
-                                    userSelect: 'none', 
-                                    cursor: 'default' 
+                                    userSelect: 'none',
+                                    cursor: 'default'
                                   }}>
                                   {intersection.label}
                                 </text> */}
@@ -2906,7 +2912,13 @@ const DevtaVastu = ({
                 {'ABCDEFGHIJKLMNOPQRSTUVW'.split('').map((letter, i) => (
                   <div key={i} className="text-sm mb-3.5 w-5" style={{
                     userSelect: 'none', // Prevent text selection
-                    cursor: 'default' // Optional: Make the cursor non-interactive
+                    cursor: 'default', // Optional: Make the cursor non-interactive
+                    position: 'relative',
+                    zIndex: 9,
+                    left: '-15px',
+                    // display:"flex",
+                    // alignItems:"center",
+                    // justifyContent:"center"
                   }}>{letter}</div>
                 ))}
               </div>
@@ -2920,6 +2932,9 @@ const DevtaVastu = ({
                   style={{
                     userSelect: 'none',
                     cursor: 'default',
+                    position: 'relative',
+                    zIndex: 9,
+                    top: '-15px'
                   }}
                 >
                   {i + 1}
