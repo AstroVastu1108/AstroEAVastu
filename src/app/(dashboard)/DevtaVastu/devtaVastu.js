@@ -248,6 +248,7 @@ function DevtaVastuPage() {
 
   const downloadPDF = () => {
     // downloadPDF()
+    return ;
     setDownloadPDFLoading(true)
   }
 
