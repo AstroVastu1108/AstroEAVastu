@@ -66,7 +66,9 @@ const DevtaVastu = ({
   snapToCentroid,
   setSnapToCentroid,
   inputDegree,
-  setInputDegree
+  setInputDegree,
+  setPrintRef,
+  setleftPrintRef
 }) => {
   const [lineSets, setLineSets] = useState(DEFAULT_LINE_SETS);
   const [selectedLineIndex, setSelectedLineIndex] = useState(0); // Default to the first line
@@ -109,11 +111,25 @@ const DevtaVastu = ({
     setLoading(false);
   }, [])
 
+
   const svgRef = useRef(null);
   const printRef = useRef(null);
   const printRef1 = useRef(null);
   const selectedPointRef = useRef(null);
   const movingCentroidRef = useRef(false);
+
+  useEffect(() => {
+    if (setPrintRef) {
+      setPrintRef(printRef.current)
+    }
+  }, [setPrintRef])
+
+  useEffect(() => {
+    if (setleftPrintRef) {
+      setleftPrintRef(printRef1.current)
+    }
+  }, [setleftPrintRef])
+
 
   useEffect(() => {
     if (snapToCentroid) {
@@ -2966,7 +2982,7 @@ const DevtaVastu = ({
         </div>
         {/* </div> */}
         <div className="flex flex-col p-6 bg-white rounded-lg  h-[100vh] overflow-y-auto">
-          <div id="hiddenDiv" className="hidden-print">
+          <div ref={printRef1} id="hiddenDiv" className="hidden-print">
             <div className="design-card">
               <img src="/path/to/your/logo.png" alt="Logo" className="card-logo" />
               <div className="card-content">

@@ -3,7 +3,9 @@ import PageTitle from '@/components/common/PageTitle/PageTitle'
 import DevtaVastu from '@/views/apps/devtaVastu/DevtaVastu'
 import { LoadingButton } from '@mui/lab'
 import { Card, MenuItem, Select, Tabs, Tab } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
+import html2canvas from 'html2canvas'
+import jsPDF from 'jspdf'
 
 function DevtaVastuPage() {
   const [loading, setLoading] = useState(false)
@@ -145,6 +147,9 @@ function DevtaVastuPage() {
   // const [points, setPoints] = useState(DEFAULT_POINTS);
 
   const [previewUrl, setPreviewUrl] = useState(null)
+
+  const printRefs = useRef([])
+  const leftprintRefs = useRef([])
 
   async function readFileData(uploadedFile) {
     const fileReader = new FileReader()
@@ -302,6 +307,106 @@ function DevtaVastuPage() {
     }
   }
 
+  // const generatePDFsForAllGroups = async () => {
+  //   if (savedGroups.length == 0) {
+  //     alert('Please add atleast one group')
+  //     return
+  //   }
+  //   setLoading(true)
+  //   const pdf = new jsPDF('l', 'pt', 'a3') // 'a3' for A3 size
+  //   const pageWidth = pdf.internal.pageSize.getWidth()
+  //   const pageHeight = pdf.internal.pageSize.getHeight()
+  //   for (let i = 0; i < savedGroups.length; i++) {
+  //     if (i > 0) {
+  //       pdf.addPage()
+  //     }
+  
+  //     setLoading(true)
+  //     const scale = 2 // Better performance
+  //     var leftDivRef = leftprintRefs.current[i]
+  //     var rightDivRef = printRefs.current[i] // First page
+
+  //     // Capture the first page
+  //     const firstPageCanvas = await Promise.all([
+  //       html2canvas(leftDivRef, { scale }),
+  //       html2canvas(rightDivRef, { scale })
+  //     ])
+
+  //     // Convert first page to image
+  //     const firstLeftImg = firstPageCanvas[0].toDataURL('image/jpeg', 1.0)
+  //     const firstRightImg = firstPageCanvas[1].toDataURL('image/jpeg', 1.0)
+  //     // Wait for state update and re-render before capturing second page
+  //     await new Promise(resolve => setTimeout(resolve, 200))
+
+  //     const leftImgWidth = pageWidth * 0.3
+  //     const leftImgHeight = pageHeight * 0.9
+  //     const rightImgWidth = pageWidth * 0.6
+  //     const rightImgHeight = pageHeight * 0.9
+
+  //     pdf.addImage(firstLeftImg, 'JPEG', 20, 20, leftImgWidth, leftImgHeight)
+  //     pdf.addImage(firstRightImg, 'JPEG', leftImgWidth + 40, 20, rightImgWidth, rightImgHeight)
+
+  //     pdf.save('download.pdf')
+  //   }
+  //   setLoading(false)
+
+  // }
+
+  const generatePDFsForAllGroups = async () => {
+    if (savedGroups.length === 0) {
+      alert("Please add at least one group");
+      return;
+    }
+  
+    setLoading(true);
+    const pdf = new jsPDF("l", "pt", "a3"); // 'a3' for A3 size
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const scale = 2; // Higher scale for better quality
+  
+    for (let i = 0; i < savedGroups.length; i++) {
+      if (i > 0) {
+        pdf.addPage();
+      }
+  
+      const leftDivRef = leftprintRefs.current[i];
+      const rightDivRef = printRefs.current[i];
+  
+      if (!leftDivRef || !rightDivRef) {
+        console.error(`Element refs not found for index ${i}`);
+        continue;
+      }
+  
+      // Ensure elements are fully rendered
+      await new Promise((resolve) => setTimeout(resolve, 300));
+  
+      try {
+        // Capture the first page
+        const firstPageCanvas = await Promise.all([
+          html2canvas(leftDivRef, { scale, logging: true }),
+          html2canvas(rightDivRef, { scale, logging: true }),
+        ]);
+  
+        // Convert first page to image
+        const firstLeftImg = firstPageCanvas[0].toDataURL("image/jpeg", 1.0);
+        const firstRightImg = firstPageCanvas[1].toDataURL("image/jpeg", 1.0);
+  
+        const leftImgWidth = pageWidth * 0.3;
+        const leftImgHeight = pageHeight * 0.9;
+        const rightImgWidth = pageWidth * 0.6;
+        const rightImgHeight = pageHeight * 0.9;
+  
+        pdf.addImage(firstLeftImg, "JPEG", 20, 20, leftImgWidth, leftImgHeight);
+        pdf.addImage(firstRightImg, "JPEG", leftImgWidth + 40, 20, rightImgWidth, rightImgHeight);
+      } catch (error) {
+        console.error(`Error capturing canvas for index ${i}:`, error);
+      }
+    }
+  
+    pdf.save("download.pdf");
+    setLoading(false);
+  };
+  
   return (
     <>
       <Card>
@@ -334,7 +439,8 @@ function DevtaVastuPage() {
               <div>
                 <LoadingButton
                   variant='outlined'
-                  onClick={downloadPDF}
+                  // onClick={downloadPDF}
+                  onClick={generatePDFsForAllGroups}
                   loading={loading}
                   loadingPosition='start'
                   type='submit'
@@ -371,11 +477,14 @@ function DevtaVastuPage() {
           </>
         )}
       </Card>
+      {/* <button onClick={generatePDFsForAllGroups}>Download All PDFs</button> */}
       {savedGroups.map(
         (group, index) =>
           activeTab === index && (
             <DevtaVastu
               key={index}
+              setPrintRef={el => (printRefs.current[index] = el)}
+              setleftPrintRef={el => (leftprintRefs.current[index] = el)}
               downloadPDFLoading={downloadPDFLoading}
               setDownloadPDFLoading={setDownloadPDFLoading}
               saveLoading={saveLoading}
