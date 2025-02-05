@@ -1,6 +1,7 @@
 'use client'
 import Loader from '@/components/common/Loader/Loader'
 import PageTitle from '@/components/common/PageTitle/PageTitle'
+import DiscardPopUp from '@/components/devta-vastu/DiscardTabPopUp/DiscardPopUp'
 import DevtaVastu from '@/views/apps/devtaVastu/DevtaVastu'
 import { LoadingButton } from '@mui/lab'
 import { Card, MenuItem, Select, Tabs, Tab, IconButton } from '@mui/material'
@@ -154,6 +155,9 @@ function DevtaVastuPage() {
   const [activeTab, setActiveTab] = useState(0)
   const [activePreservedTab, setActivePreservedTab] = useState(0)
   const [fileUploaded, setFileUploaded] = useState(false)
+  const [removeOpen, setRemoveOpen]=useState(false);
+  const [selectedTab, setSelectedTab]=useState(null);
+
   // const [points, setPoints] = useState(DEFAULT_POINTS);
 
   const [previewUrl, setPreviewUrl] = useState(null)
@@ -320,9 +324,9 @@ function DevtaVastuPage() {
       )
     }
   }
-  const handleRemoveGroup = (value) => {
+  const handleRemoveGroup = () => {
     if(savedGroups.length > 1){
-      setSavedGroups((prev) => prev.filter((group) => group !== value));
+      setSavedGroups((prev) => prev.filter((group) => group !== selectedTab));
       setActiveTab(activeTab-1)
     }
   };
@@ -734,6 +738,13 @@ function DevtaVastuPage() {
   
   
   
+  const handleRemoveOpen=(value)=>{
+    if(savedGroups.length > 1){
+      setSelectedTab(value);
+      setRemoveOpen(!removeOpen);
+    }
+  }
+
 
   return (
     <>
@@ -834,7 +845,8 @@ function DevtaVastuPage() {
                                 size='small'
                                 onClick={e => {
                                   e.stopPropagation() // Prevent tab change on button click
-                                  handleRemoveGroup(group)
+                                  handleRemoveOpen(group);
+                                  // handleRemoveGroup(group)
                                 }}
                               >
                                 <i className='tabler-x text-xs'></i>
@@ -879,6 +891,7 @@ function DevtaVastuPage() {
                   )
               )}
             </Card>
+            {removeOpen && <DiscardPopUp open={removeOpen} handleClose={handleRemoveOpen} TabData={selectedTab} handleRemoveGroup={handleRemoveGroup} />}
           </div>
         </>
       )}
