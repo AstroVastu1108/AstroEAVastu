@@ -44,6 +44,8 @@ const DEFAULT_POINTS = [
 ];
 
 const DevtaVastu = ({
+  setPrintRef,
+  setleftPrintRef,
   width = 783,
   height = 783,
   gridSize = 26,
@@ -114,6 +116,19 @@ const DevtaVastu = ({
   const printRef1 = useRef(null);
   const selectedPointRef = useRef(null);
   const movingCentroidRef = useRef(false);
+
+  useEffect(() => {
+    if (setPrintRef) {
+      setPrintRef(printRef.current)
+    }
+  }, [setPrintRef])
+
+  useEffect(() => {
+    if (setleftPrintRef) {
+      setleftPrintRef(printRef1.current)
+    }
+  }, [setleftPrintRef])
+
 
   useEffect(() => {
     if (snapToCentroid) {
@@ -2150,7 +2165,7 @@ const DevtaVastu = ({
     <>
       <div className="flex flex-row gap-4 py-4 justify-start">
 
-        <div ref={printRef} className=' bg-white' >
+        <div ref={printRef} className='bg-white' >
           <div className="flex-grow p-2" >
             <div className="flex ms-3.5">
               {Array.from({ length: 23 }, (_, i) => (
@@ -2962,7 +2977,7 @@ const DevtaVastu = ({
         </div>
         <div class="w-px bg-gray-400"></div>
         <div className="flex flex-col p-6 bg-white rounded-lg ">
-          <div id="hiddenDiv" className="hidden-print">
+          <div ref={printRef1} id="hiddenDiv" className="hidden-print h-[100vh]">
             <div className="design-card">
               <img src="/path/to/your/logo.png" alt="Logo" className="card-logo" />
               <div className="card-content">
