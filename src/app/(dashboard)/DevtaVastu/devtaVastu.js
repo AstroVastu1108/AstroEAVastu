@@ -1,6 +1,7 @@
 'use client'
 import Loader from '@/components/common/Loader/Loader'
 import PageTitle from '@/components/common/PageTitle/PageTitle'
+import DiscardPopUp from '@/components/devta-vastu/DiscardTabPopUp/DiscardPopUp'
 import DevtaVastu from '@/views/apps/devtaVastu/DevtaVastu'
 import { LoadingButton } from '@mui/lab'
 import { Card, MenuItem, Select, Tabs, Tab, IconButton } from '@mui/material'
@@ -8,6 +9,9 @@ import React, { useRef, useState } from 'react'
 // import html2canvas from 'html2canvas';
 // import jsPDF from "jspdf";
 import html2pdf from "html2pdf.js";
+
+import DownloadPopUp from '@/components/devta-vastu/DownloadPDFPopup/DownloadPopUp'
+
 import { toast } from "react-toastify";
 function DevtaVastuPage() {
   const [loading, setLoading] = useState(false)
@@ -154,6 +158,10 @@ function DevtaVastuPage() {
   const [savedGroups, setSavedGroups] = useState(['House Plan'])
   const [activeTab, setActiveTab] = useState(0)
   const [fileUploaded, setFileUploaded] = useState(false)
+  const [removeOpen, setRemoveOpen]=useState(false);
+  const [selectedTab, setSelectedTab]=useState(null);
+  const [downloadConfirm, setDownloadConfirm]=useState(false);
+
   // const [points, setPoints] = useState(DEFAULT_POINTS);
 
   const [previewUrl, setPreviewUrl] = useState(null)
@@ -252,9 +260,7 @@ function DevtaVastuPage() {
   }
 
   const downloadPDF = () => {
-    // downloadPDF()
-    return ;
-    setDownloadPDFLoading(true)
+    setDownloadConfirm(!downloadConfirm);
   }
 
   const handleSave = () => {
@@ -323,20 +329,25 @@ function DevtaVastuPage() {
     }
   }
 
+
   const handleRemoveGroup = (value) => {
     if(savedGroups.length > 1){
-      setSavedGroups((prev) => prev.filter((group) => group !== value));
+      setSavedGroups((prev) => prev.filter((group) => group !== selectedTab));
       setActiveTab(activeTab-1)
     }
   };
 
-  const generatePDFsForAllGroups = async () => {
+
+  const generatePDFsForAllGroups = async (data) => {
+    console.log(data);
+    return;
     if (savedGroups.length === 0) {
       alert("Please add at least one group");
       return;
     }
-    
+
     let preservedTab = activeTab;
+
     setLoading(true);
   
     const options = {
@@ -346,65 +357,65 @@ function DevtaVastuPage() {
       html2canvas: { scale: 3, useCORS: true },
       jsPDF: { unit: "pt", format: "a3", orientation: "landscape" },
     };
-  
+
     const pdfContainer = document.createElement("div");
-  
+
     for (let i = 0; i < savedGroups.length; i++) {
       // Update the active tab and wait for the DOM to update
       // await new Promise((resolve) => {
       //   setActiveTab(i);
       //   setTimeout(resolve, 500); // Ensuring the state update and re-rendering is completed
       // });
-  
+
       await waitForDOMUpdate(); // Ensures latest ref updates
-  
+
       const leftDivRef = leftprintRefs.current[i];
       const rightDivRef = printRefs.current[i];
-  
+
       if (!leftDivRef || !rightDivRef) {
         console.error(`Element refs not found for index ${i}`);
         continue;
       }
-  
+
       leftDivRef.classList.remove("hidden-print");
-  
+
       const pageWrapper = document.createElement("div");
       pageWrapper.style.display = "flex";
       pageWrapper.style.pageBreakAfter = "always";
-  
+
       // Clone left section
       const leftClone = leftDivRef.cloneNode(true);
       leftClone.style.width = "30%";
       leftClone.style.height = "100vh";
       leftClone.style.display = "inline-block";
       leftClone.style.overflow = "hidden";
-  
+
       // Clone right section
       const rightClone = rightDivRef.cloneNode(true);
       rightClone.style.width = "70%";
       rightClone.style.height = "115vh";
       rightClone.style.display = "inline-block";
       rightClone.style.overflow = "hidden";
-  
+
       pageWrapper.appendChild(leftClone);
       pageWrapper.appendChild(rightClone);
       pdfContainer.appendChild(pageWrapper);
     }
-  
+
     document.body.appendChild(pdfContainer);
-  
+
     // Wait for images to load before generating PDF
     await waitForImagesToLoad(pdfContainer);
-  
+
     // Ensure the browser has time to render everything before generating PDF
     await waitForDOMUpdate();
-  
+
     await html2pdf().from(pdfContainer).set(options).save();
     setActiveTab(preservedTab);
     document.body.removeChild(pdfContainer);
     setLoading(false);
   };
-  
+
   // Helper function to ensure images load before rendering PDF
   const waitForImagesToLoad = (container) => {
     const images = Array.from(container.getElementsByTagName("img"));
@@ -422,13 +433,20 @@ function DevtaVastuPage() {
       )
     );
   };
-  
+
   // Helper function to wait for React state updates and re-renders
   const waitForDOMUpdate = () =>
     new Promise((resolve) => requestAnimationFrame(() => setTimeout(resolve, 300)));
-  
-  
-  
+
+
+
+  const handleRemoveOpen=(value)=>{
+    if(savedGroups.length > 1){
+      setSelectedTab(value);
+      setRemoveOpen(!removeOpen);
+    }
+  }
+
 
   return (
     <>
@@ -446,8 +464,8 @@ function DevtaVastuPage() {
                     <div>
                       <LoadingButton
                         variant='outlined'
-                        onClick={generatePDFsForAllGroups}
-                        // onClick={downloadPDF}
+                        // onClick={generatePDFsForAllGroups}
+                        onClick={downloadPDF}
                         loading={loading}
                         loadingPosition='start'
                         type='submit'
@@ -529,7 +547,8 @@ function DevtaVastuPage() {
                                 size='small'
                                 onClick={e => {
                                   e.stopPropagation() // Prevent tab change on button click
-                                  handleRemoveGroup(group)
+                                  handleRemoveOpen(group);
+                                  // handleRemoveGroup(group)
                                 }}
                               >
                                 <i className='tabler-x text-xs'></i>
@@ -574,6 +593,8 @@ function DevtaVastuPage() {
                   )
               )}
             </Card>
+            {removeOpen && <DiscardPopUp open={removeOpen} handleClose={handleRemoveOpen} TabData={selectedTab} handleRemoveGroup={handleRemoveGroup} />}
+            {downloadConfirm && <DownloadPopUp open={downloadConfirm} handleClose={downloadPDF} TabData={savedGroups} handleSave={generatePDFsForAllGroups}/>}
           </div>
         </>
       )}
