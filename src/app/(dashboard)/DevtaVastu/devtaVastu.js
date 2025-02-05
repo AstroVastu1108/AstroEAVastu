@@ -5,22 +5,24 @@ import DiscardPopUp from '@/components/devta-vastu/DiscardTabPopUp/DiscardPopUp'
 import DevtaVastu from '@/views/apps/devtaVastu/DevtaVastu'
 import { LoadingButton } from '@mui/lab'
 import { Card, MenuItem, Select, Tabs, Tab, IconButton } from '@mui/material'
-import React, { useEffect, useRef, useState } from 'react'
-import html2canvas from 'html2canvas';
-import jsPDF from "jspdf";
+import React, { useRef, useState } from 'react'
+// import html2canvas from 'html2canvas';
+// import jsPDF from "jspdf";
 import html2pdf from "html2pdf.js";
+
 import DownloadPopUp from '@/components/devta-vastu/DownloadPDFPopup/DownloadPopUp'
 
+import { toast } from "react-toastify";
 function DevtaVastuPage() {
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [downloadPDFLoading, setDownloadPDFLoading] = useState(false)
   const [saveLoading, setSaveLoading] = useState(false)
   const printRefs = useRef([])
   const leftprintRefs = useRef([])
 
-  useEffect(() => {
-    setLoading(false)
-  }, [])
+  // useEffect(() => {
+  //   setLoading(false)
+  // }, [])
 
   const DEFAULT_POINTS = [
     { x: 220, y: 220 },
@@ -28,6 +30,7 @@ function DevtaVastuPage() {
     { x: 560, y: 560 },
     { x: 220, y: 560 }
   ]
+
   const [tabGroup, setTabGroup] = useState([
     {
       label: 'House Plan',
@@ -154,7 +157,6 @@ function DevtaVastuPage() {
   const [selectedGroup, setSelectedGroup] = useState('1')
   const [savedGroups, setSavedGroups] = useState(['House Plan'])
   const [activeTab, setActiveTab] = useState(0)
-  const [activePreservedTab, setActivePreservedTab] = useState(0)
   const [fileUploaded, setFileUploaded] = useState(false)
   const [removeOpen, setRemoveOpen]=useState(false);
   const [selectedTab, setSelectedTab]=useState(null);
@@ -262,7 +264,9 @@ function DevtaVastuPage() {
   }
 
   const handleSave = () => {
-
+    if(!fileUploaded){
+      return toast.error("Please upload a file!!")
+    }
     if (selectedGroup != 1) {
       setSaveLoading(true)
       setSavedGroups(prev => {
@@ -324,7 +328,9 @@ function DevtaVastuPage() {
       )
     }
   }
-  const handleRemoveGroup = () => {
+
+
+  const handleRemoveGroup = (value) => {
     if(savedGroups.length > 1){
       setSavedGroups((prev) => prev.filter((group) => group !== selectedTab));
       setActiveTab(activeTab-1)
@@ -341,8 +347,9 @@ function DevtaVastuPage() {
     }
 
     let preservedTab = activeTab;
-    // setLoading(true);
 
+    setLoading(true);
+  
     const options = {
       margin: 10,
       filename: "output.pdf",
@@ -404,7 +411,7 @@ function DevtaVastuPage() {
     await waitForDOMUpdate();
 
     await html2pdf().from(pdfContainer).set(options).save();
-    // setActiveTab(preservedTab);
+    setActiveTab(preservedTab);
     document.body.removeChild(pdfContainer);
     setLoading(false);
   };
