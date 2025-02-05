@@ -4,21 +4,21 @@ import PageTitle from '@/components/common/PageTitle/PageTitle'
 import DevtaVastu from '@/views/apps/devtaVastu/DevtaVastu'
 import { LoadingButton } from '@mui/lab'
 import { Card, MenuItem, Select, Tabs, Tab, IconButton } from '@mui/material'
-import React, { useEffect, useRef, useState } from 'react'
-import html2canvas from 'html2canvas';
-import jsPDF from "jspdf";
+import React, { useRef, useState } from 'react'
+// import html2canvas from 'html2canvas';
+// import jsPDF from "jspdf";
 import html2pdf from "html2pdf.js";
-
+import { toast } from "react-toastify";
 function DevtaVastuPage() {
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [downloadPDFLoading, setDownloadPDFLoading] = useState(false)
   const [saveLoading, setSaveLoading] = useState(false)
   const printRefs = useRef([])
   const leftprintRefs = useRef([])
 
-  useEffect(() => {
-    setLoading(false)
-  }, [])
+  // useEffect(() => {
+  //   setLoading(false)
+  // }, [])
 
   const DEFAULT_POINTS = [
     { x: 220, y: 220 },
@@ -26,6 +26,7 @@ function DevtaVastuPage() {
     { x: 560, y: 560 },
     { x: 220, y: 560 }
   ]
+
   const [tabGroup, setTabGroup] = useState([
     {
       label: 'House Plan',
@@ -152,7 +153,6 @@ function DevtaVastuPage() {
   const [selectedGroup, setSelectedGroup] = useState('1')
   const [savedGroups, setSavedGroups] = useState(['House Plan'])
   const [activeTab, setActiveTab] = useState(0)
-  const [activePreservedTab, setActivePreservedTab] = useState(0)
   const [fileUploaded, setFileUploaded] = useState(false)
   // const [points, setPoints] = useState(DEFAULT_POINTS);
 
@@ -258,7 +258,9 @@ function DevtaVastuPage() {
   }
 
   const handleSave = () => {
-
+    if(!fileUploaded){
+      return toast.error("Please upload a file!!")
+    }
     if (selectedGroup != 1) {
       setSaveLoading(true)
       setSavedGroups(prev => {
@@ -320,320 +322,13 @@ function DevtaVastuPage() {
       )
     }
   }
+
   const handleRemoveGroup = (value) => {
     if(savedGroups.length > 1){
       setSavedGroups((prev) => prev.filter((group) => group !== value));
       setActiveTab(activeTab-1)
     }
   };
-
-  // const generatePDFsForAllGroups = async () => {
-  //   if (savedGroups.length === 0) {
-  //     alert("Please add at least one group");
-  //     return;
-  //   }
-
-  //   // Ensure all elements are rendered
-  //   // await new Promise((resolve) => {
-  //   //   setActiveTab(0); // Start with the first tab
-  //   //   setTimeout(() => {
-  //   //     resolve();
-  //   //   }, 3000); // Wait for rendering
-  //   // });
-
-  //   const pdf = new jsPDF("l", "pt", "a3"); // 'a3' for A3 size
-  //   const pageWidth = pdf.internal.pageSize.getWidth();
-  //   const pageHeight = pdf.internal.pageSize.getHeight();
-  //   const scale = 2; // Higher scale for better quality
-
-  //   for (let i = 0; i < savedGroups.length; i++) {
-  //     // if (i > 0) {
-  //       // pdf.addPage();
-  //     // }
-
-  //     // setActiveTab(i); // Switch to the current tab
-  //     // await new Promise((resolve) => setTimeout(resolve, 3000)); // Wait for rendering
-
-  //     const leftDivRef = leftprintRefs.current[i];
-  //     const rightDivRef = printRefs.current[i];
-
-  //     if (!leftDivRef || !rightDivRef) {
-  //       console.error(`Element refs not found for index ${i}`);
-  //       continue;
-  //     }
-
-  //     try {
-  //       console.log("leftDivRef : ", leftDivRef)
-  //       console.log("rightDivRef : ", rightDivRef)
-  //       // Capture the first page
-  //       // const firstPageCanvas = await Promise.all([
-  //       //   html2canvas(leftDivRef, { scale, logging: true }),
-  //       //   html2canvas(rightDivRef, { scale, logging: true }),
-  //       // ]);
-
-  //       // // Convert first page to image
-  //       // const firstLeftImg = firstPageCanvas[0].toDataURL("image/jpeg", 1.0);
-  //       // const firstRightImg = firstPageCanvas[1].toDataURL("image/jpeg", 1.0);
-
-  //       // const leftImgWidth = pageWidth * 0.3;
-  //       // const leftImgHeight = pageHeight * 0.9;
-  //       // const rightImgWidth = pageWidth * 0.6;
-  //       // const rightImgHeight = pageHeight * 0.9;
-
-  //       // pdf.addImage(firstLeftImg, "JPEG", 20, 20, leftImgWidth, leftImgHeight);
-  //       // pdf.addImage(firstRightImg, "JPEG", leftImgWidth + 40, 20, rightImgWidth, rightImgHeight);
-  //     } catch (error) {
-  //       console.error(`Error capturing canvas for index ${i}:`, error);
-  //     }
-  //   }
-
-  //   // pdf.save("download.pdf");
-  //   setLoading(false);
-  // };
-
-  // const generatePDFsForAllGroups = () => {
-  //   const pdfContainer = document.createElement("div");
-
-  //   savedGroups.forEach((_, i) => {
-  //     const leftDivRef = leftprintRefs.current[i];
-  //     const rightDivRef = printRefs.current[i];
-
-  //     if (!leftDivRef || !rightDivRef) {
-  //       console.error(`Element refs not found for index ${i}`);
-  //       return;
-  //     }
-
-  //     // Create a wrapper div for each group
-  //     const wrapperDiv = document.createElement("div");
-  //     wrapperDiv.style.pageBreakAfter = "always"; // Ensures new page for each group
-  //     wrapperDiv.style.display = "flex";
-  //     wrapperDiv.style.gap = "20px";
-  //     wrapperDiv.style.padding = "20px";
-
-  //     // Clone elements and append
-  //     wrapperDiv.appendChild(leftDivRef.cloneNode(true));
-  //     wrapperDiv.appendChild(rightDivRef.cloneNode(true));
-  //     pdfContainer.appendChild(wrapperDiv);
-  //   });
-
-  //   // Generate PDF
-  //   html2pdf()
-  //     .set({
-  //       margin: 10,
-  //       filename: "output.pdf",
-  //       image: { type: "jpeg", quality: 0.98 },
-  //       html2canvas: { scale: 2 }, // Ensures high resolution
-  //       jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-  //     })
-  //     .from(pdfContainer)
-  //     .save();
-  // }
-
-  // const generatePDFsForAllGroups = async () => {
-  //   if (savedGroups.length === 0) {
-  //     alert("Please add at least one group");
-  //     return;
-  //   }
-
-  //   setLoading(true);
-
-  //   // Define PDF options
-  //   const options = {
-  //     margin: 10,
-  //     filename: "output.pdf",
-  //     image: { type: "jpeg", quality: 1.0 }, // High quality
-  //     html2canvas: { scale: 3, useCORS: true }, // Increase scale for better resolution
-  //     jsPDF: { unit: "pt", format: "a2", orientation: "landscape" }, // A3 landscape
-  //   };
-
-  //   const pdfContainer = document.createElement("div");
-
-  //   for (let i = 0; i < savedGroups.length; i++) {
-  //     const leftDivRef = leftprintRefs.current[i];
-  //     const rightDivRef = printRefs.current[i];
-
-  //     if (!leftDivRef || !rightDivRef) {
-  //       console.error(`Element refs not found for index ${i}`);
-  //       continue;
-  //     }
-
-  //     const pageWrapper = document.createElement("div");
-  //     pageWrapper.style.display = "flex";
-  //     pageWrapper.style.width = "100%";
-  //     pageWrapper.style.pageBreakAfter = "always"; // Ensure each section starts on a new page
-
-  //     const leftClone = leftDivRef.cloneNode(true);
-  //     leftClone.style.width = "30%";
-  //     leftClone.style.border = "1px solid #000";
-
-  //     const rightClone = rightDivRef.cloneNode(true);
-  //     rightClone.style.width = "70%";
-  //     rightClone.style.border = "1px solid #000";
-
-  //     pageWrapper.appendChild(leftClone);
-  //     pageWrapper.appendChild(rightClone);
-  //     pdfContainer.appendChild(pageWrapper);
-  //   }
-
-  //   document.body.appendChild(pdfContainer);
-
-  //   await html2pdf().from(pdfContainer).set(options).save();
-
-  //   document.body.removeChild(pdfContainer);
-  //   setLoading(false);
-  // };
-
-  // const generatePDFsForAllGroups = async () => {
-  //   if (savedGroups.length === 0) {
-  //     alert("Please add at least one group");
-  //     return;
-  //   }
-  
-  //   setLoading(true);
-  
-  //   // PDF options for high-quality output
-  //   const options = {
-  //     margin: 10,
-  //     filename: "output.pdf",
-  //     image: { type: "jpeg", quality: 1.0 }, // High quality images
-  //     html2canvas: { scale: 3, useCORS: true }, // Higher scale for better clarity
-  //     jsPDF: { unit: "pt", format: "a3", orientation: "landscape" }, // A2 landscape
-  //   };
-  
-  //   const pdfContainer = document.createElement("div");
-  
-  //   for (let i = 0; i < savedGroups.length; i++) {
-  //     const leftDivRef = leftprintRefs.current[i];
-  //     const rightDivRef = printRefs.current[i];
-  //     leftDivRef.classList.remove("hidden-print");
-
-  //     if (!leftDivRef || !rightDivRef) {
-  //       console.error(`Element refs not found for index ${i}`);
-  //       continue;
-  //     }
-  
-  //     const pageWrapper = document.createElement("div");
-  //     pageWrapper.style.display = "flex";
-  //     // pageWrapper.style.width = "100%";
-  //     // pageWrapper.style.height = "100vh"; // Ensure full height
-  //     pageWrapper.style.pageBreakAfter = "always"; // Ensure new page for each group
-  
-  //     // Clone left section
-  //     const leftClone = leftDivRef.cloneNode(true);
-  //     leftClone.style.width = "30%";
-  //     leftClone.style.height = "100vh";
-  //     leftClone.style.display = "inline-block";
-  //     // leftClone.style.border = "1px solid #000";
-  //     leftClone.style.overflow = "hidden"; // Prevent unexpected cropping
-  
-  //     // Clone right section
-  //     const rightClone = rightDivRef.cloneNode(true);
-  //     rightClone.style.width = "70%";
-  //     rightClone.style.height = "115vh";
-  //     rightClone.style.display = "inline-block";
-  //     // rightClone.style.border = "1px solid #000";
-  //     rightClone.style.overflow = "hidden";
-  
-  //     // Append both sections
-  //     pageWrapper.appendChild(leftClone);
-  //     pageWrapper.appendChild(rightClone);
-  //     pdfContainer.appendChild(pageWrapper);
-  //   }
-  
-  //   document.body.appendChild(pdfContainer);
-  
-  //   await html2pdf().from(pdfContainer).set(options).save();
-  
-  //   document.body.removeChild(pdfContainer);
-  //   setLoading(false);
-  // };
-  
-
-  // const generatePDFsForAllGroups = async () => {
-  //   if (savedGroups.length === 0) {
-  //     alert("Please add at least one group");
-  //     return;
-  //   }
-  //   let preservedTab = activeTab;
-  //   setLoading(true);
-  
-  //   const options = {
-  //     margin: 10,
-  //     filename: "output.pdf",
-  //     image: { type: "jpeg", quality: 1.0 },
-  //     html2canvas: { scale: 3, useCORS: true },
-  //     jsPDF: { unit: "pt", format: "a3", orientation: "landscape" },
-  //   };
-  
-  //   const pdfContainer = document.createElement("div");
-  
-  //   for (let i = 0; i < savedGroups.length; i++) {
-  //     setActiveTab(i);
-  //     await new Promise((resolve) => setTimeout(resolve, 1000));
-  //     const leftDivRef = leftprintRefs.current[i];
-  //     const rightDivRef = printRefs.current[i];
-  //     if (!leftDivRef || !rightDivRef) {
-  //       console.error(`Element refs not found for index ${i}`);
-  //       continue;
-  //     }
-  
-  //     leftDivRef.classList.remove("hidden-print");
-  
-  //     const pageWrapper = document.createElement("div");
-  //     pageWrapper.style.display = "flex";
-  //     pageWrapper.style.pageBreakAfter = "always";
-  
-  //     // Clone left section
-  //     const leftClone = leftDivRef.cloneNode(true);
-  //     leftClone.style.width = "30%";
-  //     leftClone.style.height = "100vh";
-  //     leftClone.style.display = "inline-block";
-  //     leftClone.style.overflow = "hidden";
-  
-  //     // Clone right section
-  //     const rightClone = rightDivRef.cloneNode(true);
-  //     rightClone.style.width = "70%";
-  //     rightClone.style.height = "115vh";
-  //     rightClone.style.display = "inline-block";
-  //     rightClone.style.overflow = "hidden";
-  
-  //     pageWrapper.appendChild(leftClone);
-  //     pageWrapper.appendChild(rightClone);
-  //     pdfContainer.appendChild(pageWrapper);
-  //   }
-  
-  //   document.body.appendChild(pdfContainer);
-  
-  //   // Wait for images to load before generating PDF
-  //   await waitForImagesToLoad(pdfContainer);
-  
-  //   // Ensure the browser has time to render everything before generating PDF
-  //   await new Promise((resolve) => requestAnimationFrame(resolve));
-  //   await new Promise((resolve) => setTimeout(resolve, 500)); // Small delay
-  
-  //   await html2pdf().from(pdfContainer).set(options).save();
-  //   setActiveTab(preservedTab);
-  //   document.body.removeChild(pdfContainer);
-  //   setLoading(false);
-  // };
-  
-  // // Helper function to ensure images load before rendering PDF
-  // const waitForImagesToLoad = (container) => {
-  //   const images = Array.from(container.getElementsByTagName("img"));
-  //   return Promise.all(
-  //     images.map(
-  //       (img) =>
-  //         new Promise((resolve) => {
-  //           if (img.complete) {
-  //             resolve();
-  //           } else {
-  //             img.onload = resolve;
-  //             img.onerror = resolve;
-  //           }
-  //         })
-  //     )
-  //   );
-  // };
 
   const generatePDFsForAllGroups = async () => {
     if (savedGroups.length === 0) {
@@ -642,7 +337,7 @@ function DevtaVastuPage() {
     }
     
     let preservedTab = activeTab;
-    // setLoading(true);
+    setLoading(true);
   
     const options = {
       margin: 10,
@@ -705,7 +400,7 @@ function DevtaVastuPage() {
     await waitForDOMUpdate();
   
     await html2pdf().from(pdfContainer).set(options).save();
-    // setActiveTab(preservedTab);
+    setActiveTab(preservedTab);
     document.body.removeChild(pdfContainer);
     setLoading(false);
   };
