@@ -396,7 +396,7 @@ function DevtaVastuPage() {
       // Clone right section
       const rightClone = rightDivRef.cloneNode(true);
       rightClone.style.width = "70%";
-      rightClone.style.height = "115vh";
+      rightClone.style.height = "120vh";
       rightClone.style.display = "inline-block";
       rightClone.style.overflow = "hidden";
 
