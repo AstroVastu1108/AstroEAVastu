@@ -339,17 +339,15 @@ function DevtaVastuPage() {
 
 
   const generatePDFsForAllGroups = async (data) => {
-    console.log(data);
-    return;
+
     if (savedGroups.length === 0) {
       alert("Please add at least one group");
       return;
     }
 
     let preservedTab = activeTab;
-
     setLoading(true);
-  
+
     const options = {
       margin: 10,
       filename: "output.pdf",
@@ -358,22 +356,24 @@ function DevtaVastuPage() {
       jsPDF: { unit: "pt", format: "a3", orientation: "landscape" },
     };
 
+
     const pdfContainer = document.createElement("div");
 
-    for (let i = 0; i < savedGroups.length; i++) {
-      // Update the active tab and wait for the DOM to update
-      // await new Promise((resolve) => {
-      //   setActiveTab(i);
-      //   setTimeout(resolve, 500); // Ensuring the state update and re-rendering is completed
-      // });
+    for (let i = 0; i < data.length; i++) {
 
-      await waitForDOMUpdate(); // Ensures latest ref updates
+      const groupIndex = savedGroups.indexOf(data[i]);
 
-      const leftDivRef = leftprintRefs.current[i];
-      const rightDivRef = printRefs.current[i];
+      if (groupIndex === -1) {
+        continue;
+      }
+
+      await waitForDOMUpdate();
+
+      const leftDivRef = leftprintRefs.current[groupIndex];
+      const rightDivRef = printRefs.current[groupIndex];
 
       if (!leftDivRef || !rightDivRef) {
-        console.error(`Element refs not found for index ${i}`);
+        console.error(`🚨 Error: Element refs not found for groupIndex ${groupIndex}`);
         continue;
       }
 
@@ -386,7 +386,7 @@ function DevtaVastuPage() {
       // Clone left section
       const leftClone = leftDivRef.cloneNode(true);
       leftClone.style.width = "30%";
-      leftClone.style.height = "100vh";
+      leftClone.style.height = "120vh";
       leftClone.style.display = "inline-block";
       leftClone.style.overflow = "hidden";
 
@@ -402,19 +402,25 @@ function DevtaVastuPage() {
       pdfContainer.appendChild(pageWrapper);
     }
 
+
+    if (!pdfContainer.innerHTML.trim()) {
+      alert("No matching data found for PDF generation.");
+      setLoading(false);
+      return;
+    }
+
     document.body.appendChild(pdfContainer);
 
-    // Wait for images to load before generating PDF
     await waitForImagesToLoad(pdfContainer);
-
-    // Ensure the browser has time to render everything before generating PDF
     await waitForDOMUpdate();
 
     await html2pdf().from(pdfContainer).set(options).save();
+
     setActiveTab(preservedTab);
     document.body.removeChild(pdfContainer);
     setLoading(false);
   };
+
 
   // Helper function to ensure images load before rendering PDF
   const waitForImagesToLoad = (container) => {

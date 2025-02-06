@@ -41,7 +41,7 @@ function DownloadPopUp({ open, handleClose, TabData, handleSave }) {
             // className:'rounded',
             onSubmit: (e) => {
               e.preventDefault();
-              handleSave(checkedItems);
+              handleSave(Object.keys(checkedItems).filter((key) => checkedItems[key]));
               handleClose();
             },
           }}
