@@ -339,7 +339,6 @@ function DevtaVastuPage() {
 
 
   const generatePDFsForAllGroups = async (data) => {
-
     if (savedGroups.length === 0) {
       alert("Please add at least one group");
       return;
@@ -347,6 +346,12 @@ function DevtaVastuPage() {
 
     let preservedTab = activeTab;
     setLoading(true);
+
+    // Hide the scrollbar
+    document.body.style.overflow = 'hidden';
+    document.body.style.height = '100vh';
+    document.body.style.position = 'fixed'; // Prevent scrolling
+    document.body.style.width = '100%'; // Ensure full width
 
     const options = {
       margin: 10,
@@ -356,11 +361,9 @@ function DevtaVastuPage() {
       jsPDF: { unit: "pt", format: "a3", orientation: "landscape" },
     };
 
-
     const pdfContainer = document.createElement("div");
 
     for (let i = 0; i < data.length; i++) {
-
       const groupIndex = savedGroups.indexOf(data[i]);
 
       if (groupIndex === -1) {
@@ -402,10 +405,13 @@ function DevtaVastuPage() {
       pdfContainer.appendChild(pageWrapper);
     }
 
-
     if (!pdfContainer.innerHTML.trim()) {
       alert("No matching data found for PDF generation.");
       setLoading(false);
+      document.body.style.overflow = ''; // Restore scrollbar
+      document.body.style.height = ''; // Restore body height
+      document.body.style.position = ''; // Restore position
+      document.body.style.width = ''; // Restore width
       return;
     }
 
@@ -419,8 +425,13 @@ function DevtaVastuPage() {
     setActiveTab(preservedTab);
     document.body.removeChild(pdfContainer);
     setLoading(false);
-  };
 
+    // Restore the scrollbar
+    document.body.style.overflow = '';
+    document.body.style.height = '';
+    document.body.style.position = '';
+    document.body.style.width = '';
+  };
 
   // Helper function to ensure images load before rendering PDF
   const waitForImagesToLoad = (container) => {

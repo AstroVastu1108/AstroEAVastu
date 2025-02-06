@@ -2981,7 +2981,7 @@ const DevtaVastu = ({
             <div className="design-card">
               <img src="/path/to/your/logo.png" alt="Logo" className="card-logo" />
               <div className="card-content">
-                <h2>Artwork Title</h2>
+                <h2>Artwork Title : {selectedGroup}</h2>
                 <p>Created by: Artist Name</p>
                 <p>Date: {new Date().toLocaleDateString()}</p>
                 <div className="artwork-details">
