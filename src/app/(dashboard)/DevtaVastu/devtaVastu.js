@@ -359,7 +359,7 @@ function DevtaVastuPage() {
 
     // Hide the scrollbar
     document.body.style.overflow = 'hidden';
-    document.body.style.height = '140vh';
+    document.body.style.height = '100%';
     document.body.style.position = 'fixed'; // Prevent scrolling
     document.body.style.width = '100%'; // Ensure full width
 
@@ -399,7 +399,7 @@ function DevtaVastuPage() {
       // Clone left section
       const leftClone = leftDivRef.cloneNode(true);
       leftClone.style.width = "30%";
-      leftClone.style.height = "120vh";
+      leftClone.style.height = "100%";
       leftClone.style.display = "inline-block";
       leftClone.style.overflow = "hidden";
 
