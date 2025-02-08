@@ -1,0 +1,6 @@
+.grid-tabs{
+  /* border: 1px solid red; */
+  .Mui-selected{
+    background-color: var(--secondary-soft-color);
+  }
+}

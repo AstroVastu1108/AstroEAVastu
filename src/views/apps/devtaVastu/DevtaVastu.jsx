@@ -203,7 +203,7 @@ const DevtaVastu = ({
 
 
   //   // Create PDF
-  //   const pdf = new jsPDF('l', 'pt', 'a4');
+  //   const pdf = new jsPDF('l', 'pt', 'a3');
   //   const pageWidth = pdf.internal.pageSize.getWidth();
   //   const pageHeight = pdf.internal.pageSize.getHeight();
 
@@ -3018,7 +3018,8 @@ const DevtaVastu = ({
           <div className="flex justify-center mt-2">
             <LoadingButton
               fullWidth
-              variant='contained'
+              variant='outlined'
+              // variant='contained'
               onClick={() => updatePointsForAllTabs(selectedGroup, points)}
               loadingPosition='start'
               type='submit'
