@@ -17,7 +17,9 @@ import { LoadingButton } from '@mui/lab';
 import { Card } from '@mui/material';
 import PageTitle from '@/components/common/PageTitle/PageTitle';
 // Set the worker source using a CDN
-GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js'; // Match this with your installed version
+// GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js'; // Match this with your installed version
+GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.js';
+
 // Adjust to the version you need
 
 
@@ -2292,7 +2294,7 @@ const DevtaVastu = ({
                             {hideCircle &&
                               Array.from({ length: totalLines }).map((_, index) => {
                                 const rotationIndex = index % totalLines;
-                                const angle = rotationIndex * angleIncrement + (270 + inputDegree);
+                                const angle = rotationIndex * angleIncrement + (270 - inputDegree);
                                 const radian = (angle * Math.PI) / 180;
 
                                 const squareSize = 783;
@@ -2610,7 +2612,7 @@ const DevtaVastu = ({
                       <rect x={745} y={0} width="40" height="783" fill="white" mask="url(#white-mask)" /> */}
                     {hideCircle && !hide16Circle && !hide4Circle && !hide8Circle && Array.from({ length: totalLines }).map((_, index) => {
                       const rotationIndex = index % totalLines;
-                      const angle = rotationIndex * angleIncrement + (270 + inputDegree);
+                      const angle = rotationIndex * angleIncrement + (270 - inputDegree);
                       const radian = (angle * Math.PI) / 180;
 
                       const squareSize = 783;
@@ -2663,7 +2665,7 @@ const DevtaVastu = ({
                     {centroid && (
                       Array.from({ length: totalLines }).map((_, index) => {
                         const rotationIndex = index % totalLines;
-                        const angle = rotationIndex * angleIncrement + (270 + inputDegree);
+                        const angle = rotationIndex * angleIncrement + (270 - inputDegree);
                         const radian = (angle * Math.PI) / 180;
 
 

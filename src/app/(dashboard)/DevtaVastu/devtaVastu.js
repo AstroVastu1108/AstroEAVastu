@@ -9,6 +9,16 @@ import React, { useRef, useState } from 'react'
 // import html2canvas from 'html2canvas';
 // import jsPDF from "jspdf";
 import html2pdf from "html2pdf.js";
+// GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.js';
+import * as pdfjsLib from 'pdfjs-dist';
+import pdfWorker from 'pdfjs-dist/build/pdf.worker.min.mjs?worker';
+
+// Set the worker
+import { GlobalWorkerOptions } from 'pdfjs-dist/build/pdf';
+
+GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.worker.min.js';
+
+// pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 
 import DownloadPopUp from '@/components/devta-vastu/DownloadPDFPopup/DownloadPopUp'
 
