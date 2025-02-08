@@ -122,9 +122,9 @@ const LoginV2 = ({ mode }) => {
     }
   };
 
-  useEffect(()=>{
-    handleVerifyCaptcha();
-  },[])
+  // useEffect(()=>{
+  //   handleVerifyCaptcha();
+  // },[])
 
 
   // const handleSubmit = async (e) => {
@@ -178,7 +178,7 @@ const LoginV2 = ({ mode }) => {
 
   const handleSubmit = async () => {
     try {
-      if(isCaptchaVerified){
+      // if(isCaptchaVerified){
       if (formData.email == "") {
         // toastDisplayer("error", "Email is required.")
         emailRef.current.focus();
@@ -213,9 +213,9 @@ const LoginV2 = ({ mode }) => {
         setIsDisable(false);
         setIsOtpVerified("sent")
       }
-    }else{
-      setErrorMessage("Unable to Verify Captcha. Try Again.");
-    }
+    // }else{
+    //   setErrorMessage("Unable to Verify Captcha. Try Again.");
+    // }
     } catch (error) {
       setIsDisable(false);
       setIsOtpVerified("pending")
@@ -468,13 +468,13 @@ const LoginV2 = ({ mode }) => {
                 </>
 
               }
-              <div>
+              {/* <div>
                 <ReCAPTCHA
                   ref={recaptchaRef}
                   sitekey={process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_SITE_KEY}
                   size="invisible"
                 />
-              </div>
+              </div> */}
 
             </div>
           </div>

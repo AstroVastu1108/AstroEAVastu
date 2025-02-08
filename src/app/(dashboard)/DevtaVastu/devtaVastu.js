@@ -8,8 +8,18 @@ import { Card, MenuItem, Select, Tabs, Tab, IconButton } from '@mui/material'
 import React, { useRef, useState } from 'react'
 // import html2canvas from 'html2canvas';
 // import jsPDF from "jspdf";
+
 import html2pdf from 'html2pdf.js'
 import "./devtaVastu.css"
+// GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.js';
+import * as pdfjsLib from 'pdfjs-dist';
+import pdfWorker from 'pdfjs-dist/build/pdf.worker.min.mjs?worker';
+
+// Set the worker
+import { GlobalWorkerOptions } from 'pdfjs-dist/build/pdf';
+
+GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.worker.min.js';
+
 
 import DownloadPopUp from '@/components/devta-vastu/DownloadPDFPopup/DownloadPopUp'
 
@@ -347,10 +357,10 @@ function DevtaVastuPage() {
     setLoading(true)
 
     // Hide the scrollbar
-    document.body.style.overflow = 'hidden'
-    document.body.style.height = '100vh'
-    document.body.style.position = 'fixed' // Prevent scrolling
-    document.body.style.width = '100%' // Ensure full width
+    document.body.style.overflow = 'hidden';
+    document.body.style.height = '100%';
+    document.body.style.position = 'fixed'; // Prevent scrolling
+    document.body.style.width = '100%'; // Ensure full width
 
     const options = {
       margin: 10,
@@ -386,22 +396,22 @@ function DevtaVastuPage() {
       pageWrapper.style.pageBreakAfter = 'always'
 
       // Clone left section
-      const leftClone = leftDivRef.cloneNode(true)
-      leftClone.style.width = '30%'
-      leftClone.style.height = '120vh'
-      leftClone.style.display = 'inline-block'
-      leftClone.style.overflow = 'hidden'
+      const leftClone = leftDivRef.cloneNode(true);
+      leftClone.style.width = "30%";
+      leftClone.style.height = "100%";
+      leftClone.style.display = "inline-block";
+      leftClone.style.overflow = "hidden";
 
       // Clone right section
-      const rightClone = rightDivRef.cloneNode(true)
-      rightClone.style.width = '70%'
-      rightClone.style.height = '120vh'
-      rightClone.style.display = 'inline-block'
-      rightClone.style.overflow = 'hidden'
+      const rightClone = rightDivRef.cloneNode(true);
+      rightClone.style.width = "70%";
+      rightClone.style.height = "100%";
+      rightClone.style.display = "inline-block";
+      rightClone.style.overflow = "hidden";
 
-      pageWrapper.appendChild(leftClone)
-      pageWrapper.appendChild(rightClone)
-      pdfContainer.appendChild(pageWrapper)
+      pageWrapper.appendChild(leftClone);
+      pageWrapper.appendChild(rightClone);
+      pdfContainer.appendChild(pageWrapper);
     }
 
     if (!pdfContainer.innerHTML.trim()) {
