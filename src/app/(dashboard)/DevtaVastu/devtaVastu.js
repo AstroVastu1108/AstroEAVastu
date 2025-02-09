@@ -5,25 +5,25 @@ import DiscardPopUp from '@/components/devta-vastu/DiscardTabPopUp/DiscardPopUp'
 import DevtaVastu from '@/views/apps/devtaVastu/DevtaVastu'
 import { LoadingButton } from '@mui/lab'
 import { Card, MenuItem, Select, Tabs, Tab, IconButton } from '@mui/material'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 // import html2canvas from 'html2canvas';
 // import jsPDF from "jspdf";
 
 import html2pdf from 'html2pdf.js'
-import "./devtaVastu.css"
+import './devtaVastu.css'
 // GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.js';
-import * as pdfjsLib from 'pdfjs-dist';
-import pdfWorker from 'pdfjs-dist/build/pdf.worker.min.mjs?worker';
+import * as pdfjsLib from 'pdfjs-dist'
+import pdfWorker from 'pdfjs-dist/build/pdf.worker.min.mjs?worker'
 
 // Set the worker
-import { GlobalWorkerOptions } from 'pdfjs-dist/build/pdf';
+import { GlobalWorkerOptions } from 'pdfjs-dist/build/pdf'
 
-GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.worker.min.js';
-
+GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.worker.min.js'
 
 import DownloadPopUp from '@/components/devta-vastu/DownloadPDFPopup/DownloadPopUp'
 
 import { toast } from 'react-toastify'
+import { getVastuLayouts, saveVastuLayouts } from '@/app/Server/API/vastulayout'
 function DevtaVastuPage() {
   const [loading, setLoading] = useState(false)
   const [downloadPDFLoading, setDownloadPDFLoading] = useState(false)
@@ -169,6 +169,7 @@ function DevtaVastuPage() {
   const [savedGroups, setSavedGroups] = useState(['House Plan'])
   const [activeTab, setActiveTab] = useState(0)
   const [fileUploaded, setFileUploaded] = useState(false)
+  const [fileInfo,setFileInfo] = useState("")
   const [removeOpen, setRemoveOpen] = useState(false)
   const [selectedTab, setSelectedTab] = useState(null)
   const [downloadConfirm, setDownloadConfirm] = useState(false)
@@ -176,6 +177,14 @@ function DevtaVastuPage() {
   // const [points, setPoints] = useState(DEFAULT_POINTS);
 
   const [previewUrl, setPreviewUrl] = useState(null)
+
+  useEffect(() => {
+    const getLayouts = async () => {
+      const data = await getVastuLayouts()
+      console.log('Data : ', data)
+    }
+    getLayouts()
+  }, [])
 
   async function readFileData(uploadedFile) {
     const fileReader = new FileReader()
@@ -230,7 +239,8 @@ function DevtaVastuPage() {
 
     if (uploadedFile) {
       const fileType = uploadedFile.type
-
+      const name  = uploadedFile.name
+      setFileInfo(name)
       if (fileType.includes('image')) {
         // If the uploaded file is an image
         setFileUploaded(true)
@@ -357,10 +367,10 @@ function DevtaVastuPage() {
     setLoading(true)
 
     // Hide the scrollbar
-    document.body.style.overflow = 'hidden';
-    document.body.style.height = '100%';
-    document.body.style.position = 'fixed'; // Prevent scrolling
-    document.body.style.width = '100%'; // Ensure full width
+    document.body.style.overflow = 'hidden'
+    document.body.style.height = '100%'
+    document.body.style.position = 'fixed' // Prevent scrolling
+    document.body.style.width = '100%' // Ensure full width
 
     const options = {
       margin: 10,
@@ -396,22 +406,22 @@ function DevtaVastuPage() {
       pageWrapper.style.pageBreakAfter = 'always'
 
       // Clone left section
-      const leftClone = leftDivRef.cloneNode(true);
-      leftClone.style.width = "30%";
-      leftClone.style.height = "100%";
-      leftClone.style.display = "inline-block";
-      leftClone.style.overflow = "hidden";
+      const leftClone = leftDivRef.cloneNode(true)
+      leftClone.style.width = '30%'
+      leftClone.style.height = '100%'
+      leftClone.style.display = 'inline-block'
+      leftClone.style.overflow = 'hidden'
 
       // Clone right section
-      const rightClone = rightDivRef.cloneNode(true);
-      rightClone.style.width = "70%";
-      rightClone.style.height = "100%";
-      rightClone.style.display = "inline-block";
-      rightClone.style.overflow = "hidden";
+      const rightClone = rightDivRef.cloneNode(true)
+      rightClone.style.width = '70%'
+      rightClone.style.height = '100%'
+      rightClone.style.display = 'inline-block'
+      rightClone.style.overflow = 'hidden'
 
-      pageWrapper.appendChild(leftClone);
-      pageWrapper.appendChild(rightClone);
-      pdfContainer.appendChild(pageWrapper);
+      pageWrapper.appendChild(leftClone)
+      pageWrapper.appendChild(rightClone)
+      pdfContainer.appendChild(pageWrapper)
     }
 
     if (!pdfContainer.innerHTML.trim()) {
@@ -467,6 +477,55 @@ function DevtaVastuPage() {
     if (savedGroups.length > 1) {
       setSelectedTab(value)
       setRemoveOpen(!removeOpen)
+    }
+  }
+
+  const handleSubmit = async () => {
+    // const matchingItems = tabGroup.filter(item => savedGroups.includes(item.label));
+
+    // console.log("TabGroup : ",matchingItems)
+
+    const matchingItems = tabGroup
+      .filter(item => savedGroups.includes(item.label))
+      .map(({ label, points, centroid, snapToCentroid, inputDegree }) => ({
+        label,
+        points,
+        centroid,
+        snapToCentroid,
+        inputDegree
+      }))
+
+    console.log('==> ', matchingItems)
+    const payload = {
+      // "CompanyID": "string",
+      ProjectName: 'Sample Layout 4',
+      ClientName: '',
+      Address: 'string',
+      OpenArea: 0,
+      OpenAreaUnit: 'string',
+      CoveredArea: 0,
+      CoveredAreaUnit: 'string',
+      TotalArea: 0,
+      TotalAreaUnit: 'string',
+      Reference: 'string',
+      Remark: 'string',
+      Revision: 0,
+      AuditDate: '2025-02-09T07:31:22.727Z',
+      NecessaryFiles: [
+        {
+          OriginalFileName: fileInfo,
+          Base64File: previewUrl
+        }
+      ],
+      TabGroups: matchingItems
+    }
+
+    console.log("Payload : ",payload)
+    try {
+      const data  = await saveVastuLayouts(payload)
+      console.log("data result  : ",data)
+    } catch (error) {
+
     }
   }
 
@@ -535,6 +594,19 @@ function DevtaVastuPage() {
                         }}
                       >
                         Add New
+                      </LoadingButton>
+                    </div>
+                    <div>
+                      <LoadingButton
+                        variant='contained'
+                        onClick={handleSubmit}
+                        loadingPosition='start'
+                        type='submit'
+                        sx={{
+                          width: '150px'
+                        }}
+                      >
+                        Save
                       </LoadingButton>
                     </div>
                   </>
