@@ -48,8 +48,8 @@ const DEFAULT_POINTS = [
 const DevtaVastu = ({
   setPrintRef,
   setleftPrintRef,
-  width = 783,
-  height = 783,
+  width = 815,
+  height = 748,
   gridSize = 26,
   drawingMode = 'drawing',
   downloadPDFLoading,
@@ -205,7 +205,7 @@ const DevtaVastu = ({
 
 
   //   // Create PDF
-  //   const pdf = new jsPDF('l', 'pt', 'a3');
+  //   const pdf = new jsPDF('l', 'pt', 'a4');
   //   const pageWidth = pdf.internal.pageSize.getWidth();
   //   const pageHeight = pdf.internal.pageSize.getHeight();
 
@@ -265,7 +265,7 @@ const DevtaVastu = ({
     const secondRightImg = secondPageCanvas[1].toDataURL('image/jpeg', 1.0);
 
     // Create PDF in A3 size
-    const pdf = new jsPDF('l', 'pt', 'a3'); // 'a3' for A3 size
+    const pdf = new jsPDF('l', 'pt', 'a4'); // 'a4' for A3 size
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
 
@@ -1895,7 +1895,7 @@ const DevtaVastu = ({
           x={textX}
           y={textY}
           fontSize="20"
-          fill="black"
+          fill="var(--green-color)"
           style={{
             userSelect: 'none',
             cursor: 'default',
@@ -2165,21 +2165,20 @@ const DevtaVastu = ({
 
   return (
     <>
-      <div className="flex flex-row gap-4 py-4 justify-start">
-
-        <div ref={printRef} className='bg-white' >
-          <div className="flex-grow p-2" >
+      <div className="flex flex-row gap-1 py-4 justify-start ">
+        <div className='bg-white' >
+          <div ref={printRef} className="flex-grow " >
             <div className="flex ms-3.5">
-              {Array.from({ length: 23 }, (_, i) => (
+              {Array.from({ length: 24 }, (_, i) => (
                 <div
                   key={i}
-                  className="text-sm ms-3.5 w-5  text-primary flex items-center justify-center font-ea-n"
+                  className="text-sm ms-3.5 w-5 text-primary flex items-center justify-center font-ea-n"
                   style={{
                     userSelect: 'none',
                     cursor: 'default',
                     position: 'relative',
                     zIndex: 9,
-                    top: '5px'
+                    top: '0px'
                   }}
                 >
                   {i + 1}
@@ -2187,9 +2186,9 @@ const DevtaVastu = ({
               ))}
             </div>
 
-            <div className="relative flex">
+            <div className="relative flex top-[-15px]">
               <div className="flex flex-col mt-2">
-                {'ABCDEFGHIJKLMNOPQRSTUVW'.split('').map((letter, i) => (
+                {'ABCDEFGHIJKLMNOPQRSTUV'.split('').map((letter, i) => (
                   <div key={i} className="text-sm mb-3.5 w-5 text-primary flex items-center justify-center  font-ea-n" style={{
                     userSelect: 'none', // Prevent text selection
                     cursor: 'default', // Optional: Make the cursor non-interactive
@@ -2205,8 +2204,8 @@ const DevtaVastu = ({
             */}
               <svg
                 ref={svgRef}
-                width={780}
-                height={780}
+                width={width}
+                height={height}
                 className="cursor-pointer border border-gray-200 bg-white"
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
@@ -2751,7 +2750,7 @@ const DevtaVastu = ({
                               {direction && (
 
                                 <>
-                                  <rect
+                                  {/* <rect
                                     x={Math.cos(radian) > 0 ? labelX : labelX - 40}
                                     y={Math.cos(radian) > 0 ? labelY : labelY - 5}
                                     width={textWidth}
@@ -2760,11 +2759,11 @@ const DevtaVastu = ({
                                     fill="white"
                                     // stroke="black" // Optional: Add a border
                                     rx="5" // Optional: Rounded corners
-                                  />
+                                  /> */}
                                   <text
                                     x={Math.cos(radian) > 0 ? labelX + 15 : labelX - 20}
                                     y={Math.cos(radian) > 0 ? labelY + 15 : labelY + 10}
-                                    fontSize="16"
+                                    fontSize="20"
                                     fontWeight="500"
                                     fill="purple"
                                     transform={Math.cos(radian) > 0 ? `rotate(90, ${labelX}, ${labelY})` : `rotate(-90, ${labelX}, ${labelY})`}
@@ -2788,7 +2787,7 @@ const DevtaVastu = ({
                               {direction && (
 
                                 <>
-                                  <rect
+                                  {/* <rect
                                     x={Math.cos(radian) > 0 ? labelX - 40 : labelX + 0}
                                     y={Math.sin(radian) > 0 ? labelY - 25 : labelY + 0} // Move bottom text upward
                                     width={textWidth}
@@ -2797,11 +2796,11 @@ const DevtaVastu = ({
                                     fill="white"
                                     // stroke="black" // Optional: Add a border
                                     rx="5" // Optional: Rounded corners
-                                  />
+                                  /> */}
                                   <text
                                     x={Math.cos(radian) > 0 ? labelX - 20 : labelX + 20}
                                     y={Math.sin(radian) > 0 ? labelY - 10 : labelY + 15} // Move bottom text upward
-                                    fontSize="16"
+                                    fontSize="20"
                                     fontWeight="500"
                                     fill="purple"
                                     textAnchor="middle"
@@ -2943,7 +2942,7 @@ const DevtaVastu = ({
                 ))}
               </div> */}
               <div className="flex flex-col ms-2 mt-2">
-                {'ABCDEFGHIJKLMNOPQRSTUVW'.split('').map((letter, i) => (
+                {'ABCDEFGHIJKLMNOPQRSTUV'.split('').map((letter, i) => (
                   <div key={i} className="text-sm mb-3.5 w-5  text-primary flex items-center justify-center  font-ea-n" style={{
                     userSelect: 'none', // Prevent text selection
                     cursor: 'default', // Optional: Make the cursor non-interactive
@@ -2958,17 +2957,17 @@ const DevtaVastu = ({
               </div>
             </div>
 
-            <div className="flex mb-1 ms-3.5">
-              {Array.from({ length: 23 }, (_, i) => (
+            <div className="flex mb-1 ms-3.5 relative top-[-40px]">
+              {Array.from({ length: 24 }, (_, i) => (
                 <div
                   key={i}
                   className="text-sm ms-3.5 w-5  text-primary flex items-center justify-center  font-ea-n"
                   style={{
                     userSelect: 'none',
                     cursor: 'default',
-                    position: 'relative',
+                    // position: 'relative',
                     zIndex: 9,
-                    top: '-15px'
+                    // top: '-40px'
                   }}
                 >
                   {i + 1}
@@ -2977,8 +2976,8 @@ const DevtaVastu = ({
             </div>
           </div>
         </div>
-        <div class="w-px bg-gray-400"></div>
-        <div className="flex flex-col p-6 bg-white rounded-lg ">
+        {/* <div class="w-px bg-gray-400"></div> */}
+        <div className="flex flex-col p-0 bg-white rounded-lg ">
           <div ref={printRef1} id="hiddenDiv" className="hidden-print h-[100vh]">
             <div className="design-card">
               <img src="/path/to/your/logo.png" alt="Logo" className="card-logo" />
@@ -2996,7 +2995,7 @@ const DevtaVastu = ({
 
           {selectedGroup == "House Plan" && (
             <div
-              className="p-4 border-2 border-dashed border-gray-300 rounded-lg text-center hover:border-purple-500 transition-colors"
+              className="p-0 border-2 border-dashed border-gray-300 rounded-lg text-center hover:border-purple-500 transition-colors"
               onDragOver={(e) => e.preventDefault()}
               onDrop={handleFileUpload}
               style={{

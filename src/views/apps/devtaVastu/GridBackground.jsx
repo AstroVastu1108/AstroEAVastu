@@ -2,6 +2,7 @@ import React from 'react';
 
 const GridBackground = ({ width, height }) => {
   const gridSize = 9 * 3.78; // 9 mm in pixels
+  const strokeWidth = 0.5;
 
   return (
     <g>
@@ -41,8 +42,8 @@ const GridBackground = ({ width, height }) => {
             y1={0}
             x2={x}
             y2={height}
-            stroke="#000"
-            strokeWidth={0.25}
+            stroke="#cccccc"
+            strokeWidth={strokeWidth}
           />
         );
       })}
@@ -59,8 +60,8 @@ const GridBackground = ({ width, height }) => {
             y1={y}
             x2={width}
             y2={y}
-            stroke="#000"
-            strokeWidth={0.25}
+            stroke="#cccccc"
+            strokeWidth={strokeWidth}
           />
         );
       })}
