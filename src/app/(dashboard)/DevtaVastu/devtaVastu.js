@@ -10,16 +10,15 @@ import React, { useEffect, useRef, useState } from 'react'
 // import jsPDF from "jspdf";
 
 import html2pdf from 'html2pdf.js'
-import "./devtaVastu.css"
+import './devtaVastu.css'
 // GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.js';
-import * as pdfjsLib from 'pdfjs-dist';
-import pdfWorker from 'pdfjs-dist/build/pdf.worker.min.mjs?worker';
+import * as pdfjsLib from 'pdfjs-dist'
+import pdfWorker from 'pdfjs-dist/build/pdf.worker.min.mjs?worker'
 
 // Set the worker
-import { GlobalWorkerOptions } from 'pdfjs-dist/build/pdf';
+import { GlobalWorkerOptions } from 'pdfjs-dist/build/pdf'
 
-GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.worker.min.js';
-
+GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.worker.min.js'
 
 import DownloadPopUp from '@/components/devta-vastu/DownloadPDFPopup/DownloadPopUp'
 
@@ -27,6 +26,8 @@ import { toast } from 'react-toastify'
 import MovableTabs from '@/components/devta-vastu/DragableTabs/DragableTabs'
 import AddPagePopUp from '@/components/devta-vastu/AddPagePopUp/AddPagePopUp'
 import { TabsData } from './TabGroupsData'
+import { getVastuLayouts, saveVastuLayouts } from '@/app/Server/API/vastulayout'
+
 function DevtaVastuPage() {
   const [loading, setLoading] = useState(false)
   const [downloadPDFLoading, setDownloadPDFLoading] = useState(false)
@@ -44,6 +45,7 @@ function DevtaVastuPage() {
   const [savedGroups, setSavedGroups] = useState(['House Plan'])
   const [activeTab, setActiveTab] = useState(0)
   const [fileUploaded, setFileUploaded] = useState(false)
+  const [fileInfo,setFileInfo] = useState("")
   const [removeOpen, setRemoveOpen] = useState(false)
   const [selectedTab, setSelectedTab] = useState(null)
   const [downloadConfirm, setDownloadConfirm] = useState(false)
@@ -55,6 +57,14 @@ function DevtaVastuPage() {
   // const [points, setPoints] = useState(DEFAULT_POINTS);
 
   const [previewUrl, setPreviewUrl] = useState(null)
+
+  useEffect(() => {
+    const getLayouts = async () => {
+      const data = await getVastuLayouts()
+      console.log('Data : ', data)
+    }
+    getLayouts()
+  }, [])
 
   async function readFileData(uploadedFile) {
     const fileReader = new FileReader()
@@ -109,7 +119,8 @@ function DevtaVastuPage() {
 
     if (uploadedFile) {
       const fileType = uploadedFile.type
-
+      const name  = uploadedFile.name
+      setFileInfo(name)
       if (fileType.includes('image')) {
         // If the uploaded file is an image
         setFileUploaded(true)
@@ -239,10 +250,10 @@ function DevtaVastuPage() {
     setLoading(true)
 
     // Hide the scrollbar
-    document.body.style.overflow = 'hidden';
-    document.body.style.height = '100%';
-    document.body.style.position = 'fixed'; // Prevent scrolling
-    document.body.style.width = '100%'; // Ensure full width
+    document.body.style.overflow = 'hidden'
+    document.body.style.height = '100%'
+    document.body.style.position = 'fixed' // Prevent scrolling
+    document.body.style.width = '100%' // Ensure full width
 
     const options = {
       margin: 0,
@@ -278,7 +289,7 @@ function DevtaVastuPage() {
       pageWrapper.style.display = 'flex'
       pageWrapper.style.pageBreakAfter = 'always'
 
-      // Clone left section
+
       const leftClone = leftDivRef.cloneNode(true);
       leftClone.style.width = "20%";
       leftClone.style.height = "100%";
@@ -386,6 +397,55 @@ function DevtaVastuPage() {
     setActiveHouse(tabGroup.filter((e) => e.label == savedGroups[activeTab])[0]);
   }, [activeTab])
 
+  const handleSubmit = async () => {
+    // const matchingItems = tabGroup.filter(item => savedGroups.includes(item.label));
+
+    // console.log("TabGroup : ",matchingItems)
+
+    const matchingItems = tabGroup
+      .filter(item => savedGroups.includes(item.label))
+      .map(({ label, points, centroid, snapToCentroid, inputDegree }) => ({
+        label,
+        points,
+        centroid,
+        snapToCentroid,
+        inputDegree
+      }))
+
+    console.log('==> ', matchingItems)
+    const payload = {
+      // "CompanyID": "string",
+      ProjectName: 'Sample Layout 4',
+      ClientName: '',
+      Address: 'string',
+      OpenArea: 0,
+      OpenAreaUnit: 'string',
+      CoveredArea: 0,
+      CoveredAreaUnit: 'string',
+      TotalArea: 0,
+      TotalAreaUnit: 'string',
+      Reference: 'string',
+      Remark: 'string',
+      Revision: 0,
+      AuditDate: '2025-02-09T07:31:22.727Z',
+      NecessaryFiles: [
+        {
+          OriginalFileName: fileInfo,
+          Base64File: previewUrl
+        }
+      ],
+      TabGroups: matchingItems
+    }
+
+    console.log("Payload : ",payload)
+    try {
+      const data  = await saveVastuLayouts(payload)
+      console.log("data result  : ",data)
+    } catch (error) {
+
+    }
+  }
+
   return (
     <>
       {loading ? (
@@ -435,7 +495,6 @@ function DevtaVastuPage() {
                   </div>
                 </div>
               </div>
-
             </Card>
             <Card>
               {savedGroups.length > 0 && (
