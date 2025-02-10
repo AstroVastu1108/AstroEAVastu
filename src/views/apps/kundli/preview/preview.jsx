@@ -51,7 +51,7 @@ const Preview = ({ kundliData, setKundliData, kundliConstData, SetKundliConstDat
   //   if (printRef.current) {
   //     html2canvas(printRef.current).then(canvas => {
   //       const imgData = canvas.toDataURL('image/jpeg', 2); // Convert to JPEG with lower quality
-  //       const pdf = new jsPDF('p', 'mm', 'a3');
+  //       const pdf = new jsPDF('p', 'mm', 'a4');
   //       const imgWidth = 200; // A4 width in mm
   //       const pageHeight = 297; // A4 height in mm
   //       const imgHeight = (canvas.height * imgWidth) / canvas.width;

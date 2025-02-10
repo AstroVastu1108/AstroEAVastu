@@ -4,7 +4,7 @@ import PageTitle from '@/components/common/PageTitle/PageTitle'
 import DiscardPopUp from '@/components/devta-vastu/DiscardTabPopUp/DiscardPopUp'
 import DevtaVastu from '@/views/apps/devtaVastu/DevtaVastu'
 import { LoadingButton } from '@mui/lab'
-import { Card, MenuItem, Select, Tabs, Tab, IconButton } from '@mui/material'
+import { Card, MenuItem, Select, Tabs, Tab, IconButton, Menu } from '@mui/material'
 import React, { useEffect, useRef, useState } from 'react'
 // import html2canvas from 'html2canvas';
 // import jsPDF from "jspdf";
@@ -23,7 +23,11 @@ GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2
 import DownloadPopUp from '@/components/devta-vastu/DownloadPDFPopup/DownloadPopUp'
 
 import { toast } from 'react-toastify'
+import MovableTabs from '@/components/devta-vastu/DragableTabs/DragableTabs'
+import AddPagePopUp from '@/components/devta-vastu/AddPagePopUp/AddPagePopUp'
+import { TabsData } from './TabGroupsData'
 import { getVastuLayouts, saveVastuLayouts } from '@/app/Server/API/vastulayout'
+
 function DevtaVastuPage() {
   const [loading, setLoading] = useState(false)
   const [downloadPDFLoading, setDownloadPDFLoading] = useState(false)
@@ -35,137 +39,9 @@ function DevtaVastuPage() {
   //   setLoading(false)
   // }, [])
 
-  const DEFAULT_POINTS = [
-    { x: 220, y: 220 },
-    { x: 560, y: 220 },
-    { x: 560, y: 560 },
-    { x: 220, y: 560 }
-  ]
+  const [tabGroup, setTabGroup] = useState(TabsData)
 
-  const [tabGroup, setTabGroup] = useState([
-    {
-      label: 'House Plan',
-      points: DEFAULT_POINTS,
-      centroid: null,
-      setCentroid: null,
-      snapToCentroid: false,
-      setSnapToCentroid: null,
-      inputDegree: 0,
-      setInputDegree: null
-    },
-    {
-      label: 'Google Layout',
-      points: DEFAULT_POINTS,
-      centroid: null,
-      setCentroid: null,
-      snapToCentroid: false,
-      setSnapToCentroid: null,
-      inputDegree: 0,
-      setInputDegree: null
-    },
-    {
-      label: 'Griding With 16 Zone',
-      points: DEFAULT_POINTS,
-      centroid: null,
-      setCentroid: null,
-      snapToCentroid: false,
-      setSnapToCentroid: null,
-      inputDegree: 0,
-      setInputDegree: null
-    },
-    {
-      label: '16 Zone Bar Chart',
-      points: DEFAULT_POINTS,
-      centroid: null,
-      setCentroid: null,
-      snapToCentroid: false,
-      setSnapToCentroid: null,
-      inputDegree: 0,
-      setInputDegree: null
-    },
-    {
-      label: 'Civil Energy',
-      points: DEFAULT_POINTS,
-      centroid: null,
-      setCentroid: null,
-      snapToCentroid: false,
-      setSnapToCentroid: null,
-      inputDegree: 0,
-      setInputDegree: null
-    },
-    {
-      label: 'Devta Mark',
-      points: DEFAULT_POINTS,
-      centroid: null,
-      setCentroid: null,
-      snapToCentroid: false,
-      setSnapToCentroid: null,
-      inputDegree: 0,
-      setInputDegree: null
-    },
-    {
-      label: 'Devta Marking Color',
-      points: DEFAULT_POINTS,
-      centroid: null,
-      setCentroid: null,
-      snapToCentroid: false,
-      setSnapToCentroid: null,
-      inputDegree: 0,
-      setInputDegree: null
-    },
-    {
-      label: 'Devta bar chart',
-      points: DEFAULT_POINTS,
-      centroid: null,
-      setCentroid: null,
-      snapToCentroid: false,
-      setSnapToCentroid: null,
-      inputDegree: 0,
-      setInputDegree: null
-    },
-    {
-      label: 'Devta + Marma Points',
-      points: DEFAULT_POINTS,
-      centroid: null,
-      setCentroid: null,
-      snapToCentroid: false,
-      setSnapToCentroid: null,
-      inputDegree: 0,
-      setInputDegree: null
-    },
-    {
-      label: 'Custom Remedial Marking',
-      points: DEFAULT_POINTS,
-      centroid: null,
-      setCentroid: null,
-      snapToCentroid: false,
-      setSnapToCentroid: null,
-      inputDegree: 0,
-      setInputDegree: null
-    },
-    {
-      label: 'Site Energy audit',
-      points: DEFAULT_POINTS,
-      centroid: null,
-      setCentroid: null,
-      snapToCentroid: false,
-      setSnapToCentroid: null,
-      inputDegree: 0,
-      setInputDegree: null
-    },
-    {
-      label: 'Geo ',
-      points: DEFAULT_POINTS,
-      centroid: null,
-      setCentroid: null,
-      snapToCentroid: false,
-      setSnapToCentroid: null,
-      inputDegree: 0,
-      setInputDegree: null
-    }
-  ])
-
-  const [selectedGroup, setSelectedGroup] = useState('1')
+  // const [selectedGroup, setSelectedGroup] = useState(null)
   const [savedGroups, setSavedGroups] = useState(['House Plan'])
   const [activeTab, setActiveTab] = useState(0)
   const [fileUploaded, setFileUploaded] = useState(false)
@@ -173,6 +49,10 @@ function DevtaVastuPage() {
   const [removeOpen, setRemoveOpen] = useState(false)
   const [selectedTab, setSelectedTab] = useState(null)
   const [downloadConfirm, setDownloadConfirm] = useState(false)
+  const [AddPage, setAddPage] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [layoutCount] = useState(parseInt(localStorage.getItem("layoutCount") || "1"));
+  const openEl = Boolean(anchorEl);
 
   // const [points, setPoints] = useState(DEFAULT_POINTS);
 
@@ -281,10 +161,11 @@ function DevtaVastuPage() {
   }
 
   const downloadPDF = () => {
+    handleAnchorElClose();
     setDownloadConfirm(!downloadConfirm)
   }
 
-  const handleSave = () => {
+  const handleSave = (selectedGroup) => {
     if (!fileUploaded) {
       return toast.error('Please upload a file!!')
     }
@@ -298,12 +179,14 @@ function DevtaVastuPage() {
       })
       // console.log(tabGroup.filter(item => item.label !== selectedGroup));
       // setTabGroup(prev => prev.filter(item => item.label !== selectedGroup))
-      setSelectedGroup(1)
+      // setSelectedGroup(1)
       setActiveTab(savedGroups.length)
     }
   }
 
   const handleTabChange = (event, newValue) => {
+    console.log(activeTab)
+    console.log(newValue)
     setActiveTab(newValue)
   }
 
@@ -373,17 +256,18 @@ function DevtaVastuPage() {
     document.body.style.width = '100%' // Ensure full width
 
     const options = {
-      margin: 10,
+      margin: 0,
       filename: 'output.pdf',
       image: { type: 'jpeg', quality: 1.0 },
       html2canvas: { scale: 3, useCORS: true },
-      jsPDF: { unit: 'pt', format: 'a3', orientation: 'landscape' }
+      jsPDF: { unit: 'pt', format: 'a4', orientation: 'landscape' }
     }
 
     const pdfContainer = document.createElement('div')
 
     for (let i = 0; i < data.length; i++) {
-      const groupIndex = savedGroups.indexOf(data[i])
+      const groupIndex = tabGroup.findIndex(e => e.label == data[i]);
+      console.log(groupIndex);
 
       if (groupIndex === -1) {
         continue
@@ -405,23 +289,25 @@ function DevtaVastuPage() {
       pageWrapper.style.display = 'flex'
       pageWrapper.style.pageBreakAfter = 'always'
 
-      // Clone left section
-      const leftClone = leftDivRef.cloneNode(true)
-      leftClone.style.width = '30%'
-      leftClone.style.height = '100%'
-      leftClone.style.display = 'inline-block'
-      leftClone.style.overflow = 'hidden'
+
+      const leftClone = leftDivRef.cloneNode(true);
+      leftClone.style.width = "20%";
+      leftClone.style.height = "100%";
+      leftClone.style.display = "inline-block";
+      leftClone.style.overflow = "hidden";
+      // leftClone.style.border = "2px solid red";
 
       // Clone right section
-      const rightClone = rightDivRef.cloneNode(true)
-      rightClone.style.width = '70%'
-      rightClone.style.height = '100%'
-      rightClone.style.display = 'inline-block'
-      rightClone.style.overflow = 'hidden'
+      const rightClone = rightDivRef.cloneNode(true);
+      rightClone.style.width = "80%";
+      rightClone.style.height = "790px";
+      rightClone.style.display = "inline-block";
+      rightClone.style.overflow = "hidden";
+      // rightClone.style.border = "2px solid red";
 
-      pageWrapper.appendChild(leftClone)
-      pageWrapper.appendChild(rightClone)
-      pdfContainer.appendChild(pageWrapper)
+      pageWrapper.appendChild(rightClone);
+      pageWrapper.appendChild(leftClone);
+      pdfContainer.appendChild(pageWrapper);
     }
 
     if (!pdfContainer.innerHTML.trim()) {
@@ -480,6 +366,37 @@ function DevtaVastuPage() {
     }
   }
 
+  const handleAnchorElOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleAnchorElClose = (event) => {
+    setAnchorEl(null);
+  };
+
+  const AddNewlayout = () => {
+    handleAnchorElClose();
+    let layoutCount = parseInt(localStorage.getItem("layoutCount") || "1", 10);
+    layoutCount++;
+    localStorage.setItem("layoutCount", layoutCount);
+    window.open(`${process.env.NEXT_PUBLIC_APP_URL}/devta-vastu`, "_blank");
+  }
+
+  const handleAddNewPage = () => {
+    handleAnchorElClose();
+    if (!fileUploaded) {
+      return toast.error('Please upload a file!!')
+    }
+    setAddPage(!AddPage);
+  }
+
+  const [activeHouse, setActiveHouse] = useState(tabGroup.findIndex((e) => e.label == savedGroups[activeTab])[0]);
+
+  useEffect(() => {
+    console.log(tabGroup.findIndex((e) => e.label == savedGroups[activeTab]))
+    setActiveHouse(tabGroup.filter((e) => e.label == savedGroups[activeTab])[0]);
+  }, [activeTab])
+
   const handleSubmit = async () => {
     // const matchingItems = tabGroup.filter(item => savedGroups.includes(item.label));
 
@@ -537,148 +454,90 @@ function DevtaVastuPage() {
         <>
           <div className='flex flex-col gap-4'>
             <Card className='bg-primary'>
-              <PageTitle
-                // title={'Vastu Layout Griding'}
-                title={<span className='text-[var(--secondary-color)]'>New-Vastu-Layout-1</span>}
-                endCmp={
-                  <>
-                    {/* <div>
-                      <LoadingButton
-                        variant='outlined'
-                        // onClick={generatePDFsForAllGroups}
-                        onClick={downloadPDF}
-                        loading={loading}
-                        loadingPosition='start'
-                        type='submit'
-                        sx={{
-                          width: '200px'
+              <div className={`chart-name sticky top-0 z-50 font-ea-sb rounded-t flex justify-between md:items-center gap-y-2 lg:flex-row sm:flex-row flex-col`}>
+                {`New-Vastu-Layout-${layoutCount}`}
+                <div className={`flex justify-between md-items-center lg:gap-1 lg:flex-row md:flex-row gap-5 birthDateTime-Div`} >
+                  <div className='flex flex-row gap-1 chart-date items-center'>
+                    <span className='label font-ea-n'>Client Name: </span>
+                    <span className='value font-ea-sb'>Client1</span>
+                  </div>
+                  <div className='flex flex-row gap-1 chart-date items-center'>
+                    <span className='label font-ea-n'>Client ID: </span>
+                    <span className='value font-ea-sb'>#C2411-0FU0C-0HHJF-WLHA1</span>
+                  </div>
+
+                  <div className='flex justify-end'>
+                    <>
+                      <IconButton onClick={handleAnchorElOpen}>
+                        <i className={'tabler-dots-vertical bg-white'} />
+                      </IconButton>
+                      <Menu
+                        anchorEl={anchorEl}
+                        open={openEl}
+                        onClose={handleAnchorElClose}
+                        anchorOrigin={{
+                          vertical: 'bottom',
+                          horizontal: 'right',
+                        }}
+                        transformOrigin={{
+                          vertical: 'top',
+                          horizontal: 'right',
                         }}
                       >
-                        Download Report
-                      </LoadingButton>
-                    </div> */}
-                    <div>
-                      <Select
-                        labelId='tab-select-label'
-                        id='tab-select'
-                        value={selectedGroup || []}
-                        onChange={e => {
-                          setSelectedGroup(e.target.value)
-                        }}
-                        disableClearable
-                        size='small'
-                        sx={{
-                          width: '200px'
-                        }}
-                      >
-                        <MenuItem value='1' disabled>
-                          Select Group
+                        <MenuItem onClick={AddNewlayout} className="flex gap-1">
+                          <i className={'tabler-browser-check me-2'} />New Layout Project
                         </MenuItem>
-                        {tabGroup
-                          .filter(item => !savedGroups.includes(item.label)) // Filter out saved groups
-                          .map((item, index) => (
-                            <MenuItem key={index} value={item.label}>
-                              {item.label}
-                            </MenuItem>
-                          ))}
-                      </Select>
-                    </div>
-                    <div>
-                      <LoadingButton
-                        variant='contained'
-                        onClick={handleSave}
-                        loadingPosition='start'
-                        type='submit'
-                        sx={{
-                          width: '150px'
-                        }}
-                      >
-                        Add New
-                      </LoadingButton>
-                    </div>
-                    <div>
-                      <LoadingButton
-                        variant='contained'
-                        onClick={handleSubmit}
-                        loadingPosition='start'
-                        type='submit'
-                        sx={{
-                          width: '150px'
-                        }}
-                      >
-                        Save
-                      </LoadingButton>
-                    </div>
-                  </>
-                }
-              />
+                        <MenuItem onClick={handleAddNewPage} className="flex gap-1"><i className={'tabler-browser-check me-2'} />Add Page</MenuItem>
+                        <MenuItem onClick={() => { }} className="flex gap-1"><i className={'tabler-browser-check me-2'} />Save Layout Project</MenuItem>
+                        <MenuItem onClick={downloadPDF} className="flex gap-1"><i className={'tabler-browser-check me-2'} />Download Report</MenuItem>
+                      </Menu>
+                    </>
+                  </div>
+                </div>
+              </div>
             </Card>
             <Card>
               {savedGroups.length > 0 && (
                 <>
                   <div className='flex items-center space-x-2 overflow-auto'>
-                    <Tabs
-                      className='pt-1 px-1 flex-1 overflow-auto grid-tabs'
-                      value={activeTab}
-                      onChange={handleTabChange}
-                      aria-label='saved groups tabs'
-                      variant='scrollable' // Enables horizontal scrolling
-                      scrollButtons='false' // Shows scroll buttons when needed
-                    >
-                      {savedGroups.map((group, index) => (
-                        <Tab
-                          key={index}
-                          className='px-2'
-                          label={
-                            <div className='flex items-center gap-2 justify-between'>
-                              <span>{group}</span>
-                              <IconButton
-                                size='small'
-                                onClick={e => {
-                                  e.stopPropagation() // Prevent tab change on button click
-                                  handleRemoveOpen(group)
-                                  // handleRemoveGroup(group)
-                                }}
-                              >
-                                <i className='tabler-x text-xs'></i>
-                              </IconButton>
-                            </div>
-                          }
-                        />
-                      ))}
-                    </Tabs>
+                    <MovableTabs savedGroups={savedGroups} setSavedGroups={setSavedGroups} handleRemoveOpen={handleRemoveOpen} activeTab={activeTab} handleTabChange={handleTabChange} groups={tabGroup} setActiveTab={setActiveTab} />
                   </div>
 
-                  {/* Render DevtaVastu component for the active tab */}
                 </>
               )}
-              {savedGroups.map(
+              {activeHouse && tabGroup.map(
                 (group, index) =>
-                  activeTab === index && (
-                    <DevtaVastu
-                      key={index}
-                      setPrintRef={el => (printRefs.current[index] = el)}
-                      setleftPrintRef={el => (leftprintRefs.current[index] = el)}
-                      downloadPDFLoading={downloadPDFLoading}
-                      setDownloadPDFLoading={setDownloadPDFLoading}
-                      saveLoading={saveLoading}
-                      setSaveLoading={setSaveLoading}
-                      selectedGroup={group}
-                      fileUploaded={fileUploaded}
-                      setFileUploaded={setFileUploaded}
-                      handleFileUpload={handleFileUpload}
-                      previewUrl={previewUrl}
-                      setPreviewUrl={setPreviewUrl}
-                      points={tabGroup[index].points}
-                      setPoints={newPoints => handlePointsChange(index, newPoints)}
-                      centroid={tabGroup[index].centroid}
-                      setCentroid={newCentroid => handleCentroidChange(index, newCentroid)}
-                      snapToCentroid={tabGroup[index].snapToCentroid}
-                      setSnapToCentroid={newSnapToCentroid => handleSnapToCentroidChange(index, newSnapToCentroid)}
-                      inputDegree={tabGroup[index].inputDegree}
-                      setInputDegree={newInputDegree => handleInputDegreeChange(index, newInputDegree)}
-                      updatePointsForAllTabs={updatePointsForAllTabs}
-                    />
+                  activeHouse?.label === group.label && (
+                    <>
+                      {console.log(group)}
+                      {console.log(activeHouse)}
+                      {console.log(index)}
+                      <DevtaVastu
+                        key={index}
+                        setPrintRef={el => (printRefs.current[index] = el)}
+                        setleftPrintRef={el => (leftprintRefs.current[index] = el)}
+                        downloadPDFLoading={downloadPDFLoading}
+                        setDownloadPDFLoading={setDownloadPDFLoading}
+                        saveLoading={saveLoading}
+                        setSaveLoading={setSaveLoading}
+                        selectedGroup={group.label}
+                        fileUploaded={fileUploaded}
+                        setFileUploaded={setFileUploaded}
+                        handleFileUpload={handleFileUpload}
+                        previewUrl={previewUrl}
+                        setPreviewUrl={setPreviewUrl}
+                        // points={tabGroup.findIndex((e)=>e.label == savedGroups[index]).points}
+                        points={tabGroup[index].points}
+                        setPoints={newPoints => handlePointsChange(index, newPoints)}
+                        centroid={tabGroup[index].centroid}
+                        setCentroid={newCentroid => handleCentroidChange(index, newCentroid)}
+                        snapToCentroid={tabGroup[index].snapToCentroid}
+                        setSnapToCentroid={newSnapToCentroid => handleSnapToCentroidChange(index, newSnapToCentroid)}
+                        inputDegree={tabGroup[index].inputDegree}
+                        setInputDegree={newInputDegree => handleInputDegreeChange(index, newInputDegree)}
+                        updatePointsForAllTabs={updatePointsForAllTabs}
+                      />
+                    </>
                   )
               )}
             </Card>
@@ -697,6 +556,9 @@ function DevtaVastuPage() {
                 TabData={savedGroups}
                 handleSave={generatePDFsForAllGroups}
               />
+            )}
+            {AddPage && (
+              <AddPagePopUp open={AddPage} handleClose={handleAddNewPage} handleSave={handleSave} tabGroup={tabGroup} savedGroups={savedGroups} />
             )}
           </div>
         </>

@@ -1,8 +1,7 @@
 import { Button, createTheme, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, ThemeProvider } from '@mui/material';
 import React from 'react'
 
-function DiscardPopUp({ open, handleClose, TabData, handleRemoveGroup
-}) {
+function DiscardPopUp({ open, handleClose, TabData, handleRemoveGroup}) {
   const theme = createTheme({
     shape: {
       borderRadius: 8, // Set the global border radius here
