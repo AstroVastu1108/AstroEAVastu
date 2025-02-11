@@ -27,6 +27,7 @@ import MovableTabs from '@/components/devta-vastu/DragableTabs/DragableTabs'
 import AddPagePopUp from '@/components/devta-vastu/AddPagePopUp/AddPagePopUp'
 import { TabsData } from './TabGroupsData'
 import { getVastuLayouts, saveVastuLayouts } from '@/app/Server/API/vastulayout'
+import SaveLayoutPopUp from '@/components/devta-vastu/SaveLayoutPopUp/SaveLayoutPopUp'
 
 function DevtaVastuPage() {
   const [loading, setLoading] = useState(false)
@@ -50,6 +51,7 @@ function DevtaVastuPage() {
   const [selectedTab, setSelectedTab] = useState(null)
   const [downloadConfirm, setDownloadConfirm] = useState(false)
   const [AddPage, setAddPage] = useState(false);
+  const [LayoutSave, setLayoutSave] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [layoutCount] = useState(parseInt(localStorage.getItem("layoutCount") || "1"));
   const openEl = Boolean(anchorEl);
@@ -390,6 +392,14 @@ function DevtaVastuPage() {
     setAddPage(!AddPage);
   }
 
+  const handleSaveLayoutToggle = () => {
+    handleAnchorElClose();
+    // if (!fileUploaded) {
+    //   return toast.error('Please upload a file!!')
+    // }
+    setLayoutSave(!LayoutSave);
+  }
+
   const [activeHouse, setActiveHouse] = useState(tabGroup.findIndex((e) => e.label == savedGroups[activeTab])[0]);
 
   useEffect(() => {
@@ -488,7 +498,7 @@ function DevtaVastuPage() {
                           <i className={'tabler-browser-check me-2'} />New Layout Project
                         </MenuItem>
                         <MenuItem onClick={handleAddNewPage} className="flex gap-1"><i className={'tabler-browser-check me-2'} />Add Page</MenuItem>
-                        <MenuItem onClick={() => { }} className="flex gap-1"><i className={'tabler-browser-check me-2'} />Save Layout Project</MenuItem>
+                        <MenuItem onClick={handleSaveLayoutToggle} className="flex gap-1"><i className={'tabler-browser-check me-2'} />Save Layout Project</MenuItem>
                         <MenuItem onClick={downloadPDF} className="flex gap-1"><i className={'tabler-browser-check me-2'} />Download Report</MenuItem>
                       </Menu>
                     </>
@@ -559,6 +569,9 @@ function DevtaVastuPage() {
             )}
             {AddPage && (
               <AddPagePopUp open={AddPage} handleClose={handleAddNewPage} handleSave={handleSave} tabGroup={tabGroup} savedGroups={savedGroups} />
+            )}
+            {LayoutSave && (
+              <SaveLayoutPopUp open={LayoutSave} handleClose={handleSaveLayoutToggle} handleSave={()=>{}} savedGroups={savedGroups} />
             )}
           </div>
         </>

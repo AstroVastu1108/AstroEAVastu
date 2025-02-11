@@ -4,3 +4,8 @@
     background-color: var(--secondary-soft-color);
   }
 }
+
+.MuiFormLabel-root {
+  font-family: var(--primary-font-n) !important;
+  font-size: 0.9375rem !important;
+}

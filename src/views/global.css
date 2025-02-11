@@ -15,3 +15,13 @@
 body {
   font-family: var(--primary-font-n);
 }
+
+.MuiInputBase-input {
+  font: unset;
+  font-family: var(--primary-font-n);
+}
+
+.MuiFormLabel-root {
+  font-family: var(--primary-font-n) !important;
+  font-size: 0.9375rem !important;
+}
