@@ -364,8 +364,6 @@ function AddKundliPopUp({ open, handleAddClose, getAllKundli, userData, setUserD
                   onChange={e => handleInputChange('Gender', e.target.value, 'Gender')}
                   label="Gender"
                   size={TextFeildSize}
-
-
                 >
                   <MenuItem value="male">Male</MenuItem>
                   <MenuItem value="female">Female</MenuItem>
