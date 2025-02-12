@@ -408,6 +408,7 @@ function DevtaVastuPage() {
   }, [activeTab])
 
   const handleSubmit = async () => {
+   
     // const matchingItems = tabGroup.filter(item => savedGroups.includes(item.label));
 
     // console.log("TabGroup : ",matchingItems)
@@ -449,7 +450,7 @@ function DevtaVastuPage() {
 
     console.log("Payload : ",payload)
     try {
-      const data  = await saveVastuLayouts(payload)
+      const data  = await saveVastuLayouts(payload);
       console.log("data result  : ",data)
     } catch (error) {
 
@@ -519,9 +520,6 @@ function DevtaVastuPage() {
                 (group, index) =>
                   activeHouse?.label === group.label && (
                     <>
-                      {console.log(group)}
-                      {console.log(activeHouse)}
-                      {console.log(index)}
                       <DevtaVastu
                         key={index}
                         setPrintRef={el => (printRefs.current[index] = el)}
@@ -571,7 +569,7 @@ function DevtaVastuPage() {
               <AddPagePopUp open={AddPage} handleClose={handleAddNewPage} handleSave={handleSave} tabGroup={tabGroup} savedGroups={savedGroups} />
             )}
             {LayoutSave && (
-              <SaveLayoutPopUp open={LayoutSave} handleClose={handleSaveLayoutToggle} handleSave={()=>{}} savedGroups={savedGroups} />
+              <SaveLayoutPopUp open={LayoutSave} fileInfo={fileInfo} handleClose={handleSaveLayoutToggle} tabGroup={tabGroup} savedGroups={savedGroups} previewUrl={previewUrl} />
             )}
           </div>
         </>

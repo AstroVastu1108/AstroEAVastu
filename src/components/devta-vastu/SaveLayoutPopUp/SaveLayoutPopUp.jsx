@@ -14,13 +14,26 @@ import {
 } from '@mui/material'
 import React, { useEffect, useRef, useState } from 'react'
 
-function SaveLayoutPopUp({ open, handleClose, handleSave }) {
+function SaveLayoutPopUp({ open, handleClose, tabGroup, savedGroups, previewUrl, fileInfo }) {
   const theme = createTheme({
     shape: {
       borderRadius: 8 // Set the global border radius here
     }
   })
-  const [formData, setFormData] = useState(null)
+  const [formData, setFormData] = useState({
+    ProjectName: '',
+    clientId: '',
+    Address: '',
+    OAU: '',
+    OAUV: '',
+    CAU: '',
+    CAUV: '',
+    TAU: '',
+    TAUV: '',
+    Reference: '',
+    Remark: '',
+    Rivision: ''
+  })
   const [ClientData, setClientData] = useState([
     { clientId: 'CLT001', clientName: 'Alpha Corp' },
     { clientId: 'CLT002', clientName: 'Beta Enterprises' },
@@ -28,17 +41,27 @@ function SaveLayoutPopUp({ open, handleClose, handleSave }) {
     { clientId: 'CLT004', clientName: 'Delta Innovations' },
     { clientId: 'CLT005', clientName: 'Epsilon Systems' }
   ])
+  const [unitData, setUnitData] = useState([
+    { Id: 'SF', Name: 'Square Feet' },
+    { Id: 'SM', Name: 'Square Meter' },
+    { Id: 'SY', Name: 'Square Yard' },
+    { Id: 'H', Name: 'Hector' }
+  ])
   const [errors, setErrors] = useState({
     ProjectName: false,
     clientId: false,
     Address: false,
     OAU: false,
+    OAUV: false,
     CAU: false,
+    CAUV: false,
     TAU: false,
+    TAUV: false,
     Reference: false,
     Remark: false,
     Rivision: false
   })
+  const [RequiredFields] = useState(['ProjectName', 'clientId', 'Address', 'OAU', 'CAU', 'TAU'])
   const inputRef = useRef(null)
 
   useEffect(() => {
@@ -78,6 +101,72 @@ function SaveLayoutPopUp({ open, handleClose, handleSave }) {
     }))
   }
 
+  const handleLayoutSave = async () => {
+    var flag = 0
+    RequiredFields.map(e => {
+      if (formData[e] == '') {
+        setErrors(prev => ({
+          ...prev,
+          [`${e}`]: true
+        }))
+        flag = 1
+      }
+    })
+
+    if (flag == 1) {
+      return
+    }
+
+    const hasErrors = Object.values(errors).some(error => error === true)
+
+    if (hasErrors) {
+      // Display an error message or alert
+      // toastDisplayer("error", "Please fill out all required fields correctly before submitting.");
+      return // Prevent submission
+    }
+
+    const matchingItems = tabGroup
+      .filter(item => savedGroups.includes(item.label))
+      .map(({ label, points, centroid, snapToCentroid, inputDegree }) => ({
+        label,
+        points,
+        centroid,
+        snapToCentroid,
+        inputDegree
+      }))
+
+    console.log('==> ', matchingItems)
+    const payload = {
+      // "CompanyID": "string",
+      ProjectName: formData?.ProjectName,
+      ClientName: formData?.clientId,
+      Address: formData?.Address,
+      OpenArea: formData?.OAUV,
+      OpenAreaUnit: formData?.OAU,
+      CoveredArea: formData?.CAUV,
+      CoveredAreaUnit: formData?.CAU,
+      TotalArea: formData?.TAUV,
+      TotalAreaUnit: formData?.TAU,
+      Reference: formData?.Reference,
+      Remark: formData?.Remark,
+      Revision: formData?.Revision,
+      AuditDate: '2025-02-09T07:31:22.727Z',
+      NecessaryFiles: [
+        {
+          OriginalFileName: fileInfo,
+          Base64File: previewUrl
+        }
+      ],
+      TabGroups: matchingItems
+    }
+
+    console.log('Payload : ', payload)
+    try {
+      const data = await saveVastuLayouts(payload)
+      console.log('data result  : ', data)
+    } catch (error) {}
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <Dialog
@@ -97,6 +186,7 @@ function SaveLayoutPopUp({ open, handleClose, handleSave }) {
             //     handleSave(selectedGroup)
             //     handleClose()
             //   }
+            handleLayoutSave()
           },
           sx: {
             width: '700px', // Set your custom width here
@@ -120,10 +210,10 @@ function SaveLayoutPopUp({ open, handleClose, handleSave }) {
             </IconButton>
           </div>
         </DialogTitle>
-        <DialogContent className='px-6 pt-3'>
+        <DialogContent className='px-6 pt-2'>
           <DialogContentText>
             <Grid className='mt-1' container columnSpacing={3} rowSpacing={2}>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={12}>
                 <TextField
                   fullWidth
                   label='Project Name'
@@ -132,7 +222,7 @@ function SaveLayoutPopUp({ open, handleClose, handleSave }) {
                   value={formData?.ProjectName}
                   //   size={TextFeildSize}
                   onChange={e => {
-                    handleInputChange('ProjectName', e.target.value, 'ProjectName')
+                    handleInputChange('ProjectName', e.target.value, 'ProjectName', true)
                   }}
                   error={errors.ProjectName}
                 />
@@ -142,53 +232,101 @@ function SaveLayoutPopUp({ open, handleClose, handleSave }) {
                   options={ClientData}
                   getOptionLabel={option => option.clientName} // Extracts label text
                   getOptionKey={option => option.clientId}
-                  value={formData?.clientId}
+                  value={formData?.clientId || null}
                   onChange={(e, newValue) => {
-                    handleInputChange('clientId', newValue, 'clientId')
+                    handleInputChange('clientId', newValue, 'clientId', true)
                     // setSelectedGroup(newValue ? newValue.label : null)
                     // setGroupError(false)
                   }}
-                  renderInput={params => <TextField {...params} label='Select Client' error={errors?.clientId} />}
+                  renderInput={params => <TextField {...params} label='Client' error={errors?.clientId} />}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label='Address'
+                  label='Client Address'
+                  title='Client Address'
                   value={formData?.Address}
                   onChange={e => {
-                    handleInputChange('Address', e.target.value, 'Address')
+                    handleInputChange('Address', e.target.value, 'Address', true)
                   }}
+                  error={errors.Address}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Autocomplete
+                  options={unitData}
+                  getOptionLabel={option => option.Name} // Extracts label text
+                  getOptionKey={option => option.Id}
+                  value={formData?.OAU || null}
+                  onChange={(e, newValue) => {
+                    handleInputChange('OAU', newValue, 'OAU', true)
+                    // setSelectedGroup(newValue ? newValue.label : null)
+                    // setGroupError(false)
+                  }}
+                  renderInput={params => <TextField {...params} label='Open Area & Unit' error={errors?.OAU} />}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label='Open Area & Unit'
-                  value={formData?.OAU}
+                  label='Open Area & Unit Value'
+                  value={formData?.OAUV}
                   onChange={e => {
-                    handleInputChange('OAU', e.target.value, 'OAU')
+                    handleInputChange('OAUV', e.target.value, 'OAUV', true)
                   }}
+                  error={errors.OAU}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Autocomplete
+                  options={unitData}
+                  getOptionLabel={option => option.Name} // Extracts label text
+                  getOptionKey={option => option.Id}
+                  value={formData?.CAU || null}
+                  onChange={(e, newValue) => {
+                    handleInputChange('CAU', newValue, 'CAU', true)
+                    // setSelectedGroup(newValue ? newValue.label : null)
+                    // setGroupError(false)
+                  }}
+                  renderInput={params => <TextField {...params} label='Covered Area & Unit' error={errors?.CAU} />}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label='Covered Area & Unit'
-                  value={formData?.CAU}
+                  label='Covered Area & Unit Value'
+                  value={formData?.CAUV}
                   onChange={e => {
-                    handleInputChange('CAU', e.target.value, 'CAU')
+                    handleInputChange('CAUV', e.target.value, 'CAUV', true)
                   }}
+                  error={errors.CAU}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
+                <Autocomplete
+                  options={unitData}
+                  getOptionLabel={option => option.Name} // Extracts label text
+                  getOptionKey={option => option.Id}
+                  value={formData?.TAU || null}
+                  onChange={(e, newValue) => {
+                    handleInputChange('TAU', newValue, 'TAU', true)
+                    // setSelectedGroup(newValue ? newValue.label : null)
+                    // setGroupError(false)
+                  }}
+                  renderInput={params => <TextField {...params} label='Total Area & Unit' error={errors?.TAU} />}
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label='Total Area & Unit'
-                  value={formData?.TAU}
+                  label='Total Area & Unit Value'
+                  value={formData?.TAUV}
                   onChange={e => {
-                    handleInputChange('TAU', e.target.value, 'TAU')
+                    handleInputChange('TAUV', e.target.value, 'TAUV', true)
                   }}
+                  error={errors.TAU}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -197,18 +335,9 @@ function SaveLayoutPopUp({ open, handleClose, handleSave }) {
                   label='Reference'
                   value={formData?.Reference}
                   onChange={e => {
-                    handleInputChange('Reference', e.target.value, 'Reference')
+                    handleInputChange('Reference', e.target.value, 'Reference', true)
                   }}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  label='Remark'
-                  value={formData?.Remark}
-                  onChange={e => {
-                    handleInputChange('Remark', e.target.value, 'Remark')
-                  }}
+                  error={errors.Reference}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -217,8 +346,20 @@ function SaveLayoutPopUp({ open, handleClose, handleSave }) {
                   label='Rivision'
                   value={formData?.Rivision}
                   onChange={e => {
-                    handleInputChange('Rivision', e.target.value, 'Rivision')
+                    handleInputChange('Rivision', e.target.value, 'Rivision', true)
                   }}
+                  error={errors.Rivision}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <TextField
+                  fullWidth
+                  label='Remark'
+                  value={formData?.Remark}
+                  onChange={e => {
+                    handleInputChange('Remark', e.target.value, 'Remark', true)
+                  }}
+                  error={errors.Remark}
                 />
               </Grid>
             </Grid>
