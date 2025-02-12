@@ -41,7 +41,8 @@ export const navigation = [
   },
   {
     label: 'Vastu Layout Griding',
-    href: '/devta-vastu',
+    // href: '/devta-vastu',
+    href: '/vastu-list',
     icon: 'tabler-brand-graphql'
   },
   // {

@@ -12,40 +12,7 @@ const httpsAgent = new https.Agent({ rejectUnauthorized: false });
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL; // or replace with the correct environment variable
 
 const API_URL = process.env.NEXT_PUBLIC_APIURL1;
-async function fetchSecureData(DID,SecureRoute,ClientID,InstanceID) {
-  try {
-    const response = await axios.get(`${API_URL}/Auth/ServerTest`, {
-      // headers: {
-      headers: {
-         "M-DID": DID,
-         "M-CID": ClientID,
-         "M-IID": InstanceID,
-         "M-SECURE-ROUTE": SecureRoute
-        },
-      // headers: { Authorization: `Bearer ${accessToken}` },
-      // httpsAgent,
-    });
-    return response;
-  } catch (error) {
-    if (error.response?.status === 401) {
-      throw new Error('Token expired');
-    }
-    throw error;
-  }
-}
 
-async function refreshTokenGet(refreshToken, accessToken) {
-  try {
-    const response = await axios.post(`${API_URL}/Auth/refresh`, {
-      accessToken,
-      refreshToken,
-    }, { httpsAgent });
-
-    return response.data.result.accessToken;
-  } catch (error) {
-    throw new Error('Token refresh failed');
-  }
-}
 
 export default async function Page({ params }) {
 
@@ -118,6 +85,13 @@ export default async function Page({ params }) {
           const idSegment = slug.split('/')[1];
           return slug.startsWith(basePath) && idSegment;
         }
+
+        if (route.path.startsWith("devta-vastu/")) {
+          const basePath = "devta-vastu";
+          const idSegment = slug.split('/')[1];
+          return slug.startsWith(basePath) && idSegment;
+        }
+
         return false;
       });
 

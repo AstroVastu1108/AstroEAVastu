@@ -2166,6 +2166,7 @@ const DevtaVastu = ({
   return (
     <>
       <div className="flex flex-row gap-1 py-4 justify-start ">
+      {/* <div className="flex flex-row gap-1 py-4 justify-start "> */}
         <div className='bg-white' >
           <div ref={printRef} className="flex-grow " >
             <div className="flex ms-3.5">

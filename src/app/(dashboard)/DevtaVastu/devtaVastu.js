@@ -26,26 +26,81 @@ import { toast } from 'react-toastify'
 import MovableTabs from '@/components/devta-vastu/DragableTabs/DragableTabs'
 import AddPagePopUp from '@/components/devta-vastu/AddPagePopUp/AddPagePopUp'
 import { TabsData } from './TabGroupsData'
-import { getVastuLayouts, saveVastuLayouts } from '@/app/Server/API/vastulayout'
-
-function DevtaVastuPage() {
+import { getVastuLayouts, getVastuLayoutsByID, saveVastuLayouts } from '@/app/Server/API/vastulayout'
+import { useRouter } from "next/navigation";
+function DevtaVastuPage({id}) {
+  const router = useRouter();
   const [loading, setLoading] = useState(false)
   const [downloadPDFLoading, setDownloadPDFLoading] = useState(false)
   const [saveLoading, setSaveLoading] = useState(false)
   const printRefs = useRef([])
   const leftprintRefs = useRef([])
-
-  // useEffect(() => {
-  //   setLoading(false)
-  // }, [])
-
+  const [vastuLayoutData,setVastuLayoutData] = useState([])
+  const [fileUploaded, setFileUploaded] = useState(false)
+  const [fileInfo,setFileInfo] = useState("")
+  const [previewUrl, setPreviewUrl] = useState(null)
   const [tabGroup, setTabGroup] = useState(TabsData)
 
   // const [selectedGroup, setSelectedGroup] = useState(null)
   const [savedGroups, setSavedGroups] = useState(['House Plan'])
+  useEffect(() => {
+    if(id != "NEW"){
+      getVastuData(id);
+    }
+    }, []);
+
+    // Func
+    const getVastuData = async (kId) => {
+      if (kId != "undefined" && kId != null) {
+        setLoading(true);
+        const res = await getVastuLayoutsByID(kId);
+        setLoading(false);
+        if (res.hasError) {
+          router.push('/vastu-list')
+        } else {
+          // console.log("res : ",res.responseData?.Result?.VastuLayout)
+          setVastuLayoutData(res.responseData?.Result?.VastuLayout)
+          const incomingData = res.responseData?.Result?.VastuLayout?.TabGroups
+          const updatedTabGroup = tabGroup.map((tab) => {
+            const matchingData = incomingData?.find((data) => data.Label === tab.label);
+
+            if (matchingData) {
+              return {
+                ...tab,
+                points: matchingData.Points.map((point) => ({
+                  x: point.X, // Convert X to x
+                  y: point.Y  // Convert Y to y
+                })),
+                centroid: {x:matchingData.Centroid?.X,y:matchingData.Centroid?.Y},
+                snapToCentroid: matchingData.SnapToCentroid,
+                inputDegree: matchingData.InputDegree
+              };
+            }
+            return tab;
+          });
+
+          const matchedLabels = incomingData?.map((data) => data.Label)
+            .filter((label) => updatedTabGroup.some((tab) => tab.label === label));
+
+          setTabGroup(updatedTabGroup);
+          setSavedGroups(matchedLabels);
+          // console.log("updatedTabGroup : ",updatedTabGroup)
+          // console.log("matchedLabels : ",matchedLabels)
+          setFileUploaded(true)
+          setPreviewUrl(res.responseData?.Result?.VastuLayout?.NecessaryFiles[0]?.Base64File)
+          setFileInfo(res.responseData?.Result?.VastuLayout?.NecessaryFiles[0]?.OriginalFileName)
+        }
+      } else {
+        router.push('/vastu-list')
+        // return toastDisplayer("error", "Kundli Id not found.");
+      }
+
+    }
+
+
   const [activeTab, setActiveTab] = useState(0)
-  const [fileUploaded, setFileUploaded] = useState(false)
-  const [fileInfo,setFileInfo] = useState("")
+  // const [fileUploaded, setFileUploaded] = useState(false)
+  // const [fileInfo,setFileInfo] = useState("")
   const [removeOpen, setRemoveOpen] = useState(false)
   const [selectedTab, setSelectedTab] = useState(null)
   const [downloadConfirm, setDownloadConfirm] = useState(false)
@@ -56,15 +111,15 @@ function DevtaVastuPage() {
 
   // const [points, setPoints] = useState(DEFAULT_POINTS);
 
-  const [previewUrl, setPreviewUrl] = useState(null)
+  // const [previewUrl, setPreviewUrl] = useState(null)
 
-  useEffect(() => {
-    const getLayouts = async () => {
-      const data = await getVastuLayouts()
-      console.log('Data : ', data)
-    }
-    getLayouts()
-  }, [])
+  // useEffect(() => {
+  //   const getLayouts = async () => {
+  //     const data = await getVastuLayouts()
+  //     console.log('Data : ', data)
+  //   }
+  //   getLayouts()
+  // }, [])
 
   async function readFileData(uploadedFile) {
     const fileReader = new FileReader()
@@ -455,15 +510,15 @@ function DevtaVastuPage() {
           <div className='flex flex-col gap-4'>
             <Card className='bg-primary'>
               <div className={`chart-name sticky top-0 z-50 font-ea-sb rounded-t flex justify-between md:items-center gap-y-2 lg:flex-row sm:flex-row flex-col`}>
-                {`New-Vastu-Layout-${layoutCount}`}
+                {vastuLayoutData?.ProjectName ? vastuLayoutData?.ProjectName : `New-Vastu-Layout-${layoutCount}`}
                 <div className={`flex justify-between md-items-center lg:gap-1 lg:flex-row md:flex-row gap-5 birthDateTime-Div`} >
                   <div className='flex flex-row gap-1 chart-date items-center'>
                     <span className='label font-ea-n'>Client Name: </span>
-                    <span className='value font-ea-sb'>Client1</span>
+                    <span className='value font-ea-sb'>{vastuLayoutData?.ClientName ? vastuLayoutData?.ClientName : "--"}</span>
                   </div>
                   <div className='flex flex-row gap-1 chart-date items-center'>
                     <span className='label font-ea-n'>Client ID: </span>
-                    <span className='value font-ea-sb'>#C2411-0FU0C-0HHJF-WLHA1</span>
+                    <span className='value font-ea-sb'>{vastuLayoutData?.VPID ? "#"+vastuLayoutData?.VPID : "#--"}</span>
                   </div>
 
                   <div className='flex justify-end'>
