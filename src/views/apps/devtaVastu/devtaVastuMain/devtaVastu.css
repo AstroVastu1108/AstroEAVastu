@@ -1,0 +1,76 @@
+.VastuLayoutGrid__highlight-row {
+  background-color: var(--secondary-color); /* For highlighting rows */
+}
+
+.VastuLayoutGrid__row--hover {
+  color: var(--primary-color);
+  background-color: var(--secondary-soft-color);
+}
+
+
+.KundliList {
+  .MuiDataGrid-toolbarContainer {
+    display: flex;
+    /* justify-content: end; */
+    /* padding: 12px 0px; */
+  }
+
+  .rowheader {
+    background-color: var(--primary-color);
+    color: #fff;
+  }
+}
+
+.CardContent {
+  padding: 0px !important;
+}
+
+.VastuLayoutGrid {
+  border: none !important;
+  /* border-radius: 0px; */
+  /* gap: 1.25rem; */
+  /* padding: 0rem 1.25rem; */
+  .MuiGrid-root{
+    width: 100% !important;
+  }
+
+  .SearchBar {
+    border: 1px solid var(--border-color);
+    padding: 0.3rem 0.8em;
+    border-radius: 4px;
+
+    .MuiInput-underline::before {
+      border: none;
+
+      -webkit-transition: none;
+      transition: none;
+    }
+  }
+
+}
+
+.SearchBar {
+  border: 1px solid var(--border-color);
+  padding: 0.3rem 0.8em;
+  border-radius: 4px;
+
+  .MuiInput-underline::before {
+    border: none;
+
+    -webkit-transition: none;
+    transition: none;
+  }
+}
+
+
+.MuiDataGrid-cell:focus-within,
+.MuiDataGrid-cell:focus,
+.MuiDataGrid-cell--editing {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.PageHeader
+.MuiInputAdornment-root{
+  margin-right: 4px;
+}
