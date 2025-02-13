@@ -1,3 +1,4 @@
+import { saveVastuLayouts } from '@/app/Server/API/vastulayout'
 import {
   Autocomplete,
   Button,
@@ -13,8 +14,10 @@ import {
   ThemeProvider
 } from '@mui/material'
 import React, { useEffect, useRef, useState } from 'react'
-
-function SaveLayoutPopUp({ open, handleClose, tabGroup, savedGroups, previewUrl, fileInfo }) {
+import { useRouter } from "next/navigation";
+import { toast } from 'react-toastify'
+function SaveLayoutPopUp({ open, handleClose, tabGroup, savedGroups, previewUrl, fileInfo,setLoading }) {
+  const router = useRouter();
   const theme = createTheme({
     shape: {
       borderRadius: 8 // Set the global border radius here
@@ -102,6 +105,7 @@ function SaveLayoutPopUp({ open, handleClose, tabGroup, savedGroups, previewUrl,
   }
 
   const handleLayoutSave = async () => {
+
     var flag = 0
     RequiredFields.map(e => {
       if (formData[e] == '') {
@@ -139,14 +143,14 @@ function SaveLayoutPopUp({ open, handleClose, tabGroup, savedGroups, previewUrl,
     const payload = {
       // "CompanyID": "string",
       ProjectName: formData?.ProjectName,
-      ClientName: formData?.clientId,
+      ClientName: formData?.clientId?.clientName,
       Address: formData?.Address,
       OpenArea: formData?.OAUV,
-      OpenAreaUnit: formData?.OAU,
+      OpenAreaUnit: formData?.OAU?.Id,
       CoveredArea: formData?.CAUV,
-      CoveredAreaUnit: formData?.CAU,
+      CoveredAreaUnit: formData?.CAU?.Id,
       TotalArea: formData?.TAUV,
-      TotalAreaUnit: formData?.TAU,
+      TotalAreaUnit: formData?.TAU?.Id,
       Reference: formData?.Reference,
       Remark: formData?.Remark,
       Revision: formData?.Revision,
@@ -162,9 +166,22 @@ function SaveLayoutPopUp({ open, handleClose, tabGroup, savedGroups, previewUrl,
 
     console.log('Payload : ', payload)
     try {
+      setLoading(true);
       const data = await saveVastuLayouts(payload)
       console.log('data result  : ', data)
-    } catch (error) {}
+      if(data.hasError){
+        setLoading(false)
+        return toast.error(data.error)
+      }
+
+      router.push(`/devta-vastu/${data?.responseData?.Result?.VPID}`)
+      handleClose()
+      return toast.success("Vastu Griding Saved Successfully.")
+
+    } catch (error) {
+      setLoading(false)
+      return toast.error(error)
+    }
   }
 
   return (

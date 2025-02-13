@@ -464,7 +464,7 @@ function DevtaVastuPage({id}) {
   }, [activeTab])
 
   const handleSubmit = async () => {
-   
+
     // const matchingItems = tabGroup.filter(item => savedGroups.includes(item.label));
 
     // console.log("TabGroup : ",matchingItems)
@@ -625,7 +625,7 @@ function DevtaVastuPage({id}) {
               <AddPagePopUp open={AddPage} handleClose={handleAddNewPage} handleSave={handleSave} tabGroup={tabGroup} savedGroups={savedGroups} />
             )}
             {LayoutSave && (
-              <SaveLayoutPopUp open={LayoutSave} fileInfo={fileInfo} handleClose={handleSaveLayoutToggle} tabGroup={tabGroup} savedGroups={savedGroups} previewUrl={previewUrl} />
+              <SaveLayoutPopUp open={LayoutSave} fileInfo={fileInfo} handleClose={handleSaveLayoutToggle} tabGroup={tabGroup} savedGroups={savedGroups} previewUrl={previewUrl} setLoading={setLoading} />
             )}
           </div>
         </>
