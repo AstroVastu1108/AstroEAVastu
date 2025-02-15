@@ -1,4 +1,4 @@
-import { saveVastuLayouts } from '@/app/Server/API/vastulayout'
+import { editVastuLayouts, saveVastuLayouts } from '@/app/Server/API/vastulayout'
 import {
   Autocomplete,
   Button,
@@ -16,27 +16,15 @@ import {
 import React, { useEffect, useRef, useState } from 'react'
 import { useRouter } from "next/navigation";
 import { toast } from 'react-toastify'
-function SaveLayoutPopUp({ open, handleClose, tabGroup, savedGroups, previewUrl, fileInfo,setLoading }) {
+function SaveLayoutPopUp({ open, handleClose, tabGroup, layoutData, setLayoutData, savedGroups, previewUrl, fileInfo,setLoading }) {
   const router = useRouter();
+  console.log("layoutData : ",layoutData)
   const theme = createTheme({
     shape: {
       borderRadius: 8 // Set the global border radius here
     }
   })
-  const [formData, setFormData] = useState({
-    ProjectName: '',
-    clientId: '',
-    Address: '',
-    OAU: '',
-    OAUV: '',
-    CAU: '',
-    CAUV: '',
-    TAU: '',
-    TAUV: '',
-    Reference: '',
-    Remark: '',
-    Rivision: ''
-  })
+  const [formData, setFormData] = useState(layoutData)
   const [ClientData, setClientData] = useState([
     { clientId: 'CLT001', clientName: 'Alpha Corp' },
     { clientId: 'CLT002', clientName: 'Beta Enterprises' },
@@ -105,7 +93,6 @@ function SaveLayoutPopUp({ open, handleClose, tabGroup, savedGroups, previewUrl,
   }
 
   const handleLayoutSave = async () => {
-
     var flag = 0
     RequiredFields.map(e => {
       if (formData[e] == '') {
@@ -131,26 +118,28 @@ function SaveLayoutPopUp({ open, handleClose, tabGroup, savedGroups, previewUrl,
 
     const matchingItems = tabGroup
       .filter(item => savedGroups.includes(item.label))
-      .map(({ label, points, centroid, snapToCentroid, inputDegree }) => ({
+      .map(({ label, points, centroid, snapToCentroid, inputDegree,zoom,translate }) => ({
         label,
         points,
         centroid,
         snapToCentroid,
-        inputDegree
+        inputDegree,
+        zoom,
+        translate
       }))
 
     console.log('==> ', matchingItems)
     const payload = {
       // "CompanyID": "string",
       ProjectName: formData?.ProjectName,
-      ClientName: formData?.clientId?.clientName,
+      ClientName: formData?.clientId,
       Address: formData?.Address,
       OpenArea: formData?.OAUV,
-      OpenAreaUnit: formData?.OAU?.Id,
+      OpenAreaUnit: formData?.OAU,
       CoveredArea: formData?.CAUV,
-      CoveredAreaUnit: formData?.CAU?.Id,
+      CoveredAreaUnit: formData?.CAU,
       TotalArea: formData?.TAUV,
-      TotalAreaUnit: formData?.TAU?.Id,
+      TotalAreaUnit: formData?.TAU,
       Reference: formData?.Reference,
       Remark: formData?.Remark,
       Revision: formData?.Revision,
@@ -167,16 +156,31 @@ function SaveLayoutPopUp({ open, handleClose, tabGroup, savedGroups, previewUrl,
     console.log('Payload : ', payload)
     try {
       setLoading(true);
-      const data = await saveVastuLayouts(payload)
+      let data;
+      let msg;
+      if(formData?.isUpdate){
+        setLayoutData(prev => ({
+          ...prev,
+          "ProjectName": formData?.ProjectName,
+          "ClientName":formData?.clientId
+        }))
+        data = await editVastuLayouts(formData?.VPID,payload)
+        msg = "Vastu Griding Update Successfully."
+      }else{
+        data = await saveVastuLayouts(payload)
+        msg = "Vastu Griding Saved Successfully."
+      }
       console.log('data result  : ', data)
       if(data.hasError){
         setLoading(false)
         return toast.error(data.error)
       }
-
-      router.push(`/devta-vastu/${data?.responseData?.Result?.VPID}`)
+      if(!formData?.isUpdate){
+        router.push(`/devta-vastu/${data?.responseData?.Result?.VPID}`)
+      }
+      setLoading(false)
       handleClose()
-      return toast.success("Vastu Griding Saved Successfully.")
+      return toast.success(msg);
 
     } catch (error) {
       setLoading(false)
@@ -248,10 +252,11 @@ function SaveLayoutPopUp({ open, handleClose, tabGroup, savedGroups, previewUrl,
                 <Autocomplete
                   options={ClientData}
                   getOptionLabel={option => option.clientName} // Extracts label text
-                  getOptionKey={option => option.clientId}
-                  value={formData?.clientId || null}
+                  // getOptionKey={option => option.clientId}
+                  value={ClientData.find(item => item.clientName === formData?.clientId) || null}
+                  // value={formData?.clientId || null}
                   onChange={(e, newValue) => {
-                    handleInputChange('clientId', newValue, 'clientId', true)
+                    handleInputChange('clientId', newValue?.clientName, 'clientId', true)
                     // setSelectedGroup(newValue ? newValue.label : null)
                     // setGroupError(false)
                   }}
@@ -274,10 +279,11 @@ function SaveLayoutPopUp({ open, handleClose, tabGroup, savedGroups, previewUrl,
                 <Autocomplete
                   options={unitData}
                   getOptionLabel={option => option.Name} // Extracts label text
-                  getOptionKey={option => option.Id}
-                  value={formData?.OAU || null}
+                  // getOptionKey={option => option.Id}
+                  value={unitData.find(item => item.Id === formData?.OAU) || null}
+                  // value={formData?.OAU || null}
                   onChange={(e, newValue) => {
-                    handleInputChange('OAU', newValue, 'OAU', true)
+                    handleInputChange('OAU', newValue?.Id, 'OAU', true)
                     // setSelectedGroup(newValue ? newValue.label : null)
                     // setGroupError(false)
                   }}
@@ -299,10 +305,11 @@ function SaveLayoutPopUp({ open, handleClose, tabGroup, savedGroups, previewUrl,
                 <Autocomplete
                   options={unitData}
                   getOptionLabel={option => option.Name} // Extracts label text
-                  getOptionKey={option => option.Id}
-                  value={formData?.CAU || null}
+                  // getOptionKey={option => option.Id}
+                  value={unitData.find(item => item.Id === formData?.CAU) || null}
+                  // value={formData?.CAU || null}
                   onChange={(e, newValue) => {
-                    handleInputChange('CAU', newValue, 'CAU', true)
+                    handleInputChange('CAU', newValue?.Id, 'CAU', true)
                     // setSelectedGroup(newValue ? newValue.label : null)
                     // setGroupError(false)
                   }}
@@ -324,10 +331,11 @@ function SaveLayoutPopUp({ open, handleClose, tabGroup, savedGroups, previewUrl,
                 <Autocomplete
                   options={unitData}
                   getOptionLabel={option => option.Name} // Extracts label text
-                  getOptionKey={option => option.Id}
-                  value={formData?.TAU || null}
+                  // getOptionKey={option => option.Id}
+                  value={unitData.find(item => item.Id === formData?.TAU) || null}
+                  // value={formData?.TAU || null}
                   onChange={(e, newValue) => {
-                    handleInputChange('TAU', newValue, 'TAU', true)
+                    handleInputChange('TAU', newValue?.Id, 'TAU', true)
                     // setSelectedGroup(newValue ? newValue.label : null)
                     // setGroupError(false)
                   }}

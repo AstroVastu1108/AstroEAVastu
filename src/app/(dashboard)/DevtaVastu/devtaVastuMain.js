@@ -18,25 +18,7 @@ import DevtaVastuMain from '@/views/apps/devtaVastu/devtaVastuMain/page';
 export default function VastuListingPage() {
   // vars
   const [loading, setLoading] = useState(false);
-  const [kundliData, setKundliData] = useState([]);
 
-  // func
-  const getAllKundli = async () => {
-    setLoading(true);
-    const res = await GetKundliDataAPI(1000, 1,"");
-    setLoading(false);
-    if (res.hasError) {
-      // return toastDisplayer("error", res.error);
-    } else {
-      setKundliData(res?.responseData?.data?.Result?.KundaliList);
-    }
-  }
-
-
-  // Hooks
-  useEffect(() => {
-    getAllKundli();
-  }, [])
 
   return (<>
     {loading && <Loader />}

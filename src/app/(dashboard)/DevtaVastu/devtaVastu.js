@@ -43,6 +43,23 @@ function DevtaVastuPage({id}) {
   const [previewUrl, setPreviewUrl] = useState(null)
   const [tabGroup, setTabGroup] = useState(TabsData)
 
+  const [formData, setFormData] = useState({
+      ProjectName: '',
+      clientId: '',
+      Address: '',
+      OAU: '',
+      OAUV: '',
+      CAU: '',
+      CAUV: '',
+      TAU: '',
+      TAUV: '',
+      Reference: '',
+      Remark: '',
+      Rivision: '',
+      isUpdate:'',
+      VPID:''
+    })
+
   // const [selectedGroup, setSelectedGroup] = useState(null)
   const [savedGroups, setSavedGroups] = useState(['House Plan'])
   useEffect(() => {
@@ -60,12 +77,29 @@ function DevtaVastuPage({id}) {
         if (res.hasError) {
           router.push('/vastu-list')
         } else {
-          // console.log("res : ",res.responseData?.Result?.VastuLayout)
+          console.log("res : ",res.responseData?.Result?.VastuLayout)
+          const resData = res.responseData?.Result?.VastuLayout
+          setFormData({
+            ProjectName: resData?.ProjectName,
+            clientId: resData?.ClientName,
+            Address: resData?.Address,
+            OAU: resData?.OpenAreaUnit,
+            OAUV: resData?.OpenArea,
+            CAU: resData?.CoveredAreaUnit,
+            CAUV: resData?.CoveredArea,
+            TAU: resData?.TotalAreaUnit,
+            TAUV: resData?.TotalArea,
+            Reference: resData?.Reference,
+            Remark: resData?.Remark,
+            Rivision: resData?.Revision,
+            isUpdate:true,
+            VPID:resData?.VPID
+          })
           setVastuLayoutData(res.responseData?.Result?.VastuLayout)
           const incomingData = res.responseData?.Result?.VastuLayout?.TabGroups
           const updatedTabGroup = tabGroup.map((tab) => {
             const matchingData = incomingData?.find((data) => data.Label === tab.label);
-
+            console.log("matchingData : ",matchingData)
             if (matchingData) {
               return {
                 ...tab,
@@ -75,7 +109,9 @@ function DevtaVastuPage({id}) {
                 })),
                 centroid: {x:matchingData.Centroid?.X,y:matchingData.Centroid?.Y},
                 snapToCentroid: matchingData.SnapToCentroid,
-                inputDegree: matchingData.InputDegree
+                inputDegree: matchingData.InputDegree,
+                translate: {x:matchingData.Translate?.X,y:matchingData.Translate?.Y},
+                zoom:matchingData.Zoom
               };
             }
             return tab;
@@ -280,6 +316,22 @@ function DevtaVastuPage({id}) {
     })
   }
 
+  const handleInputTranslateChange = (index, translate) => {
+    setTabGroup(prev => {
+      const updatedGroup = [...prev]
+      updatedGroup[index].translate = translate
+      return updatedGroup
+    })
+  }
+
+  const handleInputZoomChange = (index, zoom) => {
+    setTabGroup(prev => {
+      const updatedGroup = [...prev]
+      updatedGroup[index].zoom = zoom
+      return updatedGroup
+    })
+  }
+
   const updatePointsForAllTabs = (selectedGroup, newPoints) => {
     if (selectedGroup == 'House Plan') {
       setTabGroup(prevTabGroup =>
@@ -463,55 +515,6 @@ function DevtaVastuPage({id}) {
     setActiveHouse(tabGroup.filter((e) => e.label == savedGroups[activeTab])[0]);
   }, [activeTab])
 
-  const handleSubmit = async () => {
-
-    // const matchingItems = tabGroup.filter(item => savedGroups.includes(item.label));
-
-    // console.log("TabGroup : ",matchingItems)
-
-    const matchingItems = tabGroup
-      .filter(item => savedGroups.includes(item.label))
-      .map(({ label, points, centroid, snapToCentroid, inputDegree }) => ({
-        label,
-        points,
-        centroid,
-        snapToCentroid,
-        inputDegree
-      }))
-
-    console.log('==> ', matchingItems)
-    const payload = {
-      // "CompanyID": "string",
-      ProjectName: 'Sample Layout 4',
-      ClientName: '',
-      Address: 'string',
-      OpenArea: 0,
-      OpenAreaUnit: 'string',
-      CoveredArea: 0,
-      CoveredAreaUnit: 'string',
-      TotalArea: 0,
-      TotalAreaUnit: 'string',
-      Reference: 'string',
-      Remark: 'string',
-      Revision: 0,
-      AuditDate: '2025-02-09T07:31:22.727Z',
-      NecessaryFiles: [
-        {
-          OriginalFileName: fileInfo,
-          Base64File: previewUrl
-        }
-      ],
-      TabGroups: matchingItems
-    }
-
-    console.log("Payload : ",payload)
-    try {
-      const data  = await saveVastuLayouts(payload);
-      console.log("data result  : ",data)
-    } catch (error) {
-
-    }
-  }
 
   return (
     <>
@@ -555,7 +558,7 @@ function DevtaVastuPage({id}) {
                           <i className={'tabler-browser-check me-2'} />New Layout Project
                         </MenuItem>
                         <MenuItem onClick={handleAddNewPage} className="flex gap-1"><i className={'tabler-browser-check me-2'} />Add Page</MenuItem>
-                        <MenuItem onClick={handleSaveLayoutToggle} className="flex gap-1"><i className={'tabler-browser-check me-2'} />Save Layout Project</MenuItem>
+                        <MenuItem onClick={handleSaveLayoutToggle} className="flex gap-1"><i className={'tabler-browser-check me-2'} />{formData?.isUpdate ? "Update Layout Project" : "Save Layout Project" }</MenuItem>
                         <MenuItem onClick={downloadPDF} className="flex gap-1"><i className={'tabler-browser-check me-2'} />Download Report</MenuItem>
                       </Menu>
                     </>
@@ -599,6 +602,10 @@ function DevtaVastuPage({id}) {
                         setSnapToCentroid={newSnapToCentroid => handleSnapToCentroidChange(index, newSnapToCentroid)}
                         inputDegree={tabGroup[index].inputDegree}
                         setInputDegree={newInputDegree => handleInputDegreeChange(index, newInputDegree)}
+                        translate={tabGroup[index].translate}
+                        setTranslate={newTranslate => handleInputTranslateChange(index, newTranslate)}
+                        zoom={tabGroup[index].zoom}
+                        setZoom={newZoom => handleInputZoomChange(index, newZoom)}
                         updatePointsForAllTabs={updatePointsForAllTabs}
                       />
                     </>
@@ -625,7 +632,7 @@ function DevtaVastuPage({id}) {
               <AddPagePopUp open={AddPage} handleClose={handleAddNewPage} handleSave={handleSave} tabGroup={tabGroup} savedGroups={savedGroups} />
             )}
             {LayoutSave && (
-              <SaveLayoutPopUp open={LayoutSave} fileInfo={fileInfo} handleClose={handleSaveLayoutToggle} tabGroup={tabGroup} savedGroups={savedGroups} previewUrl={previewUrl} setLoading={setLoading} />
+              <SaveLayoutPopUp open={LayoutSave} layoutData={formData} setLayoutData={setVastuLayoutData} fileInfo={fileInfo} handleClose={handleSaveLayoutToggle} tabGroup={tabGroup} savedGroups={savedGroups} previewUrl={previewUrl} setLoading={setLoading} />
             )}
           </div>
         </>

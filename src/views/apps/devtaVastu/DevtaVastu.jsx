@@ -69,7 +69,11 @@ const DevtaVastu = ({
   setSnapToCentroid,
   inputDegree,
   setInputDegree,
-  updatePointsForAllTabs
+  updatePointsForAllTabs,
+  translate,
+  setTranslate,
+  zoom,
+  setZoom
 }) => {
   const [lineSets, setLineSets] = useState(DEFAULT_LINE_SETS)
   const [selectedLineIndex, setSelectedLineIndex] = useState(0) // Default to the first line
@@ -137,9 +141,6 @@ const DevtaVastu = ({
   }, [points, snapToCentroid])
 
   useEffect(() => {
-    console.log('points : ', points)
-    console.log('centroid : ', centroid)
-    console.log('lockCentroid : ', lockCentroid)
     if (!lockCentroid) {
       setCentroid(calculateCentroid(points))
     }
@@ -1421,14 +1422,14 @@ const DevtaVastu = ({
     )
   }
 
-  const [zoom, setZoom] = useState(1) // Initial zoom level
+  // const [zoom, setZoom] = useState(1) // Initial zoom level
   const [rotation, setRotation] = useState(0) // Initial rotation angle
-  const [translate, setTranslate] = useState({ x: 0, y: 0 }) // Initial pan offsets
+  // const [translate, setTranslate] = useState({ x: 0, y: 0 }) // Initial pan offsets
 
   // Zoom in
-  const handleZoomIn = () => setZoom(prev => Math.min(prev * 1.1, 5)) // Limit max zoom to 5
+  const handleZoomIn = () => setZoom(Math.min(zoom * 1.1, 5)); // Limit max zoom to 5
   // Zoom out
-  const handleZoomOut = () => setZoom(prev => Math.max(prev / 1.1, -51)) // Limit min zoom to 1
+  const handleZoomOut = () => setZoom(Math.max(zoom / 1.1, -5)); // Limit min zoom to 1
 
   // Reset Transformations
   const handleReset = () => {

@@ -13,7 +13,11 @@ export const TabsData = [
     snapToCentroid: false,
     setSnapToCentroid: null,
     inputDegree: 0,
-    setInputDegree: null
+    setInputDegree: null,
+    translate:{ x: 0, y: 0 },
+    setTranslate:null,
+    zoom:1,
+    setZoom:1
   },
   {
     label: 'House Plan',
@@ -23,7 +27,11 @@ export const TabsData = [
     snapToCentroid: false,
     setSnapToCentroid: null,
     inputDegree: 0,
-    setInputDegree: null
+    setInputDegree: null,
+    translate:{ x: 0, y: 0 },
+    setTranslate:null,
+    zoom:1,
+    setZoom:1
   },
   {
     label: 'Griding With 16 Zone',
@@ -33,7 +41,11 @@ export const TabsData = [
     snapToCentroid: false,
     setSnapToCentroid: null,
     inputDegree: 0,
-    setInputDegree: null
+    setInputDegree: null,
+    translate:{ x: 0, y: 0 },
+    setTranslate:null,
+    zoom:1,
+    setZoom:1
   },
   {
     label: '16 Zone Bar Chart',
@@ -43,7 +55,11 @@ export const TabsData = [
     snapToCentroid: false,
     setSnapToCentroid: null,
     inputDegree: 0,
-    setInputDegree: null
+    setInputDegree: null,
+    translate:{ x: 0, y: 0 },
+    setTranslate:null,
+    zoom:1,
+    setZoom:1
   },
   {
     label: 'Civil Energy',
@@ -53,7 +69,11 @@ export const TabsData = [
     snapToCentroid: false,
     setSnapToCentroid: null,
     inputDegree: 0,
-    setInputDegree: null
+    setInputDegree: null,
+    translate:{ x: 0, y: 0 },
+    setTranslate:null,
+    zoom:1,
+    setZoom:1
   },
   {
     label: 'Devta Mark',
@@ -63,7 +83,11 @@ export const TabsData = [
     snapToCentroid: false,
     setSnapToCentroid: null,
     inputDegree: 0,
-    setInputDegree: null
+    setInputDegree: null,
+    translate:{ x: 0, y: 0 },
+    setTranslate:null,
+    zoom:1,
+    setZoom:1
   },
   {
     label: 'Devta Marking Color',
@@ -73,7 +97,11 @@ export const TabsData = [
     snapToCentroid: false,
     setSnapToCentroid: null,
     inputDegree: 0,
-    setInputDegree: null
+    setInputDegree: null,
+    translate:{ x: 0, y: 0 },
+    setTranslate:null,
+    zoom:1,
+    setZoom:1
   },
   {
     label: 'Devta bar chart',
@@ -83,7 +111,11 @@ export const TabsData = [
     snapToCentroid: false,
     setSnapToCentroid: null,
     inputDegree: 0,
-    setInputDegree: null
+    setInputDegree: null,
+    translate:{ x: 0, y: 0 },
+    setTranslate:null,
+    zoom:1,
+    setZoom:1
   },
   {
     label: 'Devta + Marma Points',
@@ -93,7 +125,11 @@ export const TabsData = [
     snapToCentroid: false,
     setSnapToCentroid: null,
     inputDegree: 0,
-    setInputDegree: null
+    setInputDegree: null,
+    translate:{ x: 0, y: 0 },
+    setTranslate:null,
+    zoom:1,
+    setZoom:1
   },
   {
     label: 'Custom Remedial Marking',
@@ -103,7 +139,11 @@ export const TabsData = [
     snapToCentroid: false,
     setSnapToCentroid: null,
     inputDegree: 0,
-    setInputDegree: null
+    setInputDegree: null,
+    translate:{ x: 0, y: 0 },
+    setTranslate:null,
+    zoom:1,
+    setZoom:1
   },
   {
     label: 'Site Energy audit',
@@ -113,7 +153,11 @@ export const TabsData = [
     snapToCentroid: false,
     setSnapToCentroid: null,
     inputDegree: 0,
-    setInputDegree: null
+    setInputDegree: null,
+    translate:{ x: 0, y: 0 },
+    setTranslate:null,
+    zoom:1,
+    setZoom:1
   },
   {
     label: 'Geo ',
@@ -123,6 +167,10 @@ export const TabsData = [
     snapToCentroid: false,
     setSnapToCentroid: null,
     inputDegree: 0,
-    setInputDegree: null
+    setInputDegree: null,
+    translate:{ x: 0, y: 0 },
+    setTranslate:null,
+    zoom:1,
+    setZoom:1
   }
 ]
