@@ -330,7 +330,24 @@ const DevtaVastu = ({
     return minDistance < threshold ? closestLine : -1
   }
 
-  const handleMouseDown = e => {
+  const isPointInPolygon = (point, polygon) => {
+    const { x, y } = point
+    let isInside = false
+
+    for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+      const xi = polygon[i].x,
+        yi = polygon[i].y
+      const xj = polygon[j].x,
+        yj = polygon[j].y
+
+      const intersect = yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi
+      if (intersect) isInside = !isInside
+    }
+
+    return isInside
+  }
+
+  const handleMouseDown = (e, polygonIndex = '', overlay = '', pointIndex = '') => {
     // const svgRect = svgRef.current.getBoundingClientRect()
     // const mouseX = e.clientX - svgRect.left
     // const mouseY = e.clientY - svgRect.top
@@ -339,40 +356,41 @@ const DevtaVastu = ({
     const svgRect = svgRef.current.getBoundingClientRect()
     const mouseX = e.clientX - svgRect.left
     const mouseY = e.clientY - svgRect.top
+    // console.log(pointIndex != '', '-------------')
 
-    polygons.forEach((polygon, polygonIndex) => {
-      // Check if the click is near any edge of the polygon
-      const nearEdge = polygon.points.some((point, i) => {
-        const nextPoint = polygon.points[(i + 1) % polygon.points.length] // Loop back to first point for the last edge
+    if (overlay == 'overlay' && (polygonIndex == 0 || polygonIndex != '')) {
+      polygons.forEach((polygon, polygonIndex) => {
+        // Check if the mouse click is inside the polygon
+        const isInsidePolygon = isPointInPolygon({ x: mouseX, y: mouseY }, polygon.points)
 
-        // Extract coordinates
-        const x1 = point.x,
-          y1 = point.y
-        const x2 = nextPoint.x,
-          y2 = nextPoint.y
+        if (isInsidePolygon) {
+          setDraggingState({
+            polygonIndex,
+            offsetX: mouseX,
+            offsetY: mouseY,
+            initialPoints: [...polygon.points],
+            isDraggingPolygon: true,
+            isDraggingPoint: false
+          })
 
-        // Calculate distance to the edge
-        const numerator = Math.abs((x2 - x1) * (y1 - mouseY) - (x1 - mouseX) * (y2 - y1))
-        const denominator = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
-
-        const distanceToEdge = numerator / denominator
-
-        // If close enough to an edge (click tolerance), return true
-        return distanceToEdge <= 10
+          return // Stop checking further polygons
+        }
       })
+    }
 
-      if (nearEdge) {
-        console.log('Clicked near polygon edge:', polygon)
+    if (overlay == 'PointOverlay' && (pointIndex == 0 || pointIndex != '')) {
+      setDraggingState({
+        polygonIndex,
+        pointIndex,
+        offsetX: mouseX,
+        offsetY: mouseY,
+        initialPoints: [...polygons[polygonIndex].points],
+        isDraggingPolygon: false,
+        isDraggingPoint: true // Indicate point dragging
+      })
+    }
 
-        setDraggingState({
-          polygonIndex,
-          offsetX: mouseX,
-          offsetY: mouseY,
-          initialPoints: [...polygon.points],
-          isDraggingPolygon: true
-        })
-      }
-    })
+    console.log('1234567sdfghjxcvnm')
     const position = getMousePosition(e)
     // Check if the centroid is clicked
     if (centroid && isPointNear(position.x, position.y, centroid)) {
@@ -401,6 +419,51 @@ const DevtaVastu = ({
     const snappedX = e.shiftKey ? snapToGrid(clampedX) : clampedX
     const snappedY = e.shiftKey ? snapToGrid(clampedY) : clampedY
 
+    
+
+    if (draggingState && draggingState?.isDraggingPolygon) {
+      const { polygonIndex, offsetX, offsetY, initialPoints } = draggingState
+
+      // Calculate the offset from the initial drag position
+      const dx = snappedX - offsetX
+      const dy = snappedY - offsetY
+
+      // Update the polygon's points
+      const updatedPolygons = [...polygons]
+      updatedPolygons[polygonIndex].points = initialPoints.map(point => ({
+        x: point.x + dx,
+        y: point.y + dy
+      }))
+
+      setPolygons(updatedPolygons)
+      return
+    }
+
+    if (draggingState || draggingState?.isDraggingPoint) {
+      const { polygonIndex, pointIndex, offsetX, offsetY } = draggingState
+      // const updatedPolygons1 = [...polygons];
+      // console.log(updatedPolygons1)
+      // return console.log('here', draggingState)
+
+      // Calculate the offset for the specific point
+      const dx = snappedX - offsetX
+      const dy = snappedY - offsetY
+
+      // Update the specific point's position
+      const updatedPolygons = [...polygons]
+      if (updatedPolygons[polygonIndex]?.points) {
+        updatedPolygons[polygonIndex].points[pointIndex] = {
+          x: draggingState.initialPoints[pointIndex].x + dx,
+          y: draggingState.initialPoints[pointIndex].y + dy
+        }
+      }
+
+      setPolygons(updatedPolygons)
+      return
+    }
+
+    console.log('here---------------')
+
     if (movingCentroidRef.current) {
       // Move the centroid freely if snapping is disabled
       if (!snapToCentroid) {
@@ -423,6 +486,10 @@ const DevtaVastu = ({
   }
 
   const handleMouseUp = () => {
+    if (draggingState && (draggingState.isDraggingPolygon || draggingState.isDraggingPoint)) {
+      setDraggingState(null)
+      return
+    }
     movingCentroidRef.current = false
     selectedPointRef.current = null
   }
@@ -2841,7 +2908,10 @@ const DevtaVastu = ({
                           fillOpacity='0.2' // Default opacity for all polygons
                           stroke={polygon.color}
                           strokeWidth='2'
-                          onMouseDown={e => handleMouseDown(e, polygonIndex)}
+                          onMouseDown={e => {
+                            console.log('click inside : ', polygonIndex)
+                            handleMouseDown(e, polygonIndex, 'overlay')
+                          }}
                         />
                         {/* Display Title */}
                         <text
@@ -2851,6 +2921,7 @@ const DevtaVastu = ({
                           fontSize='14'
                           fontWeight='bold'
                           textAnchor='middle' // Center the text horizontally
+                          style={{ userSelect: 'none', pointerEvents: 'none' }} // Make text non-selectable and ignore pointer events
                         >
                           {polygon.title || `Polygon ${polygon.id}`} {/* Default title if none is provided */}
                         </text>
@@ -2860,11 +2931,14 @@ const DevtaVastu = ({
                             key={pointIndex}
                             cx={point.x}
                             cy={point.y}
-                            r={5}
+                            r={4}
                             fill={polygon.color}
                             stroke='#fff'
-                            strokeWidth='2'
-                            onMouseDown={e => handleMouseDown(e, polygonIndex, pointIndex)}
+                            strokeWidth='0.5'
+                            onMouseDown={e => {
+                              console.log('first')
+                              handleMouseDown(e, polygonIndex, 'PointOverlay', pointIndex)
+                            }}
                           />
                         ))}
                       </g>
