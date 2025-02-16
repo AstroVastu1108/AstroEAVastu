@@ -118,14 +118,15 @@ function SaveLayoutPopUp({ open, handleClose, tabGroup, layoutData, setLayoutDat
 
     const matchingItems = tabGroup
       .filter(item => savedGroups.includes(item.label))
-      .map(({ label, points, centroid, snapToCentroid, inputDegree,zoom,translate }) => ({
+      .map(({ label, points, centroid, snapToCentroid, inputDegree,zoom,translate, polygons}) => ({
         label,
         points,
         centroid,
         snapToCentroid,
         inputDegree,
         zoom,
-        translate
+        translate,
+        polygons
       }))
 
     console.log('==> ', matchingItems)
