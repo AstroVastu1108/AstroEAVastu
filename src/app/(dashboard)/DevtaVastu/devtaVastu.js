@@ -104,14 +104,15 @@ function DevtaVastuPage({id}) {
               return {
                 ...tab,
                 points: matchingData.Points.map((point) => ({
-                  x: point.X, // Convert X to x
-                  y: point.Y  // Convert Y to y
+                  x: point.x, // Convert X to x
+                  y: point.y  // Convert Y to y
                 })),
-                centroid: {x:matchingData.Centroid?.X,y:matchingData.Centroid?.Y},
+                centroid: {x:matchingData.Centroid?.x,y:matchingData.Centroid?.y},
                 snapToCentroid: matchingData.SnapToCentroid,
                 inputDegree: matchingData.InputDegree,
-                translate: {x:matchingData.Translate?.X,y:matchingData.Translate?.Y},
-                zoom:matchingData.Zoom
+                translate: {x:matchingData.Translate?.x,y:matchingData.Translate?.y},
+                zoom:matchingData.Zoom,
+                polygons:matchingData.Polygons
               };
             }
             return tab;
@@ -328,6 +329,14 @@ function DevtaVastuPage({id}) {
     setTabGroup(prev => {
       const updatedGroup = [...prev]
       updatedGroup[index].zoom = zoom
+      return updatedGroup
+    })
+  }
+
+  const handleInputPolygonsChange = (index, polygons) => {
+    setTabGroup(prev => {
+      const updatedGroup = [...prev]
+      updatedGroup[index].polygons = polygons
       return updatedGroup
     })
   }
@@ -606,6 +615,8 @@ function DevtaVastuPage({id}) {
                         setTranslate={newTranslate => handleInputTranslateChange(index, newTranslate)}
                         zoom={tabGroup[index].zoom}
                         setZoom={newZoom => handleInputZoomChange(index, newZoom)}
+                        polygons={tabGroup[index].polygons}
+                        setPolygons={newPolygons => handleInputPolygonsChange(index, newPolygons)}
                         updatePointsForAllTabs={updatePointsForAllTabs}
                       />
                     </>

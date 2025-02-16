@@ -72,15 +72,15 @@ export default function DevtaVastuMain() {
     const res = await deleteVastuLayoutsByID(selectedTab?.VPID);
     if (res.hasError) {
       setLoading(false);
-      if (response.errorMessage) {
-        // Object.keys(response.errorMessage).forEach((key) => {
-        //   response.errorMessage[key].forEach((message) => {
-        //     toast.error(`${key}: ${message}`);
-        //   });
-        // });
-      }
-      return;
-      // return toastDisplayer("error", res.error);
+      // if (response.errorMessage) {
+      //   // Object.keys(response.errorMessage).forEach((key) => {
+      //   //   response.errorMessage[key].forEach((message) => {
+      //   //     toast.error(`${key}: ${message}`);
+      //   //   });
+      //   // });
+      // }
+      // return;
+      return toastDisplayer("error", res.error);
     } else {
       const index = vastuListingData.findIndex(item => item.VPID === selectedTab?.VPID);
       if (index !== -1) {

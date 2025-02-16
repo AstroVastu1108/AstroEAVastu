@@ -73,7 +73,9 @@ const DevtaVastu = ({
   translate,
   setTranslate,
   zoom,
-  setZoom
+  setZoom,
+  polygons,
+  setPolygons
 }) => {
   const [lineSets, setLineSets] = useState(DEFAULT_LINE_SETS)
   const [selectedLineIndex, setSelectedLineIndex] = useState(0) // Default to the first line
@@ -419,7 +421,7 @@ const DevtaVastu = ({
     const snappedX = e.shiftKey ? snapToGrid(clampedX) : clampedX
     const snappedY = e.shiftKey ? snapToGrid(clampedY) : clampedY
 
-    
+
 
     if (draggingState && draggingState?.isDraggingPolygon) {
       const { polygonIndex, offsetX, offsetY, initialPoints } = draggingState
@@ -457,7 +459,7 @@ const DevtaVastu = ({
           y: draggingState.initialPoints[pointIndex].y + dy
         }
       }
-
+      console.log("updatedPolygons : ",updatedPolygons)
       setPolygons(updatedPolygons)
       return
     }
@@ -2181,7 +2183,7 @@ const DevtaVastu = ({
     }
   ]
 
-  const [polygons, setPolygons] = useState([])
+  // const [polygons, setPolygons] = useState([])
   const [currentPolygon, setCurrentPolygon] = useState(null)
 
   const handleAddPolygonToggle = () => {
