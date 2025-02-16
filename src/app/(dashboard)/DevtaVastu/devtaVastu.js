@@ -77,7 +77,6 @@ function DevtaVastuPage({id}) {
         if (res.hasError) {
           router.push('/vastu-list')
         } else {
-          console.log("res : ",res.responseData?.Result?.VastuLayout)
           const resData = res.responseData?.Result?.VastuLayout
           setFormData({
             ProjectName: resData?.ProjectName,
@@ -99,7 +98,6 @@ function DevtaVastuPage({id}) {
           const incomingData = res.responseData?.Result?.VastuLayout?.TabGroups
           const updatedTabGroup = tabGroup.map((tab) => {
             const matchingData = incomingData?.find((data) => data.Label === tab.label);
-            console.log("matchingData : ",matchingData)
             if (matchingData) {
               return {
                 ...tab,
@@ -123,8 +121,6 @@ function DevtaVastuPage({id}) {
 
           setTabGroup(updatedTabGroup);
           setSavedGroups(matchedLabels);
-          // console.log("updatedTabGroup : ",updatedTabGroup)
-          // console.log("matchedLabels : ",matchedLabels)
           setFileUploaded(true)
           setPreviewUrl(res.responseData?.Result?.VastuLayout?.NecessaryFiles[0]?.Base64File)
           setFileInfo(res.responseData?.Result?.VastuLayout?.NecessaryFiles[0]?.OriginalFileName)
@@ -195,13 +191,11 @@ function DevtaVastuPage({id}) {
 
           resolve(images)
         } catch (error) {
-          console.error('Error extracting images:', error)
           reject(error)
         }
       }
 
       fileReader.onerror = () => {
-        console.error('FileReader error:', fileReader.error)
         reject(fileReader.error)
       }
 
@@ -280,8 +274,6 @@ function DevtaVastuPage({id}) {
   }
 
   const handleTabChange = (event, newValue) => {
-    console.log(activeTab)
-    console.log(newValue)
     setActiveTab(newValue)
   }
 
@@ -326,6 +318,7 @@ function DevtaVastuPage({id}) {
   }
 
   const handleInputZoomChange = (index, zoom) => {
+    console.log("here")
     setTabGroup(prev => {
       const updatedGroup = [...prev]
       updatedGroup[index].zoom = zoom
@@ -386,7 +379,6 @@ function DevtaVastuPage({id}) {
 
     for (let i = 0; i < data.length; i++) {
       const groupIndex = tabGroup.findIndex(e => e.label == data[i]);
-      console.log(groupIndex);
 
       if (groupIndex === -1) {
         continue
@@ -398,7 +390,6 @@ function DevtaVastuPage({id}) {
       const rightDivRef = printRefs.current[groupIndex]
 
       if (!leftDivRef || !rightDivRef) {
-        console.error(`🚨 Error: Element refs not found for groupIndex ${groupIndex}`)
         continue
       }
 
@@ -520,7 +511,6 @@ function DevtaVastuPage({id}) {
   const [activeHouse, setActiveHouse] = useState(tabGroup.findIndex((e) => e.label == savedGroups[activeTab])[0]);
 
   useEffect(() => {
-    console.log(tabGroup.findIndex((e) => e.label == savedGroups[activeTab]))
     setActiveHouse(tabGroup.filter((e) => e.label == savedGroups[activeTab])[0]);
   }, [activeTab])
 
