@@ -33,8 +33,8 @@ function NewPolygonPopUp({ open, handleClose, handleSave }) {
   const [formData, setFormData] = useState({
     title: '',
     color: '#007BFF', // Default polygon color
-    x: 0,
-    y: 0,
+    x: 10,
+    y: 10,
     width: 100,
     height: 100
   })
@@ -83,7 +83,7 @@ function NewPolygonPopUp({ open, handleClose, handleSave }) {
           <DialogContentText>
             <Grid className='mt-1' container columnSpacing={2} rowSpacing={3}>
               {/* Title Input */}
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={12}>
                 <TextField
                   fullWidth
                   label='Title'
@@ -94,7 +94,7 @@ function NewPolygonPopUp({ open, handleClose, handleSave }) {
               </Grid>
 
               {/* Color Picker */}
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={12}>
                 <TextField
                   fullWidth
                   label='Color'
@@ -104,7 +104,7 @@ function NewPolygonPopUp({ open, handleClose, handleSave }) {
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
-
+              {/* 
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
@@ -137,6 +137,7 @@ function NewPolygonPopUp({ open, handleClose, handleSave }) {
                   onChange={e => setFormData({ ...formData, height: parseInt(e.target.value) })}
                 />
               </Grid>
+               */}
             </Grid>
           </DialogContentText>
         </DialogContent>

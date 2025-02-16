@@ -109,6 +109,7 @@ const DevtaVastu = ({
   const [loading, setLoading] = useState(true)
   const [openNewPolygon, setOpenNewPolygon] = useState(false)
   const [draggingState, setDraggingState] = React.useState(null) // For both points and polygons
+  const [OverlayPolyClick, setOverlayPolyClick] = React.useState(false) // For both points and polygons
 
   useEffect(() => {
     setLoading(false)
@@ -315,12 +316,10 @@ const DevtaVastu = ({
   const findClosestLine = (x, y, threshold = 500) => {
     let closestLine = -1
     let minDistance = Infinity
-    // console.log("x , y : ",x,y)
     for (let i = 0; i < points.length; i++) {
       const start = points[i]
       const end = points[(i + 1) % points.length]
       const distance = pointToLineDistance(x, y, start, end)
-      // console.log("distance  : ",distance)
       if (distance < minDistance) {
         minDistance = distance
         closestLine = i
@@ -356,7 +355,6 @@ const DevtaVastu = ({
     const svgRect = svgRef.current.getBoundingClientRect()
     const mouseX = e.clientX - svgRect.left
     const mouseY = e.clientY - svgRect.top
-    // console.log(pointIndex != '', '-------------')
 
     if (overlay == 'overlay' && (polygonIndex == 0 || polygonIndex != '')) {
       polygons.forEach((polygon, polygonIndex) => {
@@ -390,7 +388,6 @@ const DevtaVastu = ({
       })
     }
 
-    console.log('1234567sdfghjxcvnm')
     const position = getMousePosition(e)
     // Check if the centroid is clicked
     if (centroid && isPointNear(position.x, position.y, centroid)) {
@@ -419,8 +416,6 @@ const DevtaVastu = ({
     const snappedX = e.shiftKey ? snapToGrid(clampedX) : clampedX
     const snappedY = e.shiftKey ? snapToGrid(clampedY) : clampedY
 
-    
-
     if (draggingState && draggingState?.isDraggingPolygon) {
       const { polygonIndex, offsetX, offsetY, initialPoints } = draggingState
 
@@ -441,11 +436,7 @@ const DevtaVastu = ({
 
     if (draggingState || draggingState?.isDraggingPoint) {
       const { polygonIndex, pointIndex, offsetX, offsetY } = draggingState
-      // const updatedPolygons1 = [...polygons];
-      // console.log(updatedPolygons1)
-      // return console.log('here', draggingState)
 
-      // Calculate the offset for the specific point
       const dx = snappedX - offsetX
       const dy = snappedY - offsetY
 
@@ -461,8 +452,6 @@ const DevtaVastu = ({
       setPolygons(updatedPolygons)
       return
     }
-
-    console.log('here---------------')
 
     if (movingCentroidRef.current) {
       // Move the centroid freely if snapping is disabled
@@ -494,8 +483,115 @@ const DevtaVastu = ({
     selectedPointRef.current = null
   }
 
-  const handleDoubleClick = e => {
-    if (!disableDraw) {
+  const handleDoubleClick = (e, overlay = '', polygon = '', pointIndex = '', polygonIndex = '') => {
+    console.log('over', overlay)
+
+    // Helper function to check if a point is inside a polygon
+    const isPointInPolygon = (x, y, polygonPoints) => {
+      let inside = false
+      for (let i = 0, j = polygonPoints.length - 1; i < polygonPoints.length; j = i++) {
+        const xi = polygonPoints[i].x,
+          yi = polygonPoints[i].y
+        const xj = polygonPoints[j].x,
+          yj = polygonPoints[j].y
+
+        const intersect = yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi
+        if (intersect) inside = !inside
+      }
+      return inside
+    }
+
+    if (overlay == 'overlay') {
+      setOverlayPolyClick(true);
+      if (polygon.points.length > 3) {
+        const updatedPolygons = polygons.map((poly, idx) => {
+          if (idx === polygonIndex) {
+            return {
+              ...poly,
+              points: poly.points.filter((_, idx) => idx !== pointIndex)
+            }
+          }
+          return poly
+        })
+        setPolygons(updatedPolygons)
+      }
+      return
+    }
+
+    if (overlay == 'polyOverlay') {
+      setOverlayPolyClick(true);
+      const svg = e.target.ownerSVGElement
+      const point = svg.createSVGPoint()
+      point.x = e.clientX
+      point.y = e.clientY
+      const svgCoords = point.matrixTransform(svg.getScreenCTM().inverse())
+
+      // Find the closest edge
+      const { x, y } = svgCoords
+      const points = polygon.points
+      let closestEdgeIndex = -1
+      let minDistance = Infinity
+
+      for (let i = 0; i < points.length; i++) {
+        const p1 = points[i]
+        const p2 = points[(i + 1) % points.length] // Wrap around to form a closed shape
+
+        // Calculate distance from the click to the edge
+        const distance = Math.abs(
+          ((p2.y - p1.y) * x - (p2.x - p1.x) * y + p2.x * p1.y - p2.y * p1.x) / Math.hypot(p2.y - p1.y, p2.x - p1.x)
+        )
+
+        if (distance < minDistance) {
+          minDistance = distance
+          closestEdgeIndex = i
+        }
+      }
+
+      // Calculate the midpoint of the closest edge
+      if (closestEdgeIndex !== -1) {
+        const p1 = points[closestEdgeIndex]
+        const p2 = points[(closestEdgeIndex + 1) % points.length]
+        const newPoint = {
+          x: (p1.x + p2.x) / 2,
+          y: (p1.y + p2.y) / 2
+        }
+
+        // Insert the new point into the points array
+        const updatedPolygons = polygons.map((poly, idx) => {
+          if (idx === polygonIndex) {
+            const updatedPoints = [...poly.points]
+            updatedPoints.splice(closestEdgeIndex + 1, 0, newPoint) // Insert after the closest edge
+            return { ...poly, points: updatedPoints }
+          }
+          return poly
+        })
+
+        setPolygons(updatedPolygons) // Update state
+      }
+      return null
+    }
+
+    // Check if mouse is inside any other polygon
+    const svg = e.target.ownerSVGElement
+    const point = svg.createSVGPoint()
+    point.x = e.clientX
+    point.y = e.clientY
+    const svgCoords = point.matrixTransform(svg.getScreenCTM().inverse())
+
+    const { x, y } = svgCoords
+    const isInsideOtherPolygon = polygons.some(
+      (poly, idx) => idx !== polygonIndex && isPointInPolygon(x, y, poly.points)
+    )
+
+    if (isInsideOtherPolygon) {
+      console.log('Mouse is inside another polygon, skipping disableDraw logic.')
+      return // Skip the disableDraw logic
+    }else{
+      setOverlayPolyClick(false);
+    }
+
+    console.log('why are you here',OverlayPolyClick)
+    if (!disableDraw && !OverlayPolyClick) {
       if (drawingMode !== 'drawing') return
 
       const position = getMousePosition(e)
@@ -1494,9 +1590,11 @@ const DevtaVastu = ({
   // const [translate, setTranslate] = useState({ x: 0, y: 0 }) // Initial pan offsets
 
   // Zoom in
-  const handleZoomIn = () => setZoom(Math.min(zoom * 1.1, 5)); // Limit max zoom to 5
+  const handleZoomIn = () => {
+    console.log("first");
+    setZoom(Math.min(zoom * 1.1, 5)) }// Limit max zoom to 5
   // Zoom out
-  const handleZoomOut = () => setZoom(Math.max(zoom / 1.1, -5)); // Limit min zoom to 1
+  const handleZoomOut = () => setZoom(Math.max(zoom / 1.1, -5)) // Limit min zoom to 1
 
   // Reset Transformations
   const handleReset = () => {
@@ -1852,7 +1950,6 @@ const DevtaVastu = ({
     }))
 
     setAreas([...areas1, ...areas2, ...areas3, ...areas4].reverse())
-    // console.log("Area : ", areas)
     setDrawDevtaObject(newDrawDevtaObject)
   }, [intersactMidIntermediatePoints])
 
@@ -1914,11 +2011,6 @@ const DevtaVastu = ({
       rotation: rotation,
       zoom: zoom
     }
-    console.log('centroid : ', centroid)
-    console.log('points : ', points)
-    console.log('image rotation : ', rotation)
-    console.log('image zoom in : ', zoom)
-    console.log('payload : ', payload)
     setSaveLoading(false)
   }
 
@@ -2085,7 +2177,7 @@ const DevtaVastu = ({
         color: color
       }
     } catch (error) {
-      console.error(`Error in section ${returnParameterName}:`, error)
+      // console.error(`Error in section ${returnParameterName}:`, error)
       return null
     }
   }
@@ -2122,14 +2214,12 @@ const DevtaVastu = ({
 
       return results
     } catch (error) {
-      console.error('Error processing data:', error)
+      // console.error('Error processing data:', error)
       return []
     }
   }
 
   const allResults = processData(points, data)
-  // console.log("allResults:", allResults);
-  // console.log("allResults : ",allResults)
   const maxValue = Math.max(...allResults.map(item => item.area)) // Find the maximum value for scaling
 
   const handleShowChakra = (label, text) => {
@@ -2267,7 +2357,7 @@ const DevtaVastu = ({
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
                 onMouseLeave={handleMouseUp}
-                onDoubleClick={handleDoubleClick}
+                onDoubleClick={(e)=>handleDoubleClick(e,"svg")}
                 // style={{ touchAction: 'none', border: "0" }}
                 style={{
                   touchAction: 'none',
@@ -2366,8 +2456,6 @@ const DevtaVastu = ({
                                 }
 
                                 const style = lineSets[index % lineSets.length]
-                                // console.log("index % lineSets.length : ", index % lineSets.length)
-                                // console.log("hide16Circle ? 2 : hide8Circle ? 8 : hide4Circle ? 4 : 2 : ", hide16Circle ? 2 : hide8Circle ? 8 : hide4Circle ? 4 : 2)
                                 return (
                                   <g key={index}>
                                     {index % (hide16Circle ? 2 : hide8Circle ? 4 : hide4Circle ? 8 : 2) == 0 && (
@@ -2401,12 +2489,8 @@ const DevtaVastu = ({
                             {showDevta ? (
                               <>
                                 {intersectionsState.map((intersection, i) => {
-                                  // console.log("intersectionsState : ",intersectionsState)
-                                  // Calculate the delta (difference) for x and y coordinates
                                   const dx = (centroid.x - intersection.point.x) / 3
                                   const dy = (centroid.y - intersection.point.y) / 3
-                                  // console.log("lookup : ",pointLookup["S1"])
-                                  // Calculate the first intermediate point (P1)
                                   const point1 = { x: intersection.point.x + dx, y: intersection.point.y + dy }
                                   intermediatePoints1.push(point1) // Add P1 to the array
                                   intermediatePoints1Test.push({
@@ -2483,7 +2567,6 @@ const DevtaVastu = ({
                                 {/* uncomment this */}
                                 {intersactMidIntermediatePoints.map((item, i) => {
                                   return (
-                                    // console.log("Items : ",item)
                                     <>
                                       {showDevtaIntersaction && (
                                         <circle
@@ -2909,8 +2992,10 @@ const DevtaVastu = ({
                           stroke={polygon.color}
                           strokeWidth='2'
                           onMouseDown={e => {
-                            console.log('click inside : ', polygonIndex)
                             handleMouseDown(e, polygonIndex, 'overlay')
+                          }}
+                          onDoubleClick={e => {
+                            handleDoubleClick(e, 'polyOverlay', polygon, '', polygonIndex)
                           }}
                         />
                         {/* Display Title */}
@@ -2936,27 +3021,16 @@ const DevtaVastu = ({
                             stroke='#fff'
                             strokeWidth='0.5'
                             onMouseDown={e => {
-                              console.log('first')
                               handleMouseDown(e, polygonIndex, 'PointOverlay', pointIndex)
+                            }}
+                            onDoubleClick={e => {
+                              handleDoubleClick(e, 'overlay', polygon, pointIndex, polygonIndex)
                             }}
                           />
                         ))}
                       </g>
                     ))}
 
-                    {/* {(
-
-                    allResults.map((item) => {
-                      console.log("item : ", item)
-                      return (
-                        <polygon
-                          points={item.result.map((p) => `${p.x},${p.y}`).join(" ")}
-                          fill="pink"
-                          stroke="green"
-                        />
-                      )
-                    })
-                  )} */}
                     {graphDraw &&
                       allResults.map((item, index) => {
                         const width = 200 // Width of the SVG container
@@ -2966,7 +3040,6 @@ const DevtaVastu = ({
                         const barHeight = (item.area / maxValue) * (height - 20) // Scale the bar height
                         const x = index * (barWidth + barPadding) + 20 // Calculate x position
                         const y = height - barHeight // Calculate y position
-                        // console.log("item : ",item)
                         let additionalText = ''
                         if (item.label === 'ESE') additionalText = 'Fire'
                         if (item.label === 'W') additionalText = 'Air'
@@ -3051,8 +3124,6 @@ const DevtaVastu = ({
                 >
                   {/* x: {tooltip.x}, y: {tooltip.y}, Text :  */}
                   {tooltip.text}
-                  {/* { console.log("tooltip : ",tool)}
-              {tooltip.text ? marmaDevta[tooltip.text] ? marmaDevta[tooltip.text].value : "":""} */}
                 </div>
               )}
 
