@@ -13,7 +13,7 @@ import {
 } from '@mui/material'
 import React, { useEffect, useRef, useState } from 'react'
 
-function NewPolygonPopUp({ open, handleClose, handleSave }) {
+function NewPolygonPopUp({ open, handleClose, handleSave, newPolygonData }) {
   const theme = createTheme({
     shape: {
       borderRadius: 8 // Set the global border radius here
@@ -30,14 +30,7 @@ function NewPolygonPopUp({ open, handleClose, handleSave }) {
     }, 200)
   }, [open])
 
-  const [formData, setFormData] = useState({
-    title: '',
-    color: '#007BFF', // Default polygon color
-    x: 10,
-    y: 10,
-    width: 100,
-    height: 100
-  })
+  const [formData, setFormData] = useState(newPolygonData)
 
   useEffect(() => {
     if (open && inputRef.current) {

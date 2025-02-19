@@ -110,8 +110,16 @@ const DevtaVastu = ({
   const [graphDraw, setGraphDraw] = useState(false)
   const [loading, setLoading] = useState(true)
   const [openNewPolygon, setOpenNewPolygon] = useState(false)
-  const [draggingState, setDraggingState] = React.useState(null) // For both points and polygons
-  const [OverlayPolyClick, setOverlayPolyClick] = React.useState(false) // For both points and polygons
+  const [draggingState, setDraggingState] = useState(null) // For both points and polygons
+  const [OverlayPolyClick, setOverlayPolyClick] = useState(false) // For both points and polygons
+  const [NewOverlayPoly, setNewOverlayPoly] = useState({
+    title: '',
+    color: '#007BFF', // Default polygon color
+    x: 10,
+    y: 10,
+    width: 100,
+    height: 100
+  }) // For both points and polygons
 
   useEffect(() => {
     setLoading(false)
@@ -450,7 +458,7 @@ const DevtaVastu = ({
           y: draggingState.initialPoints[pointIndex].y + dy
         }
       }
-      console.log("updatedPolygons : ",updatedPolygons)
+      // console.log('updatedPolygons : ', updatedPolygons)
       setPolygons(updatedPolygons)
       return
     }
@@ -486,7 +494,7 @@ const DevtaVastu = ({
   }
 
   const handleDoubleClick = (e, overlay = '', polygon = '', pointIndex = '', polygonIndex = '') => {
-    console.log('over', overlay)
+    // console.log('over', overlay)
 
     // Helper function to check if a point is inside a polygon
     const isPointInPolygon = (x, y, polygonPoints) => {
@@ -504,7 +512,7 @@ const DevtaVastu = ({
     }
 
     if (overlay == 'overlay') {
-      setOverlayPolyClick(true);
+      setOverlayPolyClick(true)
       if (polygon.points.length > 3) {
         const updatedPolygons = polygons.map((poly, idx) => {
           if (idx === polygonIndex) {
@@ -521,7 +529,7 @@ const DevtaVastu = ({
     }
 
     if (overlay == 'polyOverlay') {
-      setOverlayPolyClick(true);
+      setOverlayPolyClick(true)
       const svg = e.target.ownerSVGElement
       const point = svg.createSVGPoint()
       point.x = e.clientX
@@ -586,13 +594,12 @@ const DevtaVastu = ({
     )
 
     if (isInsideOtherPolygon) {
-      console.log('Mouse is inside another polygon, skipping disableDraw logic.')
+      // console.log('Mouse is inside another polygon, skipping disableDraw logic.')
       return // Skip the disableDraw logic
-    }else{
-      setOverlayPolyClick(false);
+    } else {
+      setOverlayPolyClick(false)
     }
 
-    console.log('why are you here',OverlayPolyClick)
     if (!disableDraw && !OverlayPolyClick) {
       if (drawingMode !== 'drawing') return
 
@@ -1593,8 +1600,9 @@ const DevtaVastu = ({
 
   // Zoom in
   const handleZoomIn = () => {
-    console.log("first");
-    setZoom(Math.min(zoom * 1.1, 5)) }// Limit max zoom to 5
+    // console.log('first')
+    setZoom(Math.min(zoom * 1.1, 5))
+  } // Limit max zoom to 5
   // Zoom out
   const handleZoomOut = () => setZoom(Math.max(zoom / 1.1, -5)) // Limit min zoom to 1
 
@@ -2277,6 +2285,14 @@ const DevtaVastu = ({
   const [currentPolygon, setCurrentPolygon] = useState(null)
 
   const handleAddPolygonToggle = () => {
+    setNewOverlayPoly({
+      title: '',
+      color: '#007BFF', // Default polygon color
+      x: 10,
+      y: 10,
+      width: 100,
+      height: 100
+    })
     setOpenNewPolygon(!openNewPolygon)
   }
 
@@ -2291,19 +2307,55 @@ const DevtaVastu = ({
     //   id: polygons.length + 1
     // }
     // setPolygons([...polygons, newPolygon])
-    const newPolygon = {
-      points: [
-        { x: formData.x, y: formData.y },
-        { x: formData.x + formData.width, y: formData.y },
-        { x: formData.x + formData.width, y: formData.y + formData.height },
-        { x: formData.x, y: formData.y + formData.height }
-      ],
-      id: polygons.length + 1,
-      color: formData.color || 'rgba(0, 123, 255, 0.2)', // Default color
-      title: formData.title
+    // console.log(formData)
+
+    if (formData?.isUpdate) {
+      // Update an existing polygon
+      const updatedPolygons = polygons.map(polygon => {
+        if (polygon.id === formData.id) {
+          // Update the title and color of the matching polygon
+          return {
+            ...polygon,
+            title: formData.title || polygon.title,
+            color: formData.color || polygon.color
+          }
+        }
+        return polygon // Keep other polygons unchanged
+      })
+
+      setPolygons(updatedPolygons)
+    } else {
+      // Add a new polygon
+      const newPolygon = {
+        points: [
+          { x: formData.x, y: formData.y },
+          { x: formData.x + formData.width, y: formData.y },
+          { x: formData.x + formData.width, y: formData.y + formData.height },
+          { x: formData.x, y: formData.y + formData.height }
+        ],
+        id: polygons.length + 1,
+        color: formData.color || 'rgba(0, 123, 255, 0.2)', // Default color
+        title: formData.title
+      }
+
+      setPolygons([...polygons, newPolygon])
     }
-    setPolygons([...polygons, newPolygon])
+
     handleAddPolygonToggle()
+  }
+
+  const handleOverlayDelete = index => {
+    // Remove the polygon at the given index
+    const updatedPolygons = polygons.filter((_, i) => i !== index)
+    // Update the state with the new polygons array
+    setPolygons(updatedPolygons)
+  }
+
+  const handleOverlayEdit = polygon => {
+    // console.log(polygon)
+    polygon.isUpdate = true
+    setNewOverlayPoly(polygon)
+    setOpenNewPolygon(true)
   }
 
   return (
@@ -2359,7 +2411,7 @@ const DevtaVastu = ({
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
                 onMouseLeave={handleMouseUp}
-                onDoubleClick={(e)=>handleDoubleClick(e,"svg")}
+                onDoubleClick={e => handleDoubleClick(e, 'svg')}
                 // style={{ touchAction: 'none', border: "0" }}
                 style={{
                   touchAction: 'none',
@@ -2992,7 +3044,7 @@ const DevtaVastu = ({
                           fill={polygon.color}
                           fillOpacity='0.2' // Default opacity for all polygons
                           stroke={polygon.color}
-                          strokeWidth='2'
+                          strokeWidth='1'
                           onMouseDown={e => {
                             handleMouseDown(e, polygonIndex, 'overlay')
                           }}
@@ -3002,7 +3054,11 @@ const DevtaVastu = ({
                         />
                         {/* Display Title */}
                         <text
-                          x={Math.min(...polygon.points.map(point => point.x))} // Position title above the polygon
+                          x={
+                            (Math.min(...polygon.points.map(point => point.x)) +
+                              Math.max(...polygon.points.map(point => point.x))) /
+                            2
+                          } // Horizontal center of the polygon
                           y={Math.min(...polygon.points.map(point => point.y)) - 10} // 10px above the top edge
                           fill={polygon.color} // Title color matches the polygon's color
                           fontSize='14'
@@ -3012,13 +3068,57 @@ const DevtaVastu = ({
                         >
                           {polygon.title || `Polygon ${polygon.id}`} {/* Default title if none is provided */}
                         </text>
+
+                        <foreignObject
+                          x={
+                            (Math.min(...polygon.points.map(point => point.x)) +
+                              Math.max(...polygon.points.map(point => point.x))) /
+                              2 +
+                            15
+                          } // Positioned to the right of the title
+                          y={Math.min(...polygon.points.map(point => point.y)) - 25} // Aligned vertically with the title
+                          width='24'
+                          height='24'
+                        >
+                          <i
+                            className='tabler-pencil'
+                            style={{
+                              fontSize: '16px',
+                              color: 'blue',
+                              cursor: 'pointer'
+                            }}
+                            onClick={() => handleOverlayEdit(polygon)} // Call the edit handler
+                          />
+                        </foreignObject>
+                        {/* Delete Icon */}
+                        <foreignObject
+                          x={
+                            (Math.min(...polygon.points.map(point => point.x)) +
+                              Math.max(...polygon.points.map(point => point.x))) /
+                              2 +
+                            30
+                          } // Positioned to the right of the Edit button
+                          y={Math.min(...polygon.points.map(point => point.y)) - 25} // Aligned vertically with the title
+                          width='24'
+                          height='24'
+                        >
+                          <i
+                            className='tabler-x'
+                            style={{
+                              fontSize: '16px',
+                              color: 'red',
+                              cursor: 'pointer'
+                            }}
+                            onClick={() => handleOverlayDelete(polygonIndex)} // Call the delete handler
+                          />
+                        </foreignObject>
                         {/* Draggable Points */}
                         {polygon.points.map((point, pointIndex) => (
                           <circle
                             key={pointIndex}
                             cx={point.x}
                             cy={point.y}
-                            r={4}
+                            r={3}
                             fill={polygon.color}
                             stroke='#fff'
                             strokeWidth='0.5'
@@ -3383,7 +3483,12 @@ const DevtaVastu = ({
       </div>
       {openNewPolygon && (
         <>
-          <NewPolygonPopUp open={openNewPolygon} handleClose={handleAddPolygonToggle} handleSave={handleAddPolygon} />
+          <NewPolygonPopUp
+            open={openNewPolygon}
+            handleClose={handleAddPolygonToggle}
+            handleSave={handleAddPolygon}
+            newPolygonData={NewOverlayPoly}
+          />
         </>
       )}
     </>
