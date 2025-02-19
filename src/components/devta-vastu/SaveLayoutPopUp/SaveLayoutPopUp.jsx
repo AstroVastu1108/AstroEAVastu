@@ -118,7 +118,7 @@ function SaveLayoutPopUp({ open, handleClose, tabGroup, layoutData, setLayoutDat
 
     const matchingItems = tabGroup
       .filter(item => savedGroups.includes(item.label))
-      .map(({ label, points, centroid, snapToCentroid, inputDegree,zoom,translate, polygons}) => ({
+      .map(({ label, points, centroid, snapToCentroid, inputDegree,zoom,translate, polygons,lockChakra,lockCentroid,lineSets,hideCircle,hide32Circle,hide16Circle,hide8Circle,hide4Circle}) => ({
         label,
         points,
         centroid,
@@ -126,7 +126,8 @@ function SaveLayoutPopUp({ open, handleClose, tabGroup, layoutData, setLayoutDat
         inputDegree,
         zoom,
         translate,
-        polygons
+        polygons,
+        lockChakra,lockCentroid,lineSets,hideCircle,hide32Circle,hide16Circle,hide8Circle,hide4Circle
       }))
 
     console.log('==> ', matchingItems)

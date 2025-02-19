@@ -67,6 +67,10 @@ const DevtaVastu = ({
   setCentroid,
   snapToCentroid,
   setSnapToCentroid,
+  lockCentroid,
+  setLockCentroid,
+  lockChakra,
+  setLockChakra,
   inputDegree,
   setInputDegree,
   updatePointsForAllTabs,
@@ -75,14 +79,29 @@ const DevtaVastu = ({
   zoom,
   setZoom,
   polygons,
-  setPolygons
+  setPolygons,
+  hide32Circle,
+  setHide32Circle,
+  hide16Circle,
+  setHide16Circle,
+  hide8Circle,
+  setHide8Circle,
+  hide4Circle,
+  setHide4Circle,
+  hideCircle,
+  setHideCircle,
+  lineSets,
+  setLineSets
 }) => {
-  const [lineSets, setLineSets] = useState(DEFAULT_LINE_SETS)
+  // const [lineSets, setLineSets] = useState(DEFAULT_LINE_SETS)
   const [selectedLineIndex, setSelectedLineIndex] = useState(0) // Default to the first line
 
   const handleLineSetUpdate = (index, updates) => {
-    setLineSets(prevLineSets => prevLineSets.map((lineSet, i) => (i === index ? { ...lineSet, ...updates } : lineSet)))
-  }
+    const updatedLineSets = lineSets;
+      updatedLineSets[index] = { ...updatedLineSets[index], ...updates };
+    setLineSets(updatedLineSets);
+  };
+
   // const [points, setPoints] = useState(DEFAULT_POINTS);
   // const [centroid, setCentroid] = useState(null);
   // const [snapToCentroid, setSnapToCentroid] = useState(false);
@@ -93,20 +112,20 @@ const DevtaVastu = ({
   // file upload state
   // const [fileUploaded, setFileUploaded] = useState(false);
   // circle visible state
-  const [hideCircle, setHideCircle] = useState(false)
-  const [hide16Circle, setHide16Circle] = useState(false)
-  const [hide32Circle, setHide32Circle] = useState(false)
-  const [hide8Circle, setHide8Circle] = useState(false)
-  const [hide4Circle, setHide4Circle] = useState(false)
+  // const [hideCircle, setHideCircle] = useState(false)
+  // const [hide16Circle, setHide16Circle] = useState(false)
+  // const [hide32Circle, setHide32Circle] = useState(false)
+  // const [hide8Circle, setHide8Circle] = useState(false)
+  // const [hide4Circle, setHide4Circle] = useState(false)
   const [imageDragDone, setImageDragDone] = useState(false)
-  const [lockChakra, setLockChakra] = useState(false)
+  // const [lockChakra, setLockChakra] = useState(false)
+  // const [lockCentroid, setLockCentroid] = useState(false)
   // circle visible state
   const [hideCircleIntersaction, setHideCircleIntersaction] = useState(false)
   // Show Devta
   const [showDevta, setShowDevta] = useState(false)
   const [showDevtaIntersaction, setShowDevtaIntersaction] = useState(false)
   const [disableDraw, setDisableDraw] = useState(false)
-  const [lockCentroid, setLockCentroid] = useState(false)
   const [graphDraw, setGraphDraw] = useState(false)
   const [loading, setLoading] = useState(true)
   const [openNewPolygon, setOpenNewPolygon] = useState(false)
