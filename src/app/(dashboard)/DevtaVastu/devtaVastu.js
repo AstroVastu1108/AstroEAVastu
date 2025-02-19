@@ -608,6 +608,7 @@ function DevtaVastuPage({id}) {
                         polygons={tabGroup[index].polygons}
                         setPolygons={newPolygons => handleInputPolygonsChange(index, newPolygons)}
                         updatePointsForAllTabs={updatePointsForAllTabs}
+                        vastuLayoutData={vastuLayoutData}
                       />
                     </>
                   )

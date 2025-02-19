@@ -75,7 +75,8 @@ const DevtaVastu = ({
   zoom,
   setZoom,
   polygons,
-  setPolygons
+  setPolygons,
+  vastuLayoutData
 }) => {
   const [lineSets, setLineSets] = useState(DEFAULT_LINE_SETS)
   const [selectedLineIndex, setSelectedLineIndex] = useState(0) // Default to the first line
@@ -3279,18 +3280,27 @@ const DevtaVastu = ({
           </div>
         </div>
         {/* <div class="w-px bg-gray-400"></div> */}
-        <div className='flex flex-col p-0 bg-white rounded-lg '>
-          <div ref={printRef1} id='hiddenDiv' className='hidden-print h-[100vh]'>
+        <div className='flex flex-col p-0 bg-white'>
+          <div ref={printRef1} id='hiddenDiv' className='h-[100vh] w-full'>
             <div className='design-card'>
-              <img src='/path/to/your/logo.png' alt='Logo' className='card-logo' />
               <div className='card-content'>
-                <h2>Artwork Title : {selectedGroup}</h2>
+                <div className='pdf-title bg-primary text-white px-5 py-2 font-ea-sb'>
+                  <span className='text-[24px]'>{vastuLayoutData?.ProjectName}</span>
+                  <div className='text-[14px] flex justify-between'>
+                    <div>{vastuLayoutData?.ClientName} </div>
+                    <div>#{vastuLayoutData?.VPID} </div>
+                  </div>
+                </div>
+                <div className='p-2'>
+                  {vastuLayoutData?.Remark}
+                </div>
+                {/* <h2>Artwork Title : {selectedGroup}</h2>
                 <p>Created by: Artist Name</p>
                 <p>Date: {new Date().toLocaleDateString()}</p>
                 <div className='artwork-details'>
                   <p>Medium: Digital</p>
                   <p>Dimensions: 550x550</p>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
