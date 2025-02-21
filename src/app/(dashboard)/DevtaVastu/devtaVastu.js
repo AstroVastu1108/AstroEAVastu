@@ -570,6 +570,7 @@ function DevtaVastuPage({id}) {
                         polygons={tabGroup[index].polygons}
                         setPolygons={newPolygons => handleTabGroupChange(index, 'polygons', newPolygons)}
                         updatePointsForAllTabs={updatePointsForAllTabs}
+                        vastuLayoutData={vastuLayoutData}
                         hide32Circle={tabGroup[index].hide32Circle}
                         setHide32Circle={newHide32Circle => handleTabGroupChange(index, 'hide32Circle', newHide32Circle)}
                         hide16Circle={tabGroup[index].hide16Circle}

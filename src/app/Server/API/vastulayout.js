@@ -2,8 +2,10 @@ import axios from 'axios'
 import astroInstance from './astroInstance'
 
 // const url = 'https://localhost:7025/api';
+//const url = 'http://192.168.1.109:9090/api';
 // const url = 'http://192.168.1.112:9090/api';
 const url = 'http://192.168.142.15:9090/api';
+
 // get all the vastu layouts
 export async function getVastuLayouts() {
   const responseBody = {

@@ -13,7 +13,7 @@ import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist/build/pdf'
 import Loader from '@/components/common/Loader/Loader'
 import SkeletonLoader from '@/components/common/SkeletonLoader/SkeletonLoader'
 import { LoadingButton } from '@mui/lab'
-import { Card } from '@mui/material'
+import { Card, Divider } from '@mui/material'
 import PageTitle from '@/components/common/PageTitle/PageTitle'
 import NewPolygonPopUp from '@/components/devta-vastu/NewPolygonPopUp/NewPolygonPopUp'
 // Set the worker source using a CDN
@@ -80,6 +80,7 @@ const DevtaVastu = ({
   setZoom,
   polygons,
   setPolygons,
+  vastuLayoutData,
   hide32Circle,
   setHide32Circle,
   hide16Circle,
@@ -2377,6 +2378,27 @@ const DevtaVastu = ({
     setOpenNewPolygon(true)
   }
 
+  const formatDate = (originalDate) => {
+    const date = new Date(originalDate)
+
+    // Format the date and time
+    const day = String(date.getDate()).padStart(2, '0') // 2-digit day
+    const month = String(date.getMonth() + 1).padStart(2, '0') // 2-digit month
+    const year = date.getFullYear() // Full year
+
+    // Format hours and minutes
+    let hours = date.getHours()
+    const minutes = String(date.getMinutes()).padStart(2, '0')
+    const ampm = hours >= 12 ? 'PM' : 'AM'
+    hours = hours % 12 || 12 // Convert 24-hour time to 12-hour format
+
+    // Construct the final string
+    const formattedDate = `${day}-${month}-${year} ${hours}:${minutes} ${ampm}`
+
+    console.log(formattedDate);
+    return formattedDate;
+  }
+
   return (
     <>
       <div className='flex flex-row gap-1 py-4 justify-start '>
@@ -3298,18 +3320,49 @@ const DevtaVastu = ({
           </div>
         </div>
         {/* <div class="w-px bg-gray-400"></div> */}
-        <div className='flex flex-col p-0 bg-white rounded-lg '>
-          <div ref={printRef1} id='hiddenDiv' className='hidden-print h-[100vh]'>
+        <div className='flex flex-col p-0 bg-white'>
+          <div ref={printRef1} id='hiddenDiv' className='hidden h-[100vh] w-full'>
             <div className='design-card'>
-              <img src='/path/to/your/logo.png' alt='Logo' className='card-logo' />
               <div className='card-content'>
-                <h2>Artwork Title : {selectedGroup}</h2>
+                <div className='pdf-title bg-primary text-white px-5 py-2 font-ea-sb'>
+                  <span className='text-[20px] uppercase'>{vastuLayoutData?.ProjectName}</span>
+                  <div className='text-[14px] flex justify-between'>
+                    <div>{vastuLayoutData?.ClientName} </div>
+                    <div>#{vastuLayoutData?.VPID} </div>
+                  </div>
+                </div>
+                <div className='p-2'>{vastuLayoutData?.Remark}</div>
+                <Divider />
+                <div className='flex justify-between'>
+                  <div className='w-[33%] ps-2'>
+                    <div className='font-ea-sb uppercase'>FULL AREA</div>
+                    <div>
+                      {vastuLayoutData?.TotalArea} {vastuLayoutData?.TotalAreaUnit}
+                    </div>
+                  </div>
+                  <div className='border-l w-[33%] ps-2'>
+                    <div className='font-ea-sb uppercase'>COVERED</div>
+                    <div>
+                      {vastuLayoutData?.CoveredArea} {vastuLayoutData?.CoveredAreaUnit}
+                    </div>
+                  </div>
+                  <div className='border-l w-[33%] ps-2'>
+                    <div className='font-ea-sb uppercase'>OPEN</div>
+                    <div>
+                      {vastuLayoutData?.OpenArea} {vastuLayoutData?.OpenAreaUnit}
+                    </div>
+                  </div>
+                </div>
+                <Divider />
+                <div className=''>Audit Date # {formatDate(vastuLayoutData?.AuditDate)}</div>
+                <div className='mt-2 font-ea-sb text-primary'>Astro Vastu Remedies / Suggestions:</div>
+                {/* <h2>Artwork Title : {selectedGroup}</h2>
                 <p>Created by: Artist Name</p>
                 <p>Date: {new Date().toLocaleDateString()}</p>
                 <div className='artwork-details'>
                   <p>Medium: Digital</p>
                   <p>Dimensions: 550x550</p>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
