@@ -110,7 +110,15 @@ function DevtaVastuPage({id}) {
                 inputDegree: matchingData.InputDegree,
                 translate: {x:matchingData.Translate?.x,y:matchingData.Translate?.y},
                 zoom:matchingData.Zoom,
-                polygons:matchingData.Polygons
+                polygons:matchingData.Polygons,
+                lockChakra:matchingData.lockChakra,
+                lockCentroid:matchingData.lockCentroid,
+                lineSets:matchingData.lineSets,
+                hideCircle:matchingData.hideCircle,
+                hide32Circle:matchingData.hide32Circle,
+                hide4Circle:matchingData.hide4Circle,
+                hide16Circle:matchingData.hide16Circle,
+                hide8Circle:matchingData.hide8Circle
               };
             }
             return tab;
@@ -277,62 +285,13 @@ function DevtaVastuPage({id}) {
     setActiveTab(newValue)
   }
 
-  const handlePointsChange = (index, newPoints) => {
-    setTabGroup(prev => {
-      const updatedGroup = [...prev]
-      updatedGroup[index].points = newPoints
-      return updatedGroup
-    })
-  }
-
-  const handleCentroidChange = (index, newCentroid) => {
-    setTabGroup(prev => {
-      const updatedGroup = [...prev]
-      updatedGroup[index].centroid = newCentroid
-      return updatedGroup
-    })
-  }
-
-  const handleSnapToCentroidChange = (index, newSnapToCentroid) => {
-    setTabGroup(prev => {
-      const updatedGroup = [...prev]
-      updatedGroup[index].snapToCentroid = newSnapToCentroid
-      return updatedGroup
-    })
-  }
-
-  const handleInputDegreeChange = (index, newInputDegree) => {
-    setTabGroup(prev => {
-      const updatedGroup = [...prev]
-      updatedGroup[index].inputDegree = newInputDegree
-      return updatedGroup
-    })
-  }
-
-  const handleInputTranslateChange = (index, translate) => {
-    setTabGroup(prev => {
-      const updatedGroup = [...prev]
-      updatedGroup[index].translate = translate
-      return updatedGroup
-    })
-  }
-
-  const handleInputZoomChange = (index, zoom) => {
-    console.log("here")
-    setTabGroup(prev => {
-      const updatedGroup = [...prev]
-      updatedGroup[index].zoom = zoom
-      return updatedGroup
-    })
-  }
-
-  const handleInputPolygonsChange = (index, polygons) => {
-    setTabGroup(prev => {
-      const updatedGroup = [...prev]
-      updatedGroup[index].polygons = polygons
-      return updatedGroup
-    })
-  }
+  const handleTabGroupChange = (index, key, value) => {
+    setTabGroup((prev) => {
+      const updatedGroup = [...prev];
+      updatedGroup[index][key] = value;
+      return updatedGroup;
+    });
+  };
 
   const updatePointsForAllTabs = (selectedGroup, newPoints) => {
     if (selectedGroup == 'House Plan') {
@@ -592,23 +551,38 @@ function DevtaVastuPage({id}) {
                         handleFileUpload={handleFileUpload}
                         previewUrl={previewUrl}
                         setPreviewUrl={setPreviewUrl}
-                        // points={tabGroup.findIndex((e)=>e.label == savedGroups[index]).points}
                         points={tabGroup[index].points}
-                        setPoints={newPoints => handlePointsChange(index, newPoints)}
+                        setPoints={newPoints => handleTabGroupChange(index, 'points', newPoints)}
                         centroid={tabGroup[index].centroid}
-                        setCentroid={newCentroid => handleCentroidChange(index, newCentroid)}
+                        setCentroid={newCentroid => handleTabGroupChange(index, 'centroid', newCentroid)}
                         snapToCentroid={tabGroup[index].snapToCentroid}
-                        setSnapToCentroid={newSnapToCentroid => handleSnapToCentroidChange(index, newSnapToCentroid)}
+                        setSnapToCentroid={newSnapToCentroid => handleTabGroupChange(index, 'snapToCentroid', newSnapToCentroid)}
+                        lockCentroid={tabGroup[index].lockCentroid}
+                        setLockCentroid={newLockCentroid => handleTabGroupChange(index, 'lockCentroid', newLockCentroid)}
+                        lockChakra={tabGroup[index].lockChakra}
+                        setLockChakra={newLockChakra => handleTabGroupChange(index, 'lockChakra', newLockChakra)}
                         inputDegree={tabGroup[index].inputDegree}
-                        setInputDegree={newInputDegree => handleInputDegreeChange(index, newInputDegree)}
+                        setInputDegree={newInputDegree => handleTabGroupChange(index, 'inputDegree', newInputDegree)}
                         translate={tabGroup[index].translate}
-                        setTranslate={newTranslate => handleInputTranslateChange(index, newTranslate)}
+                        setTranslate={newTranslate => handleTabGroupChange(index, 'translate', newTranslate)}
                         zoom={tabGroup[index].zoom}
-                        setZoom={newZoom => handleInputZoomChange(index, newZoom)}
+                        setZoom={newZoom => handleTabGroupChange(index, 'zoom', newZoom)}
                         polygons={tabGroup[index].polygons}
-                        setPolygons={newPolygons => handleInputPolygonsChange(index, newPolygons)}
+                        setPolygons={newPolygons => handleTabGroupChange(index, 'polygons', newPolygons)}
                         updatePointsForAllTabs={updatePointsForAllTabs}
                         vastuLayoutData={vastuLayoutData}
+                        hide32Circle={tabGroup[index].hide32Circle}
+                        setHide32Circle={newHide32Circle => handleTabGroupChange(index, 'hide32Circle', newHide32Circle)}
+                        hide16Circle={tabGroup[index].hide16Circle}
+                        setHide16Circle={newHide16Circle => handleTabGroupChange(index, 'hide16Circle', newHide16Circle)}
+                        hide8Circle={tabGroup[index].hide8Circle}
+                        setHide8Circle={newHide8Circle => handleTabGroupChange(index, 'hide8Circle', newHide8Circle)}
+                        hide4Circle={tabGroup[index].hide4Circle}
+                        setHide4Circle={newHide4Circle => handleTabGroupChange(index, 'hide4Circle', newHide4Circle)}
+                        hideCircle={tabGroup[index].hideCircle}
+                        setHideCircle={newHideCircle => handleTabGroupChange(index, 'hideCircle', newHideCircle)}
+                        lineSets={tabGroup[index].lineSets}
+                        setLineSets={newLineSets => handleTabGroupChange(index, 'lineSets', newLineSets)}
                       />
                     </>
                   )

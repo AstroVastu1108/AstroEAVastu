@@ -4,12 +4,34 @@ const DEFAULT_POINTS = [
   { x: 560, y: 560 },
   { x: 220, y: 560 }
 ];
+
+
+const DEFAULT_LINE_SETS = [
+  {
+    stroke: '#000',
+    strokeWidth: 0.5,
+    strokeDasharray: '5,5',
+    name: 'Line 1'
+  },
+  {
+    stroke: '#0066cc',
+    strokeWidth: 0.5,
+    strokeDasharray: '',
+    name: 'Line 2'
+  }
+]
+
+
 const DEFAULT_TAB_CONFIG = {
   points: DEFAULT_POINTS,
   centroid: null,
   setCentroid: null,
   snapToCentroid: false,
   setSnapToCentroid: null,
+  lockCentroid:false,
+  setLockCentroid:null,
+  lockChakra:false,
+  setLockChakra:null,
   inputDegree: 0,
   setInputDegree: null,
   translate: { x: 0, y: 0 },
@@ -17,7 +39,19 @@ const DEFAULT_TAB_CONFIG = {
   zoom: 1,
   setZoom: null,
   polygons:[],
-  setPolygons:null
+  setPolygons:null,
+  hide32Circle:false,
+  setHide32Circle:null,
+  hide16Circle:false,
+  setHide16Circle:null,
+  hide8Circle:false,
+  setHide8Circle:null,
+  hide4Circle:false,
+  setHide4Circle:null,
+  hideCircle:false,
+  setHideCircle:null,
+  lineSets:DEFAULT_LINE_SETS,
+  setLineSets:DEFAULT_LINE_SETS
 };
 // export const TabsData = [
 //   {
