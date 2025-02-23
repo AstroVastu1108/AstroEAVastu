@@ -9,7 +9,28 @@
       position: static; /* Restore to default position during print */
       left: auto;
     }
+
+    #hiddenDiv {
+      min-height: 100vh; /* Ensures it takes full height */
+      display: flex;
+      flex-direction: column;
+    }
+  
+    .card-content {
+      flex-grow: 1; /* Ensures it stretches */
+    }
   }
+
+
+  /* #hiddenDiv {
+    min-height: 100vh; 
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-content {
+    flex-grow: 1; 
+  }  */
   
   .design-card {
     /* width: 300px; Reduced width to better match the 30% proportion */

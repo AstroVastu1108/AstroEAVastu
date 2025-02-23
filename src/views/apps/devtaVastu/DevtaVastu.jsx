@@ -98,10 +98,10 @@ const DevtaVastu = ({
   const [selectedLineIndex, setSelectedLineIndex] = useState(0) // Default to the first line
 
   const handleLineSetUpdate = (index, updates) => {
-    const updatedLineSets = lineSets;
-      updatedLineSets[index] = { ...updatedLineSets[index], ...updates };
-    setLineSets(updatedLineSets);
-  };
+    const updatedLineSets = lineSets
+    updatedLineSets[index] = { ...updatedLineSets[index], ...updates }
+    setLineSets(updatedLineSets)
+  }
 
   // const [points, setPoints] = useState(DEFAULT_POINTS);
   // const [centroid, setCentroid] = useState(null);
@@ -2378,7 +2378,7 @@ const DevtaVastu = ({
     setOpenNewPolygon(true)
   }
 
-  const formatDate = (originalDate) => {
+  const formatDate = originalDate => {
     const date = new Date(originalDate)
 
     // Format the date and time
@@ -2395,8 +2395,8 @@ const DevtaVastu = ({
     // Construct the final string
     const formattedDate = `${day}-${month}-${year} ${hours}:${minutes} ${ampm}`
 
-    console.log(formattedDate);
-    return formattedDate;
+    console.log(formattedDate)
+    return formattedDate
   }
 
   return (
@@ -2404,7 +2404,7 @@ const DevtaVastu = ({
       <div className='flex flex-row gap-1 py-4 justify-start '>
         <div className='bg-white'>
           <div ref={printRef} className='flex-grow '>
-            <div className='flex ms-3.5'>
+            {/* <div className='flex ms-3.5'>
               {Array.from({ length: 24 }, (_, i) => (
                 <div
                   key={i}
@@ -2420,10 +2420,10 @@ const DevtaVastu = ({
                   {i + 1}
                 </div>
               ))}
-            </div>
+            </div> */}
 
-            <div className='relative flex top-[-15px]'>
-              <div className='flex flex-col mt-2'>
+            <div className='relative flex'>
+              {/* <div className='flex flex-col mt-2'>
                 {'ABCDEFGHIJKLMNOPQRSTUV'.split('').map((letter, i) => (
                   <div
                     key={i}
@@ -2439,7 +2439,7 @@ const DevtaVastu = ({
                     {letter}
                   </div>
                 ))}
-              </div>
+              </div> */}
 
               {/* {loading && <SkeletonLoader width={width} height={height} />}
                */}
@@ -3278,7 +3278,7 @@ const DevtaVastu = ({
                   }}>{letter}</div>
                 ))}
               </div> */}
-              <div className='flex flex-col ms-2 mt-2'>
+              {/* <div className='flex flex-col ms-2 mt-2'>
                 {'ABCDEFGHIJKLMNOPQRSTUV'.split('').map((letter, i) => (
                   <div
                     key={i}
@@ -3297,10 +3297,10 @@ const DevtaVastu = ({
                     {letter}
                   </div>
                 ))}
-              </div>
+              </div> */}
             </div>
 
-            <div className='flex mb-1 ms-3.5 relative top-[-40px]'>
+            {/* <div className='flex mb-1 ms-3.5 relative top-[-40px]'>
               {Array.from({ length: 24 }, (_, i) => (
                 <div
                   key={i}
@@ -3316,19 +3316,19 @@ const DevtaVastu = ({
                   {i + 1}
                 </div>
               ))}
-            </div>
+            </div> */}
           </div>
         </div>
         {/* <div class="w-px bg-gray-400"></div> */}
         <div className='flex flex-col p-0 bg-white'>
-          <div ref={printRef1} id='hiddenDiv' className='hidden h-[100vh] w-full'>
-            <div className='design-card'>
+          <div ref={printRef1} id='hiddenDiv' className='border !h-[790px] w-full'>
+            {/* <div className='design-card'> */}
               <div className='card-content'>
-                <div className='pdf-title bg-primary text-white px-5 py-2 font-ea-sb'>
-                  <span className='text-[20px] uppercase'>{vastuLayoutData?.ProjectName}</span>
-                  <div className='text-[14px] flex justify-between'>
-                    <div>{vastuLayoutData?.ClientName} </div>
-                    <div>#{vastuLayoutData?.VPID} </div>
+                <div className='pdf-title bg-primary text-white px-1 py-1 '>
+                  <span className='text-[14px] uppercase font-semibold'>{vastuLayoutData?.ProjectName}</span>
+                  <div className='text-[12px] flex justify-between items-center'>
+                    <div className='text-ea-sb uppercase font-semibold'>{vastuLayoutData?.ClientName} </div>
+                    <div className='text-[10px] '>#{vastuLayoutData?.VPID} </div>
                   </div>
                 </div>
                 <div className='p-2'>{vastuLayoutData?.Remark}</div>
@@ -3355,16 +3355,34 @@ const DevtaVastu = ({
                 </div>
                 <Divider />
                 <div className=''>Audit Date # {formatDate(vastuLayoutData?.AuditDate)}</div>
-                <div className='mt-2 font-ea-sb text-primary'>Astro Vastu Remedies / Suggestions:</div>
-                {/* <h2>Artwork Title : {selectedGroup}</h2>
-                <p>Created by: Artist Name</p>
-                <p>Date: {new Date().toLocaleDateString()}</p>
-                <div className='artwork-details'>
-                  <p>Medium: Digital</p>
-                  <p>Dimensions: 550x550</p>
-                </div> */}
+                <div>
+                  <div className='mt-2 font-ea-sb text-primary'>Astro Vastu Remedies / Suggestions:</div>
+                  <div>
+                    The positioning of the Toilet WC and Main Door entry is suggested based on Astro Vastu Analysis and
+                    Energy Scan Audit.
+                  </div>
+                </div>
               </div>
-            </div>
+              <div className='card-body'
+               style={{
+                backgroundImage: "url('/images/my-svg.svg')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                width: "200px",
+                height: "200px",
+              }}
+            ></div>
+              <div className='card-footer'>
+                <div className='pdf-title flex flex-col bg-primary text-white py-1 items-center justify-center'>
+                  <div className='text-[14px] uppercase text-center font-semibold'>Elephant AstroVastu Research Center</div>
+                  <div className='text-[12px] flex justify-center items-center'>
+                    <div className='text-ea-sb uppercase font-semibold'>www.AstroVastu.net | +91 9856 650 650</div>
+                    {/* <div className='text-[10px] '>#{vastuLayoutData?.VPID} </div> */}
+                  </div>
+                </div>
+              </div>
+            {/* </div> */}
           </div>
 
           {selectedGroup == 'House Plan' && (

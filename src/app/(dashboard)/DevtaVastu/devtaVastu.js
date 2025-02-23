@@ -113,7 +113,7 @@ function DevtaVastuPage({id}) {
                 polygons:matchingData.Polygons,
                 lockChakra:matchingData.lockChakra,
                 lockCentroid:matchingData.lockCentroid,
-                lineSets:matchingData.lineSets,
+                lineSets:matchingData.LineSets,
                 hideCircle:matchingData.hideCircle,
                 hide32Circle:matchingData.hide32Circle,
                 hide4Circle:matchingData.hide4Circle,
@@ -360,18 +360,23 @@ function DevtaVastuPage({id}) {
 
 
       const leftClone = leftDivRef.cloneNode(true);
-      leftClone.style.width = "20%";
+      leftClone.style.width = "26%";
       leftClone.style.height = "100%";
       leftClone.style.display = "inline-block";
       leftClone.style.overflow = "hidden";
+      leftClone.style.paddingTop = "24px"
+      leftClone.style.fontFamily = "'Segoe UI', Arial, sans-serif"; // Apply font-family
       // leftClone.style.border = "2px solid red";
 
       // Clone right section
       const rightClone = rightDivRef.cloneNode(true);
-      rightClone.style.width = "80%";
+      rightClone.style.width = "74%";
       rightClone.style.height = "790px";
       rightClone.style.display = "inline-block";
       rightClone.style.overflow = "hidden";
+      rightClone.style.paddingTop = "24px"
+      rightClone.style.paddingLeft = "8px"
+      rightClone.style.fontFamily = "'Segoe UI', Arial, sans-serif"; // Apply font-family
       // rightClone.style.border = "2px solid red";
 
       pageWrapper.appendChild(rightClone);
