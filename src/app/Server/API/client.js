@@ -9,6 +9,8 @@ export async function CreateClient(payload) {
     error: null
   }
   try {
+    console.log("payload : ",payload)
+    // const response = await axios.post(`https://localhost:7025/api/Client/save`, payload)
     const response = await axiosInstance.post(`/Client/save`, payload)
     responseBody.responseData = response.data
     return responseBody

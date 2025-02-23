@@ -2,6 +2,7 @@
 import { authCheckRequest, registerCompnay, sendSignInRequest } from '@/app/Server/API/auth';
 import Cookies from 'js-cookie';
 import { createContext, useContext, useEffect, useState } from 'react';
+import FingerprintJS from '@fingerprintjs/fingerprintjs';
 
 const AuthContext = createContext();
 const transformString = (input) => {
@@ -14,15 +15,20 @@ const transformString = (input) => {
   const formattedString = `${part1}-${part2}-${part3}-${part4}-${part5}`;
   return formattedString;
 };
-const getDID = () => {
-  const uid = import('../../app/uid/uid').then(u => u.load())
-  uid.then(id => id.get())
-    .then(result => {
-      // This is the visitor identifier:
-      const UniqueId = result.visitorId
-      Cookies.set('M-DID', transformString(UniqueId), { expires: 1 });
-      // alert(UniqueId)
-    })
+const getDID = async () => {
+  const fp = await FingerprintJS.load();
+  const result = await fp.get();
+  const { fontPreferences, ...components } = result.components;
+  const UniqueId = FingerprintJS.hashComponents(components);
+  Cookies.set('M-DID', transformString(UniqueId), { expires: 1 });
+
+
+  // const uid = import('../../app/uid/uid').then(u => u.load())
+  // uid.then(id => id.get())
+  //   .then(result => {
+  //     const UniqueId = result.visitorId
+  //     Cookies.set('M-DID', transformString(UniqueId), { expires: 1 });
+  //   })
   //     const fpPromise = import('../../app/uid/uid')
   //         .then(FingerprintJS => FingerprintJS.load())
 

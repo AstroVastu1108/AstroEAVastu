@@ -13,6 +13,7 @@ import VerificationPopup from "@/@core/components/custom-verification/verificati
 
 export default function ClientMain() {
   const { user } = useAuth();
+  console.log("user : ",user)
   const router = useRouter()
 
   const handleClientDetail = (data)=>{
@@ -119,6 +120,7 @@ export default function ClientMain() {
 
   const handleSaveClient = async (payload) => {
     try {
+      console.log("paylosf : ",payload);
       const response = await CreateClient(payload);
       if (response.hasError) {
         setIsSaving(false)
