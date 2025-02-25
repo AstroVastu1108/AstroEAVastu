@@ -13,7 +13,7 @@ import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist/build/pdf'
 import Loader from '@/components/common/Loader/Loader'
 import SkeletonLoader from '@/components/common/SkeletonLoader/SkeletonLoader'
 import { LoadingButton } from '@mui/lab'
-import { Card, Divider } from '@mui/material'
+import { Button, Card, Divider } from '@mui/material'
 import PageTitle from '@/components/common/PageTitle/PageTitle'
 import NewPolygonPopUp from '@/components/devta-vastu/NewPolygonPopUp/NewPolygonPopUp'
 // Set the worker source using a CDN
@@ -1143,7 +1143,7 @@ const DevtaVastu = ({
           }
 
           numberedPoints.push(...selectedPoints)
-        } catch (error) {}
+        } catch (error) { }
       }
 
       setIntersectionPoints(numberedPoints)
@@ -1340,7 +1340,7 @@ const DevtaVastu = ({
 
           // Add to the global numberedPoints array
           leftnumberedPoints.push(...selectedPoints)
-        } catch (error) {}
+        } catch (error) { }
       }
 
       setNewLeftIntersectionPoints(leftnumberedPoints)
@@ -1993,12 +1993,13 @@ const DevtaVastu = ({
     // Measure text width and height (or use a fixed size if consistent)
     const textWidth = hoverText.length * 8 // Estimate based on character count
     const textHeight = 20 // Adjust based on your font size and padding
-
+    console.log("hoverText : ===> ", hoverText)
     return (
       <>
         <polygon
           points={coordinates.map(point => `${point.x},${point.y}`).join(' ')}
-          fill={'transparent'}
+          fill={hoverText == "1 Brahma" ? "pink" : 'transparent'}
+          opacity={0.25}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         />
@@ -2401,7 +2402,7 @@ const DevtaVastu = ({
 
   return (
     <>
-      <div className='flex flex-row gap-1 py-4 justify-start '>
+      <div className='flex flex-row gap-5 py-4 justify-start '>
         <div className='bg-white'>
           <div ref={printRef} className='flex-grow '>
             {/* <div className='flex ms-3.5'>
@@ -3114,7 +3115,7 @@ const DevtaVastu = ({
                           x={
                             (Math.min(...polygon.points.map(point => point.x)) +
                               Math.max(...polygon.points.map(point => point.x))) /
-                              2 +
+                            2 +
                             15
                           } // Positioned to the right of the title
                           y={Math.min(...polygon.points.map(point => point.y)) - 25} // Aligned vertically with the title
@@ -3136,7 +3137,7 @@ const DevtaVastu = ({
                           x={
                             (Math.min(...polygon.points.map(point => point.x)) +
                               Math.max(...polygon.points.map(point => point.x))) /
-                              2 +
+                            2 +
                             30
                           } // Positioned to the right of the Edit button
                           y={Math.min(...polygon.points.map(point => point.y)) - 25} // Aligned vertically with the title
@@ -3322,49 +3323,48 @@ const DevtaVastu = ({
         {/* <div class="w-px bg-gray-400"></div> */}
         <div className='flex flex-col p-0 bg-white'>
           <div ref={printRef1} id='hiddenDiv' className='border !h-[790px] w-full'>
-            {/* <div className='design-card'> */}
-              <div className='card-content'>
-                <div className='pdf-title bg-primary text-white px-1 py-1 '>
-                  <span className='text-[14px] uppercase font-semibold'>{vastuLayoutData?.ProjectName}</span>
-                  <div className='text-[12px] flex justify-between items-center'>
-                    <div className='text-ea-sb uppercase font-semibold'>{vastuLayoutData?.ClientName} </div>
-                    <div className='text-[10px] '>#{vastuLayoutData?.VPID} </div>
-                  </div>
+            <div className='card-content'>
+              <div className='pdf-title bg-primary text-white px-1 py-1 '>
+                <span className='text-[14px] uppercase font-semibold'>{vastuLayoutData?.ProjectName}</span>
+                <div className='text-[12px] flex justify-between items-center'>
+                  <div className='text-ea-sb uppercase font-semibold'>{vastuLayoutData?.ClientName} </div>
+                  <div className='text-[10px] '>#{vastuLayoutData?.VPID} </div>
                 </div>
-                <div className='p-2'>{vastuLayoutData?.Remark}</div>
-                <Divider />
-                <div className='flex justify-between'>
-                  <div className='w-[33%] ps-2'>
-                    <div className='font-ea-sb uppercase'>FULL AREA</div>
-                    <div>
-                      {vastuLayoutData?.TotalArea} {vastuLayoutData?.TotalAreaUnit}
-                    </div>
-                  </div>
-                  <div className='border-l w-[33%] ps-2'>
-                    <div className='font-ea-sb uppercase'>COVERED</div>
-                    <div>
-                      {vastuLayoutData?.CoveredArea} {vastuLayoutData?.CoveredAreaUnit}
-                    </div>
-                  </div>
-                  <div className='border-l w-[33%] ps-2'>
-                    <div className='font-ea-sb uppercase'>OPEN</div>
-                    <div>
-                      {vastuLayoutData?.OpenArea} {vastuLayoutData?.OpenAreaUnit}
-                    </div>
-                  </div>
-                </div>
-                <Divider />
-                <div className=''>Audit Date # {formatDate(vastuLayoutData?.AuditDate)}</div>
-                <div>
-                  <div className='mt-2 font-ea-sb text-primary'>Astro Vastu Remedies / Suggestions:</div>
+              </div>
+              <div className='p-2'>{vastuLayoutData?.Remark}</div>
+              <Divider />
+              <div className='flex justify-between'>
+                <div className='w-[33%] ps-2'>
+                  <div className='font-ea-sb uppercase'>FULL AREA</div>
                   <div>
-                    The positioning of the Toilet WC and Main Door entry is suggested based on Astro Vastu Analysis and
-                    Energy Scan Audit.
+                    {vastuLayoutData?.TotalArea} {vastuLayoutData?.TotalAreaUnit}
+                  </div>
+                </div>
+                <div className='border-l w-[33%] ps-2'>
+                  <div className='font-ea-sb uppercase'>COVERED</div>
+                  <div>
+                    {vastuLayoutData?.CoveredArea} {vastuLayoutData?.CoveredAreaUnit}
+                  </div>
+                </div>
+                <div className='border-l w-[33%] ps-2'>
+                  <div className='font-ea-sb uppercase'>OPEN</div>
+                  <div>
+                    {vastuLayoutData?.OpenArea} {vastuLayoutData?.OpenAreaUnit}
                   </div>
                 </div>
               </div>
-              <div className='card-body'
-               style={{
+              <Divider />
+              <div className=''>Audit Date # {formatDate(vastuLayoutData?.AuditDate)}</div>
+              <div>
+                <div className='mt-2 font-ea-sb text-primary'>Astro Vastu Remedies / Suggestions:</div>
+                <div>
+                  The positioning of the Toilet WC and Main Door entry is suggested based on Astro Vastu Analysis and
+                  Energy Scan Audit.
+                </div>
+              </div>
+            </div>
+            <div className='card-body'
+              style={{
                 backgroundImage: "url('/images/my-svg.svg')",
                 backgroundSize: "cover",
                 backgroundPosition: "center",
@@ -3373,203 +3373,305 @@ const DevtaVastu = ({
                 height: "200px",
               }}
             ></div>
-              <div className='card-footer'>
-                <div className='pdf-title flex flex-col bg-primary text-white py-1 items-center justify-center'>
-                  <div className='text-[14px] uppercase text-center font-semibold'>Elephant AstroVastu Research Center</div>
-                  <div className='text-[12px] flex justify-center items-center'>
-                    <div className='text-ea-sb uppercase font-semibold'>www.AstroVastu.net | +91 9856 650 650</div>
-                    {/* <div className='text-[10px] '>#{vastuLayoutData?.VPID} </div> */}
-                  </div>
+            <div className='card-footer'>
+              <div className='pdf-title flex flex-col bg-primary text-white py-1 items-center justify-center'>
+                <div className='text-[14px] uppercase text-center font-semibold'>Elephant AstroVastu Research Center</div>
+                <div className='text-[12px] flex justify-center items-center'>
+                  <div className='text-ea-sb uppercase font-semibold'>www.AstroVastu.net | +91 9856 650 650</div>
                 </div>
               </div>
-            {/* </div> */}
-          </div>
-
-          {selectedGroup == 'House Plan' && (
-            <div
-              className='p-0 border-2 border-dashed border-gray-300 rounded-lg text-center hover:border-purple-500 transition-colors'
-              onDragOver={e => e.preventDefault()}
-              onDrop={handleFileUpload}
-              style={{
-                padding: '30px 90px'
-              }}
-            >
-              <label className='flex flex-col items-center gap-2 cursor-pointer'>
-                <Upload size={24} className='text-primary font-ea-sb' />
-                <span className='text-primary font-ea-sb'>Upload File</span>
-                <input type='file' className='hidden' accept='.jpg,.jpeg,.png,.pdf' onChange={handleFileUpload} />
-              </label>
-              <p className='text-sm text-gray-500 mt-2'>Supported: .jpg, .jpeg, .png, .pdf</p>
             </div>
-          )}
-
-          <div className='flex justify-center mt-2'>
-            <LoadingButton
-              fullWidth
-              variant='outlined'
-              // variant='contained'
-              onClick={() => updatePointsForAllTabs(selectedGroup, points)}
-              loadingPosition='start'
-              type='submit'
-              // sx={{
-              //   width: '150px'
-              // }}
-            >
-              Save
-            </LoadingButton>
-          </div>
-          <div className='flex justify-center mt-2'>
-            <LoadingButton
-              fullWidth
-              variant='outlined'
-              // variant='contained'
-              onClick={() => handleAddPolygonToggle(selectedGroup)}
-              loadingPosition='start'
-              type='submit'
-              // sx={{
-              //   width: '150px'
-              // }}
-            >
-              Add New Polygon
-            </LoadingButton>
           </div>
 
-          <div className='flex justify-between gap-2 p-3'>
-            <LoadingButton
-              onClick={handleZoomIn}
-              variant='contained'
-              className=' text-white px-3 py-2 rounded transition w-full'
-            >
-              Zoom In
-            </LoadingButton>
-            <LoadingButton onClick={handleZoomOut} variant='outlined' className='px-3 py-2 rounded transition w-full'>
-              Zoom Out
-            </LoadingButton>
-          </div>
-
-          <label htmlFor='line-select' className='text-sm font-medium text-gray-600'>
-            Default Options
-          </label>
-          {/* Checkbox Toggles */}
-          <div className='space-y-3'>
-            <label className='flex items-center gap-2'>
-              <span className='text-sm text-gray-700'>Enter Degree to move cricle:</span>
-              <input
-                type='number'
-                readOnly={lockChakra}
-                value={inputDegree}
-                onChange={handleInputChange}
-                className='border border-gray-300 rounded px-2 py-1 w-20 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
-                placeholder='0'
-                aria-label='Degree input'
-              />
+          <div
+            className='p-0 border-2 border-dashed border-gray-300 rounded-lg text-center hover:border-purple-500 transition-colors'
+            onDragOver={e => e.preventDefault()}
+            onDrop={handleFileUpload}
+            style={{
+              padding: '30px 90px'
+            }}
+          >
+            <label className='flex flex-col items-center gap-2 cursor-pointer'>
+              <Upload size={24} className='text-primary font-ea-sb' />
+              <span className='text-primary font-ea-sb'>Upload File</span>
+              <input type='file' className='hidden' accept='.jpg,.jpeg,.png,.pdf' onChange={handleFileUpload} />
             </label>
-            {[
-              { id: 'lockChakra', label: 'Lock Chakra', checked: lockChakra, onChange: setLockChakra },
-              { id: 'lockCentroid', label: 'Lock Center', checked: lockCentroid, onChange: setLockCentroid },
-              { id: 'snapToCentroid', label: 'Reset Auto Center', checked: snapToCentroid, onChange: setSnapToCentroid }
-            ].map(({ id, label, checked, onChange }) => (
-              <div key={id} className='flex items-center gap-2'>
-                <input
-                  type='checkbox'
-                  id={id}
-                  checked={checked}
-                  onChange={e => onChange(e.target.checked)}
-                  className='cursor-pointer w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500'
-                />
-                <label htmlFor={id} className='text-sm text-gray-700 cursor-pointer'>
-                  {label}
-                </label>
-              </div>
-            ))}
-            {/*  */}
-            {chakras.map(({ id, label, checked, onChange, textLabel }) => (
-              <div key={id} className='flex items-center gap-2'>
-                <input
-                  type='checkbox'
-                  id={id}
-                  checked={checked}
-                  onChange={e => handleShowChakra(textLabel, e.target.checked)}
-                  // checked={selectedChakra === textLabel}
-                  // onChange={() => handleShowChakra(textLabel)}
-                  className='cursor-pointer w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500'
-                />
-                <label htmlFor={id} className='text-sm text-gray-700 cursor-pointer'>
-                  {label}
-                </label>
-              </div>
-            ))}
-            <div className='space-y-4 p-4 bg-gray-50 rounded-lg shadow'>
-              {/* Line Selection Dropdown */}
-              <div className='flex items-center gap-3 mb-4'>
-                <label htmlFor='line-select' className='text-sm font-medium text-gray-600'>
-                  Select Line:
-                </label>
-                <select
-                  id='line-select'
-                  value={selectedLineIndex}
-                  onChange={e => setSelectedLineIndex(parseInt(e.target.value, 10))}
-                  className='text-sm border rounded p-2 w-40'
-                >
-                  {lineSets.map((lineSet, index) => (
-                    <option key={index} value={index}>
-                      {lineSet.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            <p className='text-sm text-gray-500 mt-2'>Supported: .jpg, .jpeg, .png, .pdf</p>
+          </div>
 
-              {/* Line Controls for Selected Line */}
-              <LineControls
-                lineSet={lineSets[selectedLineIndex]}
-                setIndex={selectedLineIndex}
+          <div className='mt-3 flex flex-col gap-2'>
+            <div className='flex justify-between gap-2 '>
+              <LoadingButton
+                variant='outlined'
+                onClick={() => updatePointsForAllTabs(selectedGroup, points)}
+                className=' px-3 py-2 rounded transition w-full'
+              >
+                Save
+              </LoadingButton>
+
+              <LoadingButton
+                variant='contained'
+                onClick={() => handleAddPolygonToggle(selectedGroup)}
+                className='px-3 py-2 rounded transition w-full'
+              >
+                Add Overlay
+              </LoadingButton>
+            </div>
+
+            <div className='flex justify-between gap-2'>
+              <LoadingButton
+                onClick={handleZoomIn}
+                variant='contained'
+                className=' text-white px-3 py-2 rounded transition w-full'
+              >
+                Zoom In
+              </LoadingButton>
+              <LoadingButton onClick={handleZoomOut} variant='outlined' className='px-3 py-2 rounded transition w-full'>
+                Zoom Out
+              </LoadingButton>
+            </div>
+          </div>
+
+          <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <fieldset className="p-4 border border-purple-300 rounded-lg">
+              <legend className="font-semibold px-2">Default Options</legend>
+              {[
+                { id: 'lockChakra', label: 'Lock Chakra', checked: lockChakra, onChange: setLockChakra },
+                { id: 'lockCentroid', label: 'Lock Center', checked: lockCentroid, onChange: setLockCentroid },
+                { id: 'snapToCentroid', label: 'Reset Auto Center', checked: snapToCentroid, onChange: setSnapToCentroid }
+              ].map(({ id, label, checked, onChange }) => (
+                <div key={id} className='flex items-center gap-2'>
+                  <input
+                    type='checkbox'
+                    id={id}
+                    checked={checked}
+                    onChange={e => onChange(e.target.checked)}
+                    className='cursor-pointer w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500'
+                  />
+                  <label htmlFor={id} className='text-sm text-gray-700 cursor-pointer'>
+                    {label}
+                  </label>
+                </div>
+              ))}
+            </fieldset>
+
+            <fieldset className="p-4 border border-purple-300 rounded-lg">
+              <legend className="font-semibold px-2">Shakti Chakra Options</legend>
+              <div className="flex flex-col">
+                {chakras.map(({ id, label, checked, textLabel }) => (
+                  <div key={id} className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id={id}
+                      checked={checked}
+                      onChange={e => handleShowChakra(textLabel, e.target.checked)}
+                      className="cursor-pointer w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <label htmlFor={id} className="text-sm text-gray-700 cursor-pointer">
+                      {label}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </fieldset>
+          </div>
+
+          <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <LineControls
+                lineSet={lineSets[0]}
+                setIndex={0}
                 onUpdate={handleLineSetUpdate}
               />
-            </div>
-            <br></br>
-            <label htmlFor='line-select' className='text-sm font-medium text-gray-600'>
-              Other Options
-            </label>
-            {[
-              { id: 'imageDragDone', label: 'Lock Drag Image', checked: imageDragDone, onChange: setImageDragDone },
-              {
-                id: 'hideCircleIntersaction',
-                label: 'Show Chakra Intersaction points',
-                checked: hideCircleIntersaction,
-                onChange: setHideCircleIntersaction
-              },
-              { id: 'showDevta', label: 'Show Devta', checked: showDevta, onChange: setShowDevta },
-              {
-                id: 'showDevtaIntersaction',
-                label: 'Show Devta Intersaction points',
-                checked: showDevtaIntersaction,
-                onChange: setShowDevtaIntersaction
-              },
-              { id: 'hideMarmaLines', label: 'Show Marma Lines', checked: hideMarmaLines, onChange: setHideMarmaLines },
-              {
-                id: 'hideMarmapoints',
-                label: 'Show Marma Points',
-                checked: hideMarmapoints,
-                onChange: setHideMarmapoints
-              },
-              { id: 'disableDraw', label: 'Done Drawing', checked: disableDraw, onChange: setDisableDraw },
-              { id: 'graphDraw', label: 'Graph Drawing', checked: graphDraw, onChange: setGraphDraw }
-            ].map(({ id, label, checked, onChange }) => (
-              <div key={id} className='flex items-center gap-2'>
-                <input
-                  type='checkbox'
-                  id={id}
-                  checked={checked}
-                  onChange={e => onChange(e.target.checked)}
-                  className='cursor-pointer w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500'
-                />
-                <label htmlFor={id} className='text-sm text-gray-700 cursor-pointer'>
-                  {label}
-                </label>
-              </div>
-            ))}
+              <LineControls
+                lineSet={lineSets[1]}
+                setIndex={1}
+                onUpdate={handleLineSetUpdate}
+              />
           </div>
+
+          <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+             <fieldset className="p-4 border border-purple-300 rounded-lg">
+                  <legend className="font-semibold px-2">Marma Options</legend>
+                  {[
+                    { id: 'hideMarmaLines', label: 'Show Marma Lines', checked: hideMarmaLines, onChange: setHideMarmaLines },
+                    {
+                      id: 'hideMarmapoints',
+                      label: 'Show Marma Points',
+                      checked: hideMarmapoints,
+                      onChange: setHideMarmapoints
+                    }
+                  ].map(({ id, label, checked, onChange }) => (
+                    <div key={id} className='flex items-center gap-2'>
+                      <input
+                        type='checkbox'
+                        id={id}
+                        checked={checked}
+                        onChange={e => onChange(e.target.checked)}
+                        className='cursor-pointer w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500'
+                      />
+                      <label htmlFor={id} className='text-sm text-gray-700 cursor-pointer'>
+                        {label}
+                      </label>
+                    </div>
+
+                  ))}
+                </fieldset>
+                <fieldset className="p-4 border border-purple-300 rounded-lg">
+                  <legend className="font-semibold px-2">Devta Options</legend>
+                  {[
+                    // { id: 'imageDragDone', label: 'Lock Drag Image', checked: imageDragDone, onChange: setImageDragDone },
+                    // {
+                    //   id: 'hideCircleIntersaction',
+                    //   label: 'Show Chakra Intersaction points',
+                    //   checked: hideCircleIntersaction,
+                    //   onChange: setHideCircleIntersaction
+                    // },
+                    { id: 'showDevta', label: 'Show Devta', checked: showDevta, onChange: setShowDevta },
+                    {
+                      id: 'showDevtaIntersaction',
+                      label: 'Show Devta Intersaction points',
+                      checked: showDevtaIntersaction,
+                      onChange: setShowDevtaIntersaction
+                    },
+                    // { id: 'hideMarmaLines', label: 'Show Marma Lines', checked: hideMarmaLines, onChange: setHideMarmaLines },
+                    // {
+                    //   id: 'hideMarmapoints',
+                    //   label: 'Show Marma Points',
+                    //   checked: hideMarmapoints,
+                    //   onChange: setHideMarmapoints
+                    // },
+                    // { id: 'disableDraw', label: 'Done Drawing', checked: disableDraw, onChange: setDisableDraw },
+                    // { id: 'graphDraw', label: 'Graph Drawing', checked: graphDraw, onChange: setGraphDraw }
+                  ].map(({ id, label, checked, onChange }) => (
+                    <div key={id} className='flex items-center gap-2'>
+                      <input
+                        type='checkbox'
+                        id={id}
+                        checked={checked}
+                        onChange={e => onChange(e.target.checked)}
+                        className='cursor-pointer w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500'
+                      />
+                      <label htmlFor={id} className='text-sm text-gray-700 cursor-pointer'>
+                        {label}
+                      </label>
+                    </div>
+                  ))}
+                </fieldset>
+          </div>
+
+          <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <fieldset className="p-4 border border-purple-300 rounded-lg">
+                <legend className="font-semibold px-2">Other Options</legend>
+                {[
+                  { id: 'imageDragDone', label: 'Lock Drag Image', checked: imageDragDone, onChange: setImageDragDone },
+                  {
+                    id: 'hideCircleIntersaction',
+                    label: 'Show Chakra Intersaction points',
+                    checked: hideCircleIntersaction,
+                    onChange: setHideCircleIntersaction
+                  },
+                  { id: 'disableDraw', label: 'Done Drawing', checked: disableDraw, onChange: setDisableDraw },
+                  { id: 'graphDraw', label: 'Graph Drawing', checked: graphDraw, onChange: setGraphDraw }
+                ].map(({ id, label, checked, onChange }) => (
+                  <div key={id} className='flex items-center gap-2'>
+                    <input
+                      type='checkbox'
+                      id={id}
+                      checked={checked}
+                      onChange={e => onChange(e.target.checked)}
+                      className='cursor-pointer w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500'
+                    />
+                    <label htmlFor={id} className='text-sm text-gray-700 cursor-pointer'>
+                      {label}
+                    </label>
+                  </div>
+                ))}
+              </fieldset>
+          </div>
+
         </div>
+
+        {/* <div className="p-4 bg-gray-100 min-h-screen">
+          <div className="bg-white p-6 rounded-lg shadow-md text-center border border-gray-200">
+            <label className="flex flex-col items-center gap-3 cursor-pointer">
+              <div className="flex flex-col items-center p-6 border-2 border-dashed border-gray-300 rounded-lg hover:border-purple-500 transition">
+                <Upload size={28} className="text-purple-500" />
+                <span className="text-purple-600 font-medium">Upload File</span>
+                <input
+                  type="file"
+                  className="hidden"
+                  accept=".jpg,.jpeg,.png,.pdf"
+                  onChange={handleFileUpload}
+                />
+              </div>
+            </label>
+            <p className="text-sm text-gray-500 mt-2">
+              Supported formats: .jpg, .jpeg, .png, .pdf
+            </p>
+          </div>
+
+          <div className="mt-6 grid grid-cols-2 gap-4">
+            <Button variant="outline" className="w-full">
+              Save
+            </Button>
+            <Button className="w-full bg-purple-600 hover:bg-purple-700">
+              Add Overlay
+            </Button>
+          </div>
+
+          <div className="mt-4 grid grid-cols-2 gap-4">
+            <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+              Zoom In
+            </Button>
+            <Button variant="outline" className="w-full">
+              Zoom Out
+            </Button>
+          </div>
+
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <fieldset className="p-4 border border-purple-300 rounded-lg">
+              <legend className="font-semibold px-2">Default Options</legend>
+              {[
+                { id: 'lockChakra', label: 'Lock Chakra', checked: lockChakra, onChange: setLockChakra },
+                { id: 'lockCentroid', label: 'Lock Center', checked: lockCentroid, onChange: setLockCentroid },
+                { id: 'snapToCentroid', label: 'Reset Auto Center', checked: snapToCentroid, onChange: setSnapToCentroid }
+              ].map(({ id, label, checked, onChange }) => (
+                <div key={id} className='flex items-center gap-2'>
+                  <input
+                    type='checkbox'
+                    id={id}
+                    checked={checked}
+                    onChange={e => onChange(e.target.checked)}
+                    className='cursor-pointer w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500'
+                  />
+                  <label htmlFor={id} className='text-sm text-gray-700 cursor-pointer'>
+                    {label}
+                  </label>
+                </div>
+              ))}
+            </fieldset>
+
+            <fieldset className="p-4 border border-purple-300 rounded-lg">
+              <legend className="font-semibold px-2">Shakti Chakra Options</legend>
+              <div className="flex flex-col">
+                {chakras.map(({ id, label, checked, textLabel }) => (
+                  <div key={id} className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id={id}
+                      checked={checked}
+                      onChange={e => handleShowChakra(textLabel, e.target.checked)}
+                      className="cursor-pointer w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <label htmlFor={id} className="text-sm text-gray-700 cursor-pointer">
+                      {label}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </fieldset>
+          </div>
+        </div> */}
       </div>
       {openNewPolygon && (
         <>

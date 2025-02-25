@@ -16,9 +16,9 @@ import {
 import React, { useEffect, useRef, useState } from 'react'
 import { useRouter } from "next/navigation";
 import { toast } from 'react-toastify'
-function SaveLayoutPopUp({ open, handleClose, tabGroup, layoutData, setLayoutData, savedGroups, previewUrl, fileInfo,setLoading }) {
+function SaveLayoutPopUp({ open, handleClose, tabGroup, layoutData, setLayoutData, savedGroups, previewUrl, fileInfo, setLoading }) {
   const router = useRouter();
-  console.log("layoutData : ",layoutData)
+  console.log("layoutData : ", layoutData)
   const theme = createTheme({
     shape: {
       borderRadius: 8 // Set the global border radius here
@@ -52,7 +52,8 @@ function SaveLayoutPopUp({ open, handleClose, tabGroup, layoutData, setLayoutDat
     Remark: false,
     Rivision: false
   })
-  const [RequiredFields] = useState(['ProjectName', 'clientId', 'Address', 'OAU', 'CAU', 'TAU'])
+  const [RequiredFields] = useState(['ProjectName'])
+  // const [RequiredFields] = useState(['ProjectName', 'clientId', 'Address', 'OAU', 'CAU', 'TAU'])
   const inputRef = useRef(null)
 
   useEffect(() => {
@@ -118,7 +119,7 @@ function SaveLayoutPopUp({ open, handleClose, tabGroup, layoutData, setLayoutDat
 
     const matchingItems = tabGroup
       .filter(item => savedGroups.includes(item.label))
-      .map(({ label, points, centroid, snapToCentroid, inputDegree,zoom,translate, polygons,lockChakra,lockCentroid,lineSets,hideCircle,hide32Circle,hide16Circle,hide8Circle,hide4Circle}) => ({
+      .map(({ label, points, centroid, snapToCentroid, inputDegree, zoom, translate, polygons, lockChakra, lockCentroid, lineSets, hideCircle, hide32Circle, hide16Circle, hide8Circle, hide4Circle }) => ({
         label,
         points,
         centroid,
@@ -127,7 +128,7 @@ function SaveLayoutPopUp({ open, handleClose, tabGroup, layoutData, setLayoutDat
         zoom,
         translate,
         polygons,
-        lockChakra,lockCentroid,lineSets,hideCircle,hide32Circle,hide16Circle,hide8Circle,hide4Circle
+        lockChakra, lockCentroid, lineSets, hideCircle, hide32Circle, hide16Circle, hide8Circle, hide4Circle
       }))
 
     console.log('==> ', matchingItems)
@@ -136,16 +137,16 @@ function SaveLayoutPopUp({ open, handleClose, tabGroup, layoutData, setLayoutDat
       ProjectName: formData?.ProjectName,
       ClientName: formData?.clientId,
       Address: formData?.Address,
-      OpenArea: formData?.OAUV,
-      OpenAreaUnit: formData?.OAU,
-      CoveredArea: formData?.CAUV,
-      CoveredAreaUnit: formData?.CAU,
-      TotalArea: formData?.TAUV,
-      TotalAreaUnit: formData?.TAU,
+      OpenArea: formData?.OAUV || 0,
+      OpenAreaUnit: formData?.OAU || '',
+      CoveredArea: formData?.CAUV || 0,
+      CoveredAreaUnit: formData?.CAU || '',
+      TotalArea: formData?.TAUV || 0,
+      TotalAreaUnit: formData?.TAU || '',
       Reference: formData?.Reference,
       Remark: formData?.Remark,
       Revision: formData?.Revision,
-      AuditDate: '2025-02-09T07:31:22.727Z',
+      AuditDate: new Date(),
       NecessaryFiles: [
         {
           OriginalFileName: fileInfo,
@@ -160,24 +161,24 @@ function SaveLayoutPopUp({ open, handleClose, tabGroup, layoutData, setLayoutDat
       setLoading(true);
       let data;
       let msg;
-      if(formData?.isUpdate){
+      if (formData?.isUpdate) {
         setLayoutData(prev => ({
           ...prev,
           "ProjectName": formData?.ProjectName,
-          "ClientName":formData?.clientId
+          "ClientName": formData?.clientId
         }))
-        data = await editVastuLayouts(formData?.VPID,payload)
+        data = await editVastuLayouts(formData?.VPID, payload)
         msg = "Vastu Griding Update Successfully."
-      }else{
+      } else {
         data = await saveVastuLayouts(payload)
         msg = "Vastu Griding Saved Successfully."
       }
       console.log('data result  : ', data)
-      if(data.hasError){
+      if (data.hasError) {
         setLoading(false)
         return toast.error(data.error)
       }
-      if(!formData?.isUpdate){
+      if (!formData?.isUpdate) {
         router.push(`/devta-vastu/${data?.responseData?.Result?.VPID}`)
       }
       setLoading(false)
@@ -278,29 +279,14 @@ function SaveLayoutPopUp({ open, handleClose, tabGroup, layoutData, setLayoutDat
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <Autocomplete
-                  options={unitData}
-                  getOptionLabel={option => option.Name} // Extracts label text
-                  // getOptionKey={option => option.Id}
-                  value={unitData.find(item => item.Id === formData?.OAU) || null}
-                  // value={formData?.OAU || null}
-                  onChange={(e, newValue) => {
-                    handleInputChange('OAU', newValue?.Id, 'OAU', true)
-                    // setSelectedGroup(newValue ? newValue.label : null)
-                    // setGroupError(false)
-                  }}
-                  renderInput={params => <TextField {...params} label='Open Area & Unit' error={errors?.OAU} />}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label='Open Area & Unit Value'
-                  value={formData?.OAUV}
+                  label='Covered Area'
+                  value={formData?.CAUV}
                   onChange={e => {
-                    handleInputChange('OAUV', e.target.value, 'OAUV', true)
+                    handleInputChange('CAUV', e.target.value, 'CAUV', true)
                   }}
-                  error={errors.OAU}
+                  error={errors.CAU}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -315,20 +301,47 @@ function SaveLayoutPopUp({ open, handleClose, tabGroup, layoutData, setLayoutDat
                     // setSelectedGroup(newValue ? newValue.label : null)
                     // setGroupError(false)
                   }}
-                  renderInput={params => <TextField {...params} label='Covered Area & Unit' error={errors?.CAU} />}
+                  renderInput={params => <TextField {...params} label='Covered Area Unit' error={errors?.CAU} />}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label='Covered Area & Unit Value'
-                  value={formData?.CAUV}
+                  label='Open Area'
+                  value={formData?.OAUV}
                   onChange={e => {
-                    handleInputChange('CAUV', e.target.value, 'CAUV', true)
+                    handleInputChange('OAUV', e.target.value, 'OAUV', true)
                   }}
-                  error={errors.CAU}
+                  error={errors.OAU}
                 />
               </Grid>
+              <Grid item xs={12} sm={6}>
+                <Autocomplete
+                  options={unitData}
+                  getOptionLabel={option => option.Name} // Extracts label text
+                  // getOptionKey={option => option.Id}
+                  value={unitData.find(item => item.Id === formData?.OAU) || null}
+                  // value={formData?.OAU || null}
+                  onChange={(e, newValue) => {
+                    handleInputChange('OAU', newValue?.Id, 'OAU', true)
+                    // setSelectedGroup(newValue ? newValue.label : null)
+                    // setGroupError(false)
+                  }}
+                  renderInput={params => <TextField {...params} label='Open Area Unit' error={errors?.OAU} />}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label='Total Area'
+                  value={formData?.TAUV}
+                  onChange={e => {
+                    handleInputChange('TAUV', e.target.value, 'TAUV', true)
+                  }}
+                  error={errors.TAU}
+                />
+              </Grid>
+
               <Grid item xs={12} sm={6}>
                 <Autocomplete
                   options={unitData}
@@ -341,21 +354,11 @@ function SaveLayoutPopUp({ open, handleClose, tabGroup, layoutData, setLayoutDat
                     // setSelectedGroup(newValue ? newValue.label : null)
                     // setGroupError(false)
                   }}
-                  renderInput={params => <TextField {...params} label='Total Area & Unit' error={errors?.TAU} />}
+                  renderInput={params => <TextField {...params} label='Total Area Unit' error={errors?.TAU} />}
                 />
               </Grid>
 
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  label='Total Area & Unit Value'
-                  value={formData?.TAUV}
-                  onChange={e => {
-                    handleInputChange('TAUV', e.target.value, 'TAUV', true)
-                  }}
-                  error={errors.TAU}
-                />
-              </Grid>
+
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth

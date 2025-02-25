@@ -121,7 +121,7 @@ export default function DevtaVastuMain() {
     {
       field: 'CreateDateTime',
       minWidth: 100,
-      headerName: 'Create Date & Time',
+      headerName: 'Date Created',
       headerClassName: 'rowheader',
       width: 150,
       headerAlign: 'left',
@@ -139,9 +139,9 @@ export default function DevtaVastuMain() {
       }
     },
     {
-      field: 'AuditDate',
+      field: 'EditDateTime',
       minWidth: 100,
-      headerName: 'Audit Date & Time',
+      headerName: 'Date Modified',
       headerClassName: 'rowheader',
       width: 150,
       headerAlign: 'left',
@@ -287,7 +287,7 @@ export default function DevtaVastuMain() {
   function CustomToolbar() {
     return (
       <GridToolbarContainer className="d-flex justify-content-between p-0 w-full align-items-center">
-        <PageTitle title={"Vastu-Griding Listing"} endCmp={
+        <PageTitle title={"Vastu Layouts"} endCmp={
           <>
             <TextField
               placeholder="Search..."
