@@ -2119,7 +2119,7 @@ const DevtaVastu = ({
           key={i}
           x={textX}
           y={textY}
-          fontSize="22"
+          fontSize="18"
           fill="var(--green-color)"
           fontWeight={700}
           fontFamily="Segoe UI"
@@ -3127,7 +3127,7 @@ const DevtaVastu = ({
                                         ? `rotate(90, ${labelX}, ${labelY})`
                                         : `rotate(-90, ${labelX}, ${labelY})`
                                     }
-                                    fontSize="24"
+                                    fontSize="22"
                                     fontWeight={700}
                                     // fontFamily="Segoe UI"  // Apply Segoe UI font
                                     fill="var(--primary-color)"
@@ -3177,7 +3177,7 @@ const DevtaVastu = ({
                                   <text
                                     x={Math.cos(radian) > 0 ? labelX - 20 : labelX + 20}
                                     y={Math.sin(radian) > 0 ? labelY - 10 : labelY + 15} // Move bottom text upward
-                                    fontSize="24"
+                                    fontSize="22"
                                     fontWeight={700}
                                     // fontFamily="Segoe UI"  // Apply Segoe UI font
                                     fill="var(--primary-color)"

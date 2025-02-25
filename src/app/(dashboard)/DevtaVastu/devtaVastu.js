@@ -495,10 +495,10 @@ function DevtaVastuPage({ id }) {
                     <span className='label font-ea-n'>Client Name: </span>
                     <span className='value font-ea-sb'>{vastuLayoutData?.ClientName ? vastuLayoutData?.ClientName : "--"}</span>
                   </div>
-                  <div className='flex flex-row gap-1 chart-date items-center'>
+                  {/* <div className='flex flex-row gap-1 chart-date items-center'>
                     <span className='label font-ea-n'>Client ID: </span>
                     <span className='value font-ea-sb'>{vastuLayoutData?.VPID ? "#" + vastuLayoutData?.VPID : "#--"}</span>
-                  </div>
+                  </div> */}
 
                   <div className='flex justify-end'>
                     <>
