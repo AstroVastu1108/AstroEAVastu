@@ -8,8 +8,8 @@ const GridBackground = ({ width, height }) => {
   const maxRows = 26 // Limit to 26 rows (A-Z)
   const columns = Math.min(Math.ceil(width / gridSize), maxColumns)
   const rows = Math.min(Math.ceil(height / gridSize), maxColumns)
-  const leftX = -gridSize / 2 + 30 // Shift inside the grid
-  const rightX = width + gridSize / 2 - 30 // Shift inside the grid
+  const leftX = -gridSize / 2 + 20 // Shift inside the grid
+  const rightX = width + gridSize / 2 - 20 // Shift inside the grid
 
   return (
     <g>
@@ -26,7 +26,7 @@ const GridBackground = ({ width, height }) => {
               fontSize='12'
               textAnchor='middle'
               fill='var(--primary-color)'
-              fontFamily="'Segoe UI', Arial, sans-serif"
+              fontFamily="Segoe UI"
               fontWeight={600}
             >
               {i + 1}
@@ -39,7 +39,7 @@ const GridBackground = ({ width, height }) => {
               fontSize='12'
               textAnchor='middle'
               fill='var(--primary-color)'
-              fontFamily="'Segoe UI', Arial, sans-serif"
+              fontFamily="Segoe UI"
               fontWeight={600}
             >
               {i + 1}
@@ -59,7 +59,7 @@ const GridBackground = ({ width, height }) => {
               x={leftX}
               y={y}
               fontSize='12'
-              textAnchor='end'
+              textAnchor='start'
               alignmentBaseline='middle'
               fill='var(--primary-color)'
               fontFamily="'Segoe UI', Arial, sans-serif"
@@ -73,7 +73,7 @@ const GridBackground = ({ width, height }) => {
               x={rightX}
               y={y}
               fontSize='12'
-              textAnchor='start'
+              textAnchor='end'
               alignmentBaseline='middle'
               fill='var(--primary-color)'
               fontFamily="'Segoe UI', Arial, sans-serif"

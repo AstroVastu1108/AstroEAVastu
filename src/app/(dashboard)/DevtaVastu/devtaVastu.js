@@ -588,6 +588,8 @@ function DevtaVastuPage({id}) {
                         setHideCircle={newHideCircle => handleTabGroupChange(index, 'hideCircle', newHideCircle)}
                         lineSets={tabGroup[index].lineSets}
                         setLineSets={newLineSets => handleTabGroupChange(index, 'lineSets', newLineSets)}
+                        setLoading={setLoading}
+                        loading={loading}
                       />
                     </>
                   )

@@ -92,7 +92,9 @@ const DevtaVastu = ({
   hideCircle,
   setHideCircle,
   lineSets,
-  setLineSets
+  setLineSets,
+  loading,
+  setLoading
 }) => {
   // const [lineSets, setLineSets] = useState(DEFAULT_LINE_SETS)
   const [selectedLineIndex, setSelectedLineIndex] = useState(0) // Default to the first line
@@ -128,7 +130,7 @@ const DevtaVastu = ({
   const [showDevtaIntersaction, setShowDevtaIntersaction] = useState(false)
   const [disableDraw, setDisableDraw] = useState(false)
   const [graphDraw, setGraphDraw] = useState(false)
-  const [loading, setLoading] = useState(true)
+  // const [loading, setLoading] = useState(true)
   const [openNewPolygon, setOpenNewPolygon] = useState(false)
   const [draggingState, setDraggingState] = useState(null) // For both points and polygons
   const [OverlayPolyClick, setOverlayPolyClick] = useState(false) // For both points and polygons
@@ -316,7 +318,6 @@ const DevtaVastu = ({
   }
 
   const downloadPDF = () => {
-    // setLoading(true);
     setHide16Circle(true)
     setHideCircle(true)
     setIsReadyToCapture(true)
@@ -1143,7 +1144,7 @@ const DevtaVastu = ({
           }
 
           numberedPoints.push(...selectedPoints)
-        } catch (error) {}
+        } catch (error) { }
       }
 
       setIntersectionPoints(numberedPoints)
@@ -1340,7 +1341,7 @@ const DevtaVastu = ({
 
           // Add to the global numberedPoints array
           leftnumberedPoints.push(...selectedPoints)
-        } catch (error) {}
+        } catch (error) { }
       }
 
       setNewLeftIntersectionPoints(leftnumberedPoints)
@@ -2047,73 +2048,171 @@ const DevtaVastu = ({
   const plotText = () => {
     const cx = centroid.x
     const cy = centroid.y
+    const width = 815
+    const height = 748
 
-    const sideLength = 500
-    const halfSide = sideLength / 2
+    const padding = 75 // Ensures text stays inside SVG
+    const stepX = (width - 2 * padding) / 8
+    const stepY = (height - 2 * padding) / 8
+
+    const generalOffset = 15 // General fine-tuning
+    const nOffset = 12 // More precise shift for N1, N2
+    const wOffset = 0 // Adjust W side alignment
+    const spacingAdjust = 15 // Reduce gap further for N4-N5
 
     const labels = []
-    const totalParts = 32
 
-    // Create labels for each direction
-    for (let i = 0; i < totalParts; i++) {
-      let label
+    for (let i = 0; i < 32; i++) {
+      let label, textX, textY
 
-      // Determine the label based on the index
       if (i < 8) {
-        label = `N${i + 1}` // North labels (N1 to N8)
+        // North (Top, Moves Left to Right)
+        label = `N${i + 1}`
+        textX = cx + (padding + stepX * i + stepX / 2 - width / 2) // Apply cx, no change in Y
+        textY = padding - generalOffset
+
+        if (i === 0) textX += nOffset // Shift N1 right
+        if (i === 1) textX += nOffset + 15 // Shift N2 right
+        if (i === 2) textX += nOffset + 10 // Shift N2 right
+        if (i === 3) textX += nOffset  // Shift N2 right
+        if (i === 4) textX -= spacingAdjust - 10  // Move N5 further left
+        if (i === 5) textX -= spacingAdjust + 10 // Move N6 further left
+        if (i === 6) textX -= spacingAdjust + 15 // Move N7 further left
+        if (i === 7) textX -= spacingAdjust + 0 // Move N7 further left
       } else if (i < 16) {
-        label = `E${i - 7}` // East labels (E1 to E8)
+        // East (Right, Moves Top to Bottom)
+        label = `E${i - 7}`
+        textX = width - padding + generalOffset
+        textY = cy + (padding + stepY * (i - 8) + stepY / 2 - height / 2) // Apply cy, no change in X
+        if (i === 8) textY -= spacingAdjust + 15 // Move N7 further left
+        if (i === 9) textY -= 5 // Move N7 further left
+        if (i === 10) textY  // Move N7 further left
+        if (i === 15) textY += 30 // Move N7 further left
       } else if (i < 24) {
-        label = `S${i - 15}` // South labels (S1 to S8)
+        // South (Bottom, Moves Right to Left)
+        label = `S${i - 15}`
+        textX = cx + (width - padding - stepX * (i - 16) - stepX / 2 - width / 2) // Apply cx, no change in Y
+        textY = height - padding + 7 + generalOffset
+        if (i === 16) textX -= spacingAdjust + 20 // Move N7 further left
+        if (i === 17) textX -= spacingAdjust + 30 // Move N7 further left
+        if (i === 18) textX -= 30 // Move N7 further left
+        if (i === 19) textX -= 10 // Move N7 further left
+        if (i === 20) textX += 15 // Move N7 further left
+        if (i === 21) textX += 30 // Move N7 further left
+        if (i === 22) textX += 45 // Move N7 further left
+        if (i === 23) textX += 45 // Move N7 further left
       } else {
-        label = `W${i - 23}` // West labels (W1 to W8)
+        // West (Left, Moves Bottom to Top)
+        label = `W${i - 23}`
+        textX = padding - generalOffset - wOffset // No change in X
+        textY = cy + (height - padding - stepY * (i - 24) - stepY / 2 - height / 2) // Apply cy, no change in X
+        if (i === 25) textY -= 10 // Move N7 further left
+        if (i === 26) textY -= 10 // Move N7 further left
+        if (i === 28) textY += 5 // Move N7 further left
+        if (i === 29) textY += 10 // Move N7 further left
+        if (i === 30) textY += 10 // Move N7 further left
       }
 
-      labels.push(label)
-    }
-
-    // Calculate positions for each label in a square pattern
-    const texts = labels.map((label, index) => {
-      let textX, textY
-
-      // Determine position based on the index
-      if (index < 8) {
-        // North side (top)
-        textX = cx - (halfSide - (sideLength / 8) * index) + 20 // Evenly spaced across the top
-        textY = cy - halfSide // Fixed y position
-      } else if (index < 16) {
-        // East side (right)
-        textX = cx + halfSide
-        textY = cy - (halfSide - (sideLength / 8) * (index - 8)) + 40
-      } else if (index < 24) {
-        textX = cx + (halfSide - (sideLength / 8) * (index - 16)) - 40
-        textY = cy + halfSide + 20
-      } else {
-        textX = cx - halfSide - 20
-        textY = cy + (halfSide - (sideLength / 8) * (index - 24)) - 20
-      }
-
-      // Return text element
-      return (
+      labels.push(
         <text
-          key={index}
+          key={i}
           x={textX}
           y={textY}
-          fontSize='20'
-          fill='var(--green-color)'
+          fontSize="22"
+          fill="var(--green-color)"
+          fontWeight={700}
+          fontFamily="Segoe UI"
+          textAnchor="middle"
+          alignmentBaseline="middle"
           style={{
-            userSelect: 'none',
-            cursor: 'default'
+            userSelect: "none",
+            cursor: "default"
           }}
         >
           {label}
         </text>
       )
-    })
+    }
 
-    // Return the array of text elements
-    return texts
+    return labels
   }
+
+
+
+  // const plotText = () => {
+  //   const cx = centroid.x
+  //   const cy = centroid.y
+
+  //   const sideLength = 500
+  //   const halfSide = sideLength / 2
+
+  //   const labels = []
+  //   const totalParts = 32
+
+  //   // Create labels for each direction
+  //   for (let i = 0; i < totalParts; i++) {
+  //     let label
+
+  //     // Determine the label based on the index
+  //     if (i < 8) {
+  //       label = `N${i + 1}` // North labels (N1 to N8)
+  //     } else if (i < 16) {
+  //       label = `E${i - 7}` // East labels (E1 to E8)
+  //     } else if (i < 24) {
+  //       label = `S${i - 15}` // South labels (S1 to S8)
+  //     } else {
+  //       label = `W${i - 23}` // West labels (W1 to W8)
+  //     }
+
+  //     labels.push(label)
+  //   }
+
+  //   // Calculate positions for each label in a square pattern
+  //   const texts = labels.map((label, index) => {
+  //     let textX, textY
+
+  //     // Determine position based on the index
+  //     if (index < 8) {
+  //       // North side (top)
+  //       textX = cx - (halfSide - (sideLength / 8) * index) + 20 // Evenly spaced across the top
+  //       textY = cy - halfSide // Fixed y position
+  //     } else if (index < 16) {
+  //       // East side (right)
+  //       textX = cx + halfSide
+  //       textY = cy - (halfSide - (sideLength / 8) * (index - 8)) + 40
+  //     } else if (index < 24) {
+  //       textX = cx + (halfSide - (sideLength / 8) * (index - 16)) - 40
+  //       textY = cy + halfSide + 20
+  //     } else {
+  //       textX = cx - halfSide - 20
+  //       textY = cy + (halfSide - (sideLength / 8) * (index - 24)) - 20
+  //     }
+
+  //     // Return text element
+  //     return (
+  //       <text
+  //         key={index}
+  //         x={textX}
+  //         y={textY}
+  //         fontSize='22'
+  //         fill='var(--green-color)'
+  //         fontWeight={800}
+  //         fontFamily='Segoe UI'
+  //         style={{
+  //           userSelect: 'none',
+  //           cursor: 'default'
+  //         }}
+  //       >
+  //         {label}
+  //       </text>
+  //     )
+  //   })
+
+  //   // Return the array of text elements
+  //   return texts
+  // }
+
+
 
   const [isDragging, setIsDragging] = useState(false)
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
@@ -2395,7 +2494,6 @@ const DevtaVastu = ({
     // Construct the final string
     const formattedDate = `${day}-${month}-${year} ${hours}:${minutes} ${ampm}`
 
-    console.log(formattedDate)
     return formattedDate
   }
 
@@ -2930,13 +3028,16 @@ const DevtaVastu = ({
                         const svgHeight = height // SVG height
                         const minBoundary = 50 // Minimum inner boundary to avoid
 
-                        // Outer boundaries for the text
+                        const padding = 25; // Adjust padding from all sides
+
+                        // Outer boundaries for the text with padding
                         const outerBounds = {
-                          xMin: 0 + 15,
-                          xMax: svgWidth - 15,
-                          yMin: 0 + 15,
-                          yMax: svgHeight - 15
-                        }
+                          xMin: padding,
+                          xMax: svgWidth - padding,
+                          yMin: padding,
+                          yMax: svgHeight - padding
+                        };
+
 
                         // Inner restricted boundaries (600x600 zone to avoid)
                         const restrictedBounds = {
@@ -3000,46 +3101,64 @@ const DevtaVastu = ({
                         const textWidth = 40 // Approximate width of text
                         const textHeight = 25
                         if (Math.abs(slope) <= 1) {
+                          // if (direction === "N") {
+                          //   labelX -= 20; // Move 'N' 20 units left
+                          // }
+                          // if (direction === "S") {
+                          //   labelX += 20; // Move 'N' 20 units left
+                          // }
+                          if (direction == "W") {
+                            labelY -= 20; // Move 'N' 20 units left
+                          }
+                          if (direction == "E") {
+                            labelY -= 15; // Move 'N' 20 units left
+                          }
                           return (
                             <g key={index}>
                               {direction && (
                                 <>
-                                  {/* <rect
-                                    x={Math.cos(radian) > 0 ? labelX : labelX - 40}
-                                    y={Math.cos(radian) > 0 ? labelY : labelY - 5}
-                                    width={textWidth}
-                                    height={textHeight}
-                                    transform={Math.cos(radian) > 0 ? `rotate(90, ${labelX}, ${labelY})` : `rotate(-90, ${labelX}, ${labelY})`}
-                                    fill="white"
-                                    // stroke="black" // Optional: Add a border
-                                    rx="5" // Optional: Rounded corners
-                                  /> */}
                                   <text
+
                                     x={Math.cos(radian) > 0 ? labelX + 15 : labelX - 20}
                                     y={Math.cos(radian) > 0 ? labelY + 15 : labelY + 10}
-                                    fontSize='20'
-                                    fontWeight='500'
-                                    fill='purple'
                                     transform={
                                       Math.cos(radian) > 0
                                         ? `rotate(90, ${labelX}, ${labelY})`
                                         : `rotate(-90, ${labelX}, ${labelY})`
                                     }
-                                    textAnchor='middle'
-                                    alignmentBaseline='middle'
+                                    fontSize="24"
+                                    fontWeight={700}
+                                    // fontFamily="Segoe UI"  // Apply Segoe UI font
+                                    fill="var(--primary-color)"
+                                    textAnchor="middle"
+                                    alignmentBaseline="middle"
                                     style={{
                                       userSelect: 'none', // Prevent text selection
-                                      cursor: 'default', // Optional: Make the cursor non-interactive
-                                      fontWeight: 600
+                                      cursor: 'default',  // Optional: Make the cursor non-interactive
+                                      fontWeight: "700",   // Ensure fontWeight is explicitly applied
+                                      fontFamily: "Segoe UI", // Ensure fontFamily is explicitly applied
                                     }}
                                   >
                                     {direction}
                                   </text>
+                                  s
                                 </>
                               )}
                             </g>
                           )
                         } else {
+                          if (direction === "N") {
+                            labelX -= 20; // Move 'N' 20 units left
+                          }
+                          if (direction === "S") {
+                            labelX += 20; // Move 'N' 20 units left
+                          }
+                          // if (direction === "W") {
+                          //   labelY -= 20; // Move 'N' 20 units left
+                          // }
+                          // if (direction === "E") {
+                          //   labelY -= 15; // Move 'N' 20 units left
+                          // }
                           return (
                             <g key={index}>
                               {direction && (
@@ -3057,15 +3176,17 @@ const DevtaVastu = ({
                                   <text
                                     x={Math.cos(radian) > 0 ? labelX - 20 : labelX + 20}
                                     y={Math.sin(radian) > 0 ? labelY - 10 : labelY + 15} // Move bottom text upward
-                                    fontSize='20'
-                                    fontWeight='500'
-                                    fill='purple'
-                                    textAnchor='middle'
-                                    alignmentBaseline='middle'
+                                    fontSize="24"
+                                    fontWeight={700}
+                                    // fontFamily="Segoe UI"  // Apply Segoe UI font
+                                    fill="var(--primary-color)"
+                                    textAnchor="middle"
+                                    alignmentBaseline="middle"
                                     style={{
                                       userSelect: 'none', // Prevent text selection
-                                      cursor: 'default', // Optional: Make the cursor non-interactive
-                                      fontWeight: 600
+                                      cursor: 'default',  // Optional: Make the cursor non-interactive
+                                      fontWeight: "700",   // Ensure fontWeight is explicitly applied
+                                      fontFamily: "Segoe UI", // Ensure fontFamily is explicitly applied
                                     }}
                                   >
                                     {direction}
@@ -3084,7 +3205,7 @@ const DevtaVastu = ({
                           points={polygon.points.map(point => `${point.x},${point.y}`).join(' ')}
                           fill={polygon.color}
                           fillOpacity='0.2' // Default opacity for all polygons
-                          stroke={polygon.color}
+                          stroke={"#000"}
                           strokeWidth='1'
                           onMouseDown={e => {
                             handleMouseDown(e, polygonIndex, 'overlay')
@@ -3101,7 +3222,7 @@ const DevtaVastu = ({
                             2
                           } // Horizontal center of the polygon
                           y={Math.min(...polygon.points.map(point => point.y)) - 10} // 10px above the top edge
-                          fill={polygon.color} // Title color matches the polygon's color
+                          fill={"#000"} // Title color matches the polygon's color
                           fontSize='14'
                           fontWeight='bold'
                           textAnchor='middle' // Center the text horizontally
@@ -3114,7 +3235,7 @@ const DevtaVastu = ({
                           x={
                             (Math.min(...polygon.points.map(point => point.x)) +
                               Math.max(...polygon.points.map(point => point.x))) /
-                              2 +
+                            2 +
                             15
                           } // Positioned to the right of the title
                           y={Math.min(...polygon.points.map(point => point.y)) - 25} // Aligned vertically with the title
@@ -3136,7 +3257,7 @@ const DevtaVastu = ({
                           x={
                             (Math.min(...polygon.points.map(point => point.x)) +
                               Math.max(...polygon.points.map(point => point.x))) /
-                              2 +
+                            2 +
                             30
                           } // Positioned to the right of the Edit button
                           y={Math.min(...polygon.points.map(point => point.y)) - 25} // Aligned vertically with the title
@@ -3153,24 +3274,27 @@ const DevtaVastu = ({
                             onClick={() => handleOverlayDelete(polygonIndex)} // Call the delete handler
                           />
                         </foreignObject>
-                        {/* Draggable Points */}
-                        {polygon.points.map((point, pointIndex) => (
-                          <circle
-                            key={pointIndex}
-                            cx={point.x}
-                            cy={point.y}
-                            r={3}
-                            fill={polygon.color}
-                            stroke='#fff'
-                            strokeWidth='0.5'
-                            onMouseDown={e => {
-                              handleMouseDown(e, polygonIndex, 'PointOverlay', pointIndex)
-                            }}
-                            onDoubleClick={e => {
-                              handleDoubleClick(e, 'overlay', polygon, pointIndex, polygonIndex)
-                            }}
-                          />
-                        ))}
+                        {!loading &&
+                          <>
+                            {/* Draggable Points */}
+                            {polygon.points.map((point, pointIndex) => (
+                              <circle
+                                key={pointIndex}
+                                cx={point.x}
+                                cy={point.y}
+                                r={3}
+                                fill={polygon.color}
+                                stroke='#fff'
+                                strokeWidth='0.5'
+                                onMouseDown={e => {
+                                  handleMouseDown(e, polygonIndex, 'PointOverlay', pointIndex)
+                                }}
+                                onDoubleClick={e => {
+                                  handleDoubleClick(e, 'overlay', polygon, pointIndex, polygonIndex)
+                                }}
+                              />
+                            ))}
+                          </>}
                       </g>
                     ))}
 
@@ -3321,50 +3445,50 @@ const DevtaVastu = ({
         </div>
         {/* <div class="w-px bg-gray-400"></div> */}
         <div className='flex flex-col p-0 bg-white'>
-          <div ref={printRef1} id='hiddenDiv' className='border !h-[790px] w-full'>
+          <div ref={printRef1} id='hiddenDiv' className='hidden !h-[790px] w-full'>
             {/* <div className='design-card'> */}
-              <div className='card-content'>
-                <div className='pdf-title bg-primary text-white px-1 py-1 '>
-                  <span className='text-[14px] uppercase font-semibold'>{vastuLayoutData?.ProjectName}</span>
-                  <div className='text-[12px] flex justify-between items-center'>
-                    <div className='text-ea-sb uppercase font-semibold'>{vastuLayoutData?.ClientName} </div>
-                    <div className='text-[10px] '>#{vastuLayoutData?.VPID} </div>
-                  </div>
+            <div className='card-content'>
+              <div className='pdf-title bg-primary text-white px-1 py-1 '>
+                <span className='text-[14px] uppercase font-semibold'>{vastuLayoutData?.ProjectName}</span>
+                <div className='text-[12px] flex justify-between items-center'>
+                  <div className='text-ea-sb uppercase font-semibold'>{vastuLayoutData?.ClientName} </div>
+                  <div className='text-[10px] '>#{vastuLayoutData?.VPID} </div>
                 </div>
-                <div className='p-2'>{vastuLayoutData?.Remark}</div>
-                <Divider />
-                <div className='flex justify-between'>
-                  <div className='w-[33%] ps-2'>
-                    <div className='font-ea-sb uppercase'>FULL AREA</div>
-                    <div>
-                      {vastuLayoutData?.TotalArea} {vastuLayoutData?.TotalAreaUnit}
-                    </div>
-                  </div>
-                  <div className='border-l w-[33%] ps-2'>
-                    <div className='font-ea-sb uppercase'>COVERED</div>
-                    <div>
-                      {vastuLayoutData?.CoveredArea} {vastuLayoutData?.CoveredAreaUnit}
-                    </div>
-                  </div>
-                  <div className='border-l w-[33%] ps-2'>
-                    <div className='font-ea-sb uppercase'>OPEN</div>
-                    <div>
-                      {vastuLayoutData?.OpenArea} {vastuLayoutData?.OpenAreaUnit}
-                    </div>
-                  </div>
-                </div>
-                <Divider />
-                <div className=''>Audit Date # {formatDate(vastuLayoutData?.AuditDate)}</div>
-                <div>
-                  <div className='mt-2 font-ea-sb text-primary'>Astro Vastu Remedies / Suggestions:</div>
+              </div>
+              <div className='p-2'>{vastuLayoutData?.Remark}</div>
+              <Divider />
+              <div className='flex justify-between'>
+                <div className='w-[33%] ps-2'>
+                  <div className='font-ea-sb uppercase'>FULL AREA</div>
                   <div>
-                    The positioning of the Toilet WC and Main Door entry is suggested based on Astro Vastu Analysis and
-                    Energy Scan Audit.
+                    {vastuLayoutData?.TotalArea} {vastuLayoutData?.TotalAreaUnit}
+                  </div>
+                </div>
+                <div className='border-l w-[33%] ps-2'>
+                  <div className='font-ea-sb uppercase'>COVERED</div>
+                  <div>
+                    {vastuLayoutData?.CoveredArea} {vastuLayoutData?.CoveredAreaUnit}
+                  </div>
+                </div>
+                <div className='border-l w-[33%] ps-2'>
+                  <div className='font-ea-sb uppercase'>OPEN</div>
+                  <div>
+                    {vastuLayoutData?.OpenArea} {vastuLayoutData?.OpenAreaUnit}
                   </div>
                 </div>
               </div>
-              <div className='card-body'
-               style={{
+              <Divider />
+              <div className=''>Audit Date # {formatDate(vastuLayoutData?.AuditDate)}</div>
+              <div>
+                <div className='mt-2 font-ea-sb text-primary'>Astro Vastu Remedies / Suggestions:</div>
+                <div>
+                  The positioning of the Toilet WC and Main Door entry is suggested based on Astro Vastu Analysis and
+                  Energy Scan Audit.
+                </div>
+              </div>
+            </div>
+            <div className='card-body'
+              style={{
                 backgroundImage: "url('/images/my-svg.svg')",
                 backgroundSize: "cover",
                 backgroundPosition: "center",
@@ -3373,15 +3497,15 @@ const DevtaVastu = ({
                 height: "200px",
               }}
             ></div>
-              <div className='card-footer'>
-                <div className='pdf-title flex flex-col bg-primary text-white py-1 items-center justify-center'>
-                  <div className='text-[14px] uppercase text-center font-semibold'>Elephant AstroVastu Research Center</div>
-                  <div className='text-[12px] flex justify-center items-center'>
-                    <div className='text-ea-sb uppercase font-semibold'>www.AstroVastu.net | +91 9856 650 650</div>
-                    {/* <div className='text-[10px] '>#{vastuLayoutData?.VPID} </div> */}
-                  </div>
+            <div className='card-footer'>
+              <div className='pdf-title flex flex-col bg-primary text-white py-1 items-center justify-center'>
+                <div className='text-[14px] uppercase text-center font-semibold'>Elephant AstroVastu Research Center</div>
+                <div className='text-[12px] flex justify-center items-center'>
+                  <div className='text-ea-sb uppercase font-semibold'>www.AstroVastu.net | +91 9856 650 650</div>
+                  {/* <div className='text-[10px] '>#{vastuLayoutData?.VPID} </div> */}
                 </div>
               </div>
+            </div>
             {/* </div> */}
           </div>
 
@@ -3411,9 +3535,9 @@ const DevtaVastu = ({
               onClick={() => updatePointsForAllTabs(selectedGroup, points)}
               loadingPosition='start'
               type='submit'
-              // sx={{
-              //   width: '150px'
-              // }}
+            // sx={{
+            //   width: '150px'
+            // }}
             >
               Save
             </LoadingButton>
@@ -3426,9 +3550,9 @@ const DevtaVastu = ({
               onClick={() => handleAddPolygonToggle(selectedGroup)}
               loadingPosition='start'
               type='submit'
-              // sx={{
-              //   width: '150px'
-              // }}
+            // sx={{
+            //   width: '150px'
+            // }}
             >
               Add New Polygon
             </LoadingButton>

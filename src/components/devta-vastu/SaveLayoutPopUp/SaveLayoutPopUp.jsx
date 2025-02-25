@@ -18,7 +18,6 @@ import { useRouter } from "next/navigation";
 import { toast } from 'react-toastify'
 function SaveLayoutPopUp({ open, handleClose, tabGroup, layoutData, setLayoutData, savedGroups, previewUrl, fileInfo,setLoading }) {
   const router = useRouter();
-  console.log("layoutData : ",layoutData)
   const theme = createTheme({
     shape: {
       borderRadius: 8 // Set the global border radius here
@@ -130,7 +129,6 @@ function SaveLayoutPopUp({ open, handleClose, tabGroup, layoutData, setLayoutDat
         lockChakra,lockCentroid,lineSets,hideCircle,hide32Circle,hide16Circle,hide8Circle,hide4Circle
       }))
 
-    console.log('==> ', matchingItems)
     const payload = {
       // "CompanyID": "string",
       ProjectName: formData?.ProjectName,
