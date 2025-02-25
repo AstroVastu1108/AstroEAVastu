@@ -30,115 +30,116 @@ import SaveLayoutPopUp from '@/components/devta-vastu/SaveLayoutPopUp/SaveLayout
 
 import { getVastuLayouts, getVastuLayoutsByID, saveVastuLayouts } from '@/app/Server/API/vastulayout'
 import { useRouter } from "next/navigation";
-function DevtaVastuPage({id}) {
+function DevtaVastuPage({ id }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false)
   const [downloadPDFLoading, setDownloadPDFLoading] = useState(false)
   const [saveLoading, setSaveLoading] = useState(false)
   const printRefs = useRef([])
   const leftprintRefs = useRef([])
-  const [vastuLayoutData,setVastuLayoutData] = useState([])
+  const [vastuLayoutData, setVastuLayoutData] = useState([])
   const [fileUploaded, setFileUploaded] = useState(false)
-  const [fileInfo,setFileInfo] = useState("")
+  const [fileInfo, setFileInfo] = useState("")
   const [previewUrl, setPreviewUrl] = useState(null)
   const [tabGroup, setTabGroup] = useState(TabsData)
 
   const [formData, setFormData] = useState({
-      ProjectName: '',
-      clientId: '',
-      Address: '',
-      OAU: '',
-      OAUV: '',
-      CAU: '',
-      CAUV: '',
-      TAU: '',
-      TAUV: '',
-      Reference: '',
-      Remark: '',
-      Rivision: '',
-      isUpdate:'',
-      VPID:''
-    })
+    ProjectName: '',
+    clientId: '',
+    Address: '',
+    OAU: '',
+    OAUV: '',
+    CAU: '',
+    CAUV: '',
+    TAU: '',
+    TAUV: '',
+    Reference: '',
+    Remark: '',
+    Rivision: '',
+    isUpdate: '',
+    VPID: ''
+  })
 
   // const [selectedGroup, setSelectedGroup] = useState(null)
   const [savedGroups, setSavedGroups] = useState(['House Plan'])
   useEffect(() => {
-    if(id != "NEW"){
+    if (id != "NEW") {
       getVastuData(id);
     }
-    }, []);
+  }, []);
 
-    // Func
-    const getVastuData = async (kId) => {
-      if (kId != "undefined" && kId != null) {
-        setLoading(true);
-        const res = await getVastuLayoutsByID(kId);
-        setLoading(false);
-        if (res.hasError) {
-          router.push('/vastu-list')
-        } else {
-          const resData = res.responseData?.Result?.VastuLayout
-          setFormData({
-            ProjectName: resData?.ProjectName,
-            clientId: resData?.ClientName,
-            Address: resData?.Address,
-            OAU: resData?.OpenAreaUnit,
-            OAUV: resData?.OpenArea,
-            CAU: resData?.CoveredAreaUnit,
-            CAUV: resData?.CoveredArea,
-            TAU: resData?.TotalAreaUnit,
-            TAUV: resData?.TotalArea,
-            Reference: resData?.Reference,
-            Remark: resData?.Remark,
-            Rivision: resData?.Revision,
-            isUpdate:true,
-            VPID:resData?.VPID
-          })
-          setVastuLayoutData(res.responseData?.Result?.VastuLayout)
-          const incomingData = res.responseData?.Result?.VastuLayout?.TabGroups
-          const updatedTabGroup = tabGroup.map((tab) => {
-            const matchingData = incomingData?.find((data) => data.Label === tab.label);
-            if (matchingData) {
-              return {
-                ...tab,
-                points: matchingData.Points.map((point) => ({
-                  x: point.x, // Convert X to x
-                  y: point.y  // Convert Y to y
-                })),
-                centroid: {x:matchingData.Centroid?.x,y:matchingData.Centroid?.y},
-                snapToCentroid: matchingData.SnapToCentroid,
-                inputDegree: matchingData.InputDegree,
-                translate: {x:matchingData.Translate?.x,y:matchingData.Translate?.y},
-                zoom:matchingData.Zoom,
-                polygons:matchingData.Polygons,
-                lockChakra:matchingData.lockChakra,
-                lockCentroid:matchingData.lockCentroid,
-                lineSets:matchingData.LineSets,
-                hideCircle:matchingData.hideCircle,
-                hide32Circle:matchingData.hide32Circle,
-                hide4Circle:matchingData.hide4Circle,
-                hide16Circle:matchingData.hide16Circle,
-                hide8Circle:matchingData.hide8Circle
-              };
-            }
-            return tab;
-          });
-
-          const matchedLabels = incomingData?.map((data) => data.Label)
-            .filter((label) => updatedTabGroup.some((tab) => tab.label === label));
-
-          setTabGroup(updatedTabGroup);
-          setSavedGroups(matchedLabels);
-          setFileUploaded(true)
-          setPreviewUrl(res.responseData?.Result?.VastuLayout?.NecessaryFiles[0]?.Base64File)
-          setFileInfo(res.responseData?.Result?.VastuLayout?.NecessaryFiles[0]?.OriginalFileName)
-        }
-      } else {
+  // Func
+  const getVastuData = async (kId) => {
+    if (kId != "undefined" && kId != null) {
+      setLoading(true);
+      const res = await getVastuLayoutsByID(kId);
+      setLoading(false);
+      if (res.hasError) {
         router.push('/vastu-list')
-        // return toastDisplayer("error", "Kundli Id not found.");
-      }
+      } else {
+        const resData = res.responseData?.Result?.VastuLayout
+        setFormData({
+          ProjectName: resData?.ProjectName,
+          clientId: resData?.ClientName,
+          Address: resData?.Address,
+          OAU: resData?.OpenAreaUnit,
+          OAUV: resData?.OpenArea,
+          CAU: resData?.CoveredAreaUnit,
+          CAUV: resData?.CoveredArea,
+          TAU: resData?.TotalAreaUnit,
+          TAUV: resData?.TotalArea,
+          Reference: resData?.Reference,
+          Remark: resData?.Remark,
+          Rivision: resData?.Revision,
+          isUpdate: true,
+          VPID: resData?.VPID
+        })
+        setVastuLayoutData(res.responseData?.Result?.VastuLayout)
+        const incomingData = res.responseData?.Result?.VastuLayout?.TabGroups
+        const updatedTabGroup = tabGroup.map((tab) => {
+          const matchingData = incomingData?.find((data) => data.Label === tab.label);
+          if (matchingData) {
+            return {
+              ...tab,
+              points: matchingData.Points.map((point) => ({
+                x: point.x, // Convert X to x
+                y: point.y  // Convert Y to y
+              })),
+              centroid: { x: matchingData.Centroid?.x, y: matchingData.Centroid?.y },
+              snapToCentroid: matchingData.SnapToCentroid,
+              inputDegree: matchingData.InputDegree,
+              translate: { x: matchingData.Translate?.x, y: matchingData.Translate?.y },
+              zoom: matchingData.Zoom,
+              polygons: matchingData.Polygons,
+              lockChakra: matchingData.lockChakra,
+              lockCentroid: matchingData.lockCentroid,
+              lineSets: matchingData.LineSets,
+              hideCircle: matchingData.hideCircle,
+              hide32Circle: matchingData.hide32Circle,
+              hide4Circle: matchingData.hide4Circle,
+              hide16Circle: matchingData.hide16Circle,
+              hide8Circle: matchingData.hide8Circle
+            };
+          }
+          return tab;
+        });
 
+        const matchedLabels = incomingData?.map((data) => data.Label)
+          .filter((label) => updatedTabGroup.some((tab) => tab.label === label));
+
+        setTabGroup(updatedTabGroup);
+        setSavedGroups(matchedLabels);
+        setActiveHouse(updatedTabGroup[0]);
+        setFileUploaded(true)
+        setPreviewUrl(res.responseData?.Result?.VastuLayout?.NecessaryFiles[0]?.Base64File)
+        setFileInfo(res.responseData?.Result?.VastuLayout?.NecessaryFiles[0]?.OriginalFileName)
+      }
+    } else {
+      router.push('/vastu-list')
+      // return toastDisplayer("error", "Kundli Id not found.");
     }
+
+  }
 
 
   const [activeTab, setActiveTab] = useState(0)
@@ -216,7 +217,7 @@ function DevtaVastuPage({id}) {
 
     if (uploadedFile) {
       const fileType = uploadedFile.type
-      const name  = uploadedFile.name
+      const name = uploadedFile.name
       setFileInfo(name)
       if (fileType.includes('image')) {
         // If the uploaded file is an image
@@ -496,7 +497,7 @@ function DevtaVastuPage({id}) {
                   </div>
                   <div className='flex flex-row gap-1 chart-date items-center'>
                     <span className='label font-ea-n'>Client ID: </span>
-                    <span className='value font-ea-sb'>{vastuLayoutData?.VPID ? "#"+vastuLayoutData?.VPID : "#--"}</span>
+                    <span className='value font-ea-sb'>{vastuLayoutData?.VPID ? "#" + vastuLayoutData?.VPID : "#--"}</span>
                   </div>
 
                   <div className='flex justify-end'>
@@ -521,7 +522,7 @@ function DevtaVastuPage({id}) {
                           <i className={'tabler-browser-check me-2'} />New Layout Project
                         </MenuItem>
                         <MenuItem onClick={handleAddNewPage} className="flex gap-1"><i className={'tabler-browser-check me-2'} />Add Page</MenuItem>
-                        <MenuItem onClick={handleSaveLayoutToggle} className="flex gap-1"><i className={'tabler-browser-check me-2'} />{formData?.isUpdate ? "Update Layout Project" : "Save Layout Project" }</MenuItem>
+                        <MenuItem onClick={handleSaveLayoutToggle} className="flex gap-1"><i className={'tabler-browser-check me-2'} />{formData?.isUpdate ? "Update Layout Project" : "Save Layout Project"}</MenuItem>
                         <MenuItem onClick={downloadPDF} className="flex gap-1"><i className={'tabler-browser-check me-2'} />Download Report</MenuItem>
                       </Menu>
                     </>
@@ -588,6 +589,8 @@ function DevtaVastuPage({id}) {
                         setHideCircle={newHideCircle => handleTabGroupChange(index, 'hideCircle', newHideCircle)}
                         lineSets={tabGroup[index].lineSets}
                         setLineSets={newLineSets => handleTabGroupChange(index, 'lineSets', newLineSets)}
+                        setLoading={setLoading}
+                        loading={loading}
                       />
                     </>
                   )

@@ -79,11 +79,7 @@ export default function MovableTabs({
   const handleDragEnd = event => {
     const { active, over } = event
     if (active.id !== over.id) {
-      console.log("activeTab",activeTab)
-      console.log("active.id",active.id)
-      console.log("over.id",over.id)
       if(activeTab == active.id){
-        console.log("here")
         setActiveTab(over.id)
       }else{
         setActiveTab(active.id)
