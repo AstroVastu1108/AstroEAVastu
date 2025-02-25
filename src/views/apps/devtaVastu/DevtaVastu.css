@@ -3,7 +3,7 @@
     left: -9999px; /* Move off-screen */
     top: 0;
   }
-  
+
   @media print {
     .hidden-print {
       position: static; /* Restore to default position during print */
@@ -15,23 +15,24 @@
       display: flex;
       flex-direction: column;
     }
-  
+
     .card-content {
       flex-grow: 1; /* Ensures it stretches */
     }
   }
 
 
-  /* #hiddenDiv {
-    min-height: 100vh; 
+   #hiddenDiv {
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
+    display: none;
   }
 
   .card-content {
-    flex-grow: 1; 
-  }  */
-  
+    flex-grow: 1;
+  }
+
   .design-card {
     /* width: 300px; Reduced width to better match the 30% proportion */
     /* padding: 0px 20px; */
@@ -40,5 +41,4 @@
     border-radius: 8px;
     /* box-shadow: 0 2px 4px rgba(0,0,0,0.1); */
   }
-  
-  
+
