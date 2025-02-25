@@ -16,7 +16,7 @@ import {
 import React, { useEffect, useRef, useState } from 'react'
 import { useRouter } from "next/navigation";
 import { toast } from 'react-toastify'
-function SaveLayoutPopUp({ open, handleClose, tabGroup, layoutData, setLayoutData, savedGroups, previewUrl, fileInfo,setLoading }) {
+function SaveLayoutPopUp({ open, handleClose, tabGroup, layoutData, setLayoutData, savedGroups, previewUrl, fileInfo, setLoading }) {
   const router = useRouter();
   const theme = createTheme({
     shape: {
@@ -115,19 +115,25 @@ function SaveLayoutPopUp({ open, handleClose, tabGroup, layoutData, setLayoutDat
       return // Prevent submission
     }
 
-    const matchingItems = tabGroup
-      .filter(item => savedGroups.includes(item.label))
-      .map(({ label, points, centroid, snapToCentroid, inputDegree,zoom,translate, polygons,lockChakra,lockCentroid,lineSets,hideCircle,hide32Circle,hide16Circle,hide8Circle,hide4Circle}) => ({
-        label,
-        points,
-        centroid,
-        snapToCentroid,
-        inputDegree,
-        zoom,
-        translate,
-        polygons,
-        lockChakra,lockCentroid,lineSets,hideCircle,hide32Circle,hide16Circle,hide8Circle,hide4Circle
-      }))
+    // const matchingItems = tabGroup
+    //   .filter(item => savedGroups.includes(item.label))
+    //   .map(({ label, points, centroid, snapToCentroid, inputDegree,zoom,translate, polygons,lockChakra,lockCentroid,lineSets,hideCircle,hide32Circle,hide16Circle,hide8Circle,hide4Circle}) => ({
+    //     label,
+    //     points,
+    //     centroid,
+    //     snapToCentroid,
+    //     inputDegree,
+    //     zoom,
+    //     translate,
+    //     polygons,
+    //     lockChakra,lockCentroid,lineSets,hideCircle,hide32Circle,hide16Circle,hide8Circle,hide4Circle
+    //   }))
+
+    const matchingItems = savedGroups
+      .map(label => tabGroup.find(item => item.label === label))
+      .filter(item => item !== undefined);
+
+    // return console.log("mat", matchingItems)
 
     const payload = {
       // "CompanyID": "string",
@@ -158,24 +164,24 @@ function SaveLayoutPopUp({ open, handleClose, tabGroup, layoutData, setLayoutDat
       setLoading(true);
       let data;
       let msg;
-      if(formData?.isUpdate){
+      if (formData?.isUpdate) {
         setLayoutData(prev => ({
           ...prev,
           "ProjectName": formData?.ProjectName,
-          "ClientName":formData?.clientId
+          "ClientName": formData?.clientId
         }))
-        data = await editVastuLayouts(formData?.VPID,payload)
+        data = await editVastuLayouts(formData?.VPID, payload)
         msg = "Vastu Griding Update Successfully."
-      }else{
+      } else {
         data = await saveVastuLayouts(payload)
         msg = "Vastu Griding Saved Successfully."
       }
       console.log('data result  : ', data)
-      if(data.hasError){
+      if (data.hasError) {
         setLoading(false)
         return toast.error(data.error)
       }
-      if(!formData?.isUpdate){
+      if (!formData?.isUpdate) {
         router.push(`/devta-vastu/${data?.responseData?.Result?.VPID}`)
       }
       setLoading(false)
