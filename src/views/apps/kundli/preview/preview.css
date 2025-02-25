@@ -985,6 +985,18 @@
     font-size: 1rem;
   }
 }
+.chkBoxLabel {
+  .MuiTypography-root {
+    font-family: ea-n;
+    font-weight: unset;
+    font-size: 14px;
+    line-height: unset;
+  }
+
+  .MuiCheckbox-root svg {
+    font-size: 1.1rem;
+  }
+}
 
 
 .MuiDivider-root{

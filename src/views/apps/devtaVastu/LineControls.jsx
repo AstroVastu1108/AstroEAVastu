@@ -10,7 +10,7 @@ const LineControls = ({ lineSet, onUpdate, setIndex }) => {
 
         <div className="flex flex-col gap-1">
           <div className="flex items-center">
-            <label className="text-sm text-gray-600 w-20">Color:</label>
+            <label className="text-sm text-gray-600 w-[30%]">Color:</label>
             <input
               type="color"
               value={lineSet.stroke}
@@ -20,7 +20,7 @@ const LineControls = ({ lineSet, onUpdate, setIndex }) => {
           </div>
 
           <div className="flex items-center">
-            <label className="text-sm text-gray-600 w-20">Width:</label>
+            <label className="text-sm text-gray-600 w-[30%]">Width:</label>
             <select
               value={lineSet.strokeWidth}
               onChange={(e) =>
@@ -38,7 +38,7 @@ const LineControls = ({ lineSet, onUpdate, setIndex }) => {
           </div>
 
           <div className="flex items-center">
-            <label className="text-sm text-gray-600 w-20">Style:</label>
+            <label className="text-sm text-gray-600 w-[30%]">Style:</label>
             <select
               value={
                 lineSet.strokeDasharray
