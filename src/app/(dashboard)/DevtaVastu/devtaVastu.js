@@ -130,8 +130,7 @@ function DevtaVastuPage({ id }) {
 
         setTabGroup(updatedTabGroup);
         setSavedGroups(matchedLabels);
-        console.log(updatedTabGroup.filter((item)=>item.label==matchedLabels[0]))
-        setActiveHouse(updatedTabGroup.filter((item)=>item.label==matchedLabels[0])[0]);
+        setActiveHouse(updatedTabGroup.filter((item) => item.label == matchedLabels[0])[0]);
         setFileUploaded(true)
         setPreviewUrl(res.responseData?.Result?.VastuLayout?.NecessaryFiles[0]?.Base64File)
         setFileInfo(res.responseData?.Result?.VastuLayout?.NecessaryFiles[0]?.OriginalFileName)
@@ -552,61 +551,61 @@ function DevtaVastuPage({ id }) {
               )}
               {activeHouse && tabGroup.map(
                 (group, index) =>
-                // activeHouse?.label === group.label && 
-                (
-                  <div key={index} style={{ display: activeHouse?.label === group.label ? 'block' : 'none' }}>
-                    <DevtaVastu
-                      key={index}
-                      setPrintRef={el => (printRefs.current[index] = el)}
-                      setleftPrintRef={el => (leftprintRefs.current[index] = el)}
-                      downloadPDFLoading={downloadPDFLoading}
-                      setDownloadPDFLoading={setDownloadPDFLoading}
-                      saveLoading={saveLoading}
-                      setSaveLoading={setSaveLoading}
-                      selectedGroup={group.label}
-                      fileUploaded={fileUploaded}
-                      setFileUploaded={setFileUploaded}
-                      handleFileUpload={handleFileUpload}
-                      previewUrl={previewUrl}
-                      setPreviewUrl={setPreviewUrl}
-                      points={tabGroup[index].points}
-                      setPoints={newPoints => handleTabGroupChange(index, 'points', newPoints)}
-                      centroid={tabGroup[index].centroid}
-                      setCentroid={newCentroid => handleTabGroupChange(index, 'centroid', newCentroid)}
-                      snapToCentroid={tabGroup[index].snapToCentroid}
-                      setSnapToCentroid={newSnapToCentroid => handleTabGroupChange(index, 'snapToCentroid', newSnapToCentroid)}
-                      lockCentroid={tabGroup[index].lockCentroid}
-                      setLockCentroid={newLockCentroid => handleTabGroupChange(index, 'lockCentroid', newLockCentroid)}
-                      lockChakra={tabGroup[index].lockChakra}
-                      setLockChakra={newLockChakra => handleTabGroupChange(index, 'lockChakra', newLockChakra)}
-                      inputDegree={tabGroup[index].inputDegree}
-                      setInputDegree={newInputDegree => handleTabGroupChange(index, 'inputDegree', newInputDegree)}
-                      translate={tabGroup[index].translate}
-                      setTranslate={newTranslate => handleTabGroupChange(index, 'translate', newTranslate)}
-                      zoom={tabGroup[index].zoom}
-                      setZoom={newZoom => handleTabGroupChange(index, 'zoom', newZoom)}
-                      polygons={tabGroup[index].polygons}
-                      setPolygons={newPolygons => handleTabGroupChange(index, 'polygons', newPolygons)}
-                      updatePointsForAllTabs={updatePointsForAllTabs}
-                      vastuLayoutData={vastuLayoutData}
-                      hide32Circle={tabGroup[index].hide32Circle}
-                      setHide32Circle={newHide32Circle => handleTabGroupChange(index, 'hide32Circle', newHide32Circle)}
-                      hide16Circle={tabGroup[index].hide16Circle}
-                      setHide16Circle={newHide16Circle => handleTabGroupChange(index, 'hide16Circle', newHide16Circle)}
-                      hide8Circle={tabGroup[index].hide8Circle}
-                      setHide8Circle={newHide8Circle => handleTabGroupChange(index, 'hide8Circle', newHide8Circle)}
-                      hide4Circle={tabGroup[index].hide4Circle}
-                      setHide4Circle={newHide4Circle => handleTabGroupChange(index, 'hide4Circle', newHide4Circle)}
-                      hideCircle={tabGroup[index].hideCircle}
-                      setHideCircle={newHideCircle => handleTabGroupChange(index, 'hideCircle', newHideCircle)}
-                      lineSets={tabGroup[index].lineSets}
-                      setLineSets={newLineSets => handleTabGroupChange(index, 'lineSets', newLineSets)}
-                      setLoading={setLoading}
-                      loading={loading}
-                      IsDownloading={IsDownloading}
-                    />
-                  </div>
-                )
+                  activeHouse?.label === group.label &&
+                  (
+                    // <div key={index} style={{ display: activeHouse?.label === group.label ? 'block' : 'none' }}>
+                      <DevtaVastu
+                        key={index}
+                        setPrintRef={el => (printRefs.current[index] = el)}
+                        setleftPrintRef={el => (leftprintRefs.current[index] = el)}
+                        downloadPDFLoading={downloadPDFLoading}
+                        setDownloadPDFLoading={setDownloadPDFLoading}
+                        saveLoading={saveLoading}
+                        setSaveLoading={setSaveLoading}
+                        selectedGroup={group.label}
+                        fileUploaded={fileUploaded}
+                        setFileUploaded={setFileUploaded}
+                        handleFileUpload={handleFileUpload}
+                        previewUrl={previewUrl}
+                        setPreviewUrl={setPreviewUrl}
+                        points={tabGroup[index].points}
+                        setPoints={newPoints => handleTabGroupChange(index, 'points', newPoints)}
+                        centroid={tabGroup[index].centroid}
+                        setCentroid={newCentroid => handleTabGroupChange(index, 'centroid', newCentroid)}
+                        snapToCentroid={tabGroup[index].snapToCentroid}
+                        setSnapToCentroid={newSnapToCentroid => handleTabGroupChange(index, 'snapToCentroid', newSnapToCentroid)}
+                        lockCentroid={tabGroup[index].lockCentroid}
+                        setLockCentroid={newLockCentroid => handleTabGroupChange(index, 'lockCentroid', newLockCentroid)}
+                        lockChakra={tabGroup[index].lockChakra}
+                        setLockChakra={newLockChakra => handleTabGroupChange(index, 'lockChakra', newLockChakra)}
+                        inputDegree={tabGroup[index].inputDegree}
+                        setInputDegree={newInputDegree => handleTabGroupChange(index, 'inputDegree', newInputDegree)}
+                        translate={tabGroup[index].translate}
+                        setTranslate={newTranslate => handleTabGroupChange(index, 'translate', newTranslate)}
+                        zoom={tabGroup[index].zoom}
+                        setZoom={newZoom => handleTabGroupChange(index, 'zoom', newZoom)}
+                        polygons={tabGroup[index].polygons}
+                        setPolygons={newPolygons => handleTabGroupChange(index, 'polygons', newPolygons)}
+                        updatePointsForAllTabs={updatePointsForAllTabs}
+                        vastuLayoutData={vastuLayoutData}
+                        hide32Circle={tabGroup[index].hide32Circle}
+                        setHide32Circle={newHide32Circle => handleTabGroupChange(index, 'hide32Circle', newHide32Circle)}
+                        hide16Circle={tabGroup[index].hide16Circle}
+                        setHide16Circle={newHide16Circle => handleTabGroupChange(index, 'hide16Circle', newHide16Circle)}
+                        hide8Circle={tabGroup[index].hide8Circle}
+                        setHide8Circle={newHide8Circle => handleTabGroupChange(index, 'hide8Circle', newHide8Circle)}
+                        hide4Circle={tabGroup[index].hide4Circle}
+                        setHide4Circle={newHide4Circle => handleTabGroupChange(index, 'hide4Circle', newHide4Circle)}
+                        hideCircle={tabGroup[index].hideCircle}
+                        setHideCircle={newHideCircle => handleTabGroupChange(index, 'hideCircle', newHideCircle)}
+                        lineSets={tabGroup[index].lineSets}
+                        setLineSets={newLineSets => handleTabGroupChange(index, 'lineSets', newLineSets)}
+                        setLoading={setLoading}
+                        loading={loading}
+                        IsDownloading={IsDownloading}
+                      />
+                    // </div>
+                  )
               )}
             </Card>
             {removeOpen && (
