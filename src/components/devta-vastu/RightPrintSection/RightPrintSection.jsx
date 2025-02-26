@@ -1,5 +1,9 @@
+// import Logo from '@/@core/svg/Logo'
+import LogoSM from '@/@core/svg/LogoSm';
 import { Divider } from '@mui/material'
 import React from 'react'
+import { renderToStaticMarkup } from "react-dom/server";
+
 // import MySvg from './../../../../public/images/next.svg';
 
 
@@ -23,6 +27,10 @@ function RightPrintSection({ printRef1, vastuLayoutData }) {
 
         return formattedDate
     }
+
+    const svgString = encodeURIComponent(renderToStaticMarkup(<LogoSM />));
+    const backgroundImage = `url("data:image/svg+xml,${svgString}")`;
+
     return (
         <div ref={printRef1} id='hiddenDiv' className=' !h-[790px] w-full'>
 
@@ -66,16 +74,22 @@ function RightPrintSection({ printRef1, vastuLayoutData }) {
                     </div>
                 </div>
             </div>
-            <div className='card-body'
-                style={{
-                    backgroundImage: "url('./../../../../public/images/next.svg')",
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    backgroundRepeat: "no-repeat",
-                    // width: "200px",
-                    height: "470px",
-                }}
-            ></div>
+            <div className="card-body h-[400px] flex flex-col relative">
+                {/* Text at the Top */}
+                {/* <div>Hello</div> */}
+
+                {/* Background Image Centered */}
+                <div
+                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[220px] h-[205px]"
+                    style={{
+                        backgroundImage: backgroundImage,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                        backgroundRepeat: "no-repeat",
+                        opacity:0.1
+                    }}
+                />
+            </div>
             <div className='card-footer'>
                 <div className='pdf-title flex flex-col bg-primary text-white py-1 items-center justify-center'>
                     <div className='text-[14px] uppercase text-center font-semibold'>Elephant AstroVastu Research Center</div>

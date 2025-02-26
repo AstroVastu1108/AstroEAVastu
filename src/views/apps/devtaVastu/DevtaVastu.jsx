@@ -3261,26 +3261,27 @@ const DevtaVastu = ({
                         </foreignObject>
                         {/* Hide draggable circles when downloading */}
                         {/* {!IsDownloading && !loading && ( */}
-                        <div className={IsDownloading ? "hidden" : ""}>
+                        {/* <g style={{ display: IsDownloading ? 'none' : 'block' }}> */}
+                        <g style={{ visibility: IsDownloading ? 'hidden' : 'visible' }}>
                           {polygon.points.map((point, pointIndex) => (
                             <circle
                               key={pointIndex}
                               cx={point.x}
                               cy={point.y}
                               r={3}
-                              visibility={!IsDownloading}
                               fill={polygon.color}
                               stroke='#fff'
                               strokeWidth='0.5'
                               onMouseDown={e => {
-                                handleMouseDown(e, polygonIndex, 'PointOverlay', pointIndex)
+                                handleMouseDown(e, polygonIndex, 'PointOverlay', pointIndex);
                               }}
                               onDoubleClick={e => {
-                                handleDoubleClick(e, 'overlay', polygon, pointIndex, polygonIndex)
+                                handleDoubleClick(e, 'overlay', polygon, pointIndex, polygonIndex);
                               }}
                             />
                           ))}
-                        </div>
+                        </g>
+
                         {/* )} */}
                       </g>
                     ))}

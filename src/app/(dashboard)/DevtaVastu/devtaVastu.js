@@ -130,7 +130,8 @@ function DevtaVastuPage({ id }) {
 
         setTabGroup(updatedTabGroup);
         setSavedGroups(matchedLabels);
-        setActiveHouse(updatedTabGroup[0]);
+        console.log(updatedTabGroup.filter((item)=>item.label==matchedLabels[0]))
+        setActiveHouse(updatedTabGroup.filter((item)=>item.label==matchedLabels[0])[0]);
         setFileUploaded(true)
         setPreviewUrl(res.responseData?.Result?.VastuLayout?.NecessaryFiles[0]?.Base64File)
         setFileInfo(res.responseData?.Result?.VastuLayout?.NecessaryFiles[0]?.OriginalFileName)
@@ -260,6 +261,7 @@ function DevtaVastuPage({ id }) {
   }
 
   const downloadPDF = () => {
+    setIsDownloading(!IsDownloading);
     handleAnchorElClose();
     setDownloadConfirm(!downloadConfirm)
   }

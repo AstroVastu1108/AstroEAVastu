@@ -25,6 +25,8 @@ import { useAuth } from '@/@core/contexts/authContext'
 import { LoadingButton } from '@mui/lab'
 
 import { useRouter } from 'next/navigation'
+import { MenuItem, Select } from '@mui/material'
+import PageTitle from '@/components/common/PageTitle/PageTitle'
 // Styles Imports
 // import frontCommonStyles from '@views/front-pages/styles.module.css'
 // import styles from './styles.module.css'
@@ -42,8 +44,8 @@ const pricingPlans = [
   {
     title: 'Basic',
     img: '/images/front-pages/landing-page/pricing-team.png',
-    monthlyPay: 250,
-    annualPay: 250,
+    monthlyPay: 4000,
+    annualPay: 45000,
     perYearPay: 3000,
     features: [
       'Making Kundli',
@@ -52,37 +54,37 @@ const pricingPlans = [
     ],
     current: true
   },
-//   {
-//     title: 'Enterprise',
-//     img: '/images/front-pages/landing-page/pricing-enterprise.png',
-//     monthlyPay: 49,
-//     annualPay: 37,
-//     perYearPay: 444,
-//     features: [
-//       'Campaign management',
-//       'Timeline with database',
-//       'Fuzzy search',
-//       'A/B testing sanbox',
-//       'Custom permissions',
-//       'Social media automation'
-//     ],
-//     current: false
-//   }
+  //   {
+  //     title: 'Enterprise',
+  //     img: '/images/front-pages/landing-page/pricing-enterprise.png',
+  //     monthlyPay: 49,
+  //     annualPay: 37,
+  //     perYearPay: 444,
+  //     features: [
+  //       'Campaign management',
+  //       'Timeline with database',
+  //       'Fuzzy search',
+  //       'A/B testing sanbox',
+  //       'Custom permissions',
+  //       'Social media automation'
+  //     ],
+  //     current: false
+  //   }
 ]
 
 const PricingPlan = () => {
   // States
-  const { user,logout } = useAuth();
+  const { user, logout } = useAuth();
   const router = useRouter()
-  const [pricingPlan, setPricingPlan] = useState('annually')
+  const [pricingPlan, setPricingPlan] = useState('M')
   const [paymentStatus, setPaymentStatus] = useState(null);
   const [isDisable, setIsDisable] = useState(false);
   const handleChange = e => {
-    if (e.target.checked) {
-      setPricingPlan('annually')
-    } else {
-      setPricingPlan('monthly')
-    }
+    // if (e.target.checked) {
+    //   setPricingPlan('annually')
+    // } else {
+    //   setPricingPlan('monthly')
+    // }
   }
 
   const loadRazorpayScript = () => {
@@ -107,10 +109,10 @@ const PricingPlan = () => {
     const amount = pricingPlan == "monthly" ? 250 : 3000
     // Fetch the payment order ID from your backend
     const response = await CreateOrder({
-      "companyId":user?.transactionID,
-      "amount":amount
+      "companyId": user?.transactionID,
+      "amount": amount
     });
-    if(response.hasError){
+    if (response.hasError) {
       setIsDisable(false)
       // return toastDisplayer("error",response.errorMessage)
     }
@@ -133,7 +135,7 @@ const PricingPlan = () => {
           RazorpayPaymentId: response.razorpay_payment_id,
           RazorpaySignature: response.razorpay_signature
         });
-        if(verifyResponse.hasError){
+        if (verifyResponse.hasError) {
           setIsDisable(false)
           // return toastDisplayer("error",response.errorMessage)
         }
@@ -166,28 +168,30 @@ const PricingPlan = () => {
   };
 
   return (
-    <section
-      id='pricing-plans'
-    >
-      <div >
-        <div className='flex flex-col gap-y-4 items-center justify-center'>
-          <Chip size='small' variant='tonal' color='primary' label='Pricing Plans' />
-          <div className='flex flex-col items-center gap-y-1 justify-center flex-wrap'>
+    <div className='flex flex-col gap-3'>
+      <Card>
+        <PageTitle title={"Pick Your Perfect Plan"} endCmp={
+          <>
+            <Select
+              labelId="country-select-label"
+              id="country-select"
+              value={pricingPlan}
+              onChange={(e) => {
+                setPricingPlan(e.target.value);
+              }}
+              disableClearable
+              className="w-6/12 lg:w-3/12 md:w-4/12 sm:w-4/12"
+              size="small"
+            >
+              <MenuItem value="M">Monthly</MenuItem>
+              <MenuItem value="A">Annually</MenuItem>
+            </Select>
+            {/* <PreviewActions value={"New Kundali"} onButtonClick={handleAddClick} icon={'tabler-plus'} /> */}
+          </>
+        } />
+      </Card>
 
-            <Typography className='text-center'>
-              Choose the best plan to fit your needs.
-            </Typography>
-          </div>
-        </div>
-        <div className='flex justify-center items-center max-sm:mlb-3 mbe-6'>
-          <InputLabel htmlFor='pricing-switch' className='cursor-pointer'>
-            Pay Monthly
-          </InputLabel>
-          <Switch id='pricing-switch' onChange={handleChange} checked={pricingPlan === 'annually'} />
-          <InputLabel htmlFor='pricing-switch' className='cursor-pointer'>
-            Pay Annually
-          </InputLabel>
-        </div>
+      <Card className='p-3'>
         <Grid container spacing={6}>
           {pricingPlans.map((plan, index) => (
             <Grid item key={index} xs={12} lg={4}>
@@ -202,19 +206,20 @@ const PricingPlan = () => {
                     </Typography>
                     <div className='flex items-baseline gap-x-1'>
                       <Typography variant='h2' color='primary' className='font-extrabold'>
-                      ₹{pricingPlan === 'monthly' ? plan.monthlyPay : plan.annualPay}
+                        ₹{pricingPlan && pricingPlan === 'M' ? plan.monthlyPay : plan.annualPay}
                       </Typography>
                       <Typography color='text.disabled' className='font-medium'>
-                        /mo
+                        {pricingPlan && pricingPlan === 'M' ? "/month" : "/year"}
+
                       </Typography>
                     </div>
-                    {pricingPlan === 'annually' && (
-                      <Typography color='text.disabled' className='absolute block-start-[100%]'>
-                        ₹ {plan.perYearPay} / year
-                      </Typography>
-                    )}
+                    {/* {pricingPlan === 'A' && (
+                        <Typography color='text.disabled' className='absolute block-start-[100%]'>
+                          ₹ {plan.perYearPay} / year
+                        </Typography>
+                      )} */}
                   </div>
-                  <div>
+                  <div className='flex justify-center'>
                     <div className='flex flex-col gap-3 mbs-3'>
                       {plan.features.map((feature, index) => (
                         <div key={index} className='flex items-center gap-[12px]'>
@@ -227,15 +232,15 @@ const PricingPlan = () => {
                     </div>
                   </div>
                   <LoadingButton
-                      fullWidth
-                      variant={plan.current ? 'contained' : 'tonal'}
-                      onClick={handlePayment}
-                      loading={isDisable}
-                      loadingPosition="start"
-                      type='submit'
-                    >
-                       {isDisable ? "Loading ...": "Get Started"}
-                    </LoadingButton>
+                    fullWidth
+                    variant={plan.current ? 'contained' : 'tonal'}
+                    onClick={handlePayment}
+                    loading={isDisable}
+                    loadingPosition="start"
+                    type='submit'
+                  >
+                    {isDisable ? "Loading ..." : "Get Started"}
+                  </LoadingButton>
                   {/* <Button variant={plan.current ? 'contained' : 'tonal'} onClick={handlePayment}>
                     Get Started
                   </Button> */}
@@ -244,8 +249,8 @@ const PricingPlan = () => {
             </Grid>
           ))}
         </Grid>
-      </div>
-    </section>
+      </Card>
+    </div>
   )
 }
 
