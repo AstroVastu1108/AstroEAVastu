@@ -43,6 +43,8 @@ function DevtaVastuPage({ id }) {
   const [previewUrl, setPreviewUrl] = useState(null)
   const [tabGroup, setTabGroup] = useState(TabsData);
   const [IsDownloading, setIsDownloading] = useState(false);
+  const [forceRenderAllTabs, setForceRenderAllTabs] = useState(false);
+  const [isLayoutChange,setIsLayoutChange] = useState(false);
 
   const [formData, setFormData] = useState({
     ProjectName: '',
@@ -62,7 +64,8 @@ function DevtaVastuPage({ id }) {
   })
 
   // const [selectedGroup, setSelectedGroup] = useState(null)
-  const [savedGroups, setSavedGroups] = useState(['House Plan'])
+  const [savedGroups, setSavedGroups] = useState(['House Plan']);
+
   useEffect(() => {
     if (id != "NEW") {
       getVastuData(id);
@@ -106,7 +109,7 @@ function DevtaVastuPage({ id }) {
                 x: point.x, // Convert X to x
                 y: point.y  // Convert Y to y
               })),
-              centroid: { x: matchingData.Centroid?.x, y: matchingData.Centroid?.y },
+              centroid: { x: matchingData.Centroid.x, y: matchingData.Centroid.y },
               snapToCentroid: matchingData.SnapToCentroid,
               inputDegree: matchingData.InputDegree,
               translate: { x: matchingData.Translate?.x, y: matchingData.Translate?.y },
@@ -260,9 +263,12 @@ function DevtaVastuPage({ id }) {
   }
 
   const downloadPDF = () => {
-    setIsDownloading(!IsDownloading);
+    // setLoading(!loading);
     handleAnchorElClose();
-    setDownloadConfirm(!downloadConfirm)
+    setDownloadConfirm(!downloadConfirm);
+    setIsDownloading(!IsDownloading);
+    setForceRenderAllTabs(!forceRenderAllTabs);
+    // setLoading(false);
   }
 
   const handleSave = (selectedGroup) => {
@@ -289,9 +295,13 @@ function DevtaVastuPage({ id }) {
   }
 
   const handleTabGroupChange = (index, key, value) => {
+    setIsLayoutChange(true);
     setTabGroup((prev) => {
       const updatedGroup = [...prev];
       updatedGroup[index][key] = value;
+      console.log(index,key,value)
+      console.log(updatedGroup[index][key],value)
+      console.log(updatedGroup)
       return updatedGroup;
     });
   };
@@ -316,6 +326,7 @@ function DevtaVastuPage({ id }) {
 
   const handleDownload = async (data) => {
     setIsDownloading(true);
+    // return console.log(data)
     await generatePDFsForAllGroups(data); // Your download function
     setIsDownloading(false);
   };
@@ -328,7 +339,7 @@ function DevtaVastuPage({ id }) {
     }
 
     let preservedTab = activeTab
-    setLoading(true)
+    setLoading(true);
 
     // Hide the scrollbar
     document.body.style.overflow = 'hidden'
@@ -477,9 +488,9 @@ function DevtaVastuPage({ id }) {
 
   const handleSaveLayoutToggle = () => {
     handleAnchorElClose();
-    // if (!fileUploaded) {
-    //   return toast.error('Please upload a file!!')
-    // }
+    if (!fileUploaded) {
+      return toast.error('Please upload a file!!')
+    }
     setLayoutSave(!LayoutSave);
   }
 
@@ -549,11 +560,11 @@ function DevtaVastuPage({ id }) {
 
                 </>
               )}
-              {activeHouse && tabGroup.map(
-                (group, index) =>
-                  activeHouse?.label === group.label &&
+              {activeHouse && tabGroup && tabGroup.map(
+                (group, index) => (
+                  (forceRenderAllTabs || activeHouse?.label === group.label) &&
                   (
-                    // <div key={index} style={{ display: activeHouse?.label === group.label ? 'block' : 'none' }}>
+                    <>
                       <DevtaVastu
                         key={index}
                         setPrintRef={el => (printRefs.current[index] = el)}
@@ -603,9 +614,12 @@ function DevtaVastuPage({ id }) {
                         setLoading={setLoading}
                         loading={loading}
                         IsDownloading={IsDownloading}
+                        isLayoutChange={isLayoutChange}
                       />
+                    </>
+                    // <div key={index} style={{ display: activeHouse?.label === group.label ? 'block' : 'none' }}>
                     // </div>
-                  )
+                  ))
               )}
             </Card>
             {removeOpen && (
@@ -628,7 +642,7 @@ function DevtaVastuPage({ id }) {
               <AddPagePopUp open={AddPage} handleClose={handleAddNewPage} handleSave={handleSave} tabGroup={tabGroup} savedGroups={savedGroups} />
             )}
             {LayoutSave && (
-              <SaveLayoutPopUp open={LayoutSave} layoutData={formData} setLayoutData={setVastuLayoutData} fileInfo={fileInfo} handleClose={handleSaveLayoutToggle} tabGroup={tabGroup} savedGroups={savedGroups} previewUrl={previewUrl} setLoading={setLoading} />
+              <SaveLayoutPopUp open={LayoutSave} layoutData={formData} setLayoutData={setVastuLayoutData} fileInfo={fileInfo} handleClose={handleSaveLayoutToggle} tabGroup={tabGroup} savedGroups={savedGroups} previewUrl={previewUrl} setLoading={setLoading} setIsLayoutChange={setIsLayoutChange}/>
             )}
           </div>
         </>

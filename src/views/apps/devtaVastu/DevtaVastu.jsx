@@ -17,33 +17,63 @@ import { Button, Card, Checkbox, Divider, FormControlLabel } from '@mui/material
 import PageTitle from '@/components/common/PageTitle/PageTitle'
 import NewPolygonPopUp from '@/components/devta-vastu/NewPolygonPopUp/NewPolygonPopUp'
 import RightPrintSection from '@/components/devta-vastu/RightPrintSection/RightPrintSection'
-// Set the worker source using a CDN
-// GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js'; // Match this with your installed version
+
 GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.js'
 
-// Adjust to the version you need
-
-const DEFAULT_LINE_SETS = [
-  {
-    stroke: '#000',
-    strokeWidth: 0.5,
-    strokeDasharray: '5,5',
-    name: 'Line 1'
-  },
-  {
-    stroke: '#0066cc',
-    strokeWidth: 0.5,
-    strokeDasharray: '',
-    name: 'Line 2'
-  }
-]
-
-const DEFAULT_POINTS = [
-  { x: 220, y: 220 },
-  { x: 560, y: 220 },
-  { x: 560, y: 560 },
-  { x: 220, y: 560 }
-]
+const colors = {
+  Yellow: '#FBEEBD',
+  Red: '#F6CFCF',
+  Green: '#DDEEBB',
+  Blue: '#C5EEF8',
+  Grey: '#F1F1F1'
+}
+const devtaColors = {
+  Brahma: colors.Yellow,
+  Bhudhar: colors.Blue,
+  Aryama: colors.Yellow,
+  Viviswan: colors.Red,
+  Mitra: colors.Grey,
+  Aapaha: colors.Grey,
+  Aapahavatsa: colors.Red,
+  Savita: colors.Blue,
+  Savitra: colors.Red,
+  Indra: colors.Grey,
+  Jaya: colors.Red,
+  Rudra: colors.Blue,
+  Rajyakshma: colors.Blue,
+  Shikhi: colors.Blue,
+  Parjanya: colors.Green,
+  Jayant: colors.Green,
+  Mahendra: colors.Green,
+  Surya: colors.Blue,
+  Satya: colors.Red,
+  Bhrisha: colors.Green,
+  Antriksh: colors.Yellow,
+  Anil: colors.Yellow,
+  Pusha: colors.Blue,
+  Vitasta: colors.Red,
+  GrihaSpatya: colors.Green,
+  Yama: colors.Yellow,
+  Gandharva: colors.Blue,
+  Bhringraj: colors.Yellow,
+  Mrigah: colors.Green,
+  Pitra: colors.Blue,
+  Dauwarik: colors.Blue,
+  Sugreev: colors.Grey,
+  Pushpdant: colors.Blue,
+  Varun: colors.Grey,
+  Asur: colors.Red,
+  Shosha: colors.Yellow,
+  Papyakshma: colors.Green,
+  Roga: colors.Blue,
+  Ahir: colors.Grey,
+  Mukhya: colors.Blue,
+  Bhallat: colors.Yellow,
+  Soma: colors.Red,
+  Bhujag: colors.Yellow,
+  Aditi: colors.Grey,
+  Diti: colors.Green
+}
 
 const DevtaVastu = ({
   setPrintRef,
@@ -96,7 +126,8 @@ const DevtaVastu = ({
   setLineSets,
   loading,
   setLoading,
-  IsDownloading
+  IsDownloading,
+  isLayoutChange
 }) => {
   // const [lineSets, setLineSets] = useState(DEFAULT_LINE_SETS)
   const [selectedLineIndex, setSelectedLineIndex] = useState(0) // Default to the first line
@@ -170,14 +201,18 @@ const DevtaVastu = ({
   useEffect(() => {
     if (snapToCentroid) {
       if (!lockCentroid) {
-        setCentroid(calculateCentroid(points))
+        if (isLayoutChange) {
+          setCentroid(calculateCentroid(points))
+        }
       }
     }
   }, [points, snapToCentroid])
 
   useEffect(() => {
     if (!lockCentroid) {
-      setCentroid(calculateCentroid(points))
+      if (isLayoutChange) {
+        setCentroid(calculateCentroid(points))
+      }
     }
   }, [])
 
@@ -501,7 +536,9 @@ const DevtaVastu = ({
         setPoints(newPoints)
         // Recalculate centroid after point modification
         if (!lockCentroid) {
-          setCentroid(calculateCentroid(newPoints))
+          if (isLayoutChange) {
+            setCentroid(calculateCentroid(newPoints))
+          }
         }
       }
     }
@@ -633,7 +670,7 @@ const DevtaVastu = ({
           const newPoints = points.filter((_, i) => i !== clickedPointIndex)
           setPoints(newPoints)
           if (!lockCentroid) {
-            setCentroid(calculateCentroid(newPoints))
+            if (isLayoutChange) setCentroid(calculateCentroid(newPoints))
           }
         }
       } else {
@@ -643,7 +680,7 @@ const DevtaVastu = ({
           newPoints.splice(closestLineIndex + 1, 0, position)
           setPoints(newPoints)
           if (!lockCentroid) {
-            setCentroid(calculateCentroid(newPoints))
+            if (isLayoutChange) setCentroid(calculateCentroid(newPoints))
           }
         }
       }
@@ -1146,7 +1183,7 @@ const DevtaVastu = ({
           }
 
           numberedPoints.push(...selectedPoints)
-        } catch (error) { }
+        } catch (error) {}
       }
 
       setIntersectionPoints(numberedPoints)
@@ -1343,7 +1380,7 @@ const DevtaVastu = ({
 
           // Add to the global numberedPoints array
           leftnumberedPoints.push(...selectedPoints)
-        } catch (error) { }
+        } catch (error) {}
       }
 
       setNewLeftIntersectionPoints(leftnumberedPoints)
@@ -1986,7 +2023,7 @@ const DevtaVastu = ({
     setDrawDevtaObject(newDrawDevtaObject)
   }, [intersactMidIntermediatePoints])
 
-  const HoverArea = ({ coordinates, hoverText }) => {
+  const HoverArea = ({ coordinates, hoverText, devta }) => {
     const [isHovered, setIsHovered] = useState(false)
 
     // Calculate the center position for the text and rectangle
@@ -1996,12 +2033,11 @@ const DevtaVastu = ({
     // Measure text width and height (or use a fixed size if consistent)
     const textWidth = hoverText.length * 8 // Estimate based on character count
     const textHeight = 20 // Adjust based on your font size and padding
-    console.log("hoverText : ===> ", hoverText)
     return (
       <>
         <polygon
           points={coordinates.map(point => `${point.x},${point.y}`).join(' ')}
-          fill={hoverText == "1 Brahma" ? "pink" : 'transparent'}
+          fill={devtaColors[devta]}
           opacity={0.25}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
@@ -2029,6 +2065,7 @@ const DevtaVastu = ({
               fontWeight='600' // Semi-bold weight
               alignmentBaseline='central'
               textAnchor='middle' // Center the text
+              z={999}
             >
               {hoverText}
             </text>
@@ -2077,8 +2114,8 @@ const DevtaVastu = ({
         if (i === 0) textX += nOffset // Shift N1 right
         if (i === 1) textX += nOffset + 15 // Shift N2 right
         if (i === 2) textX += nOffset + 10 // Shift N2 right
-        if (i === 3) textX += nOffset  // Shift N2 right
-        if (i === 4) textX -= spacingAdjust - 10  // Move N5 further left
+        if (i === 3) textX += nOffset // Shift N2 right
+        if (i === 4) textX -= spacingAdjust - 10 // Move N5 further left
         if (i === 5) textX -= spacingAdjust + 10 // Move N6 further left
         if (i === 6) textX -= spacingAdjust + 15 // Move N7 further left
         if (i === 7) textX -= spacingAdjust + 0 // Move N7 further left
@@ -2089,7 +2126,7 @@ const DevtaVastu = ({
         textY = cy + (padding + stepY * (i - 8) + stepY / 2 - height / 2) // Apply cy, no change in X
         if (i === 8) textY -= spacingAdjust + 15 // Move N7 further left
         if (i === 9) textY -= 5 // Move N7 further left
-        if (i === 10) textY  // Move N7 further left
+        if (i === 10) textY // Move N7 further left
         if (i === 15) textY += 30 // Move N7 further left
       } else if (i < 24) {
         // South (Bottom, Moves Right to Left)
@@ -2121,15 +2158,15 @@ const DevtaVastu = ({
           key={i}
           x={textX}
           y={textY}
-          fontSize="18"
-          fill="var(--green-color)"
+          fontSize='18'
+          fill='var(--green-color)'
           fontWeight={700}
-          fontFamily="Segoe UI"
-          textAnchor="middle"
-          alignmentBaseline="middle"
+          fontFamily='Segoe UI'
+          textAnchor='middle'
+          alignmentBaseline='middle'
           style={{
-            userSelect: "none",
-            cursor: "default"
+            userSelect: 'none',
+            cursor: 'default'
           }}
         >
           {label}
@@ -2139,8 +2176,6 @@ const DevtaVastu = ({
 
     return labels
   }
-
-
 
   // const plotText = () => {
   //   const cx = centroid.x
@@ -2214,8 +2249,6 @@ const DevtaVastu = ({
   //   // Return the array of text elements
   //   return texts
   // }
-
-
 
   const [isDragging, setIsDragging] = useState(false)
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
@@ -2316,8 +2349,8 @@ const DevtaVastu = ({
 
   const data = [
     // fire element
-    ['E4', 'E6', 'E', 'green'],
-    ['E6', 'E8', 'ESE', 'green'],
+    ['E4', 'E6', 'E', '#DDEEBB'],
+    ['E6', 'E8', 'ESE', '#DDEEBB'],
     ['E8', 'S2', 'SE', 'red'],
     ['S2', 'S4', 'SSE', 'red'],
     ['S4', 'S6', 'S', 'red'],
@@ -2333,7 +2366,7 @@ const DevtaVastu = ({
     ['N4', 'N6', 'N', 'blue'],
     ['N6', 'N8', 'NNE', 'blue'],
     ['N8', 'E2', 'NE', 'blue'],
-    ['E2', 'E4', 'ENE', 'green']
+    ['E2', 'E4', 'ENE', '#DDEEBB']
   ]
 
   const processData = (polygon, data) => {
@@ -2479,8 +2512,6 @@ const DevtaVastu = ({
     setNewOverlayPoly(polygon)
     setOpenNewPolygon(true)
   }
-
-
 
   return (
     <>
@@ -2635,19 +2666,22 @@ const DevtaVastu = ({
 
                                 const style = lineSets[index % lineSets.length]
                                 return (
-                                  <g key={index}>
-                                    {index % (hide16Circle ? 2 : hide8Circle ? 4 : hide4Circle ? 8 : 2) == 0 && (
-                                      <line
-                                        x1={centroid.x}
-                                        y1={centroid.y}
-                                        x2={endX}
-                                        y2={endY}
-                                        stroke={style.stroke}
-                                        strokeWidth={style.strokeWidth}
-                                        strokeDasharray={style.strokeDasharray}
-                                      />
-                                    )}
-                                  </g>
+                                  <>
+                                  {console.log("1234567")}
+                                    <g key={index}>
+                                      {index % (hide16Circle ? 2 : hide8Circle ? 4 : hide4Circle ? 8 : 2) == 0 && (
+                                        <line
+                                          x1={centroid.x}
+                                          y1={centroid.y}
+                                          x2={endX}
+                                          y2={endY}
+                                          stroke={style.stroke}
+                                          strokeWidth={style.strokeWidth}
+                                          strokeDasharray={style.strokeDasharray}
+                                        />
+                                      )}
+                                    </g>
+                                  </>
                                 )
                               })}
 
@@ -2874,6 +2908,7 @@ const DevtaVastu = ({
                               key={area.id}
                               coordinates={area.coordinates}
                               hoverText={index + 1 + ' ' + devta[index]}
+                              devta={devta[index]}
                             />
                           )
                         })}
@@ -3013,7 +3048,7 @@ const DevtaVastu = ({
                         const svgHeight = height // SVG height
                         const minBoundary = 50 // Minimum inner boundary to avoid
 
-                        const padding = 25; // Adjust padding from all sides
+                        const padding = 25 // Adjust padding from all sides
 
                         // Outer boundaries for the text with padding
                         const outerBounds = {
@@ -3021,8 +3056,7 @@ const DevtaVastu = ({
                           xMax: svgWidth - padding,
                           yMin: padding,
                           yMax: svgHeight - padding
-                        };
-
+                        }
 
                         // Inner restricted boundaries (600x600 zone to avoid)
                         const restrictedBounds = {
@@ -3092,18 +3126,17 @@ const DevtaVastu = ({
                           // if (direction === "S") {
                           //   labelX += 20; // Move 'N' 20 units left
                           // }
-                          if (direction == "W") {
-                            labelY -= 20; // Move 'N' 20 units left
+                          if (direction == 'W') {
+                            labelY -= 20 // Move 'N' 20 units left
                           }
-                          if (direction == "E") {
-                            labelY -= 15; // Move 'N' 20 units left
+                          if (direction == 'E') {
+                            labelY -= 15 // Move 'N' 20 units left
                           }
                           return (
                             <g key={index}>
                               {direction && (
                                 <>
                                   <text
-
                                     x={Math.cos(radian) > 0 ? labelX + 15 : labelX - 20}
                                     y={Math.cos(radian) > 0 ? labelY + 15 : labelY + 10}
                                     transform={
@@ -3111,17 +3144,17 @@ const DevtaVastu = ({
                                         ? `rotate(90, ${labelX}, ${labelY})`
                                         : `rotate(-90, ${labelX}, ${labelY})`
                                     }
-                                    fontSize="22"
+                                    fontSize='22'
                                     fontWeight={700}
                                     // fontFamily="Segoe UI"  // Apply Segoe UI font
-                                    fill="var(--primary-color)"
-                                    textAnchor="middle"
-                                    alignmentBaseline="middle"
+                                    fill='var(--primary-color)'
+                                    textAnchor='middle'
+                                    alignmentBaseline='middle'
                                     style={{
                                       userSelect: 'none', // Prevent text selection
-                                      cursor: 'default',  // Optional: Make the cursor non-interactive
-                                      fontWeight: "700",   // Ensure fontWeight is explicitly applied
-                                      fontFamily: "Segoe UI", // Ensure fontFamily is explicitly applied
+                                      cursor: 'default', // Optional: Make the cursor non-interactive
+                                      fontWeight: '700', // Ensure fontWeight is explicitly applied
+                                      fontFamily: 'Segoe UI' // Ensure fontFamily is explicitly applied
                                     }}
                                   >
                                     {direction}
@@ -3132,11 +3165,11 @@ const DevtaVastu = ({
                             </g>
                           )
                         } else {
-                          if (direction === "N") {
-                            labelX -= 20; // Move 'N' 20 units left
+                          if (direction === 'N') {
+                            labelX -= 20 // Move 'N' 20 units left
                           }
-                          if (direction === "S") {
-                            labelX += 20; // Move 'N' 20 units left
+                          if (direction === 'S') {
+                            labelX += 20 // Move 'N' 20 units left
                           }
                           // if (direction === "W") {
                           //   labelY -= 20; // Move 'N' 20 units left
@@ -3161,17 +3194,17 @@ const DevtaVastu = ({
                                   <text
                                     x={Math.cos(radian) > 0 ? labelX - 20 : labelX + 20}
                                     y={Math.sin(radian) > 0 ? labelY - 10 : labelY + 15} // Move bottom text upward
-                                    fontSize="22"
+                                    fontSize='22'
                                     fontWeight={700}
                                     // fontFamily="Segoe UI"  // Apply Segoe UI font
-                                    fill="var(--primary-color)"
-                                    textAnchor="middle"
-                                    alignmentBaseline="middle"
+                                    fill='var(--primary-color)'
+                                    textAnchor='middle'
+                                    alignmentBaseline='middle'
                                     style={{
                                       userSelect: 'none', // Prevent text selection
-                                      cursor: 'default',  // Optional: Make the cursor non-interactive
-                                      fontWeight: "700",   // Ensure fontWeight is explicitly applied
-                                      fontFamily: "Segoe UI", // Ensure fontFamily is explicitly applied
+                                      cursor: 'default', // Optional: Make the cursor non-interactive
+                                      fontWeight: '700', // Ensure fontWeight is explicitly applied
+                                      fontFamily: 'Segoe UI' // Ensure fontFamily is explicitly applied
                                     }}
                                   >
                                     {direction}
@@ -3190,7 +3223,7 @@ const DevtaVastu = ({
                           points={polygon.points.map(point => `${point.x},${point.y}`).join(' ')}
                           fill={polygon.color}
                           fillOpacity='0.2' // Default opacity for all polygons
-                          stroke={"#000"}
+                          stroke={'#000'}
                           strokeWidth='1'
                           onMouseDown={e => {
                             handleMouseDown(e, polygonIndex, 'overlay')
@@ -3207,7 +3240,7 @@ const DevtaVastu = ({
                             2
                           } // Horizontal center of the polygon
                           y={Math.min(...polygon.points.map(point => point.y)) - 10} // 10px above the top edge
-                          fill={"#000"} // Title color matches the polygon's color
+                          fill={'#000'} // Title color matches the polygon's color
                           fontSize='14'
                           fontWeight='bold'
                           textAnchor='middle' // Center the text horizontally
@@ -3220,7 +3253,7 @@ const DevtaVastu = ({
                           x={
                             (Math.min(...polygon.points.map(point => point.x)) +
                               Math.max(...polygon.points.map(point => point.x))) /
-                            2 +
+                              2 +
                             15
                           } // Positioned to the right of the title
                           y={Math.min(...polygon.points.map(point => point.y)) - 25} // Aligned vertically with the title
@@ -3242,7 +3275,7 @@ const DevtaVastu = ({
                           x={
                             (Math.min(...polygon.points.map(point => point.x)) +
                               Math.max(...polygon.points.map(point => point.x))) /
-                            2 +
+                              2 +
                             30
                           } // Positioned to the right of the Edit button
                           y={Math.min(...polygon.points.map(point => point.y)) - 25} // Aligned vertically with the title
@@ -3273,10 +3306,10 @@ const DevtaVastu = ({
                               stroke='#fff'
                               strokeWidth='0.5'
                               onMouseDown={e => {
-                                handleMouseDown(e, polygonIndex, 'PointOverlay', pointIndex);
+                                handleMouseDown(e, polygonIndex, 'PointOverlay', pointIndex)
                               }}
                               onDoubleClick={e => {
-                                handleDoubleClick(e, 'overlay', polygon, pointIndex, polygonIndex);
+                                handleDoubleClick(e, 'overlay', polygon, pointIndex, polygonIndex)
                               }}
                             />
                           ))}
@@ -3439,9 +3472,9 @@ const DevtaVastu = ({
             className='p-0 border-2 border-dashed border-gray-300 rounded-lg text-center hover:border-purple-500 transition-colors py-6 w-1/3 lg:w-full'
             onDragOver={e => e.preventDefault()}
             onDrop={handleFileUpload}
-          // style={{
-          //   padding: '30px 90px'
-          // }}
+            // style={{
+            //   padding: '30px 90px'
+            // }}
           >
             <label className='flex flex-col items-center gap-2 cursor-pointer'>
               <Upload size={24} className='text-primary font-ea-sb' />
@@ -3484,43 +3517,38 @@ const DevtaVastu = ({
           </div>
           {/* </div> */}
 
-          <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4 flex-wrap">
-            <fieldset className="p-4 border border-purple-300 rounded-lg">
-              <legend className="font-semibold px-2">Default Options</legend>
+          <div className='mt-3 flex flex-wrap gap-4'>
+            <fieldset className='p-4 border border-purple-300 rounded-lg flex-grow lg:min-w-[254px]'>
+              <legend className='font-semibold px-2'>Default Options</legend>
               {[
                 { id: 'lockChakra', label: 'Lock Chakra', checked: lockChakra, onChange: setLockChakra },
                 { id: 'lockCentroid', label: 'Lock Center', checked: lockCentroid, onChange: setLockCentroid },
-                { id: 'snapToCentroid', label: 'Reset Auto Center', checked: snapToCentroid, onChange: setSnapToCentroid }
+                {
+                  id: 'snapToCentroid',
+                  label: 'Reset Auto Center',
+                  checked: snapToCentroid,
+                  onChange: setSnapToCentroid
+                }
               ].map(({ id, label, checked, onChange }) => (
                 <div key={id} className='flex items-center gap-2'>
                   <FormControlLabel
                     label={label}
                     className='chkBoxLabel'
-                    control={
-                      <Checkbox
-                        checked={checked}
-                        onChange={e => onChange(e.target.checked)}
-                      />
-                    }
+                    control={<Checkbox checked={checked} onChange={e => onChange(e.target.checked)} />}
                   />
                 </div>
               ))}
             </fieldset>
 
-            <fieldset className="p-4 border border-purple-300 rounded-lg">
-              <legend className="font-semibold px-2">Shakti Chakra Options</legend>
-              <div className="flex flex-col">
+            <fieldset className='p-4 border border-purple-300 rounded-lg flex-grow'>
+              <legend className='font-semibold px-2'>Shakti Chakra Options</legend>
+              <div className='flex flex-col'>
                 {chakras.map(({ id, label, checked, textLabel }) => (
-                  <div key={id} className="flex items-center gap-2">
+                  <div key={id} className='flex items-center gap-2'>
                     <FormControlLabel
                       label={label}
                       className='chkBoxLabel'
-                      control={
-                        <Checkbox
-                          checked={checked}
-                          onChange={e => onChange(e.target.checked)}
-                        />
-                      }
+                      control={<Checkbox checked={checked} onChange={e => handleShowChakra(textLabel, e.target.checked)} />}
                     />
                   </div>
                 ))}
@@ -3528,24 +3556,21 @@ const DevtaVastu = ({
             </fieldset>
           </div>
 
-          <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
-            <LineControls
-              lineSet={lineSets[0]}
-              setIndex={0}
-              onUpdate={handleLineSetUpdate}
-            />
-            <LineControls
-              lineSet={lineSets[1]}
-              setIndex={1}
-              onUpdate={handleLineSetUpdate}
-            />
+          <div className='mt-3 flex flex-wrap gap-4'>
+            <LineControls lineSet={lineSets[0]} setIndex={0} onUpdate={handleLineSetUpdate} />
+            <LineControls lineSet={lineSets[1]} setIndex={1} onUpdate={handleLineSetUpdate} />
           </div>
 
-          <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
-            <fieldset className="p-4 border border-purple-300 rounded-lg">
-              <legend className="font-semibold px-2">Marma Options</legend>
+          <div className='mt-3 flex flex-wrap gap-4'>
+            <fieldset className='p-4 border border-purple-300 rounded-lg flex-grow '>
+              <legend className='font-semibold px-2'>Marma Options</legend>
               {[
-                { id: 'hideMarmaLines', label: 'Show Marma Lines', checked: hideMarmaLines, onChange: setHideMarmaLines },
+                {
+                  id: 'hideMarmaLines',
+                  label: 'Show Marma Lines',
+                  checked: hideMarmaLines,
+                  onChange: setHideMarmaLines
+                },
                 {
                   id: 'hideMarmapoints',
                   label: 'Show Marma Points',
@@ -3557,19 +3582,13 @@ const DevtaVastu = ({
                   <FormControlLabel
                     label={label}
                     className='chkBoxLabel'
-                    control={
-                      <Checkbox
-                        checked={checked}
-                        onChange={e => onChange(e.target.checked)}
-                      />
-                    }
+                    control={<Checkbox checked={checked} onChange={e => onChange(e.target.checked)} />}
                   />
                 </div>
-
               ))}
             </fieldset>
-            <fieldset className="p-4 border border-purple-300 rounded-lg">
-              <legend className="font-semibold px-2">Devta Options</legend>
+            <fieldset className='p-4 border border-purple-300 rounded-lg flex-grow lg:min-w-[254px]'>
+              <legend className='font-semibold px-2'>Devta Options</legend>
               {[
                 // { id: 'imageDragDone', label: 'Lock Drag Image', checked: imageDragDone, onChange: setImageDragDone },
                 // {
@@ -3584,7 +3603,7 @@ const DevtaVastu = ({
                   label: 'Show Devta Intersaction points',
                   checked: showDevtaIntersaction,
                   onChange: setShowDevtaIntersaction
-                },
+                }
                 // { id: 'hideMarmaLines', label: 'Show Marma Lines', checked: hideMarmaLines, onChange: setHideMarmaLines },
                 // {
                 //   id: 'hideMarmapoints',
@@ -3599,21 +3618,16 @@ const DevtaVastu = ({
                   <FormControlLabel
                     label={label}
                     className='chkBoxLabel'
-                    control={
-                      <Checkbox
-                        checked={checked}
-                        onChange={e => onChange(e.target.checked)}
-                      />
-                    }
+                    control={<Checkbox checked={checked} onChange={e => onChange(e.target.checked)} />}
                   />
                 </div>
               ))}
             </fieldset>
           </div>
 
-          <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
-            <fieldset className="p-4 border border-purple-300 rounded-lg">
-              <legend className="font-semibold px-2">Other Options</legend>
+          <div className='mt-3 flex flex-wrap gap-4'>
+            <fieldset className='p-4 border border-purple-300 rounded-lg '>
+              <legend className='font-semibold px-2'>Other Options</legend>
               {[
                 { id: 'imageDragDone', label: 'Lock Drag Image', checked: imageDragDone, onChange: setImageDragDone },
                 {
@@ -3629,18 +3643,12 @@ const DevtaVastu = ({
                   <FormControlLabel
                     label={label}
                     className='chkBoxLabel'
-                    control={
-                      <Checkbox
-                        checked={checked}
-                        onChange={e => onChange(e.target.checked)}
-                      />
-                    }
+                    control={<Checkbox checked={checked} onChange={e => onChange(e.target.checked)} />}
                   />
                 </div>
               ))}
             </fieldset>
           </div>
-
         </div>
 
         {/* <div className="p-4 bg-gray-100 min-h-screen">

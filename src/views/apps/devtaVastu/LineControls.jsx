@@ -4,7 +4,7 @@ import { LINE_STYLES } from "../../../utils/directions";
 
 const LineControls = ({ lineSet, onUpdate, setIndex }) => {
   return (
-    <div className="">
+    <div className="flex-grow lg:min-w-[254px]">
       <fieldset className="p-4 border border-purple-300 rounded-lg">
         <legend className="font-semibold px-2">{lineSet.name}</legend>
 

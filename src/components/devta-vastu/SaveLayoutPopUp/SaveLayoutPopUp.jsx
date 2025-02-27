@@ -14,10 +14,21 @@ import {
   ThemeProvider
 } from '@mui/material'
 import React, { useEffect, useRef, useState } from 'react'
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
-function SaveLayoutPopUp({ open, handleClose, tabGroup, layoutData, setLayoutData, savedGroups, previewUrl, fileInfo, setLoading }) {
-  const router = useRouter();
+function SaveLayoutPopUp({
+  open,
+  handleClose,
+  tabGroup,
+  layoutData,
+  setLayoutData,
+  savedGroups,
+  previewUrl,
+  fileInfo,
+  setLoading,
+  setIsLayoutChange
+}) {
+  const router = useRouter()
   const theme = createTheme({
     shape: {
       borderRadius: 8 // Set the global border radius here
@@ -116,26 +127,52 @@ function SaveLayoutPopUp({ open, handleClose, tabGroup, layoutData, setLayoutDat
       return // Prevent submission
     }
 
-    // const matchingItems = tabGroup
-    //   .filter(item => savedGroups.includes(item.label))
-    //   .map(({ label, points, centroid, snapToCentroid, inputDegree,zoom,translate, polygons,lockChakra,lockCentroid,lineSets,hideCircle,hide32Circle,hide16Circle,hide8Circle,hide4Circle}) => ({
-    //     label,
-    //     points,
-    //     centroid,
-    //     snapToCentroid,
-    //     inputDegree,
-    //     zoom,
-    //     translate,
-    //     polygons,
-    //     lockChakra,lockCentroid,lineSets,hideCircle,hide32Circle,hide16Circle,hide8Circle,hide4Circle
-    //   }))
+    const matchingItems1 = tabGroup
+      .filter(item => savedGroups.includes(item.label))
+      .map(
+        ({
+          label,
+          points,
+          centroid,
+          snapToCentroid,
+          inputDegree,
+          zoom,
+          translate,
+          polygons,
+          lockChakra,
+          lockCentroid,
+          lineSets,
+          hideCircle,
+          hide32Circle,
+          hide16Circle,
+          hide8Circle,
+          hide4Circle
+        }) => ({
+          label,
+          points,
+          centroid,
+          snapToCentroid,
+          inputDegree,
+          zoom,
+          translate,
+          polygons,
+          lockChakra,
+          lockCentroid,
+          lineSets,
+          hideCircle,
+          hide32Circle,
+          hide16Circle,
+          hide8Circle,
+          hide4Circle
+        })
+      )
+
 
     const matchingItems = savedGroups
       .map(label => tabGroup.find(item => item.label === label))
-      .filter(item => item !== undefined);
+      .filter(item => item !== undefined)
 
-    // return console.log("mat", matchingItems)
-
+    // return console.log('mat', matchingItems)
 
     const payload = {
       // "CompanyID": "string",
@@ -161,22 +198,21 @@ function SaveLayoutPopUp({ open, handleClose, tabGroup, layoutData, setLayoutDat
       TabGroups: matchingItems
     }
 
-    console.log('Payload : ', payload)
     try {
-      setLoading(true);
-      let data;
-      let msg;
+      setLoading(true)
+      let data
+      let msg
       if (formData?.isUpdate) {
         setLayoutData(prev => ({
           ...prev,
-          "ProjectName": formData?.ProjectName,
-          "ClientName": formData?.clientId
+          ProjectName: formData?.ProjectName,
+          ClientName: formData?.clientId
         }))
         data = await editVastuLayouts(formData?.VPID, payload)
-        msg = "Vastu Griding Update Successfully."
+        msg = 'Vastu Griding Update Successfully.'
       } else {
         data = await saveVastuLayouts(payload)
-        msg = "Vastu Griding Saved Successfully."
+        msg = 'Vastu Griding Saved Successfully.'
       }
       console.log('data result  : ', data)
       if (data.hasError) {
@@ -186,10 +222,10 @@ function SaveLayoutPopUp({ open, handleClose, tabGroup, layoutData, setLayoutDat
       if (!formData?.isUpdate) {
         router.push(`/devta-vastu/${data?.responseData?.Result?.VPID}`)
       }
-      setLoading(false)
-      handleClose()
-      return toast.success(msg);
-
+      setLoading(false);
+      handleClose();
+      setIsLayoutChange(false);
+      return toast.success(msg)
     } catch (error) {
       setLoading(false)
       return toast.error(error)
@@ -362,7 +398,6 @@ function SaveLayoutPopUp({ open, handleClose, tabGroup, layoutData, setLayoutDat
                   renderInput={params => <TextField {...params} label='Total Area Unit' error={errors?.TAU} />}
                 />
               </Grid>
-
 
               <Grid item xs={12} sm={6}>
                 <TextField
