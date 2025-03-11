@@ -1755,6 +1755,7 @@ const DevtaVastu = ({
 
   useEffect(() => {
     const filteredData = (label, object) => {
+      console.log(label, object)
       return object.filter(item => label === item.label)
     }
 
@@ -2018,11 +2019,14 @@ const DevtaVastu = ({
       coordinates: convertPointsToCoordinates(area),
       text: `Area ${index + 45}`
     }))
+    console.log([...areas1, ...areas2, ...areas3, ...areas4].reverse())
 
     setAreas([...areas1, ...areas2, ...areas3, ...areas4].reverse())
     setDrawDevtaObject(newDrawDevtaObject)
   }, [intersactMidIntermediatePoints])
 
+
+  
   const HoverArea = ({ coordinates, hoverText, devta }) => {
     const [isHovered, setIsHovered] = useState(false)
 
@@ -2037,8 +2041,8 @@ const DevtaVastu = ({
       <>
         <polygon
           points={coordinates.map(point => `${point.x},${point.y}`).join(' ')}
-          fill={devtaColors[devta]}
-          opacity={0.25}
+          fill={isHovered ? devtaColors[devta] : 'transparent'}
+          opacity={0.5}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         />
@@ -2667,7 +2671,7 @@ const DevtaVastu = ({
                                 const style = lineSets[index % lineSets.length]
                                 return (
                                   <>
-                                  {console.log("1234567")}
+                                    {console.log('1234567')}
                                     <g key={index}>
                                       {index % (hide16Circle ? 2 : hide8Circle ? 4 : hide4Circle ? 8 : 2) == 0 && (
                                         <line
@@ -3538,6 +3542,20 @@ const DevtaVastu = ({
                   />
                 </div>
               ))}
+              
+
+              <label className='flex items-center gap-2'>
+                <span className='text-sm text-gray-700'>Chakra Degree:</span>
+                <input
+                  type='number'
+                  readOnly={lockChakra}
+                  value={inputDegree}
+                  onChange={handleInputChange}
+                  className='border border-gray-300 rounded px-2 py-1 w-20 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+                  placeholder='0'
+                  aria-label='Degree input'
+                />
+              </label>
             </fieldset>
 
             <fieldset className='p-4 border border-purple-300 rounded-lg flex-grow'>
@@ -3548,7 +3566,9 @@ const DevtaVastu = ({
                     <FormControlLabel
                       label={label}
                       className='chkBoxLabel'
-                      control={<Checkbox checked={checked} onChange={e => handleShowChakra(textLabel, e.target.checked)} />}
+                      control={
+                        <Checkbox checked={checked} onChange={e => handleShowChakra(textLabel, e.target.checked)} />
+                      }
                     />
                   </div>
                 ))}
