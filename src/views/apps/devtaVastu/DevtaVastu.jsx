@@ -210,11 +210,10 @@ const DevtaVastu = ({
 
   useEffect(() => {
     if (!lockCentroid) {
-      if (isLayoutChange) {
-        setCentroid(calculateCentroid(points))
-      }else{
-        setCentroid(calculateCentroid(points))
-      }
+        if(centroid)
+          setCentroid(centroid)
+        else
+          setCentroid(calculateCentroid(points))
     }
   }, [])
 
