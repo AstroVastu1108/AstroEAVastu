@@ -201,9 +201,9 @@ const DevtaVastu = ({
   useEffect(() => {
     if (snapToCentroid) {
       if (!lockCentroid) {
-        if (isLayoutChange) {
+        // if (isLayoutChange) {
           setCentroid(calculateCentroid(points))
-        }
+        // }
       }
     }
   }, [points, snapToCentroid])
@@ -211,6 +211,8 @@ const DevtaVastu = ({
   useEffect(() => {
     if (!lockCentroid) {
       if (isLayoutChange) {
+        setCentroid(calculateCentroid(points))
+      }else{
         setCentroid(calculateCentroid(points))
       }
     }
@@ -536,9 +538,9 @@ const DevtaVastu = ({
         setPoints(newPoints)
         // Recalculate centroid after point modification
         if (!lockCentroid) {
-          if (isLayoutChange) {
+          // if (isLayoutChange) {
             setCentroid(calculateCentroid(newPoints))
-          }
+          // }
         }
       }
     }
@@ -670,7 +672,8 @@ const DevtaVastu = ({
           const newPoints = points.filter((_, i) => i !== clickedPointIndex)
           setPoints(newPoints)
           if (!lockCentroid) {
-            if (isLayoutChange) setCentroid(calculateCentroid(newPoints))
+            // if (isLayoutChange) 
+              setCentroid(calculateCentroid(newPoints))
           }
         }
       } else {
@@ -680,7 +683,8 @@ const DevtaVastu = ({
           newPoints.splice(closestLineIndex + 1, 0, position)
           setPoints(newPoints)
           if (!lockCentroid) {
-            if (isLayoutChange) setCentroid(calculateCentroid(newPoints))
+            // if (isLayoutChange) 
+              setCentroid(calculateCentroid(newPoints))
           }
         }
       }
