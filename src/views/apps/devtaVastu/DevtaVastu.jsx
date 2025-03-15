@@ -13,7 +13,7 @@ import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist/build/pdf'
 import Loader from '@/components/common/Loader/Loader'
 import SkeletonLoader from '@/components/common/SkeletonLoader/SkeletonLoader'
 import { LoadingButton } from '@mui/lab'
-import { Button, Card, Checkbox, Divider, FormControlLabel } from '@mui/material'
+import { Button, Card, Checkbox, Divider, FormControlLabel, TextField } from '@mui/material'
 import PageTitle from '@/components/common/PageTitle/PageTitle'
 import NewPolygonPopUp from '@/components/devta-vastu/NewPolygonPopUp/NewPolygonPopUp'
 import RightPrintSection from '@/components/devta-vastu/RightPrintSection/RightPrintSection'
@@ -3544,23 +3544,26 @@ const DevtaVastu = ({
               ))}
               
 
-              <label className='flex items-center gap-2'>
-                <span className='text-sm text-gray-700'>Chakra Degree:</span>
-                <input
-                  type='number'
-                  readOnly={lockChakra}
-                  value={inputDegree}
-                  onChange={handleInputChange}
-                  className='border border-gray-300 rounded px-2 py-1 w-20 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
-                  placeholder='0'
-                  aria-label='Degree input'
-                />
-              </label>
+             
             </fieldset>
 
             <fieldset className='p-4 border border-purple-300 rounded-lg flex-grow'>
               <legend className='font-semibold px-2'>Shakti Chakra Options</legend>
               <div className='flex flex-col'>
+              <label className='flex items-center gap-2'>
+                <span className='text-sm text-gray-700 text-nowrap'>Chakra Degree:</span>
+                <TextField
+                  type='number'
+                  readOnly={lockChakra}
+                  value={inputDegree}
+                  onChange={handleInputChange}
+                  // className='border border-gray-300 rounded px-2 py-1 w-20 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+                  className='w-auto'
+                  placeholder='0'
+                  aria-label='Degree input'
+                  size='small'
+                />
+              </label>
                 {chakras.map(({ id, label, checked, textLabel }) => (
                   <div key={id} className='flex items-center gap-2'>
                     <FormControlLabel
