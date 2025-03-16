@@ -17,6 +17,7 @@ import { Button, Card, Checkbox, Divider, FormControlLabel, TextField } from '@m
 import PageTitle from '@/components/common/PageTitle/PageTitle'
 import NewPolygonPopUp from '@/components/devta-vastu/NewPolygonPopUp/NewPolygonPopUp'
 import RightPrintSection from '@/components/devta-vastu/RightPrintSection/RightPrintSection'
+import RadialLines from '@/components/devta-vastu/RadialLines/RadialLines'
 
 GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.js'
 
@@ -202,7 +203,7 @@ const DevtaVastu = ({
     if (snapToCentroid) {
       if (!lockCentroid) {
         // if (isLayoutChange) {
-          setCentroid(calculateCentroid(points))
+        setCentroid(calculateCentroid(points))
         // }
       }
     }
@@ -210,10 +211,8 @@ const DevtaVastu = ({
 
   useEffect(() => {
     if (!lockCentroid) {
-        if(centroid)
-          setCentroid(centroid)
-        else
-          setCentroid(calculateCentroid(points))
+      if (centroid) setCentroid(centroid)
+      else setCentroid(calculateCentroid(points))
     }
   }, [])
 
@@ -538,7 +537,7 @@ const DevtaVastu = ({
         // Recalculate centroid after point modification
         if (!lockCentroid) {
           // if (isLayoutChange) {
-            setCentroid(calculateCentroid(newPoints))
+          setCentroid(calculateCentroid(newPoints))
           // }
         }
       }
@@ -671,8 +670,8 @@ const DevtaVastu = ({
           const newPoints = points.filter((_, i) => i !== clickedPointIndex)
           setPoints(newPoints)
           if (!lockCentroid) {
-            // if (isLayoutChange) 
-              setCentroid(calculateCentroid(newPoints))
+            // if (isLayoutChange)
+            setCentroid(calculateCentroid(newPoints))
           }
         }
       } else {
@@ -682,8 +681,8 @@ const DevtaVastu = ({
           newPoints.splice(closestLineIndex + 1, 0, position)
           setPoints(newPoints)
           if (!lockCentroid) {
-            // if (isLayoutChange) 
-              setCentroid(calculateCentroid(newPoints))
+            // if (isLayoutChange)
+            setCentroid(calculateCentroid(newPoints))
           }
         }
       }
@@ -2028,8 +2027,6 @@ const DevtaVastu = ({
     setDrawDevtaObject(newDrawDevtaObject)
   }, [intersactMidIntermediatePoints])
 
-
-  
   const HoverArea = ({ coordinates, hoverText, devta }) => {
     const [isHovered, setIsHovered] = useState(false)
 
@@ -2525,45 +2522,7 @@ const DevtaVastu = ({
       <div className='flex flex-col lg:flex-row gap-5 py-4 justify-start '>
         <div className='bg-white'>
           <div ref={printRef} className='flex-grow '>
-            {/* <div className='flex ms-3.5'>
-              {Array.from({ length: 24 }, (_, i) => (
-                <div
-                  key={i}
-                  className='text-sm ms-3.5 w-5 text-primary flex items-center justify-center font-ea-n'
-                  style={{
-                    userSelect: 'none',
-                    cursor: 'default',
-                    position: 'relative',
-                    zIndex: 9,
-                    top: '0px'
-                  }}
-                >
-                  {i + 1}
-                </div>
-              ))}
-            </div> */}
-
             <div className='relative flex'>
-              {/* <div className='flex flex-col mt-2'>
-                {'ABCDEFGHIJKLMNOPQRSTUV'.split('').map((letter, i) => (
-                  <div
-                    key={i}
-                    className='text-sm mb-3.5 w-5 text-primary flex items-center justify-center  font-ea-n'
-                    style={{
-                      userSelect: 'none', // Prevent text selection
-                      cursor: 'default', // Optional: Make the cursor non-interactive
-                      position: 'relative',
-                      zIndex: 9,
-                      right: '-10px'
-                    }}
-                  >
-                    {letter}
-                  </div>
-                ))}
-              </div> */}
-
-              {/* {loading && <SkeletonLoader width={width} height={height} />}
-               */}
               <svg
                 ref={svgRef}
                 width={width}
@@ -2574,7 +2533,6 @@ const DevtaVastu = ({
                 onMouseUp={handleMouseUp}
                 onMouseLeave={handleMouseUp}
                 onDoubleClick={e => handleDoubleClick(e, 'svg')}
-                // style={{ touchAction: 'none', border: "0" }}
                 style={{
                   touchAction: 'none',
                   border: '0',
@@ -2674,7 +2632,6 @@ const DevtaVastu = ({
                                 const style = lineSets[index % lineSets.length]
                                 return (
                                   <>
-                                    {console.log('1234567')}
                                     <g key={index}>
                                       {index % (hide16Circle ? 2 : hide8Circle ? 4 : hide4Circle ? 8 : 2) == 0 && (
                                         <line
@@ -2692,17 +2649,6 @@ const DevtaVastu = ({
                                 )
                               })}
 
-                            {/* {intersectionsState.map((intersection, i) => (
-                      <g key={i}>
-                        <circle cx={intersection.point.x} cy={intersection.point.y} r="3" fill="red" />
-                        <text x={intersection.point.x + 5} y={intersection.point.y - 5} fontSize="10" fill="black" style={{
-                          userSelect: 'none', // Prevent text selection
-                          cursor: 'default' // Optional: Make the cursor non-interactive
-                        }}>
-                          {intersection.label}
-                        </text>
-                      </g>
-                    ))} */}
                             {plotText()}
 
                             {showDevta ? (
@@ -2984,10 +2930,8 @@ const DevtaVastu = ({
                         )}
                       </g>
                     </g>
-                    {/* <rect x={0} y={0} width="783" height="35" fill="white" mask="url(#white-mask)" />
-                      <rect x={0} y={0} width="35" height="783" fill="white" mask="url(#white-mask)" />
-                      <rect x={0} y={745} width="783" height="40" fill="white" mask="url(#white-mask)" />
-                      <rect x={745} y={0} width="40" height="783" fill="white" mask="url(#white-mask)" /> */}
+                    <RadialLines width={width} height={height} cx={centroid.x} cy={centroid.y} rotation={inputDegree} />
+
                     {hideCircle &&
                       !hide16Circle &&
                       !hide4Circle &&
@@ -3044,184 +2988,7 @@ const DevtaVastu = ({
                           </g>
                         )
                       })}
-                    {centroid &&
-                      Array.from({ length: totalLines }).map((_, index) => {
-                        const rotationIndex = index % totalLines
-                        const angle = rotationIndex * angleIncrement + (270 - inputDegree)
-                        const radian = (angle * Math.PI) / 180
-
-                        // Dynamic centroid-based calculation
-                        const svgWidth = width // SVG width
-                        const svgHeight = height // SVG height
-                        const minBoundary = 50 // Minimum inner boundary to avoid
-
-                        const padding = 25 // Adjust padding from all sides
-
-                        // Outer boundaries for the text with padding
-                        const outerBounds = {
-                          xMin: padding,
-                          xMax: svgWidth - padding,
-                          yMin: padding,
-                          yMax: svgHeight - padding
-                        }
-
-                        // Inner restricted boundaries (600x600 zone to avoid)
-                        const restrictedBounds = {
-                          xMin: (svgWidth - minBoundary) / 2,
-                          xMax: svgWidth - (svgWidth - minBoundary) / 2,
-                          yMin: (svgHeight - minBoundary) / 2,
-                          yMax: svgHeight - (svgHeight - minBoundary) / 2
-                        }
-
-                        const slope = Math.tan(radian)
-                        const direction = index % 2 === 0 ? DIRECTION_DATA[index / 2] : null
-
-                        let endX, endY
-                        let labelX, labelY
-                        const labelOffset = 1.04 // Label position offset
-
-                        if (Math.abs(slope) <= 1) {
-                          // Horizontal placement
-                          endX = Math.cos(radian) > 0 ? outerBounds.xMax : outerBounds.xMin
-                          endY = centroid.y + slope * (endX - centroid.x)
-
-                          // Adjust label position dynamically
-                          labelX = Math.min(
-                            Math.max(outerBounds.xMin, centroid?.x + (endX - centroid.x) * labelOffset),
-                            outerBounds.xMax
-                          )
-                          labelY = Math.min(
-                            Math.max(outerBounds.yMin, centroid.y + (endY - centroid.y) * labelOffset),
-                            outerBounds.yMax - 50
-                          )
-                        } else {
-                          // Vertical placement
-                          endY = Math.sin(radian) > 0 ? outerBounds.yMax : outerBounds.yMin
-                          endX = centroid?.x + (1 / slope) * (endY - centroid.y)
-
-                          // Adjust label position dynamically
-                          labelX = Math.min(
-                            Math.max(outerBounds.xMin, centroid.x + (endX - centroid.x) * labelOffset),
-                            outerBounds.xMax
-                          )
-                          labelY = Math.min(
-                            Math.max(outerBounds.yMin, centroid.y + (endY - centroid.y) * labelOffset),
-                            outerBounds.yMax
-                          )
-                        }
-
-                        // Avoid restricted (600x600) zone
-                        if (
-                          labelX > restrictedBounds.xMin &&
-                          labelX < restrictedBounds.xMax &&
-                          labelY > restrictedBounds.yMin &&
-                          labelY < restrictedBounds.yMax
-                        ) {
-                          // Adjust label position slightly to move out of the restricted area
-                          const adjustFactor = 10 // Push outside the restricted bounds
-                          labelX = labelX < restrictedBounds.xMin ? restrictedBounds.xMin - adjustFactor : labelX
-                          labelX = labelX > restrictedBounds.xMax ? restrictedBounds.xMax + adjustFactor : labelX
-                          labelY = labelY < restrictedBounds.yMin ? restrictedBounds.yMin - adjustFactor : labelY
-                          labelY = labelY > restrictedBounds.yMax ? restrictedBounds.yMax + adjustFactor : labelY
-                        }
-                        const textWidth = 40 // Approximate width of text
-                        const textHeight = 25
-                        if (Math.abs(slope) <= 1) {
-                          // if (direction === "N") {
-                          //   labelX -= 20; // Move 'N' 20 units left
-                          // }
-                          // if (direction === "S") {
-                          //   labelX += 20; // Move 'N' 20 units left
-                          // }
-                          if (direction == 'W') {
-                            labelY -= 20 // Move 'N' 20 units left
-                          }
-                          if (direction == 'E') {
-                            labelY -= 15 // Move 'N' 20 units left
-                          }
-                          return (
-                            <g key={index}>
-                              {direction && (
-                                <>
-                                  <text
-                                    x={Math.cos(radian) > 0 ? labelX + 15 : labelX - 20}
-                                    y={Math.cos(radian) > 0 ? labelY + 15 : labelY + 10}
-                                    transform={
-                                      Math.cos(radian) > 0
-                                        ? `rotate(90, ${labelX}, ${labelY})`
-                                        : `rotate(-90, ${labelX}, ${labelY})`
-                                    }
-                                    fontSize='22'
-                                    fontWeight={700}
-                                    // fontFamily="Segoe UI"  // Apply Segoe UI font
-                                    fill='var(--primary-color)'
-                                    textAnchor='middle'
-                                    alignmentBaseline='middle'
-                                    style={{
-                                      userSelect: 'none', // Prevent text selection
-                                      cursor: 'default', // Optional: Make the cursor non-interactive
-                                      fontWeight: '700', // Ensure fontWeight is explicitly applied
-                                      fontFamily: 'Segoe UI' // Ensure fontFamily is explicitly applied
-                                    }}
-                                  >
-                                    {direction}
-                                  </text>
-                                  s
-                                </>
-                              )}
-                            </g>
-                          )
-                        } else {
-                          if (direction === 'N') {
-                            labelX -= 20 // Move 'N' 20 units left
-                          }
-                          if (direction === 'S') {
-                            labelX += 20 // Move 'N' 20 units left
-                          }
-                          // if (direction === "W") {
-                          //   labelY -= 20; // Move 'N' 20 units left
-                          // }
-                          // if (direction === "E") {
-                          //   labelY -= 15; // Move 'N' 20 units left
-                          // }
-                          return (
-                            <g key={index}>
-                              {direction && (
-                                <>
-                                  {/* <rect
-                                    x={Math.cos(radian) > 0 ? labelX - 40 : labelX + 0}
-                                    y={Math.sin(radian) > 0 ? labelY - 25 : labelY + 0} // Move bottom text upward
-                                    width={textWidth}
-                                    height={textHeight}
-                                    // transform={Math.cos(radian) > 0 ? `rotate(90, ${labelX}, ${labelY})` : `rotate(-90, ${labelX}, ${labelY})`}
-                                    fill="white"
-                                    // stroke="black" // Optional: Add a border
-                                    rx="5" // Optional: Rounded corners
-                                  /> */}
-                                  <text
-                                    x={Math.cos(radian) > 0 ? labelX - 20 : labelX + 20}
-                                    y={Math.sin(radian) > 0 ? labelY - 10 : labelY + 15} // Move bottom text upward
-                                    fontSize='22'
-                                    fontWeight={700}
-                                    // fontFamily="Segoe UI"  // Apply Segoe UI font
-                                    fill='var(--primary-color)'
-                                    textAnchor='middle'
-                                    alignmentBaseline='middle'
-                                    style={{
-                                      userSelect: 'none', // Prevent text selection
-                                      cursor: 'default', // Optional: Make the cursor non-interactive
-                                      fontWeight: '700', // Ensure fontWeight is explicitly applied
-                                      fontFamily: 'Segoe UI' // Ensure fontFamily is explicitly applied
-                                    }}
-                                  >
-                                    {direction}
-                                  </text>
-                                </>
-                              )}
-                            </g>
-                          )
-                        }
-                      })}
+                   
 
                     {polygons.map((polygon, polygonIndex) => (
                       <g key={polygon.id}>
@@ -3545,28 +3312,25 @@ const DevtaVastu = ({
                   />
                 </div>
               ))}
-              
-
-             
             </fieldset>
 
             <fieldset className='p-4 border border-purple-300 rounded-lg flex-grow'>
               <legend className='font-semibold px-2'>Shakti Chakra Options</legend>
               <div className='flex flex-col'>
-              <label className='flex items-center gap-2'>
-                <span className='text-sm text-gray-700 text-nowrap'>Chakra Degree:</span>
-                <TextField
-                  type='number'
-                  readOnly={lockChakra}
-                  value={inputDegree}
-                  onChange={handleInputChange}
-                  // className='border border-gray-300 rounded px-2 py-1 w-20 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
-                  className='w-auto'
-                  placeholder='0'
-                  aria-label='Degree input'
-                  size='small'
-                />
-              </label>
+                <label className='flex items-center gap-2'>
+                  <span className='text-sm text-gray-700 text-nowrap'>Chakra Degree:</span>
+                  <TextField
+                    type='number'
+                    readOnly={lockChakra}
+                    value={inputDegree}
+                    onChange={handleInputChange}
+                    // className='border border-gray-300 rounded px-2 py-1 w-20 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+                    className='w-auto'
+                    placeholder='0'
+                    aria-label='Degree input'
+                    size='small'
+                  />
+                </label>
                 {chakras.map(({ id, label, checked, textLabel }) => (
                   <div key={id} className='flex items-center gap-2'>
                     <FormControlLabel
