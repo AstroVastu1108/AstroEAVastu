@@ -18,6 +18,7 @@ import PageTitle from '@/components/common/PageTitle/PageTitle'
 import NewPolygonPopUp from '@/components/devta-vastu/NewPolygonPopUp/NewPolygonPopUp'
 import RightPrintSection from '@/components/devta-vastu/RightPrintSection/RightPrintSection'
 import RadialLines from '@/components/devta-vastu/RadialLines/RadialLines'
+import RectangleWithRotatedLines from '@/components/devta-vastu/RadialLines/RadialLines'
 
 GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.js'
 
@@ -2930,7 +2931,8 @@ const DevtaVastu = ({
                         )}
                       </g>
                     </g>
-                    <RadialLines width={width} height={height} cx={centroid?.x} cy={centroid?.y} rotation={inputDegree} />
+                    <RectangleWithRotatedLines degree={inputDegree} />
+                    {/* <RadialLines width={width} height={height} cx={centroid?.x} cy={centroid?.y} rotation={inputDegree} /> */}
 
                     {hideCircle &&
                       !hide16Circle &&
