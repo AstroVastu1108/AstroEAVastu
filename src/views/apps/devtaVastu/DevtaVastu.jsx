@@ -2930,7 +2930,7 @@ const DevtaVastu = ({
                         )}
                       </g>
                     </g>
-                    <RadialLines width={width} height={height} cx={centroid.x} cy={centroid.y} rotation={inputDegree} />
+                    <RadialLines width={width} height={height} cx={centroid?.x} cy={centroid?.y} rotation={inputDegree} />
 
                     {hideCircle &&
                       !hide16Circle &&

@@ -6,20 +6,21 @@ const DIRECTION_DATA = [
 ];
 
 const RadialLines = ({ width, height, cx, cy, margin = 30, rotation = 0 }) => {
-  const numLines = 32; // Total radial lines
+  const numLines = DIRECTION_DATA.length;
+  const squareSize = Math.min(width, height) - margin * 2;
+  const halfSquare = squareSize / 2;
 
   const getLineEnd = (angle) => {
-    const radian = ((angle + rotation) * Math.PI) / 180;
-    let x2 = cx + Math.cos(radian) * width;
-    let y2 = cy + Math.sin(radian) * height;
+    const radian = ((angle - rotation) * Math.PI) / 180;
+    let x2 = cx + Math.cos(radian) * halfSquare;
+    let y2 = cy + Math.sin(radian) * halfSquare;
 
-    const slope = Math.tan(radian);
-    if (Math.abs(slope) <= height / width) {
-      x2 = angle < 90 || angle > 270 ? width - margin : margin;
-      y2 = cy + (x2 - cx) * slope;
+    if (Math.abs(Math.cos(radian)) > Math.abs(Math.sin(radian))) {
+      x2 = cx + Math.sign(Math.cos(radian)) * halfSquare;
+      y2 = cy + Math.tan(radian) * (x2 - cx);
     } else {
-      y2 = angle < 180 ? margin : height - margin;
-      x2 = cx + (y2 - cy) / slope;
+      y2 = cy + Math.sign(Math.sin(radian)) * halfSquare;
+      x2 = cx + (y2 - cy) / Math.tan(radian);
     }
 
     return { x2, y2 };
@@ -29,51 +30,50 @@ const RadialLines = ({ width, height, cx, cy, margin = 30, rotation = 0 }) => {
     const angle = (i * 360) / numLines;
     const { x2, y2 } = getLineEnd(angle);
 
-    const labelIndex = Math.floor(i / 2);
-    const showLabel = i % 2 === 0 && labelIndex < DIRECTION_DATA.length;
-    const text = showLabel ? DIRECTION_DATA[labelIndex] : null;
+    let textX = x2;
+    let textY = y2;
 
-    const textOffset = 15;
-    const textX = x2 + textOffset * Math.cos(((angle + rotation) * Math.PI) / 180);
-    const textY = y2 + textOffset * Math.sin(((angle + rotation) * Math.PI) / 180);
-
-    const numOffset = 10;
-    const numX = x2 - numOffset * Math.cos(((angle + rotation) * Math.PI) / 180);
-    const numY = y2 - numOffset * Math.sin(((angle + rotation) * Math.PI) / 180);
+    if (Math.abs(x2 - cx) > Math.abs(y2 - cy)) {
+      // Left or Right Side → Adjust Y-axis only
+      textY = y2 + (y2 > cy ? -10 : 10);
+    } else {
+      // Top or Bottom Side → Adjust X-axis only
+      textX = x2 + (x2 > cx ? -10 : 10);
+    }
 
     return (
       <g key={i}>
         <line x1={cx} y1={cy} x2={x2} y2={y2} stroke="black" strokeWidth="1" />
-        {text && (
-          <text
-            x={textX}
-            y={textY}
-            fontSize="12"
-            fill="red"
-            textAnchor="middle"
-            alignmentBaseline="middle"
-            fontFamily="Segoe UI"
-            fontWeight={600}
-          >
-            {text}
-          </text>
-        )}
         <text
-          x={numX}
-          y={numY}
-          fontSize="10"
-          fill="blue"
+          x={textX}
+          y={textY}
+          fontSize="12"
+          fill="red"
           textAnchor="middle"
           alignmentBaseline="middle"
-          fontFamily="Arial"
+          fontFamily="Segoe UI"
+          fontWeight={600}
+          style={{ userSelect: "none" }}
         >
-          {i + 1}
+          {DIRECTION_DATA[i]}
         </text>
       </g>
     );
   });
 
-  return <g>{lines}</g>;
+  return (
+    <svg width={width} height={height}>
+      <rect
+        x={cx - halfSquare}
+        y={cy - halfSquare}
+        width={squareSize}
+        height={squareSize}
+        stroke="black"
+        fill="none"
+      />
+      {lines}
+    </svg>
+  );
 };
 
 export default RadialLines;
