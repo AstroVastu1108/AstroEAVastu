@@ -2737,7 +2737,7 @@ const DevtaVastu = ({
                                             />
                                           )}
 
-                                          <text
+                                          {/* <text
                                             x={intersection.point.x + 5}
                                             y={intersection.point.y - 5}
                                             fontSize='10'
@@ -2748,7 +2748,7 @@ const DevtaVastu = ({
                                             }}
                                           >
                                             {intersection.label}
-                                          </text>
+                                          </text> */}
                                         </>
                                       )}
 
