@@ -2931,7 +2931,7 @@ const DevtaVastu = ({
                         )}
                       </g>
                     </g>
-                    <RectangleWithRotatedLines degree={inputDegree} />
+                    <RectangleWithRotatedLines width={width} height={height} degree={inputDegree} cx={centroid?.x} cy={centroid?.y} />
                     {/* <RadialLines width={width} height={height} cx={centroid?.x} cy={centroid?.y} rotation={inputDegree} /> */}
 
                     {hideCircle &&

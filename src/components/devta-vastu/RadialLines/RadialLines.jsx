@@ -153,46 +153,51 @@
 
 import React from "react";
 
-const RectangleWithRotatedLines = ({ degree = 0, numLines = 16 }) => {
-  const width = 600;
-  const height = 750;
-  const centroid = { x: width / 2, y: height / 2 };
+const RectangleWithRotatedLines = ({ height, width, degree = 0, numLines = 16, cx = 300, cy = 375 }) => {
+  const centroid = { x: cx, y: cy };
 
   // Function to calculate intersection points for a given angle
   const calculateIntersections = (angle) => {
-    const rad = ((angle + degree) * Math.PI) / 180; // Apply rotation
-    const dx = Math.cos(rad);
-    const dy = Math.sin(rad);
-    
+    const rad = ((angle + degree) * Math.PI) / 180; // Convert angle to radians
+    let dx = Math.cos(rad);
+    let dy = Math.sin(rad);
+
+    // Prevent division by zero issues
+    if (Math.abs(dx) < 1e-10) dx = 1e-10;
+    if (Math.abs(dy) < 1e-10) dy = 1e-10;
+
     const intersections = [];
 
-    // Function to find intersection with rectangle edges
-    const checkIntersection = (boundaryX, boundaryY, isVertical) => {
+    // Compute intersection with rectangle edges using parametric equations
+    const edges = [
+      { x: 0, y: null, vertical: true },     // Left edge
+      { x: width, y: null, vertical: true }, // Right edge
+      { x: null, y: 0, vertical: false },    // Top edge
+      { x: null, y: height, vertical: false } // Bottom edge
+    ];
+
+    edges.forEach(({ x, y, vertical }) => {
       let t;
-      if (isVertical) {
-        t = (boundaryX - centroid.x) / dx;
+      if (vertical) {
+        t = (x - centroid.x) / dx;
       } else {
-        t = (boundaryY - centroid.y) / dy;
+        t = (y - centroid.y) / dy;
       }
 
       const ix = centroid.x + t * dx;
       const iy = centroid.y + t * dy;
 
+      // Only keep valid points inside rectangle boundaries
       if (ix >= 0 && ix <= width && iy >= 0 && iy <= height) {
         intersections.push({ x: ix, y: iy });
       }
-    };
+    });
 
-    // Check all four edges
-    checkIntersection(0, null, true);     // Left
-    checkIntersection(width, null, true); // Right
-    checkIntersection(null, 0, false);    // Top
-    checkIntersection(null, height, false); // Bottom
-
-    return intersections;
+    // Ensure we always return exactly two points
+    return intersections.length === 2 ? intersections : [];
   };
 
-  // Generate lines dynamically based on the number of lines and degree
+  // Generate lines dynamically
   const allPoints = [];
   const lines = [...Array(numLines)].map((_, i) => {
     const angle = i * (360 / numLines);
@@ -206,6 +211,9 @@ const RectangleWithRotatedLines = ({ degree = 0, numLines = 16 }) => {
       {/* Rectangle */}
       <rect x="0" y="0" width={width} height={height} fill="lightblue" stroke="black" strokeWidth="2" />
 
+      {/* Centroid */}
+      <circle cx={cx} cy={cy} r="5" fill="red" />
+
       {/* Draw lines */}
       {lines.map((points, i) =>
         points.length === 2 ? (
@@ -216,7 +224,7 @@ const RectangleWithRotatedLines = ({ degree = 0, numLines = 16 }) => {
             x2={points[1].x}
             y2={points[1].y}
             stroke="black"
-            strokeWidth="2"
+            strokeWidth="1"
           />
         ) : null
       )}
