@@ -407,7 +407,7 @@ const DevtaVastu = ({
 
   const handleMouseMove = e => {
     const position = getMousePosition(e)
-    const canvasBounds = { xMin: 35, xMax: 780, yMin: 35, yMax: 780 }
+    const canvasBounds = { xMin: 220, xMax: 560, yMin: 220, yMax: 560 }
     const gridSize = 10 // Define the grid size for snapping
 
     // Clamp the mouse position within the SVG boundaries
