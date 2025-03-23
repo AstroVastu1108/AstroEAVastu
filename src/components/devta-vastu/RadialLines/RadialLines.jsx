@@ -1,249 +1,228 @@
-// import React from "react";
+import React from 'react'
 
-// const DIRECTION_DATA = [
-//   "N", "", "NE", "", "E", "", "SE", "",
-//   "S", "", "SW", "", "W", "", "NW", "",
-//   "N", "", "NE", "", "E", "", "SE", "",
-//    "SSW", "", "WSW", "", "WNW", "", "NNW"
-// ];
+const DIRECTION_DATA = [
+  'E',
+  '',
+  'ESE',
+  '',
+  'SE',
+  '',
+  'SSE',
+  '',
+  'S',
+  '',
+  'SSW',
+  '',
+  'SW',
+  '',
+  'WSW',
+  '',
+  'W',
+  '',
+  'WNW',
+  '',
+  'NW',
+  '',
+  'NNW',
+  '',
+  'N',
+  '',
+  'NNE',
+  '',
+  'NE',
+  '',
+  'ENE'
+]
 
-// const RadialLines = ({ width, height, cx, cy, margin = 30, rotation = 0 }) => {
-//   const numLines = 32; // Divide into 32 parts
-//   const halfWidth = (width - margin * 2) / 2;
-//   const halfHeight = (height - margin * 2) / 2;
+const RectangleWithRotatedLines = ({ height, width, degree = 0, cx = 300, cy = 375 }) => {
+  const totalLines = 32
+  const angleIncrement = 360 / totalLines
 
-//   const calculateIntersection = (angle) => {
-//     const radian = (angle * Math.PI) / 180;
-//     const tanAngle = Math.tan(radian);
+  // Define rectangle bounds
+  const rectX1 = 20,
+    rectY1 = 20
+  const rectX2 = rectX1 + (width - 40)
+  const rectY2 = rectY1 + (height - 40)
 
-//     // Determine which edge the line intersects
-//     if (Math.abs(tanAngle) <= halfHeight / halfWidth) {
-//       // Intersects with left or right edge
-//       const x = angle <= 90 || angle > 270 ? width / 2 + halfWidth : width / 2 - halfWidth;
-//       const y = cy + (x - cx) * tanAngle;
-//       return { x, y };
-//     } else {
-//       // Intersects with top or bottom edge
-//       const y = angle <= 180 ? height / 2 - halfHeight : height / 2 + halfHeight;
-//       const x = cx + (y - cy) / tanAngle;
-//       return { x, y };
-//     }
-//   };
+  // Inner rectangle bounds
+  const innerPadding = 40
+  const innerRectX1 = rectX1 + innerPadding
+  const innerRectY1 = rectY1 + innerPadding
+  const innerRectX2 = rectX2 - innerPadding
+  const innerRectY2 = rectY2 - innerPadding
 
-//   const clampToRectangle = (x, y) => {
-//     const rectLeft = (width - halfWidth * 2) / 2;
-//     const rectRight = rectLeft + halfWidth * 2;
-//     const rectTop = (height - halfHeight * 2) / 2;
-//     const rectBottom = rectTop + halfHeight * 2;
+  // Function to find intersection of a line with the rectangle
+  const getIntersection = (angle, bounds) => {
+    const radian = (angle * Math.PI) / 180
+    const dx = Math.cos(radian)
+    const dy = Math.sin(radian)
 
-//     return {
-//       x: Math.min(Math.max(x, rectLeft), rectRight),
-//       y: Math.min(Math.max(y, rectTop), rectBottom),
-//     };
-//   };
+    let tMin = Infinity
+    let intersectX = cx,
+      intersectY = cy
 
-//   const rotatePoint = (x, y, cx, cy, angle) => {
-//     const radian = (angle * Math.PI) / 180;
-//     const cos = Math.cos(radian);
-//     const sin = Math.sin(radian);
-
-//     // Translate point to origin
-//     const dx = x - cx;
-//     const dy = y - cy;
-
-//     // Rotate point
-//     const rotatedX = dx * cos - dy * sin + cx;
-//     const rotatedY = dx * sin + dy * cos + cy;
-
-//     return { x: rotatedX, y: rotatedY };
-//   };
-
-//   const rotatePoint2 = (x, y, cx, cy, angle, scale = 1) => {
-//     const radian = (angle * Math.PI) / 180;
-//     const cos = Math.cos(radian);
-//     const sin = Math.sin(radian);
-  
-//     // Translate point to origin
-//     const dx = x - cx;
-//     const dy = y - cy;
-  
-//     // Scale the distance from the centroid
-//     const scaledDx = dx * scale;
-//     const scaledDy = dy * scale;
-  
-//     // Rotate point
-//     const rotatedX = scaledDx * cos - scaledDy * sin + cx;
-//     const rotatedY = scaledDx * sin + scaledDy * cos + cy;
-  
-//     return { x: rotatedX, y: rotatedY };
-//   };
-
-//   const lines = Array.from({ length: numLines }).map((_, i) => {
-//     const angle = (i * 360) / numLines;
-//     const { x, y } = calculateIntersection(angle);
-
-//     // Rotate line end point
-//     const rotatedEnd = rotatePoint(x, y, cx, cy, -rotation);
-//     const rotatedEnd2 = rotatePoint2(x, y, cx, cy, -rotation,100);
-
-//     // Calculate text position
-//     let textX = rotatedEnd.x;
-//     let textY = rotatedEnd.y;
-
-//     let x2 = rotatedEnd2.x;
-//     let y2 = rotatedEnd2.y;
-
-//     let color = "black";
-
-//     console.warn("angle==>",angle,DIRECTION_DATA[i]);
-
-//     // Adjust text position relative to the centroid
-//     if (angle > 0 && angle < 90) {
-//       // Top and bottom: move horizontally
-//       textX = rotatedEnd.x;
-//       textY = cy;
-//     } 
-//     // else if (angle === 90 || angle === 270) {
-//     //   // Left and right: move vertically
-//     //   textX = cx;
-//     //   textY = rotatedEnd.y;
-//     // }
-
-//     // Clamp text position to rectangle boundaries
-//     const clampedPosition = clampToRectangle(textX, textY);
-//     textX = clampedPosition.x;
-//     textY = clampedPosition.y;
-
-//     return (
-//       <g key={i}>
-//         <line x1={cx} y1={cy} x2={x2} y2={y2} stroke={color} strokeWidth="1" />
-//         <text
-//           x={textX}
-//           y={textY}
-//           fontSize="12"
-//           fill="red"
-//           textAnchor="middle"
-//           alignmentBaseline="middle"
-//           fontFamily="Segoe UI"
-//           fontWeight={600}
-//           style={{ userSelect: "none" }}
-//         >
-//           {DIRECTION_DATA[i]}
-//         </text>
-//       </g>
-//     );
-//   });
-
-//   return (
-//     <svg width={width} height={height}>
-//       <rect
-//         x={(width - halfWidth * 2) / 2}
-//         y={(height - halfHeight * 2) / 2}
-//         width={halfWidth * 2}
-//         height={halfHeight * 2}
-//         stroke="black"
-//         fill="none"
-//       />
-//       {lines}
-//     </svg>
-//   );
-// };
-
-// export default RadialLines;
-
-import React from "react";
-
-const RectangleWithRotatedLines = ({ height, width, degree = 0, numLines = 16, cx = 300, cy = 375 }) => {
-  const centroid = { x: cx, y: cy };
-
-  // Function to calculate intersection points for a given angle
-  const calculateIntersections = (angle) => {
-    const rad = ((angle + degree) * Math.PI) / 180; // Convert angle to radians
-    let dx = Math.cos(rad);
-    let dy = Math.sin(rad);
-
-    // Prevent division by zero issues
-    if (Math.abs(dx) < 1e-10) dx = 1e-10;
-    if (Math.abs(dy) < 1e-10) dy = 1e-10;
-
-    const intersections = [];
-
-    // Compute intersection with rectangle edges using parametric equations
+    // Check intersection with each side of the given rectangle bounds
     const edges = [
-      { x: 0, y: null, vertical: true },     // Left edge
-      { x: width, y: null, vertical: true }, // Right edge
-      { x: null, y: 0, vertical: false },    // Top edge
-      { x: null, y: height, vertical: false } // Bottom edge
-    ];
+      { x: bounds.x1, y1: bounds.y1, y2: bounds.y2 }, // Left
+      { x: bounds.x2, y1: bounds.y1, y2: bounds.y2 }, // Right
+      { y: bounds.y1, x1: bounds.x1, x2: bounds.x2 }, // Top
+      { y: bounds.y2, x1: bounds.x1, x2: bounds.x2 } // Bottom
+    ]
 
-    edges.forEach(({ x, y, vertical }) => {
-      let t;
-      if (vertical) {
-        t = (x - centroid.x) / dx;
+    edges.forEach(edge => {
+      let t, x, y
+      if (edge.x !== undefined) {
+        // Vertical edge
+        t = (edge.x - cx) / dx
+        y = cy + t * dy
+        x = edge.x
+        if (y >= edge.y1 && y <= edge.y2 && t > 0 && t < tMin) {
+          tMin = t
+          intersectX = x
+          intersectY = y
+        }
       } else {
-        t = (y - centroid.y) / dy;
+        // Horizontal edge
+        t = (edge.y - cy) / dy
+        x = cx + t * dx
+        y = edge.y
+        if (x >= edge.x1 && x <= edge.x2 && t > 0 && t < tMin) {
+          tMin = t
+          intersectX = x
+          intersectY = y
+        }
       }
+    })
 
-      const ix = centroid.x + t * dx;
-      const iy = centroid.y + t * dy;
+    // Ensure cross-corner cases take correct axis
+    if (intersectX === bounds.x1 || intersectX === bounds.x2) {
+      intersectY = Math.round(intersectY)
+    } else if (intersectY === bounds.y1 || intersectY === bounds.y2) {
+      intersectX = Math.round(intersectX)
+    }
 
-      // Only keep valid points inside rectangle boundaries
-      if (ix >= 0 && ix <= width && iy >= 0 && iy <= height) {
-        intersections.push({ x: ix, y: iy });
-      }
-    });
+    return { x: Math.round(intersectX), y: Math.round(intersectY) }
+  }
 
-    // Ensure we always return exactly two points
-    return intersections.length === 2 ? intersections : [];
-  };
-
-  // Generate lines dynamically
-  const allPoints = [];
-  const lines = [...Array(numLines)].map((_, i) => {
-    const angle = i * (360 / numLines);
-    const points = calculateIntersections(angle);
-    allPoints.push(...points);
-    return points;
-  });
+  const intersections = Array.from({ length: totalLines }).map((_, index) => {
+    const angle = index * angleIncrement - degree
+    return getIntersection(angle, { x1: innerRectX1, y1: innerRectY1, x2: innerRectX2, y2: innerRectY2 })
+  })
 
   return (
-    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={{ border: "1px solid black" }}>
-      {/* Rectangle */}
-      <rect x="0" y="0" width={width} height={height} fill="lightblue" stroke="black" strokeWidth="2" />
+    <svg width='1000' height='800'>
+      {/* Outer rectangle */}
+      {/* <rect x={rectX1} y={rectY1} width={width - 40} height={height - 40} fill="none" stroke="black" strokeWidth="2" /> */}
 
-      {/* Centroid */}
-      <circle cx={cx} cy={cy} r="5" fill="red" />
+      {/* Inner rectangle */}
+      {/* <rect x={innerRectX1} y={innerRectY1} width={innerRectX2 - innerRectX1} height={innerRectY2 - innerRectY1} fill="none" stroke="gray" strokeWidth="2" /> */}
 
-      {/* Draw lines */}
-      {lines.map((points, i) =>
-        points.length === 2 ? (
-          <line
-            key={i}
-            x1={points[0].x}
-            y1={points[0].y}
-            x2={points[1].x}
-            y2={points[1].y}
-            stroke="black"
-            strokeWidth="1"
-          />
-        ) : null
-      )}
+      {Array.from({ length: totalLines }).map((_, index) => {
+        const angle = index * angleIncrement - degree
+        const { x: endX, y: endY } = getIntersection(angle, { x1: rectX1, y1: rectY1, x2: rectX2, y2: rectY2 })
 
-      {/* Intersection points with labels */}
-      {allPoints.map((point, index) => (
-        <text
-          key={index}
-          x={point.x - 10}
-          y={point.y < 20 ? point.y + 15 : point.y > height - 20 ? point.y - 5 : point.y}
-          fontSize="14"
-          fill="red"
-          fontWeight="bold"
-        >
-          {index + 1}
-        </text>
-      ))}
+        let adjustedY = endY
+        let adjustedX = endX
+        // const adjustedY = endY + (endY === rectY2 ? 5 : 10)
+        // const adjustedYX = endX + (endX === rectX2 ? -5 : 10)
+        let rotation = 0
+
+        if (endX === rectX1) {
+          // Left side
+          rotation = -90
+          adjustedX = endX + 10
+        } else if (endX === rectX2) {
+          // Right side
+          rotation = 90
+          adjustedX = endX - 10
+        }
+
+        if (endY === rectY1) {
+          // Top side
+          adjustedY = endY + 10
+        } else if (endY === rectY2) {
+          // Bottom side
+          adjustedY = endY - 10
+        }
+
+        return (
+          <g key={index}>
+            {/* Line from (cx, cy) to the intersection */}
+            {/* <line x1={cx} y1={cy} x2={endX} y2={endY} stroke="black" strokeWidth="1" /> */}
+
+            {/* Label each intersection point on the rectangle boundary */}
+            <text
+              x={adjustedX}
+              y={adjustedY}
+              transform={`rotate(${rotation}, ${adjustedX}, ${adjustedY})`}
+              fontSize='22'
+              fontWeight={700}
+              fill='var(--primary-color)'
+              textAnchor='middle'
+              alignmentBaseline='middle'
+              style={{
+                userSelect: 'none',
+                cursor: 'default',
+                fontWeight: '700',
+                fontFamily: 'Segoe UI'
+              }}
+            >
+              {DIRECTION_DATA[index]}
+            </text>
+          </g>
+        )
+      })}
+
+      {Array.from({ length: totalLines }).map((_, index) => {
+        let label = ''
+
+        if (index < 4) {
+          // North (Top, Moves Left to Right)
+          label = `E${index + 5}`
+        } else if (index < 12) {
+          // East (Right, Moves Top to Bottom)
+          label = `S${index - 3}`
+        } else if (index < 20) {
+          // South (Bottom, Moves Right to Left)
+          label = `W${index - 11}`
+        } else if (index < 28) {
+          // West (Left, Moves Bottom to Top)
+          label = `N${index - 19}`
+        } else {
+          label = `E${index - 27}`
+        }
+
+        let midX = 0;
+        let midY = 0;
+        if (index === totalLines - 1) {
+          midX = Math.round((intersections[index].x + intersections[0].x) / 2)
+          midY = Math.round((intersections[index].y + intersections[0].y) / 2)
+        }else{
+          midX = Math.round((intersections[index].x + intersections[index + 1].x) / 2)
+          midY = Math.round((intersections[index].y + intersections[index + 1].y) / 2)
+        }
+        return (
+          <text
+            key={index}
+            x={midX}
+            y={midY}
+            fontSize='18'
+            fill='var(--green-color)'
+            fontWeight={700}
+            fontFamily='Segoe UI'
+            textAnchor='middle'
+            alignmentBaseline='middle'
+            style={{
+              userSelect: 'none',
+              cursor: 'default'
+            }}
+          >
+            {label}
+          </text>
+        )
+      })}
     </svg>
-  );
-};
+  )
+}
 
-export default RectangleWithRotatedLines;
+export default RectangleWithRotatedLines

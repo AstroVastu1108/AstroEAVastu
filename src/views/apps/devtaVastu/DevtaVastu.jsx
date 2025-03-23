@@ -2090,171 +2090,6 @@ const DevtaVastu = ({
     setSaveLoading(false)
   }
 
-  const plotText = () => {
-    const cx = centroid.x
-    const cy = centroid.y
-    const width = 815
-    const height = 748
-
-    const padding = 75 // Ensures text stays inside SVG
-    const stepX = (width - 2 * padding) / 8
-    const stepY = (height - 2 * padding) / 8
-
-    const generalOffset = 15 // General fine-tuning
-    const nOffset = 12 // More precise shift for N1, N2
-    const wOffset = 0 // Adjust W side alignment
-    const spacingAdjust = 15 // Reduce gap further for N4-N5
-
-    const labels = []
-
-    for (let i = 0; i < 32; i++) {
-      let label, textX, textY
-
-      if (i < 8) {
-        // North (Top, Moves Left to Right)
-        label = `N${i + 1}`
-        textX = cx + (padding + stepX * i + stepX / 2 - width / 2) // Apply cx, no change in Y
-        textY = padding - generalOffset
-
-        if (i === 0) textX += nOffset // Shift N1 right
-        if (i === 1) textX += nOffset + 15 // Shift N2 right
-        if (i === 2) textX += nOffset + 10 // Shift N2 right
-        if (i === 3) textX += nOffset // Shift N2 right
-        if (i === 4) textX -= spacingAdjust - 10 // Move N5 further left
-        if (i === 5) textX -= spacingAdjust + 10 // Move N6 further left
-        if (i === 6) textX -= spacingAdjust + 15 // Move N7 further left
-        if (i === 7) textX -= spacingAdjust + 0 // Move N7 further left
-      } else if (i < 16) {
-        // East (Right, Moves Top to Bottom)
-        label = `E${i - 7}`
-        textX = width - padding + generalOffset
-        textY = cy + (padding + stepY * (i - 8) + stepY / 2 - height / 2) // Apply cy, no change in X
-        if (i === 8) textY -= spacingAdjust + 15 // Move N7 further left
-        if (i === 9) textY -= 5 // Move N7 further left
-        if (i === 10) textY // Move N7 further left
-        if (i === 15) textY += 30 // Move N7 further left
-      } else if (i < 24) {
-        // South (Bottom, Moves Right to Left)
-        label = `S${i - 15}`
-        textX = cx + (width - padding - stepX * (i - 16) - stepX / 2 - width / 2) // Apply cx, no change in Y
-        textY = height - padding + 7 + generalOffset
-        if (i === 16) textX -= spacingAdjust + 20 // Move N7 further left
-        if (i === 17) textX -= spacingAdjust + 30 // Move N7 further left
-        if (i === 18) textX -= 30 // Move N7 further left
-        if (i === 19) textX -= 10 // Move N7 further left
-        if (i === 20) textX += 15 // Move N7 further left
-        if (i === 21) textX += 30 // Move N7 further left
-        if (i === 22) textX += 45 // Move N7 further left
-        if (i === 23) textX += 45 // Move N7 further left
-      } else {
-        // West (Left, Moves Bottom to Top)
-        label = `W${i - 23}`
-        textX = padding - generalOffset - wOffset // No change in X
-        textY = cy + (height - padding - stepY * (i - 24) - stepY / 2 - height / 2) // Apply cy, no change in X
-        if (i === 25) textY -= 10 // Move N7 further left
-        if (i === 26) textY -= 10 // Move N7 further left
-        if (i === 28) textY += 5 // Move N7 further left
-        if (i === 29) textY += 10 // Move N7 further left
-        if (i === 30) textY += 10 // Move N7 further left
-      }
-
-      labels.push(
-        <text
-          key={i}
-          x={textX}
-          y={textY}
-          fontSize='18'
-          fill='var(--green-color)'
-          fontWeight={700}
-          fontFamily='Segoe UI'
-          textAnchor='middle'
-          alignmentBaseline='middle'
-          style={{
-            userSelect: 'none',
-            cursor: 'default'
-          }}
-        >
-          {label}
-        </text>
-      )
-    }
-
-    return labels
-  }
-
-  // const plotText = () => {
-  //   const cx = centroid.x
-  //   const cy = centroid.y
-
-  //   const sideLength = 500
-  //   const halfSide = sideLength / 2
-
-  //   const labels = []
-  //   const totalParts = 32
-
-  //   // Create labels for each direction
-  //   for (let i = 0; i < totalParts; i++) {
-  //     let label
-
-  //     // Determine the label based on the index
-  //     if (i < 8) {
-  //       label = `N${i + 1}` // North labels (N1 to N8)
-  //     } else if (i < 16) {
-  //       label = `E${i - 7}` // East labels (E1 to E8)
-  //     } else if (i < 24) {
-  //       label = `S${i - 15}` // South labels (S1 to S8)
-  //     } else {
-  //       label = `W${i - 23}` // West labels (W1 to W8)
-  //     }
-
-  //     labels.push(label)
-  //   }
-
-  //   // Calculate positions for each label in a square pattern
-  //   const texts = labels.map((label, index) => {
-  //     let textX, textY
-
-  //     // Determine position based on the index
-  //     if (index < 8) {
-  //       // North side (top)
-  //       textX = cx - (halfSide - (sideLength / 8) * index) + 20 // Evenly spaced across the top
-  //       textY = cy - halfSide // Fixed y position
-  //     } else if (index < 16) {
-  //       // East side (right)
-  //       textX = cx + halfSide
-  //       textY = cy - (halfSide - (sideLength / 8) * (index - 8)) + 40
-  //     } else if (index < 24) {
-  //       textX = cx + (halfSide - (sideLength / 8) * (index - 16)) - 40
-  //       textY = cy + halfSide + 20
-  //     } else {
-  //       textX = cx - halfSide - 20
-  //       textY = cy + (halfSide - (sideLength / 8) * (index - 24)) - 20
-  //     }
-
-  //     // Return text element
-  //     return (
-  //       <text
-  //         key={index}
-  //         x={textX}
-  //         y={textY}
-  //         fontSize='22'
-  //         fill='var(--green-color)'
-  //         fontWeight={800}
-  //         fontFamily='Segoe UI'
-  //         style={{
-  //           userSelect: 'none',
-  //           cursor: 'default'
-  //         }}
-  //       >
-  //         {label}
-  //       </text>
-  //     )
-  //   })
-
-  //   // Return the array of text elements
-  //   return texts
-  // }
-
   const [isDragging, setIsDragging] = useState(false)
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
   const [initialPosition, setInitialPosition] = useState({ x: 0, y: 0 })
@@ -2650,7 +2485,6 @@ const DevtaVastu = ({
                                 )
                               })}
 
-                            {plotText()}
 
                             {showDevta ? (
                               <>
@@ -2931,7 +2765,7 @@ const DevtaVastu = ({
                         )}
                       </g>
                     </g>
-                    <RectangleWithRotatedLines width={width} height={height} degree={inputDegree} cx={centroid?.x} cy={centroid?.y} />
+                    <RectangleWithRotatedLines totalLines={32} width={width} height={height} degree={inputDegree} cx={centroid?.x} cy={centroid?.y} />
                     {/* <RadialLines width={width} height={height} cx={centroid?.x} cy={centroid?.y} rotation={inputDegree} /> */}
 
                     {hideCircle &&
