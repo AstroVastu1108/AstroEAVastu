@@ -43,6 +43,9 @@ const getDID = async () => {
 Cookies.set('M-DIDC', "0", { expires: 1 });
 // getDID();
 export const AuthProvider = ({ children }) => {
+  useEffect(() => {
+    console.log = function () {}; // Disable console.log in the browser
+  }, []);
   const [user, setUser] = useState([]);
   const [kundliData, setKundliData] = useState(null);
   const [isloggedIn, setIsLoggedIn] = useState();
