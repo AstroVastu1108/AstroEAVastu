@@ -271,24 +271,61 @@ function DevtaVastuPage({ id }) {
     // setLoading(false);
   }
 
-  const handleSave = (selectedGroup) => {
+  // const handleSave = (selectedGroup,selectedBaseGroup) => {
+  //   if (!fileUploaded) {
+  //     return toast.error('Please upload a file!!')
+  //   }
+
+  //   console.warn(tabGroup.filter(tab => tab.label == selectedBaseGroup))
+    
+  //   return console.warn(selectedGroup,selectedBaseGroup)
+  //   if (selectedGroup != 1) {
+  //     setSaveLoading(true)
+  //     setSavedGroups(prev => {
+  //       if (!prev.includes(selectedGroup)) {
+  //         return [...prev, selectedGroup]
+  //       }
+  //       return prev
+  //     })
+  //     setActiveTab(savedGroups.length)
+  //   }
+  // }
+
+  const handleSave = (selectedGroup, selectedBaseGroup) => {
     if (!fileUploaded) {
-      return toast.error('Please upload a file!!')
+      return toast.error('Please upload a file!!');
     }
-    if (selectedGroup != 1) {
-      setSaveLoading(true)
+  
+    // Find the base group data
+    const baseGroupData = tabGroup.find(tab => tab.label === selectedBaseGroup);
+    
+    if (!baseGroupData) {
+      return toast.error('Base group not found!');
+    }
+  
+    // Update tabGroup by replacing selectedGroup with baseGroupData, keeping its label
+    setTabGroup(prevTabGroup => 
+      prevTabGroup.map(tab => 
+        tab.label === selectedGroup 
+          ? { ...baseGroupData, label: tab.label }  // Keep label, update other data
+          : tab
+      )
+    );
+  
+    console.warn("Updated tabGroup:", tabGroup);
+  
+    if (selectedGroup !== 1) {
+      setSaveLoading(true);
       setSavedGroups(prev => {
         if (!prev.includes(selectedGroup)) {
-          return [...prev, selectedGroup]
+          return [...prev, selectedGroup];
         }
-        return prev
-      })
-      // console.log(tabGroup.filter(item => item.label !== selectedGroup));
-      // setTabGroup(prev => prev.filter(item => item.label !== selectedGroup))
-      // setSelectedGroup(1)
-      setActiveTab(savedGroups.length)
+        return prev;
+      });
+      setActiveTab(savedGroups.length);
     }
-  }
+  };
+  
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue)

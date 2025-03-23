@@ -1,23 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { calculateCentroid, pointToLineDistance } from '../../../utils/geometryUtils'
-// import { calculateCentroid, pointToLineDistance } from '../utils/geometryUtils';
 import GridBackground from './GridBackground'
 import LineControls from './LineControls'
 import jsPDF from 'jspdf'
-import * as pdfjsLib from 'pdfjs-dist'
 import './DevtaVastu.css'
 
 import html2canvas from 'html2canvas'
 import { Upload } from 'lucide-react'
-import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist/build/pdf'
-import Loader from '@/components/common/Loader/Loader'
-import SkeletonLoader from '@/components/common/SkeletonLoader/SkeletonLoader'
+import {  GlobalWorkerOptions } from 'pdfjs-dist/build/pdf'
 import { LoadingButton } from '@mui/lab'
-import { Button, Card, Checkbox, Divider, FormControlLabel, TextField } from '@mui/material'
-import PageTitle from '@/components/common/PageTitle/PageTitle'
+import { Checkbox,  FormControlLabel, TextField } from '@mui/material'
 import NewPolygonPopUp from '@/components/devta-vastu/NewPolygonPopUp/NewPolygonPopUp'
 import RightPrintSection from '@/components/devta-vastu/RightPrintSection/RightPrintSection'
-import RadialLines from '@/components/devta-vastu/RadialLines/RadialLines'
 import RectangleWithRotatedLines from '@/components/devta-vastu/RadialLines/RadialLines'
 
 GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.js'
@@ -238,66 +232,6 @@ const DevtaVastu = ({
       capturePDF()
     }
   }, [isReadyToCapture])
-
-  // const capturePDF = async () => {
-  //   setLoading(true);
-  //   const scale = 2; // Better performance
-  //   const leftDivRef = document.getElementById('hiddenDiv');
-  //   const rightDivRef = printRef.current; // First page
-
-  //   // Capture the first page
-  //   const firstPageCanvas = await Promise.all([
-  //     html2canvas(leftDivRef, { scale }),
-  //     html2canvas(rightDivRef, { scale }),
-  //   ]);
-
-  //   // Convert first page to image
-  //   const firstLeftImg = firstPageCanvas[0].toDataURL('image/jpeg', 1.0);
-  //   const firstRightImg = firstPageCanvas[1].toDataURL('image/jpeg', 1.0);
-  //   setHide16Circle(false);
-  //   setHideCircle(false);
-  //   setShowDevta(true);
-
-  //   // Wait for state update and re-render before capturing second page
-  //   await new Promise((resolve) => setTimeout(resolve, 200));
-
-  //   const secondRightDivRef = printRef.current;
-
-  //   // Capture the second page
-  //   const secondPageCanvas = await Promise.all([
-  //     html2canvas(leftDivRef, { scale }), // Left div remains the same
-  //     html2canvas(secondRightDivRef, { scale }),
-  //   ]);
-
-  //   // Convert second page to image
-  //   const secondLeftImg = secondPageCanvas[0].toDataURL('image/jpeg', 1.0);
-  //   const secondRightImg = secondPageCanvas[1].toDataURL('image/jpeg', 1.0);
-
-  //   // Create PDF
-  //   const pdf = new jsPDF('l', 'pt', 'a4');
-  //   const pageWidth = pdf.internal.pageSize.getWidth();
-  //   const pageHeight = pdf.internal.pageSize.getHeight();
-
-  //   const leftImgWidth = pageWidth * 0.3;
-  //   const leftImgHeight = pageHeight * 0.9;
-  //   const rightImgWidth = pageWidth * 0.6;
-  //   const rightImgHeight = pageHeight * 0.9;
-
-  //   // First page
-  //   pdf.addImage(firstLeftImg, 'JPEG', 20, 20, leftImgWidth, leftImgHeight);
-  //   pdf.addImage(firstRightImg, 'JPEG', leftImgWidth + 40, 20, rightImgWidth, rightImgHeight);
-
-  //   // Second page
-  //   pdf.addPage();
-  //   pdf.addImage(secondLeftImg, 'JPEG', 20, 20, leftImgWidth, leftImgHeight);
-  //   pdf.addImage(secondRightImg, 'JPEG', leftImgWidth + 40, 20, rightImgWidth, rightImgHeight);
-  //   setShowDevta(false);
-  //   // Reset state after generating PDF
-  //   pdf.save('artwork.pdf');
-
-  //   setIsReadyToCapture(false); // Reset the flag
-  //   setLoading(false);
-  // };
 
   const capturePDF = async () => {
     setLoading(true)

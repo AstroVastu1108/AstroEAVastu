@@ -43,7 +43,7 @@ function AddPagePopUp({ open, handleClose, handleSave, tabGroup, savedGroups }) 
               if (!selectedGroup) setGroupError(true)
               if (!selectedBaseGroup) setBaseGroupError(true)
               if (selectedGroup && selectedBaseGroup) {
-                handleSave(selectedGroup)
+                handleSave(selectedGroup,selectedBaseGroup)
                 handleClose()
               }
             }
