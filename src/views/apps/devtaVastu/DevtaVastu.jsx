@@ -212,8 +212,10 @@ const DevtaVastu = ({
 
   useEffect(() => {
     if (!lockCentroid) {
-      if (centroid) setCentroid(centroid)
-      else setCentroid(calculateCentroid(points))
+      if (centroid)
+        setCentroid(centroid)
+      else
+        setCentroid(calculateCentroid(points))
     }
   }, [])
 
@@ -671,7 +673,6 @@ const DevtaVastu = ({
           const newPoints = points.filter((_, i) => i !== clickedPointIndex)
           setPoints(newPoints)
           if (!lockCentroid) {
-            // if (isLayoutChange)
             setCentroid(calculateCentroid(newPoints))
           }
         }
@@ -682,7 +683,6 @@ const DevtaVastu = ({
           newPoints.splice(closestLineIndex + 1, 0, position)
           setPoints(newPoints)
           if (!lockCentroid) {
-            // if (isLayoutChange)
             setCentroid(calculateCentroid(newPoints))
           }
         }
@@ -1186,7 +1186,7 @@ const DevtaVastu = ({
           }
 
           numberedPoints.push(...selectedPoints)
-        } catch (error) {}
+        } catch (error) { }
       }
 
       setIntersectionPoints(numberedPoints)
@@ -1383,7 +1383,7 @@ const DevtaVastu = ({
 
           // Add to the global numberedPoints array
           leftnumberedPoints.push(...selectedPoints)
-        } catch (error) {}
+        } catch (error) { }
       }
 
       setNewLeftIntersectionPoints(leftnumberedPoints)
@@ -1444,7 +1444,7 @@ const DevtaVastu = ({
 
     Array.from({ length: totalLines }).forEach((_, index) => {
       const rotationIndex = index % totalLines
-      const angle = rotationIndex * angleIncrement + (360 + inputDegree)
+      const angle = rotationIndex * angleIncrement + (360 - inputDegree)
       const radian = (angle * Math.PI) / 180
 
       const squareSize = 783 // Define your square size
@@ -2518,7 +2518,7 @@ const DevtaVastu = ({
                                             />
                                           )}
 
-                                          <text
+                                          {/* <text
                                             x={intersection.point.x + 5}
                                             y={intersection.point.y - 5}
                                             fontSize='10'
@@ -2529,7 +2529,7 @@ const DevtaVastu = ({
                                             }}
                                           >
                                             {intersection.label}
-                                          </text>
+                                          </text> */}
                                         </>
                                       )}
 
@@ -2538,13 +2538,13 @@ const DevtaVastu = ({
                                         <circle cx={point1.x} cy={point1.y} r='3' fill='blue' />
                                       )}
                                       {/* <text
-                                  x={point1.x + 5}
-                                  y={point1.y - 5}
-                                  fontSize="10"
-                                  fill="black"
-                                  style={{ userSelect: 'none', cursor: 'default' }}
-                                >
-                                  I-{i}
+                                        x={point1.x + 5}
+                                        y={point1.y - 5}
+                                        fontSize="10"
+                                        fill="black"
+                                        style={{ userSelect: 'none', cursor: 'default' }}
+                                      >
+                                        I-{i}
                                 </text> */}
 
                                       {/* Draw the second intermediate point (P2) */}
@@ -2824,8 +2824,6 @@ const DevtaVastu = ({
                           </g>
                         )
                       })}
-                   
-
                     {polygons.map((polygon, polygonIndex) => (
                       <g key={polygon.id}>
                         {/* Polygon Shape */}
@@ -2863,7 +2861,7 @@ const DevtaVastu = ({
                           x={
                             (Math.min(...polygon.points.map(point => point.x)) +
                               Math.max(...polygon.points.map(point => point.x))) /
-                              2 +
+                            2 +
                             15
                           } // Positioned to the right of the title
                           y={Math.min(...polygon.points.map(point => point.y)) - 25} // Aligned vertically with the title
@@ -2885,7 +2883,7 @@ const DevtaVastu = ({
                           x={
                             (Math.min(...polygon.points.map(point => point.x)) +
                               Math.max(...polygon.points.map(point => point.x))) /
-                              2 +
+                            2 +
                             30
                           } // Positioned to the right of the Edit button
                           y={Math.min(...polygon.points.map(point => point.y)) - 25} // Aligned vertically with the title
@@ -3082,9 +3080,9 @@ const DevtaVastu = ({
             className='p-0 border-2 border-dashed border-gray-300 rounded-lg text-center hover:border-purple-500 transition-colors py-6 w-1/3 lg:w-full'
             onDragOver={e => e.preventDefault()}
             onDrop={handleFileUpload}
-            // style={{
-            //   padding: '30px 90px'
-            // }}
+          // style={{
+          //   padding: '30px 90px'
+          // }}
           >
             <label className='flex flex-col items-center gap-2 cursor-pointer'>
               <Upload size={24} className='text-primary font-ea-sb' />
@@ -3148,6 +3146,7 @@ const DevtaVastu = ({
                   />
                 </div>
               ))}
+
             </fieldset>
 
             <fieldset className='p-4 border border-purple-300 rounded-lg flex-grow'>
