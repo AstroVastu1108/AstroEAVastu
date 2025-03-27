@@ -95,8 +95,8 @@ export default function KundliMain() {
       width: 150,
       headerAlign: 'left',
       renderCell: (params) => {
-        const dateValue = params.row.BirthDate;
-        const timeValue = params.value.toString();
+        const dateValue = params?.row?.BirthDate;
+        const timeValue = params?.value?.toString();
         const formattedTime = timeValue?.slice(0, 2) + ':' + timeValue?.slice(2, 4) + ':' + (timeValue?.slice(4, 6) ? timeValue?.slice(4, 6) : '00');
         // const searchText = searchInputRef.current.value;
         const searchText = searchValue;

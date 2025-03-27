@@ -73,7 +73,7 @@ function RemoveKundli({ open, handleClose, userData, handleDeleteClick }) {
 
                 </div>
                 <div className='font-ea-n text-black'>
-                  <span className='font-ea-sb'>{userData?.BirthDate} </span>{userData?.BirthTime.substring(0, 2)}:{userData?.BirthTime.substring(2, 4)}:{(userData?.BirthTime.substring(4, 6) ? userData?.BirthTime.substring(4, 6) : '00')}
+                  <span className='font-ea-sb'>{userData?.BirthDate} </span>{userData?.BirthTime?.substring(0, 2)}:{userData?.BirthTime?.substring(2, 4)}:{(userData?.BirthTime?.substring(4, 6) ? userData?.BirthTime?.substring(4, 6) : '00')}
                 </div>
                 <div className='font-ea-n text-black'>
                   {userData?.City}, {userData?.Country}

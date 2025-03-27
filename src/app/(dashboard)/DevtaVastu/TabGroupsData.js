@@ -229,6 +229,7 @@ const TAB_LABELS = [
   'House Plan',
   'Griding With 16 Zone',
   '16 Zone Bar Chart',
+  'Marma Lines + Marma Points',
   'Civil Energy',
   'Devta Mark',
   'Devta Marking Color',
@@ -236,7 +237,7 @@ const TAB_LABELS = [
   'Devta + Marma Points',
   'Custom Remedial Marking',
   'Site Energy audit',
-  'Geo ',
+  'Geo Energy audit',
 ];
 
 export const TabsData = TAB_LABELS.map(label => ({ label, ...DEFAULT_TAB_CONFIG }));

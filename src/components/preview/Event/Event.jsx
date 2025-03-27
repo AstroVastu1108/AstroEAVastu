@@ -2,7 +2,7 @@ import { Autocomplete, Box, Button, createTheme, debounce, Dialog, DialogActions
 import React, { useEffect, useState } from 'react'
 import "./Event.css";
 import { DataGrid, GridToolbarContainer, GridToolbarQuickFilter } from '@mui/x-data-grid';
-import { EventOptionsData } from '@/app/Server/API/kundliAPI';
+import { EventOptionsData, UpdateKundli } from '@/app/Server/API/kundliAPI';
 import { DatePicker, DateTimePicker, LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
@@ -10,13 +10,15 @@ import { getCities, getCountries } from '@/app/Server/API/common';
 import dayjs from 'dayjs';
 import { CreateEvent } from '@/app/Server/API/EventAPI';
 import Loader from '@/components/common/Loader/Loader';
+import { toast } from 'react-toastify';
 
-function AddEvent({ NewEventData, open, handleClose, getAllEvent, EventOptionData }) {
+function AddEvent({ AddEventData,setAddEventData, open, handleClose, getAllEvent, EventOptionData }) {
+  console.warn("EventOptionData", AddEventData)
 
 
   // const [EventOptionData, setEventOptionData] = useState([]);
   const [RequiredFields] = useState(["Event", "EventDate", "EventTime", "City"]);
-  const [AddEventData, setAddEventData] = useState(NewEventData);
+  // const [AddEventData, setAddEventData] = useState(NewEventData);
   const [loading, setLoading] = useState([]);
   const [errors, setErrors] = useState({
     "Client": false,
@@ -168,16 +170,16 @@ function AddEvent({ NewEventData, open, handleClose, getAllEvent, EventOptionDat
       // return kId;
     } else {
       // setIsDisable(false)
-      // const response = await UpdateKundli(formattedData)
+      const response = await UpdateKundli(payload)
 
-      // if (response.hasError) {
-      //   setIsDisable(false)
-      //   return toastDisplayer("error", response.error)
-      // }
-      // var kId = response?.responseData?.Result?.KundaliID;
+      if (response.hasError) {
+        setIsDisable(false)
+        return toastDisplayer("error", response.error)
+      }
+      var kId = response?.responseData?.Result?.KundaliID;
       // setIsDisable(false)
-      // getAllKundli(1, "");
-      // handleAddClose();
+      getAllEvent(AddEventData?.KundaliID);
+      handleClose();
       // // toastDisplayer("success", `Kundli data is updated successfully.`)
       // return kId;
     }
@@ -292,7 +294,7 @@ function AddEvent({ NewEventData, open, handleClose, getAllEvent, EventOptionDat
                   title="Select Event"
                   id='event-select'
                   options={EventOptionData && EventOptionData}
-                  // defaultValue={EventOptionData && AddEventData && AddEventData.Event}
+                  defaultValue={EventOptionData && AddEventData && AddEventData.Event}
                   getOptionLabel={(option) => option?.EventName}
                   getOptionKey={(option) => option?.Event}
                   onChange={(event, newValue) => handleInputChange('Event', newValue, 'Event', true)}

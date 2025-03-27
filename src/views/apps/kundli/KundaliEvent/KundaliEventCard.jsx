@@ -1,31 +1,30 @@
-import { Button, Chip, Collapse, Divider } from '@mui/material'
-import { DataGrid } from '@mui/x-data-grid';
-import dayjs from 'dayjs';
-import React, { useState } from 'react';
-import "./KundaliEvent.css";
+import { Button, Chip, Collapse, Divider, IconButton } from '@mui/material'
+import { DataGrid } from '@mui/x-data-grid'
+import dayjs from 'dayjs'
+import React, { useState } from 'react'
+import './KundaliEvent.css'
 
 function KundaliEventCard({ EventElement, index, handleEditEvent, SelectedEventVal }) {
-
-  const originalData = EventElement?.Astro;
-  const Summary = EventElement?.Summary;
-  const CurrentMDScript = EventElement?.CurrentMDScript;
-  const CurrentPDScript = EventElement?.CurrentPDScript;
-  const CurrentADScript = EventElement?.CurrentADScript;
+  const originalData = EventElement?.Astro
+  const Summary = EventElement?.Summary
+  const CurrentMDScript = EventElement?.CurrentMDScript
+  const CurrentPDScript = EventElement?.CurrentPDScript
+  const CurrentADScript = EventElement?.CurrentADScript
 
   const planetClass = {
-    ketu: "ketu",
-    venus: "venus",
-    sun: "sun",
-    moon: "moon",
-    mars: "mars",
-    rahu: "rahu",
-    jupiter: "jupiter",
-    saturn: "saturn",
-    mercury: "mercury",
-    uranus: "uranus",
-    neptune: "neptune",
-    pluto: "pluto"
-  };
+    ketu: 'ketu',
+    venus: 'venus',
+    sun: 'sun',
+    moon: 'moon',
+    mars: 'mars',
+    rahu: 'rahu',
+    jupiter: 'jupiter',
+    saturn: 'saturn',
+    mercury: 'mercury',
+    uranus: 'uranus',
+    neptune: 'neptune',
+    pluto: 'pluto'
+  }
 
   const shorthandMap = {
     Ke: planetClass.ketu,
@@ -40,77 +39,81 @@ function KundaliEventCard({ EventElement, index, handleEditEvent, SelectedEventV
     Ur: planetClass.uranus,
     Ne: planetClass.neptune,
     Pl: planetClass.pluto
-  };
+  }
 
   const highlightText = (data, isHeader = false) => {
-    const dataArr = data.split(", ");
+    const dataArr = data.split(', ')
 
     return dataArr.map((value, index) => {
-      const abbreviation = value.trim().slice(0, 2);
-      const fullName = shorthandMap[abbreviation] || "black";
-      const isLast = index === dataArr.length - 1;
-      const planet = value;
+      const abbreviation = value.trim().slice(0, 2)
+      const fullName = shorthandMap[abbreviation] || 'black'
+      const isLast = index === dataArr.length - 1
+      const planet = value
 
       return (
-        <span
-          className={`pl-${fullName} row-title ${isHeader ? `font-ea-n` : `font-ea-sb`} `}
-          key={abbreviation}
-        >
+        <span className={`pl-${fullName} row-title ${isHeader ? `font-ea-n` : `font-ea-sb`} `} key={abbreviation}>
           {planet.slice(0, 3)}
-          <span className='text-black'>
-            {!isLast && ", "}
-          </span>
+          <span className='text-black'>{!isLast && ', '}</span>
         </span>
-      );
-    });
-  };
+      )
+    })
+  }
 
-  const applyOccupancyColor = (Occupancy) => {
+  const applyOccupancyColor = Occupancy => {
     if (SelectedEventVal) {
-      const positive = SelectedEventVal.Positive?.split(", ").map(Number) || [];
-      const negative = SelectedEventVal.Negative?.split(", ").map(Number) || [];
-      const occupancyNumbers = Occupancy?.split(", ").map(Number) || [];
+      const positive = SelectedEventVal.Positive?.split(', ').map(Number) || []
+      const negative = SelectedEventVal.Negative?.split(', ').map(Number) || []
+      const occupancyNumbers = Occupancy?.split(', ').map(Number) || []
 
       return (
         <>
-          {occupancyNumbers.map((num, index) => {
-            if (positive.includes(num)) {
-              return (
-                <span
-                  key={index}
-                  className="bg-[var(--green-bg-color)] text-[var(--green-text-color)] font-ea-sb px-[2px] py-0 break-words whitespace-normal overflow-visible !leading-relaxed"
-                >
-                  {num}
-                </span>
-              );
-            } else if (negative.includes(num)) {
-              return (
-                <span
-                  key={index}
-                  className="bg-[var(--red-bg-color)] text-[var(--red-text-color)] font-ea-sb px-[2px] py-0 break-words whitespace-normal overflow-visible !leading-relaxed"
-                >
-                  {num}
-                </span>
-              );
-            } else {
-              if (num != 0) {
+          {occupancyNumbers
+            .map((num, index) => {
+              if (positive.includes(num)) {
                 return (
-                  <span key={index} className="px-[2px] text-black py-0 break-words whitespace-normal overflow-visible !leading-relaxed">
+                  <span
+                    key={index}
+                    className='bg-[var(--green-bg-color)] text-[var(--green-text-color)] font-ea-sb px-[2px] py-0 break-words whitespace-normal overflow-visible !leading-relaxed'
+                  >
                     {num}
                   </span>
-                );
+                )
+              } else if (negative.includes(num)) {
+                return (
+                  <span
+                    key={index}
+                    className='bg-[var(--red-bg-color)] text-[var(--red-text-color)] font-ea-sb px-[2px] py-0 break-words whitespace-normal overflow-visible !leading-relaxed'
+                  >
+                    {num}
+                  </span>
+                )
               } else {
-                return;
+                if (num != 0) {
+                  return (
+                    <span
+                      key={index}
+                      className='px-[2px] text-black py-0 break-words whitespace-normal overflow-visible !leading-relaxed'
+                    >
+                      {num}
+                    </span>
+                  )
+                } else {
+                  return
+                }
               }
-            }
-          }).reduce((prev, curr, idx) => (
-            <>{prev}{idx > 0 && ", "}{curr}</>
-          ))}
+            })
+            .reduce((prev, curr, idx) => (
+              <>
+                {prev}
+                {idx > 0 && ', '}
+                {curr}
+              </>
+            ))}
         </>
-      );
+      )
     }
-    return Occupancy;
-  };
+    return Occupancy
+  }
 
   // const applyPlanetAndOccupancyColor = (data) => {
   //   if (!SelectedEventVal) return data;
@@ -175,167 +178,186 @@ function KundaliEventCard({ EventElement, index, handleEditEvent, SelectedEventV
   //   );
   // };
 
-  const applyPlanetAndOccupancyColor = (data) => {
-    const items = data.split(", "); // Split the data by commas and spaces
+  const applyPlanetAndOccupancyColor = data => {
+    const items = data.split(', ') // Split the data by commas and spaces
 
     // Handle the case where SelectedEventVal is null
-    const positive = SelectedEventVal?.Positive?.split(", ").map(Number) || [];
-    const negative = SelectedEventVal?.Negative?.split(", ").map(Number) || [];
+    const positive = SelectedEventVal?.Positive?.split(', ').map(Number) || []
+    const negative = SelectedEventVal?.Negative?.split(', ').map(Number) || []
 
     return (
       <div>
         {items.map((item, index) => {
-          const isNumber = !isNaN(Number(item.trim()));
-          const isLast = index === items.length - 1;
+          const isNumber = !isNaN(Number(item.trim()))
+          const isLast = index === items.length - 1
 
           if (isNumber) {
             if (SelectedEventVal) {
-              const num = Number(item.trim());
-              let className = "px-[2px] break-words whitespace-normal overflow-visible !leading-relaxed";
+              const num = Number(item.trim())
+              let className = 'px-[2px] break-words whitespace-normal overflow-visible !leading-relaxed'
               if (positive.includes(num)) {
-                className = "bg-[var(--green-bg-color)] text-[var(--green-text-color)] font-ea-sb px-[2px]";
+                className = 'bg-[var(--green-bg-color)] text-[var(--green-text-color)] font-ea-sb px-[2px]'
               } else if (negative.includes(num)) {
-                className = "bg-[var(--red-bg-color)] text-[var(--red-text-color)] font-ea-sb px-[2px]";
+                className = 'bg-[var(--red-bg-color)] text-[var(--red-text-color)] font-ea-sb px-[2px]'
               } else if (num == 0) {
-                return;
+                return
               }
               return (
                 <React.Fragment key={`num-${index}`}>
                   <span className={className}>{num}</span>
                   {!isLast && <span>, </span>}
                 </React.Fragment>
-              );
+              )
             } else {
               return (
                 <React.Fragment key={`num-${index}`}>
-                  <span className="px-[2px]">{item.trim()}</span>
+                  <span className='px-[2px]'>{item.trim()}</span>
                   {!isLast && <span>, </span>}
                 </React.Fragment>
-              );
+              )
             }
           } else {
             // Highlight only planet names
-            const abbreviation = item.trim().slice(0, 2);
-            const fullName = shorthandMap[abbreviation] || "black";
+            const abbreviation = item.trim().slice(0, 2)
+            const fullName = shorthandMap[abbreviation] || 'black'
             return (
               <React.Fragment key={`text-${index}`}>
-                <span
-                  className={`pl-${fullName} row-title font-ea-n`}
-                >
-                  {item.trim().slice(0, 3)}
-                </span>
+                <span className={`pl-${fullName} row-title font-ea-n`}>{item.trim().slice(0, 3)}</span>
                 {!isLast && <span>, </span>}
               </React.Fragment>
-            );
+            )
           }
         })}
       </div>
-    );
-  };
+    )
+  }
 
-  const handleEdit = (eid) => {
+  const handleEdit = eid => {
+    console.warn("EventElement",EventElement)
+
     handleEditEvent(eid)
   }
 
   const rows = [
     // { id: 'row1', key: 'Influence', ...Object.fromEntries(originalData.map((item, index) => [`col${index + 1}`, item.Planet])) },
     { id: 'row2', key: 'Sign', ...Object.fromEntries(originalData.map((item, index) => [`col${index + 1}`, item])) },
-    { id: 'row3', key: 'Nakshatra', ...Object.fromEntries(originalData.map((item, index) => [`col${index + 1}`, item.Nakshatra])) },
+    {
+      id: 'row3',
+      key: 'Nakshatra',
+      ...Object.fromEntries(originalData.map((item, index) => [`col${index + 1}`, item.Nakshatra]))
+    },
     { id: 'row4', key: 'NL 🡒 SL', ...Object.fromEntries(originalData.map((item, index) => [`col${index + 1}`, item])) },
-    { id: 'row5', key: 'Planet', ...Object.fromEntries(originalData.map((item, index) => [`col${index + 1}`, item.AspectPlanet])) },
-    { id: 'row6', key: 'House', ...Object.fromEntries(originalData.map((item, index) => [`col${index + 1}`, item.AspectHouse])) },
-    { id: 'row7', key: 'Cumulative', ...Object.fromEntries(originalData.map((item, index) => [`col${index + 1}`, item.AspectCumulativeHouse])) },
-  ];
+    {
+      id: 'row5',
+      key: 'Planet',
+      ...Object.fromEntries(originalData.map((item, index) => [`col${index + 1}`, item.AspectPlanet]))
+    },
+    {
+      id: 'row6',
+      key: 'House',
+      ...Object.fromEntries(originalData.map((item, index) => [`col${index + 1}`, item.AspectHouse]))
+    },
+    {
+      id: 'row7',
+      key: 'Cumulative',
+      ...Object.fromEntries(originalData.map((item, index) => [`col${index + 1}`, item.AspectCumulativeHouse]))
+    }
+  ]
 
   const columnHeaders = originalData.map(item => {
-    const symbol = ' ⮌'; // Define your symbol
+    const symbol = ' ⮌' // Define your symbol
     if (item.Planet.includes(' R')) {
       return (
         <span>
           {item.Planet.replace(/ R\b/, '')}
           <span className='text-white'>{symbol}</span>
         </span>
-      );
+      )
     }
-    return item.Planet;
-  });
+    return item.Planet
+  })
 
   const columns = [
-    { field: 'key', headerName: "Influence", width: 100, headerClassName: 'rowheader' }, // First column header
+    { field: 'key', headerName: 'Influence', width: 100, headerClassName: 'rowheader' }, // First column header
     ...columnHeaders.map((header, index) => ({
       field: `col${index + 1}`,
       headerName: header, // Use the provided header names
       // minWidth: 105,
       flex: 1,
       headerClassName: 'rowheader',
-      renderCell: (params) => {
-        const row = params.row?.id;
-        if (row == "row2") {
-          const Rashi = params?.formattedValue?.Rashi?.slice(0, 3) || "";
+      renderCell: params => {
+        const row = params.row?.id
+        if (row == 'row2') {
+          const Rashi = params?.formattedValue?.Rashi?.slice(0, 3) || ''
           // const Rashi = params?.formattedValue?.Rashi || "";
-          const Degree = params?.formattedValue?.Degree?.split(":")[0] || "";
-          const Min = params?.formattedValue?.Degree?.split(":")[1] || "";
+          const Degree = params?.formattedValue?.Degree?.split(':')[0] || ''
+          const Min = params?.formattedValue?.Degree?.split(':')[1] || ''
           // console.log(data)
-          return <>
-            <div className='flex'>
-              <div className='text-primary pe-3'>{Rashi}.</div>
-              <div>{Degree}° {Min}'</div>
-            </div>
-          </>
-        } else if (row == "row5") {
-          const data = params?.value?.split(", ");
-          return <>
-            <span className='break-words whitespace-normal overflow-visible !leading-relaxed'>
-              {highlightText(params?.value)}
-            </span>
-          </>
-        }
-        else if (row == "row4") {
-          const NL = params?.formattedValue?.NL?.slice(0, 3);
-          const SL = params?.formattedValue?.SL?.slice(0, 3);
-          return <>
-            <span className='break-words whitespace-normal overflow-visible !leading-relaxed'>{highlightText(NL)} 🡒 {highlightText(SL)}</span>
-          </>
-        }
-        else if (row == "row6") {
-          const arr1 = params.value.split("/")[0];
-          const arr2 = params.value.split("/")[1];
-          return <>
-            {/* <div className=''> */}
-            {applyOccupancyColor(arr1)} {arr2?.length ? <span className=''>/ {applyOccupancyColor(arr2)}</span> : ""}
-            {/* </div> */}
-          </>
-        }
-        else if (row == "row7") {
+          return (
+            <>
+              <div className='flex'>
+                <div className='text-primary pe-3'>{Rashi}.</div>
+                <div>
+                  {Degree}° {Min}'
+                </div>
+              </div>
+            </>
+          )
+        } else if (row == 'row5') {
+          const data = params?.value?.split(', ')
+          return (
+            <>
+              <span className='break-words whitespace-normal overflow-visible !leading-relaxed'>
+                {highlightText(params?.value)}
+              </span>
+            </>
+          )
+        } else if (row == 'row4') {
+          const NL = params?.formattedValue?.NL?.slice(0, 3)
+          const SL = params?.formattedValue?.SL?.slice(0, 3)
+          return (
+            <>
+              <span className='break-words whitespace-normal overflow-visible !leading-relaxed'>
+                {highlightText(NL)} 🡒 {highlightText(SL)}
+              </span>
+            </>
+          )
+        } else if (row == 'row6') {
+          const arr1 = params.value.split('/')[0]
+          const arr2 = params.value.split('/')[1]
+          return (
+            <>
+              {/* <div className=''> */}
+              {applyOccupancyColor(arr1)} {arr2?.length ? <span className=''>/ {applyOccupancyColor(arr2)}</span> : ''}
+              {/* </div> */}
+            </>
+          )
+        } else if (row == 'row7') {
           // console.log("here : ",params.value)
-          return <>
-            {applyOccupancyColor(params.value)}
-          </>
+          return <>{applyOccupancyColor(params.value)}</>
         }
       }
-    })),
-  ];
+    }))
+  ]
 
-  const getRowHeight = (params) => {
-    if (params.id == "row5" || params.id == "row7" || params.id == "row6") {
-      return "auto";
+  const getRowHeight = params => {
+    if (params.id == 'row5' || params.id == 'row7' || params.id == 'row6') {
+      return 'auto'
     } else {
-      return 30;
+      return 30
     }
-  };
+  }
 
-  const getRowClassName = (params) => {
-    if (params.id === "row5") {
-      return 'row5-style';
+  const getRowClassName = params => {
+    if (params.id === 'row5') {
+      return 'row5-style'
+    } else if (params.id == 'row7') {
+      return 'row7-style'
+    } else if (params.id == 'row6') {
+      return 'row7-style'
     }
-    else if (params.id == "row7") {
-      return 'row7-style';
-    }
-    else if (params.id == "row6") {
-      return 'row7-style';
-    }
-    return '';
-  };
+    return ''
+  }
 
   // const getNumber = (items) => {
   //   const items = input.split(", ").map(item => item.trim());
@@ -344,21 +366,31 @@ function KundaliEventCard({ EventElement, index, handleEditEvent, SelectedEventV
   //   return applyOccupancyColor(numericValues);
   // }
 
-  const GetDashaDetail = (params) => {
-    const arr1 = params.split("/")[0];
-    const arr2 = params.split("/")[1];
-    return <>
-      <div className='flex'>
-        {applyOccupancyColor(arr1)} {arr2?.length ? <> <span className='px-1'> / </span> {applyOccupancyColor(arr2)}</> : ""}
-      </div>
-    </>
+  const GetDashaDetail = params => {
+    const arr1 = params.split('/')[0]
+    const arr2 = params.split('/')[1]
+    return (
+      <>
+        <div className='flex'>
+          {applyOccupancyColor(arr1)}{' '}
+          {arr2?.length ? (
+            <>
+              {' '}
+              <span className='px-1'> / </span> {applyOccupancyColor(arr2)}
+            </>
+          ) : (
+            ''
+          )}
+        </div>
+      </>
+    )
   }
 
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false)
 
   const toggleGrid = () => {
-    setIsExpanded((prev) => !prev);
-  };
+    setIsExpanded(prev => !prev)
+  }
 
   return (
     <>
@@ -368,24 +400,36 @@ function KundaliEventCard({ EventElement, index, handleEditEvent, SelectedEventV
             <div className=' pb-2 w-[20%]'>
               <table>
                 <tr className='bg-[var(--primary-soft-color)] text-[18px] '>
-                  <td className='px-2 w-1 py-[5px] '>
-                    {(index + 1) < 10 ? `0${index + 1}` : index + 1}.
-                  </td>
+                  <td className='px-2 w-1 py-[5px] '>{index + 1 < 10 ? `0${index + 1}` : index + 1}.</td>
                   <td>
                     <div className='flex items-center'>
                       <span className='text-primary font-ea-sb'> {EventElement.Event}</span>
                     </div>
                   </td>
+                  <td>
+                    <IconButton
+                      aria-label='close'
+                      onClick={()=>handleEdit(EventElement.EventID)} // Replace with your close handler function
+                      sx={{
+                        color: 'white'
+                      }}
+                    >
+                    <i className={'tabler-edit text-primary'} />
+                    </IconButton>
+                  </td>
                 </tr>
                 <tr>
                   <td></td>
                   <td>
-                    <div className={`flex items-center`} >
+                    <div className={`flex items-center`}>
                       <div className='flex flex-col gap-1 chart-date'>
                         {/* <span className='label font-ea-n'>Event Date & Time: </span> */}
                         <span className='value font-ea-sb text-black'>
                           {EventElement?.EventDate}
-                          <span className='font-ea-n'> {EventElement?.EventTime.substring(0, 2)}:{EventElement?.EventTime.substring(2, 4)}:{(EventElement?.EventTime.substring(4, 6) ? EventElement?.EventTime.substring(4, 6) : '00')}
+                          <span className='font-ea-n'>
+                            {' '}
+                            {EventElement?.EventTime.substring(0, 2)}:{EventElement?.EventTime.substring(2, 4)}:
+                            {EventElement?.EventTime.substring(4, 6) ? EventElement?.EventTime.substring(4, 6) : '00'}
                           </span>
                         </span>
                       </div>
@@ -393,7 +437,9 @@ function KundaliEventCard({ EventElement, index, handleEditEvent, SelectedEventV
 
                     <div className='flex flex-col'>
                       {/* <span className='label font-ea-n'>Place: </span> */}
-                      <span className='value font-ea-n'>{EventElement?.City}, {EventElement?.Country}</span>
+                      <span className='value font-ea-n'>
+                        {EventElement?.City}, {EventElement?.Country}
+                      </span>
                     </div>
                   </td>
                 </tr>
@@ -412,23 +458,37 @@ function KundaliEventCard({ EventElement, index, handleEditEvent, SelectedEventV
             <div className='w-[40%]  pb-2 border-l border-[var(--border-color)]'>
               <table>
                 <tr className='bg-[var(--primary-soft-color)]'>
-                  <td colSpan={2} className='text-primary font-ea-sb px-2 py-2'>Combined Planetary Influence</td>
+                  <td colSpan={2} className='text-primary font-ea-sb px-2 py-2'>
+                    Combined Planetary Influence
+                  </td>
                 </tr>
                 <tr className='px-2'>
                   <td className='ps-2 text-primary font-ea-sb w-[27%]'>Sat + Jup </td>
-                  <td className='flex'> <div className='pe-2'>🡒</div>  {applyPlanetAndOccupancyColor(Summary?.SatJup, true)}</td>
+                  <td className='flex'>
+                    {' '}
+                    <div className='pe-2'>🡒</div> {applyPlanetAndOccupancyColor(Summary?.SatJup, true)}
+                  </td>
                 </tr>
                 <tr className='px-2'>
                   <td className='ps-2 text-primary font-ea-sb'>Sat + Jup + Sun</td>
-                  <td className='flex'> <div className='pe-2'>🡒</div> {applyPlanetAndOccupancyColor(Summary?.SatJupSun, true)}</td>
+                  <td className='flex'>
+                    {' '}
+                    <div className='pe-2'>🡒</div> {applyPlanetAndOccupancyColor(Summary?.SatJupSun, true)}
+                  </td>
                 </tr>
                 <tr className='px-2'>
                   <td className='ps-2 text-primary font-ea-sb'>Sat + Jup + Rahu</td>
-                  <td className='flex'> <div className='pe-2'>🡒</div> {applyPlanetAndOccupancyColor(Summary?.SatJupRah, true)}</td>
+                  <td className='flex'>
+                    {' '}
+                    <div className='pe-2'>🡒</div> {applyPlanetAndOccupancyColor(Summary?.SatJupRah, true)}
+                  </td>
                 </tr>
                 <tr className='px-2'>
                   <td className='ps-2 text-primary font-ea-sb'>Sat + Jup + Ketu</td>
-                  <td className='flex'> <div className='pe-2'>🡒</div> {applyPlanetAndOccupancyColor(Summary?.SatJupKet, true)}</td>
+                  <td className='flex'>
+                    {' '}
+                    <div className='pe-2'>🡒</div> {applyPlanetAndOccupancyColor(Summary?.SatJupKet, true)}
+                  </td>
                 </tr>
               </table>
             </div>
@@ -437,7 +497,9 @@ function KundaliEventCard({ EventElement, index, handleEditEvent, SelectedEventV
                 <table>
                   <tr className='bg-[var(--primary-soft-color)]'>
                     {/* <td><div className='px-2 py-1'>Dasha 🡒</div></td> */}
-                    <td className='px-2 py-2 font-ea-sb text-primary' colSpan={4}>MahaDasha</td>
+                    <td className='px-2 py-2 font-ea-sb text-primary' colSpan={4}>
+                      MahaDasha
+                    </td>
                   </tr>
                   <tr>
                     <td className='ps-2 font-ea-sb text-primary'>PL</td>
@@ -462,7 +524,9 @@ function KundaliEventCard({ EventElement, index, handleEditEvent, SelectedEventV
               <div className='w-auto grow pb-2 border-l border-[var(--border-color)]'>
                 <table>
                   <tr className='bg-[var(--primary-soft-color)]'>
-                    <td className='px-2 py-2 font-ea-sb  text-primary' colSpan={4}>AntarDasha</td>
+                    <td className='px-2 py-2 font-ea-sb  text-primary' colSpan={4}>
+                      AntarDasha
+                    </td>
                   </tr>
                   <tr>
                     <td className='ps-2 pe-1 text-black font-ea-sb'>{highlightText(CurrentADScript?.PL?.Planet)} </td>
@@ -481,24 +545,32 @@ function KundaliEventCard({ EventElement, index, handleEditEvent, SelectedEventV
               <div className='w-auto grow pb-2 border-l border-[var(--border-color)]'>
                 <table>
                   <tr className='bg-[var(--primary-soft-color)]'>
-                    <td className='px-2 py-2 font-ea-sb  text-primary' colSpan={3}>PratyantarDasha</td>
-                    <td><div className='flex-grow flex justify-end items-center'>
-                      <Button
-                        variant='outlined'
-                        size='small'
-                        onClick={toggleGrid}
-                        sx={{
-                          borderColor: 'var(--border-color)',
-                          color: 'var(--primary-color)',
-                          ':hover': {
-                            backgroundColor: 'var(--primary-soft-color)',
-                            borderColor: 'var(--primary-color)',
-                          },
-                        }}
-                      >
-                        {isExpanded ? <i className='tabler-circle-arrow-up'></i> : <i className='tabler-circle-arrow-down'></i>}
-                      </Button>
-                    </div></td>
+                    <td className='px-2 py-2 font-ea-sb  text-primary' colSpan={3}>
+                      PratyantarDasha
+                    </td>
+                    <td>
+                      <div className='flex-grow flex justify-end items-center'>
+                        <Button
+                          variant='outlined'
+                          size='small'
+                          onClick={toggleGrid}
+                          sx={{
+                            borderColor: 'var(--border-color)',
+                            color: 'var(--primary-color)',
+                            ':hover': {
+                              backgroundColor: 'var(--primary-soft-color)',
+                              borderColor: 'var(--primary-color)'
+                            }
+                          }}
+                        >
+                          {isExpanded ? (
+                            <i className='tabler-circle-arrow-up'></i>
+                          ) : (
+                            <i className='tabler-circle-arrow-down'></i>
+                          )}
+                        </Button>
+                      </div>
+                    </td>
                   </tr>
                   <tr>
                     <td className='ps-2 pe-1 text-black font-ea-sb'>{highlightText(CurrentPDScript?.PL?.Planet)}</td>
@@ -515,11 +587,10 @@ function KundaliEventCard({ EventElement, index, handleEditEvent, SelectedEventV
                 </table>
               </div>
             </div>
-
           </div>
         </div>
 
-        <Collapse in={isExpanded} timeout="auto" unmountOnExit>
+        <Collapse in={isExpanded} timeout='auto' unmountOnExit>
           <div className='p-0 pt-0 mb-0'>
             <DataGrid
               showCellVerticalBorder
@@ -532,9 +603,7 @@ function KundaliEventCard({ EventElement, index, handleEditEvent, SelectedEventV
               disableColumnResize
               hideFooterPagination={true}
               showColumnVerticalBorder
-              getCellClassName={(params) =>
-                params.field === 'key' ? 'font-ea-sb text-primary' : 'text-black'
-              }
+              getCellClassName={params => (params.field === 'key' ? 'font-ea-sb text-primary' : 'text-black')}
               getRowHeight={getRowHeight}
               getRowClassName={getRowClassName}
               className='eventGrid'
