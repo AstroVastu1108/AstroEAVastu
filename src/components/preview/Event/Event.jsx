@@ -13,7 +13,6 @@ import Loader from '@/components/common/Loader/Loader';
 import { toast } from 'react-toastify';
 
 function AddEvent({ AddEventData,setAddEventData, open, handleClose, getAllEvent, EventOptionData }) {
-  console.warn("EventOptionData", AddEventData)
 
 
   // const [EventOptionData, setEventOptionData] = useState([]);
@@ -170,6 +169,8 @@ function AddEvent({ AddEventData,setAddEventData, open, handleClose, getAllEvent
       // return kId;
     } else {
       // setIsDisable(false)
+      payload.BirthDetails = AddEventData.BirthDetails;
+      console.log(payload)
       const response = await UpdateKundli(payload)
 
       if (response.hasError) {

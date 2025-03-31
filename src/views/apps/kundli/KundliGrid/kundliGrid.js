@@ -190,7 +190,6 @@
 //   }
 
 //   const handleSelectionChange = (newSelection) => {
-//     console.log("handleSelectionChange : ",newSelection)
 //     setSelectedRows(newSelection)
 //   }
 
@@ -271,7 +270,6 @@ function KundliDataGrid({ columns, pageSize = 5, checkboxSelection = false, onRo
   })
 
   const handleSearch = (e) => {
-      // console.log('Searched Data : ', e.target.value)
     //   setQuery(e.target.value)
   }
 
@@ -279,7 +277,6 @@ function KundliDataGrid({ columns, pageSize = 5, checkboxSelection = false, onRo
 //     // if (query.length > 1) {
 //       try {
 //         const response = await SearchKundli(query)
-//         console.log("Response : ",response.responseData.Result.KundaliList)
 //         setKundliData(response.responseData.Result.KundaliList)
 //       } catch (error) {
 //         return toastDisplayer("error", `There was a problem with the fetch operation:${error}`)

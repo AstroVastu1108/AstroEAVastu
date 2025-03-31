@@ -38,7 +38,7 @@ const UserDropdown = () => {
   // States
   const [open, setOpen] = useState(false)
   const { user,logout } = useAuth();
-  // console.log("user : ",user)
+
   // Refs
 
   const anchorRef = useRef(null)

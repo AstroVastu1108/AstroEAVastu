@@ -10,15 +10,7 @@ export async function validateCaptcha(token) {
       token: token
     })
 
-    // const response = await fetch('https://www.google.com/recaptcha/api/siteverify', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    //   body: new URLSearchParams({
-    //     secret: process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_SECRET_KEY,
-    //     response: token,
-    //   }).toString(),
-    // });
-    // console.log("NEXT_PUBLIC_GOOGLE_RECAPTCHA_SECRET_KEY : ",NEXT_PUBLIC_GOOGLE_RECAPTCHA_SECRET_KEY)
+ 
     const data = response.data
     return data.success ? { success: true } : { success: false, error: 'reCAPTCHA verification failed' }
   } catch (error) {
@@ -75,7 +67,6 @@ export async function registerCompnay(payload, did) {
     error: null
   }
   try {
-    // console.log("Data compnay : ",company)
     // const payload = {
     //   userType: "CompanyMaster",
     //   email:company.email,

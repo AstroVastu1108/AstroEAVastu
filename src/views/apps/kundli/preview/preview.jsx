@@ -83,7 +83,6 @@ const Preview = ({ kundliData, setKundliData, kundliConstData, SetKundliConstDat
   }
 
   const getTransitData = async (fdate, ftime, option) => {
-    // return console.log(option);
     setIsTransit("T");
     var BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
     var date = "";
@@ -200,13 +199,11 @@ const Preview = ({ kundliData, setKundliData, kundliConstData, SetKundliConstDat
 
   const handleDateChange = async (datePicker1) => {
     var kdata = kundliData?.AstroVastuReport?.BirthDetails;
-    // return console.log(kdata, TimeToolOpt);
     const formattedDate = datePicker1.format('DD-MM-YYYY');
     const formattedTime = datePicker1.format('HHmmss'); // 24-hour format without colon
 
     if (TimeToolOpt == "B") {
       const chkDate = dayjs(`${kdata?.BirthDate} ${kdata?.BirthTime}`, 'DD-MM-YYYY HHmmss');
-      // console.log(chkDate);
       if (chkDate.isSame(datePicker1, 'second')) {
         // setDatePicker(dayjs(`${kdata?.Date} ${kdata?.Time}`, 'DD-MM-YYYY HHmmss'));
         return
@@ -280,7 +277,6 @@ const Preview = ({ kundliData, setKundliData, kundliConstData, SetKundliConstDat
     if(TimeToolOpt=="T" && isTransit=="T"){
       resetTransit();
     }else{
-      console.log(kundliConstData)
       setKundliData(kundliConstData);
     }
   }

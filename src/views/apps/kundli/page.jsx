@@ -531,7 +531,6 @@ export default function KundliMain() {
 
   const handleInputChange = (e) => {
     const query = e.target.value;
-    // console.log(e.target.value)
     setSearchValue(e.target.value);
     if (query.length > 3) {
       fetchData(query);
@@ -570,7 +569,6 @@ export default function KundliMain() {
   //     try {
   //       setLoading(true);
   //       const response = await getKundliPdf(kId);
-  //       console.log(response);
 
   //       if (response.hasError) {
   //         setLoading(false);

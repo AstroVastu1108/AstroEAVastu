@@ -225,7 +225,6 @@ function PrakritiPopUp({ open, handlePraClose }) {
 
   const handleSave = () => {
     localStorage.setItem('prakritiSelections', JSON.stringify(selectedOptions));
-    // console.log('Saved options:', selectedOptions);
     // Calculate checked counts
     const counts = { vata: 0, pitta: 0, kapha: 0 };
     Object.values(selectedOptions).forEach((options) => {

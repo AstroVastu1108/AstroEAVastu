@@ -44,7 +44,7 @@ Cookies.set('M-DIDC', "0", { expires: 1 });
 // getDID();
 export const AuthProvider = ({ children }) => {
   useEffect(() => {
-    console.log = function () {}; // Disable console.log in the browser
+    // console.log = function () {}; // Disable console.log in the browser
   }, []);
   const [user, setUser] = useState([]);
   const [kundliData, setKundliData] = useState(null);
@@ -102,7 +102,6 @@ export const AuthProvider = ({ children }) => {
   // SSE code
   // useEffect(() => {
   //     if(user?.transactionID){
-  //         console.log("Data : ",user?.transactionID)
 
   //         const encodedUserId = encodeURIComponent(user?.transactionID);
 
@@ -111,7 +110,6 @@ export const AuthProvider = ({ children }) => {
   //         eventSource.onmessage = (event) => {
   //             const data = JSON.parse(event.data);
   //             if (data.action === "logout") {
-  //                 console.log("logout called")
   //                 // Logout the user immediately
   //                 eventSource.close();
 
@@ -132,7 +130,6 @@ export const AuthProvider = ({ children }) => {
 
 
   const loginData = async (result) => {
-    // console.log("Context is called", userData)
     // const result = await sendSignInRequest(userData,Cookies.get('M-DID'));
     // const result = await sendSignInRequest(userData.email, userData.password);
     if (result.isOk) {
@@ -164,7 +161,6 @@ export const AuthProvider = ({ children }) => {
 
   const companyRegistration = async (result) => {
     // const result = await registerCompnay(userData,Cookies.get('M-DID'));
-    // console.log("================> result: ", result)
     if (result.isOk) {
       setUser(result.data.Result)
       const { useremail, ClientID, InstanceID, SecureRoute } = result.data.Result;
