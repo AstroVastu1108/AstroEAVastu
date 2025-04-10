@@ -297,8 +297,6 @@ function DevtaVastuPage({ id }) {
       )
     );
 
-    ("Updated tabGroup:", tabGroup);
-
     if (selectedGroup !== 1) {
       setSaveLoading(true);
       setSavedGroups(prev => {
@@ -344,24 +342,24 @@ function DevtaVastuPage({ id }) {
     }
   }
 
-  const handleDownload = async () => {
-    const response = await fetch("/api/generate-pdf");
-    console.log(response)
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "my-pdf.pdf";
-    a.click();
-    window.URL.revokeObjectURL(url);
-  };
-
-
-  // const handleDownload = async (data) => {
-  //   setIsDownloading(true);
-  //   await generatePDFsForAllGroups(data); // Your download function
-  //   setIsDownloading(false);
+  // const handleDownload = async () => {
+  //   const response = await fetch("/api/generate-pdf");
+  //   console.log(response)
+  //   const blob = await response.blob();
+  //   const url = window.URL.createObjectURL(blob);
+  //   const a = document.createElement("a");
+  //   a.href = url;
+  //   a.download = "my-pdf.pdf";
+  //   a.click();
+  //   window.URL.revokeObjectURL(url);
   // };
+
+
+  const handleDownload = async (data) => {
+    setIsDownloading(true);
+    await generatePDFsForAllGroups(data); // Your download function
+    setIsDownloading(false);
+  };
 
   const generatePDFsForAllGroups = async data => {
 
