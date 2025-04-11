@@ -84,7 +84,19 @@ const KanbanBoard = ({cid}) => {
       const fetchDatacolumn = async () =>{
         const columnsData = await fetchKundliTasksData(user?.transactionID,cid);
         if(await columnsData){
-        
+          // console.log("TaskList =======> ",tasksList)
+          // console.log("columns =======> ",columns)
+          // console.log("columnsData =======> ",columnsData)
+          // let taskIds = []
+
+          // columns.map(col => {
+          //   taskIds = [...taskIds, ...col.taskIds]
+          // })
+          // console.log("taskIds =======> ",taskIds)
+          // const newTasksList = columnsData.filter(task => task && taskIds.includes(task.id))
+          // console.log("TaskList Last =======> ",newTasksList)
+          // setTasksList(newTasksList)
+          // setTasksList(columnsData)
           dispatch(addTasks(columnsData));
         }
       }

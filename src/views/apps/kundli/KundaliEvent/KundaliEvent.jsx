@@ -83,6 +83,8 @@ function KundaliEvent({ EventsData, KID, getAllEvent }) {
     const dataToUpdate = AllEventsData.find(e => e.EventID == eid)
     if (!dataToUpdate) return
 
+    console.warn('dataToUpdate', dataToUpdate)
+
     const dateParts = dataToUpdate.EventDate.split('-')
     const timeParts = dataToUpdate.EventTime
 
@@ -100,7 +102,9 @@ function KundaliEvent({ EventsData, KID, getAllEvent }) {
     }
 
     // Create a Day.js object for internal use
+    console.warn('dateParts', year, month, day, hours, minutes, seconds)
     const eventDate = dayjs(new Date(year, month, day, hours, minutes, seconds))
+    console.warn('eventDate', eventDate)
 
     // Update state with the parsed and formatted data
     setNewEventData({
@@ -111,8 +115,7 @@ function KundaliEvent({ EventsData, KID, getAllEvent }) {
       City: { CityID: dataToUpdate.CityID, FormattedCity: dataToUpdate.City },
       Country: { CountryCode: dataToUpdate.CountryCode, Country: dataToUpdate.Country },
       Remark: dataToUpdate.Remark,
-      isUpdate: true,
-      BirthDetails: BirthDetails
+      isUpdate: true
     })
 
     handleAddEventOpen()
@@ -139,6 +142,10 @@ function KundaliEvent({ EventsData, KID, getAllEvent }) {
     // handleClose();
     setOpenLifeEvent(true)
   }
+
+  useEffect(()=>{
+    console.warn("===========",newEventData)
+  },[newEventData])
 
   return (
     <>
@@ -294,6 +301,7 @@ function KundaliEvent({ EventsData, KID, getAllEvent }) {
 
       {newEventData && openAddEvent && (
         <>
+          {console.warn('newEventData', newEventData)}
           <AddEvent
             getAllEvent={getAllEvent}
             AddEventData={newEventData && newEventData}

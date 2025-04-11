@@ -453,6 +453,7 @@ const DevtaVastu = ({
           y: draggingState.initialPoints[pointIndex].y + dy
         }
       }
+      // console.log('updatedPolygons : ', updatedPolygons)
       setPolygons(updatedPolygons)
       return
     }
@@ -490,6 +491,7 @@ const DevtaVastu = ({
   }
 
   const handleDoubleClick = (e, overlay = '', polygon = '', pointIndex = '', polygonIndex = '') => {
+    // console.log('over', overlay)
 
     // Helper function to check if a point is inside a polygon
     const isPointInPolygon = (x, y, polygonPoints) => {
@@ -589,6 +591,7 @@ const DevtaVastu = ({
     )
 
     if (isInsideOtherPolygon) {
+      // console.log('Mouse is inside another polygon, skipping disableDraw logic.')
       return // Skip the disableDraw logic
     } else {
       setOverlayPolyClick(false)
@@ -1594,6 +1597,7 @@ const DevtaVastu = ({
 
   // Zoom in
   const handleZoomIn = () => {
+    // console.log('first')
     setZoom(Math.min(zoom * 1.1, 5))
   } // Limit max zoom to 5
   // Zoom out
@@ -1688,6 +1692,7 @@ const DevtaVastu = ({
 
   useEffect(() => {
     const filteredData = (label, object) => {
+      console.log(label, object)
       return object.filter(item => label === item.label)
     }
 
@@ -1951,6 +1956,7 @@ const DevtaVastu = ({
       coordinates: convertPointsToCoordinates(area),
       text: `Area ${index + 45}`
     }))
+    console.log([...areas1, ...areas2, ...areas3, ...areas4].reverse())
 
     setAreas([...areas1, ...areas2, ...areas3, ...areas4].reverse())
     setDrawDevtaObject(newDrawDevtaObject)
@@ -2230,6 +2236,7 @@ const DevtaVastu = ({
     //   id: polygons.length + 1
     // }
     // setPolygons([...polygons, newPolygon])
+    // console.log(formData)
 
     if (formData?.isUpdate) {
       // Update an existing polygon
@@ -2274,6 +2281,7 @@ const DevtaVastu = ({
   }
 
   const handleOverlayEdit = polygon => {
+    // console.log(polygon)
     polygon.isUpdate = true
     setNewOverlayPoly(polygon)
     setOpenNewPolygon(true)

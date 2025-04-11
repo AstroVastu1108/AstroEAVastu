@@ -132,6 +132,7 @@ export default function ClientKundli({ cid }) {
   };
 
   const handleSubmit = async (selectedData, client) => {
+    // console.log("SelectedData : ",selectedData)
     // if (!selectedData) return toastDisplayer("error", "Select the kundli to add client.");
     const payload = {
       id: kundliType ? selectedKundliClient?.id : undefined,
@@ -153,6 +154,7 @@ export default function ClientKundli({ cid }) {
         clientId: cid,
         companyId: user?.transactionID,
       };
+      // console.log("response : ",response.responseData?.result)
       if(!kundliType){
         setClientKundliList((prevList) => [...prevList, payloadData]);
       }

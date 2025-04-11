@@ -88,9 +88,10 @@ function DownloadPopUp({ open, handleClose, TabData, handleSave }) {
           component: 'form',
           onSubmit: e => {
             e.preventDefault()
+            console.log(checkedItems, items)
             const filteredItems = items.filter(key => checkedItems[key] === true)
 
-
+            console.log(filteredItems)
             handleSave(filteredItems);
             handleClose();
           }

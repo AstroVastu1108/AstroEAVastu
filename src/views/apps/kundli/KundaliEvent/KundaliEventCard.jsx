@@ -233,6 +233,8 @@ function KundaliEventCard({ EventElement, index, handleEditEvent, SelectedEventV
   }
 
   const handleEdit = eid => {
+    console.warn("EventElement",EventElement)
+
     handleEditEvent(eid)
   }
 
@@ -290,6 +292,7 @@ function KundaliEventCard({ EventElement, index, handleEditEvent, SelectedEventV
           // const Rashi = params?.formattedValue?.Rashi || "";
           const Degree = params?.formattedValue?.Degree?.split(':')[0] || ''
           const Min = params?.formattedValue?.Degree?.split(':')[1] || ''
+          // console.log(data)
           return (
             <>
               <div className='flex'>
@@ -330,6 +333,7 @@ function KundaliEventCard({ EventElement, index, handleEditEvent, SelectedEventV
             </>
           )
         } else if (row == 'row7') {
+          // console.log("here : ",params.value)
           return <>{applyOccupancyColor(params.value)}</>
         }
       }

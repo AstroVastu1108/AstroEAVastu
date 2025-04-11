@@ -82,6 +82,7 @@ const StyledLoggedInUserContainer = styled(Box)(({ theme }) => ({
 const Navigation = props => {
   // states
   const { logout, user } = useAuth();
+// console.log("user : ",)
   // Props
   const { mode, systemMode } = props
 

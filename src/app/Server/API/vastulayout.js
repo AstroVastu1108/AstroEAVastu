@@ -74,12 +74,15 @@ export async function getVastuLayoutsListing(PageSize, PageNumber, Search = '') 
     error: null
   }
   try {
+    console.log("came into func : ",PageSize)
     var apiURL = `/VastuLayout/${PageSize}/${PageNumber}`
+    console.log("AP : ",apiURL)
     if (Search != '') {
       apiURL = `/VastuLayout/${PageSize}/${PageNumber}/${Search}`
     }
 
     // const response = await astroInstance.get(`/VastuLayout`)
+    console.log("APIURL : ",apiURL)
     // const response = await axios.get(`${url}${apiURL}`,{
     const response = await axiosInstance.get(`${apiURL}`
     //   ,{

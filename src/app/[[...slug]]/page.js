@@ -55,6 +55,7 @@ export default async function Page({ params }) {
 
     // if (secureData.status === 200) {
       const matchingRoute = routes.find(route => {
+        // console.log(routes)
         if (route.path === slug) return true;
 
         if (route.path.startsWith("kundali/")) {
@@ -113,6 +114,10 @@ export default async function Page({ params }) {
         }
         return <NotFoundPage type={"not found"}/>;
       }
+    // } else {
+    //   console.log("==============Unauthorisexd")
+    //   return <NotFoundPage type={"unAuthorized"}/>;
+    // }
   } catch (error) {
     return <NotFoundPage type={"unAuthorized"}/>;
   }

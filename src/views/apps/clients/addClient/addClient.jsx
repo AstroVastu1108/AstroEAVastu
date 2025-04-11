@@ -109,6 +109,7 @@ function AddClientPopUp({ open, handleAddClose,saveClient }) {
     const handleSubmit = async () => {
         setIsSaving(true);
         try {
+            console.log("=====");
             const payload = {
                 "companyID": user?.transactionID,
                 "status": data.status,
@@ -132,6 +133,8 @@ function AddClientPopUp({ open, handleAddClose,saveClient }) {
                 "email1": data.email1,
                 "gstin": data.gstin
             }
+            console.log("payload : ",payload);
+            console.log("validatePayload(payload) : ",validatePayload(payload));
             if (validatePayload(payload)) {
                 return saveClient(payload);
                 // const response = await CreateClient(payload);

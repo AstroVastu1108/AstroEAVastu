@@ -60,7 +60,13 @@ function Listing({ cid, from }) {
     }
   }
 
-
+  // const fetchDatacolumn = async () => {
+  //   const columnsData = await fetchKundliTasksData(user?.transactionID, cid)
+  //   if (await columnsData) {
+  //     setTasks(columnsData)
+  //     console.log('columnsData : ', columnsData)
+  //   }
+  // }
   useEffect(() => {
     // if (user?.transactionID) {
       if (from == 'ClientTasks') {
@@ -74,6 +80,7 @@ function Listing({ cid, from }) {
   const handleOpenDrawer = item => {
     setCurrentTask(item)
     setDrawerOpen(true)
+    // console.log("Item : ",item)
   }
 
   const handleAddItem = async () => {

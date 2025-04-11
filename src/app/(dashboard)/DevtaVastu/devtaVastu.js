@@ -44,7 +44,7 @@ function DevtaVastuPage({ id }) {
   const [tabGroup, setTabGroup] = useState(TabsData);
   const [IsDownloading, setIsDownloading] = useState(false);
   const [forceRenderAllTabs, setForceRenderAllTabs] = useState(false);
-  const [isLayoutChange, setIsLayoutChange] = useState(false);
+  const [isLayoutChange,setIsLayoutChange] = useState(false);
 
   const [formData, setFormData] = useState({
     ProjectName: '',
@@ -158,6 +158,18 @@ function DevtaVastuPage({ id }) {
   const [layoutCount] = useState(parseInt(localStorage.getItem("layoutCount") || "1"));
   const openEl = Boolean(anchorEl);
 
+  // const [points, setPoints] = useState(DEFAULT_POINTS);
+
+  // const [previewUrl, setPreviewUrl] = useState(null)
+
+  // useEffect(() => {
+  //   const getLayouts = async () => {
+  //     const data = await getVastuLayouts()
+  //     console.log('Data : ', data)
+  //   }
+  //   getLayouts()
+  // }, [])
+
   async function readFileData(uploadedFile) {
     const fileReader = new FileReader()
 
@@ -216,6 +228,7 @@ function DevtaVastuPage({ id }) {
         setFileUploaded(true)
         const reader = new FileReader()
         reader.onloadend = () => {
+          // console.log("reader : ", reader.result)
           setPreviewUrl(reader.result)
         }
         reader.readAsDataURL(uploadedFile)
@@ -263,7 +276,9 @@ function DevtaVastuPage({ id }) {
   //     return toast.error('Please upload a file!!')
   //   }
 
-
+  //   console.warn(tabGroup.filter(tab => tab.label == selectedBaseGroup))
+    
+  //   return console.warn(selectedGroup,selectedBaseGroup)
   //   if (selectedGroup != 1) {
   //     setSaveLoading(true)
   //     setSavedGroups(prev => {
@@ -280,23 +295,26 @@ function DevtaVastuPage({ id }) {
     if (!fileUploaded) {
       return toast.error('Please upload a file!!');
     }
-
+  
     // Find the base group data
     const baseGroupData = tabGroup.find(tab => tab.label === selectedBaseGroup);
-
+    
     if (!baseGroupData) {
       return toast.error('Base group not found!');
     }
-
+  
     // Update tabGroup by replacing selectedGroup with baseGroupData, keeping its label
-    setTabGroup(prevTabGroup =>
-      prevTabGroup.map(tab =>
-        tab.label === selectedGroup
+    setTabGroup(prevTabGroup => 
+      prevTabGroup.map(tab => 
+        tab.label === selectedGroup 
           ? { ...baseGroupData, label: tab.label }  // Keep label, update other data
           : tab
       )
     );
 
+  
+    console.warn("Updated tabGroup:", tabGroup);
+  
     if (selectedGroup !== 1) {
       setSaveLoading(true);
       setSavedGroups(prev => {
@@ -308,7 +326,7 @@ function DevtaVastuPage({ id }) {
       setActiveTab(savedGroups.length);
     }
   };
-
+  
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue)
@@ -319,7 +337,9 @@ function DevtaVastuPage({ id }) {
     setTabGroup((prev) => {
       const updatedGroup = [...prev];
       updatedGroup[index][key] = value;
-
+      console.log(index,key,value)
+      console.log(updatedGroup[index][key],value)
+      console.log(updatedGroup)
       return updatedGroup;
     });
   };
@@ -397,6 +417,7 @@ function DevtaVastuPage({ id }) {
       await waitForDOMUpdate()
 
       const leftDivRef = leftprintRefs.current[groupIndex]
+      console.log(leftDivRef)
       const rightDivRef = printRefs.current[groupIndex]
 
       if (!leftDivRef || !rightDivRef) {
@@ -671,7 +692,7 @@ function DevtaVastuPage({ id }) {
               <AddPagePopUp open={AddPage} handleClose={handleAddNewPage} handleSave={handleSave} tabGroup={tabGroup} savedGroups={savedGroups} />
             )}
             {LayoutSave && (
-              <SaveLayoutPopUp open={LayoutSave} layoutData={formData} setLayoutData={setVastuLayoutData} fileInfo={fileInfo} handleClose={handleSaveLayoutToggle} tabGroup={tabGroup} savedGroups={savedGroups} previewUrl={previewUrl} setLoading={setLoading} setIsLayoutChange={setIsLayoutChange} />
+              <SaveLayoutPopUp open={LayoutSave} layoutData={formData} setLayoutData={setVastuLayoutData} fileInfo={fileInfo} handleClose={handleSaveLayoutToggle} tabGroup={tabGroup} savedGroups={savedGroups} previewUrl={previewUrl} setLoading={setLoading} setIsLayoutChange={setIsLayoutChange}/>
             )}
           </div>
         </>
