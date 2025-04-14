@@ -407,7 +407,8 @@ const DevtaVastu = ({
 
   const handleMouseMove = e => {
     const position = getMousePosition(e)
-    const canvasBounds = { xMin: 220, xMax: 560, yMin: 220, yMax: 560 }
+    // const canvasBounds = { xMin: 220, xMax: 560, yMin: 220, yMax: 560 }
+    const canvasBounds = { xMin: 35, xMax: 780, yMin: 35, yMax: 780 }
     const gridSize = 10 // Define the grid size for snapping
 
     // Clamp the mouse position within the SVG boundaries
@@ -1692,7 +1693,7 @@ const DevtaVastu = ({
 
   useEffect(() => {
     const filteredData = (label, object) => {
-      console.log(label, object)
+      // console.log(label, object)
       return object.filter(item => label === item.label)
     }
 
@@ -2287,6 +2288,57 @@ const DevtaVastu = ({
     setOpenNewPolygon(true)
   }
 
+
+  // 13th April coding
+
+  const findPointsInsideRectangle = (p1, p2, points) => {
+    // Calculate the bounds of the rectangle
+    const xMin = Math.min(p1?.x, p2?.x);
+    const xMax = Math.max(p1?.x, p2?.x);
+    const yMin = Math.min(p1?.y, p2?.y);
+    const yMax = Math.max(p1?.y, p2?.y);
+  
+    // Use a Set to track unique points
+    const uniquePoints = new Set();
+  
+    // Filter points that lie inside or on the boundary of the rectangle
+    const pointsInside = points.filter(point => {
+      const isOnOrInside =
+        point.x >= xMin &&
+        point.x <= xMax &&
+        point.y >= yMin &&
+        point.y <= yMax; // Include points on the boundary
+      const pointKey = `${point.x},${point.y}`; // Create a unique key for the point
+      if (isOnOrInside && !uniquePoints.has(pointKey)) {
+        uniquePoints.add(pointKey); // Add the point to the Set
+        return true;
+      }
+      return false;
+    });
+  
+    return pointsInside;
+  };
+
+  const handleDevtaArea = ()=>{
+    const p1 = pointLookup["E1"];
+      const p2 = pointLookup["E2"];
+    // const p1 = pointLookup[op1]
+    //   const p2 = pointLookup[op2]
+
+    const result = findPointsInsideRectangle(p1, p2, points);
+    console.log("=======> result ",result);
+
+    console.log("==> p1 : ",p1);
+    console.log("p2 : ",p2);
+    console.log("points : ",points);
+  }
+  useEffect(() => {
+    console.log("===> devta area : ");
+    // console.log("===> devta area : ",devtaArea); 
+    handleDevtaArea();
+  }, [hideCircle, totalLines, angleIncrement, inputDegree, centroid, points])
+  // End Code
+
   return (
     <>
       <div className='flex flex-col lg:flex-row gap-5 py-4 justify-start '>
@@ -2452,7 +2504,7 @@ const DevtaVastu = ({
                                             />
                                           )}
 
-                                          {/* <text
+                                          <text
                                             x={intersection.point.x + 5}
                                             y={intersection.point.y - 5}
                                             fontSize='10'
@@ -2463,7 +2515,7 @@ const DevtaVastu = ({
                                             }}
                                           >
                                             {intersection.label}
-                                          </text> */}
+                                          </text>
                                         </>
                                       )}
 
@@ -2471,7 +2523,7 @@ const DevtaVastu = ({
                                       {showDevtaIntersaction && (
                                         <circle cx={point1.x} cy={point1.y} r='3' fill='blue' />
                                       )}
-                                      {/* <text
+                                      <text
                                         x={point1.x + 5}
                                         y={point1.y - 5}
                                         fontSize="10"
@@ -2479,7 +2531,7 @@ const DevtaVastu = ({
                                         style={{ userSelect: 'none', cursor: 'default' }}
                                       >
                                         I-{i}
-                                </text> */}
+                                      </text>
 
                                       {/* Draw the second intermediate point (P2) */}
                                       {showDevtaIntersaction && (
