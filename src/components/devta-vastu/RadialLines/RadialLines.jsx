@@ -1,6 +1,38 @@
-import { DIRECTION_DATA } from '@/utils/directions'
 import React from 'react'
 
+const DIRECTION_DATA = [
+  'E',
+  '',
+  'ESE',
+  '',
+  'SE',
+  '',
+  'SSE',
+  '',
+  'S',
+  '',
+  'SSW',
+  '',
+  'SW',
+  '',
+  'WSW',
+  '',
+  'W',
+  '',
+  'WNW',
+  '',
+  'NW',
+  '',
+  'NNW',
+  '',
+  'N',
+  '',
+  'NNE',
+  '',
+  'NE',
+  '',
+  'ENE'
+]
 
 const RectangleWithRotatedLines = ({ height, width, degree = 0, cx = 300, cy = 375 }) => {
   const totalLines = 32
