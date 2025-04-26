@@ -337,9 +337,6 @@ function DevtaVastuPage({ id }) {
     setTabGroup((prev) => {
       const updatedGroup = [...prev];
       updatedGroup[index][key] = value;
-      console.log(index,key,value)
-      console.log(updatedGroup[index][key],value)
-      console.log(updatedGroup)
       return updatedGroup;
     });
   };

@@ -86,16 +86,16 @@ const DevtaVastu = ({
   const [disableDraw, setDisableDraw] = useState(false)
   const [graphDraw, setGraphDraw] = useState(false)
   const [openNewPolygon, setOpenNewPolygon] = useState(false)
-  const [draggingState, setDraggingState] = useState(null) 
-  const [OverlayPolyClick, setOverlayPolyClick] = useState(false) 
+  const [draggingState, setDraggingState] = useState(null)
+  const [OverlayPolyClick, setOverlayPolyClick] = useState(false)
   const [NewOverlayPoly, setNewOverlayPoly] = useState({
     title: '',
-    color: '#007BFF', 
+    color: '#007BFF',
     x: 10,
     y: 10,
     width: 100,
     height: 100
-  }) 
+  })
 
   useEffect(() => {
     setLoading(false)
@@ -594,7 +594,7 @@ const DevtaVastu = ({
       let line = 1
       const numberedPoints = []
       const linePointLimits1 = [15, 17, 15]
-    
+
       for (let i = 0; i < specificLines.length; i++) {
         try {
           const specificLine = specificLines[i]
@@ -1048,7 +1048,7 @@ const DevtaVastu = ({
   // Zoom in
   const handleZoomIn = () => {
     setZoom(Math.min(zoom * 1.1, 5))
-  } 
+  }
 
   const handleZoomOut = () => setZoom(Math.max(zoom / 1.1, -5)) // Limit min zoom to 1
 
@@ -1361,10 +1361,10 @@ const DevtaVastu = ({
     setDrawDevtaObject(newDrawDevtaObject)
   }, [intersactMidIntermediatePoints])
 
-  
+
   const checkgetPointsBetween = (p1, p2) => {
     try {
-     
+
       // Helper function to calculate angle between two points relative to centroid
       const getAngle = point => {
         const dx = point.x - centroid.x
@@ -1380,7 +1380,7 @@ const DevtaVastu = ({
 
       // Find all points that belong to this section
       const sectionPoints = points.filter(point => {
-     
+
         const pointAngle = getAngle(point)
 
         // Handle the case where the section crosses 0
@@ -1397,38 +1397,38 @@ const DevtaVastu = ({
     }
   }
 
-  const HoverArea = ({ coordinates, hoverText,currentIndex, devta }) => {
+  const HoverArea = ({ coordinates, hoverText, currentIndex, devta }) => {
     const [isHovered, setIsHovered] = useState(false)
     const centerX = (coordinates[0].x + coordinates[2].x) / 2 + 15
     const centerY = (coordinates[0].y + coordinates[2].y) / 2 + 15
 
-    if(currentIndex >=13 && currentIndex <= 44){
+    if (currentIndex >= 13 && currentIndex <= 44) {
       const p1 = coordinates[0]
       const p2 = coordinates[1]
-      
+
       const betweenPoints = checkgetPointsBetween(p1, p2) || [];
-        
-        // Round function for comparison
-        const roundTo2 = num => Math.round(num * 100) / 100;
-        
-        // Function to check if two points are the same
-        const isSamePoint = (a, b) =>
-          roundTo2(a.x) === roundTo2(b.x) && roundTo2(a.y) === roundTo2(b.y);
-        
-        // Filter out points that are the same as p1 or p2
-        const filteredPoints = betweenPoints.filter(bp =>
-          !isSamePoint(bp, p1) && !isSamePoint(bp, p2)
-        );
-        if(filteredPoints.length > 0){
-          coordinates = [
-            p1,
-            ...filteredPoints,
-            ...coordinates.slice(1)  // Add the rest of coordinates starting from index 1
-          ];
-        }
+
+      // Round function for comparison
+      const roundTo2 = num => Math.round(num * 100) / 100;
+
+      // Function to check if two points are the same
+      const isSamePoint = (a, b) =>
+        roundTo2(a.x) === roundTo2(b.x) && roundTo2(a.y) === roundTo2(b.y);
+
+      // Filter out points that are the same as p1 or p2
+      const filteredPoints = betweenPoints.filter(bp =>
+        !isSamePoint(bp, p1) && !isSamePoint(bp, p2)
+      );
+      if (filteredPoints.length > 0) {
+        coordinates = [
+          p1,
+          ...filteredPoints,
+          ...coordinates.slice(1)  // Add the rest of coordinates starting from index 1
+        ];
+      }
     }
 
-    if(currentIndex == 0){
+    if (currentIndex == 0) {
       coordinates = intermediatePoints2;
     }
 
@@ -1440,14 +1440,14 @@ const DevtaVastu = ({
           return filteredData(id, source)[0][property];
         });
       };
-    
+
       // Map source names to variables
       const sources = {
         'X': intermediatePoints2Test,
         'A': intersactMidIntermediatePoints,
         'I': intermediatePoints1Test
       };
-      
+
       // Define point patterns (id, source type, property type)
       const configs = {
         // Indices 1-4 use the 20-point pattern
@@ -1455,28 +1455,28 @@ const DevtaVastu = ({
           ["X20", "X", "point"], ["A13", "A", "midpoint"], ["A14", "A", "midpoint"], ["A15", "A", "midpoint"],
           ["I22", "I", "point"], ["I23", "I", "point"], ["I24", "I", "point"], ["I25", "I", "point"], ["I26", "I", "point"],
           ["A16", "A", "midpoint"], ["A17", "A", "midpoint"], ["A18", "A", "midpoint"],
-          ["X28", "X", "point"], ["X27", "X", "point"], ["X26", "X", "point"], ["X25", "X", "point"], 
+          ["X28", "X", "point"], ["X27", "X", "point"], ["X26", "X", "point"], ["X25", "X", "point"],
           ["X24", "X", "point"], ["X23", "X", "point"], ["X22", "X", "point"], ["X21", "X", "point"]
         ],
         2: [
           ["X28", "X", "point"], ["A18", "A", "midpoint"], ["A19", "A", "midpoint"], ["A20", "A", "midpoint"],
           ["I30", "I", "point"], ["I31", "I", "point"], ["I0", "I", "point"], ["I1", "I", "point"], ["I2", "I", "point"],
           ["A1", "A", "midpoint"], ["A2", "A", "midpoint"], ["A3", "A", "midpoint"],
-          ["X4", "X", "point"], ["X3", "X", "point"], ["X2", "X", "point"], ["X1", "X", "point"], 
+          ["X4", "X", "point"], ["X3", "X", "point"], ["X2", "X", "point"], ["X1", "X", "point"],
           ["X0", "X", "point"], ["X31", "X", "point"], ["X30", "X", "point"], ["X29", "X", "point"]
         ],
         3: [
           ["X4", "X", "point"], ["A3", "A", "midpoint"], ["A4", "A", "midpoint"], ["A5", "A", "midpoint"],
           ["I6", "I", "point"], ["I7", "I", "point"], ["I8", "I", "point"], ["I9", "I", "point"], ["I10", "I", "point"],
           ["A6", "A", "midpoint"], ["A7", "A", "midpoint"], ["A8", "A", "midpoint"],
-          ["X12", "X", "point"], ["X11", "X", "point"], ["X10", "X", "point"], ["X9", "X", "point"], 
+          ["X12", "X", "point"], ["X11", "X", "point"], ["X10", "X", "point"], ["X9", "X", "point"],
           ["X8", "X", "point"], ["X7", "X", "point"], ["X6", "X", "point"], ["X5", "X", "point"]
         ],
         4: [
           ["X12", "X", "point"], ["A8", "A", "midpoint"], ["A9", "A", "midpoint"], ["A10", "A", "midpoint"],
           ["I14", "I", "point"], ["I15", "I", "point"], ["I16", "I", "point"], ["I17", "I", "point"], ["I18", "I", "point"],
           ["A11", "A", "midpoint"], ["A12", "A", "midpoint"], ["A13", "A", "midpoint"],
-          ["X20", "X", "point"], ["X19", "X", "point"], ["X18", "X", "point"], ["X17", "X", "point"], 
+          ["X20", "X", "point"], ["X19", "X", "point"], ["X18", "X", "point"], ["X17", "X", "point"],
           ["X16", "X", "point"], ["X15", "X", "point"], ["X14", "X", "point"], ["X13", "X", "point"]
         ],
         // Indices 5-12 use the 6-point pattern
@@ -1513,7 +1513,7 @@ const DevtaVastu = ({
           ["A15", "A", "midpoint"], ["A14", "A", "midpoint"]
         ]
       };
-    
+
       try {
         if (configs[currentIndex]) {
           // Process the configuration for the current index
@@ -1674,57 +1674,57 @@ const DevtaVastu = ({
   const allResults = processData(points, data)
   const maxValue = Math.max(...allResults.map(item => item.area))
 
-  const handleShowChakra = (label, text) => {
-    if (text) {
+  const [activeChakra, setActiveChakra] = useState(null);
+
+  const handleShowChakra = (chakraValue, isChecked) => {
+    if (isChecked) {
       setHideCircle(true)
-      setHide32Circle(label === 32)
-      setHide16Circle(label === 16)
-      setHide8Circle(label === 8)
-      setHide4Circle(label === 4)
-    } else {
+      setActiveChakra(chakraValue);
+      setHide32Circle(chakraValue === 32)
+      setHide16Circle(chakraValue === 16)
+      setHide8Circle(chakraValue === 8)
+      setHide4Circle(chakraValue === 4)
+    } else if (activeChakra === chakraValue) {
       setHideCircle(false)
-      if (label === 32) setHide32Circle(false)
-      if (label === 16) setHide16Circle(false)
-      if (label === 8) setHide8Circle(false)
-      if (label === 4) setHide4Circle(false)
+      if (chakraValue === 32) setHide32Circle(false)
+      if (chakraValue === 16) setHide16Circle(false)
+      if (chakraValue === 8) setHide8Circle(false)
+      if (chakraValue === 4) setHide4Circle(false)
+      setActiveChakra(null);
     }
-  }
+  };
 
   const chakras = [
     {
       id: 'hide32Circle',
       label: 'Show Chakra - 32 Entrance',
-      checked: hide32Circle,
-      onChange: setHide32Circle,
+      checked: activeChakra === 32,
       textLabel: 32
     },
     {
       id: 'hide16Circle',
       label: 'Show Chakra - 16 Entrance',
-      checked: hide16Circle,
-      onChange: setHide16Circle,
+      checked: activeChakra === 16,
       textLabel: 16
     },
     {
       id: 'hide8Circle',
       label: 'Show Chakra - 8 Entrance',
-      checked: hide8Circle,
-      onChange: setHide8Circle,
+      checked: activeChakra === 8,
       textLabel: 8
     },
     {
       id: 'hide4Circle',
       label: 'Show Chakra - 4 Entrance',
-      checked: hide4Circle,
-      onChange: setHide4Circle,
+      checked: activeChakra === 4,
       textLabel: 4
     }
-  ]
+  ];
 
   const handleAddPolygonToggle = () => {
     setNewOverlayPoly({
       title: '',
-      color: '#007BFF', // Default polygon color
+      color: '#007BFF',
       x: 10,
       y: 10,
       width: 100,
@@ -1774,172 +1774,172 @@ const DevtaVastu = ({
     setOpenNewPolygon(true)
   }
 
-return (
-  <>
-    <div className='flex flex-col lg:flex-row gap-5 py-4 justify-start '>
-      <div className='bg-white'>
-        <div ref={printRef} className='flex-grow '>
-          <div className='relative flex'>
-            <svg
-              ref={svgRef}
-              width={width}
-              height={height}
-              className='cursor-pointer border border-gray-200 bg-white'
-              onMouseDown={handleMouseDown}
-              onMouseMove={handleMouseMove}
-              onMouseUp={handleMouseUp}
-              onMouseLeave={handleMouseUp}
-              onDoubleClick={e => handleDoubleClick(e, 'svg')}
-              style={{
-                touchAction: 'none',
-                border: '0',
-                shapeRendering: 'auto' // Enables antialiasing
-              }}
-            >
-              {!fileUploaded && (
-                <>
-                  <GridBackground width={width} height={height} gridSize={gridSize} />
-                </>
-              )}
+  return (
+    <>
+      <div className='flex flex-col lg:flex-row gap-5 py-4 justify-start '>
+        <div className='bg-white'>
+          <div ref={printRef} className='flex-grow '>
+            <div className='relative flex'>
+              <svg
+                ref={svgRef}
+                width={width}
+                height={height}
+                className='cursor-pointer border border-gray-200 bg-white'
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseUp}
+                onDoubleClick={e => handleDoubleClick(e, 'svg')}
+                style={{
+                  touchAction: 'none',
+                  border: '0',
+                  shapeRendering: 'auto' // Enables antialiasing
+                }}
+              >
+                {!fileUploaded && (
+                  <>
+                    <GridBackground width={width} height={height} gridSize={gridSize} />
+                  </>
+                )}
 
-              {fileUploaded && (
-                <>
-                  <defs>
-                    <clipPath id='svgViewBox'>
-                      <rect width={width} height={height} />
-                    </clipPath>
-                  </defs>
+                {fileUploaded && (
+                  <>
+                    <defs>
+                      <clipPath id='svgViewBox'>
+                        <rect width={width} height={height} />
+                      </clipPath>
+                    </defs>
 
-                  <g clipPath='url(#svgViewBox)' vectorEffect='non-scaling-stroke'>
-                    <g
-                      className='file-layer'
-                      transform={`translate(${translate.x + (width - width * zoom) / 2}, ${translate.y + (height - height * zoom) / 2}) rotate(${rotation}, ${width / 2}, ${height / 2}) scale(${zoom})`}
-                    >
-                      {previewUrl ? (
-                        <image
-                          href={previewUrl}
-                          style={{ maxWidth: '100%', maxHeight: '500px', imageRendering: 'auto' }}
-                          width={width}
-                          height={height}
-                          onMouseDown={handleMouseDown1}
-                          onMouseMove={handleMouseMove1}
-                          onMouseUp={handleMouseUp1}
-                          onMouseLeave={handleMouseUp1}
-                        />
-                      ) : null}
-                    </g>
+                    <g clipPath='url(#svgViewBox)' vectorEffect='non-scaling-stroke'>
+                      <g
+                        className='file-layer'
+                        transform={`translate(${translate.x + (width - width * zoom) / 2}, ${translate.y + (height - height * zoom) / 2}) rotate(${rotation}, ${width / 2}, ${height / 2}) scale(${zoom})`}
+                      >
+                        {previewUrl ? (
+                          <image
+                            href={previewUrl}
+                            style={{ maxWidth: '100%', maxHeight: '500px', imageRendering: 'auto' }}
+                            width={width}
+                            height={height}
+                            onMouseDown={handleMouseDown1}
+                            onMouseMove={handleMouseMove1}
+                            onMouseUp={handleMouseUp1}
+                            onMouseLeave={handleMouseUp1}
+                          />
+                        ) : null}
+                      </g>
 
-                    <GridBackground width={width} height={height} />
-                   
-                    <g className='drawing-layer' style={{ pointerEvents: 'all' }}>
-                      {points.length > 1 && (
-                        <polygon
-                          points={points.map(p => `${p.x},${p.y}`).join(' ')}
-                          fill='none'
-                          stroke='blue'
-                          strokeWidth='1'
-                        />
-                      )}
+                      <GridBackground width={width} height={height} />
 
-                      {/* Draw points */}
-                      {!disableDraw &&
-                        points.map((point, i) => (
-                          <circle key={i} cx={point.x} cy={point.y} r='5' fill='red' stroke='white' strokeWidth='2' />
-                        ))}
+                      <g className='drawing-layer' style={{ pointerEvents: 'all' }}>
+                        {points.length > 1 && (
+                          <polygon
+                            points={points.map(p => `${p.x},${p.y}`).join(' ')}
+                            fill='none'
+                            stroke='blue'
+                            strokeWidth='1'
+                          />
+                        )}
 
-                      {centroid && (
-                        <>
-                          <circle cx={centroid.x} cy={centroid.y} r='5' fill='green' stroke='white' strokeWidth='2' />
+                        {/* Draw points */}
+                        {!disableDraw &&
+                          points.map((point, i) => (
+                            <circle key={i} cx={point.x} cy={point.y} r='5' fill='red' stroke='white' strokeWidth='2' />
+                          ))}
 
-                          {hideCircle &&
-                            Array.from({ length: totalLines }).map((_, index) => {
-                              const rotationIndex = index % totalLines
-                              const angle = rotationIndex * angleIncrement + (270 - inputDegree)
-                              const radian = (angle * Math.PI) / 180
+                        {centroid && (
+                          <>
+                            <circle cx={centroid.x} cy={centroid.y} r='5' fill='green' stroke='white' strokeWidth='2' />
 
-                              const squareSize = 783
-                              const halfSize = squareSize
-                              const margin = 26
+                            {hideCircle &&
+                              Array.from({ length: totalLines }).map((_, index) => {
+                                const rotationIndex = index % totalLines
+                                const angle = rotationIndex * angleIncrement + (270 - inputDegree)
+                                const radian = (angle * Math.PI) / 180
 
-                              let endX, endY
-                              const slope = Math.tan(radian)
-                              const rightBoundary = centroid.x + halfSize - margin
-                              const leftBoundary = centroid.x - halfSize + margin
-                              const topBoundary = centroid.y - halfSize + margin
-                              const bottomBoundary = centroid.y + halfSize - margin
+                                const squareSize = 783
+                                const halfSize = squareSize
+                                const margin = 26
 
-                              if (Math.abs(slope) <= 1) {
-                                if (Math.cos(radian) > 0) {
-                                  endX = rightBoundary
-                                  endY = centroid.y + slope * (rightBoundary - centroid.x)
+                                let endX, endY
+                                const slope = Math.tan(radian)
+                                const rightBoundary = centroid.x + halfSize - margin
+                                const leftBoundary = centroid.x - halfSize + margin
+                                const topBoundary = centroid.y - halfSize + margin
+                                const bottomBoundary = centroid.y + halfSize - margin
+
+                                if (Math.abs(slope) <= 1) {
+                                  if (Math.cos(radian) > 0) {
+                                    endX = rightBoundary
+                                    endY = centroid.y + slope * (rightBoundary - centroid.x)
+                                  } else {
+                                    endX = leftBoundary
+                                    endY = centroid.y - slope * (centroid.x - leftBoundary)
+                                  }
                                 } else {
-                                  endX = leftBoundary
-                                  endY = centroid.y - slope * (centroid.x - leftBoundary)
+                                  if (Math.sin(radian) > 0) {
+                                    endX = centroid.x + (1 / slope) * (bottomBoundary - centroid.y)
+                                    endY = bottomBoundary
+                                  } else {
+                                    endX = centroid.x - (1 / slope) * (centroid.y - topBoundary)
+                                    endY = topBoundary
+                                  }
                                 }
-                              } else {
-                                if (Math.sin(radian) > 0) {
-                                  endX = centroid.x + (1 / slope) * (bottomBoundary - centroid.y)
-                                  endY = bottomBoundary
-                                } else {
-                                  endX = centroid.x - (1 / slope) * (centroid.y - topBoundary)
-                                  endY = topBoundary
-                                }
-                              }
 
-                              const style = lineSets[index % lineSets.length]
-                              return (
-                                <>
-                                  <g key={index}>
-                                    {index % (hide16Circle ? 2 : hide8Circle ? 4 : hide4Circle ? 8 : 2) == 0 && (
-                                      <line
-                                        x1={centroid.x}
-                                        y1={centroid.y}
-                                        x2={endX}
-                                        y2={endY}
-                                        stroke={style.stroke}
-                                        strokeWidth={style.strokeWidth}
-                                        strokeDasharray={style.strokeDasharray}
-                                      />
-                                    )}
-                                  </g>
-                                </>
-                              )
-                            })}
-
-
-                          {showDevta ? (
-                            <>
-                              {intersectionsState.map((intersection, i) => {
-                                const dx = (centroid.x - intersection.point.x) / 3
-                                const dy = (centroid.y - intersection.point.y) / 3
-                                const point1 = { x: intersection.point.x + dx, y: intersection.point.y + dy }
-                                intermediatePoints1.push(point1) // Add P1 to the array
-                                intermediatePoints1Test.push({
-                                  point: point1,
-                                  label: `I${i}`
-                                })
-                                // Calculate the second intermediate point (P2)
-                                const point2 = { x: intersection.point.x + 2 * dx, y: intersection.point.y + 2 * dy }
-                                intermediatePoints2.push(point2) // Add P2 to the array
-                                intermediatePoints2Test.push({
-                                  point: point2,
-                                  label: `X${i}`
-                                })
+                                const style = lineSets[index % lineSets.length]
                                 return (
-                                  <g key={i}>
-                                    {/* Draw the intersection point */}
-                                    {hideCircle && (
-                                      <>
-                                        {hideCircleIntersaction && (
-                                          <circle
-                                            cx={intersection.point.x}
-                                            cy={intersection.point.y}
-                                            r='3'
-                                            fill='red'
-                                          />
-                                        )}
+                                  <>
+                                    <g key={index}>
+                                      {index % (hide16Circle ? 2 : hide8Circle ? 4 : hide4Circle ? 8 : 2) == 0 && (
+                                        <line
+                                          x1={centroid.x}
+                                          y1={centroid.y}
+                                          x2={endX}
+                                          y2={endY}
+                                          stroke={style.stroke}
+                                          strokeWidth={style.strokeWidth}
+                                          strokeDasharray={style.strokeDasharray}
+                                        />
+                                      )}
+                                    </g>
+                                  </>
+                                )
+                              })}
 
-                                        {/* <text
+
+                            {showDevta ? (
+                              <>
+                                {intersectionsState.map((intersection, i) => {
+                                  const dx = (centroid.x - intersection.point.x) / 3
+                                  const dy = (centroid.y - intersection.point.y) / 3
+                                  const point1 = { x: intersection.point.x + dx, y: intersection.point.y + dy }
+                                  intermediatePoints1.push(point1) // Add P1 to the array
+                                  intermediatePoints1Test.push({
+                                    point: point1,
+                                    label: `I${i}`
+                                  })
+                                  // Calculate the second intermediate point (P2)
+                                  const point2 = { x: intersection.point.x + 2 * dx, y: intersection.point.y + 2 * dy }
+                                  intermediatePoints2.push(point2) // Add P2 to the array
+                                  intermediatePoints2Test.push({
+                                    point: point2,
+                                    label: `X${i}`
+                                  })
+                                  return (
+                                    <g key={i}>
+                                      {/* Draw the intersection point */}
+                                      {hideCircle && (
+                                        <>
+                                          {hideCircleIntersaction && (
+                                            <circle
+                                              cx={intersection.point.x}
+                                              cy={intersection.point.y}
+                                              r='3'
+                                              fill='red'
+                                            />
+                                          )}
+
+                                          {/* <text
                                           x={intersection.point.x + 5}
                                           y={intersection.point.y - 5}
                                           fontSize='10'
@@ -1951,14 +1951,14 @@ return (
                                         >
                                           {intersection.label}
                                         </text> */}
-                                      </>
-                                    )}
+                                        </>
+                                      )}
 
-                                    {/* Draw the first intermediate point (P1) */}
-                                    {showDevtaIntersaction && (
-                                      <circle cx={point1.x} cy={point1.y} r='3' fill='blue' />
-                                    )}
-                                    {/* <text
+                                      {/* Draw the first intermediate point (P1) */}
+                                      {showDevtaIntersaction && (
+                                        <circle cx={point1.x} cy={point1.y} r='3' fill='blue' />
+                                      )}
+                                      {/* <text
                                       x={point1.x + 5}
                                       y={point1.y - 5}
                                       fontSize="10"
@@ -1968,11 +1968,11 @@ return (
                                       I-{i}
                                     </text> */}
 
-                                    {/* Draw the second intermediate point (P2) */}
-                                    {showDevtaIntersaction && (
-                                      <circle cx={point2.x} cy={point2.y} r='3' fill='blue' />
-                                    )}
-                                    {/* <text
+                                      {/* Draw the second intermediate point (P2) */}
+                                      {showDevtaIntersaction && (
+                                        <circle cx={point2.x} cy={point2.y} r='3' fill='blue' />
+                                      )}
+                                      {/* <text
                                   x={point2.x + 5}
                                   y={point2.y - 5}
                                   fontSize="10"
@@ -1981,26 +1981,26 @@ return (
                                 >
                                   X-{i}
                                 </text> */}
-                                  </g>
-                                )
-                              })}
+                                    </g>
+                                  )
+                                })}
 
-                              {/* uncomment this */}
-                              {intersactMidIntermediatePoints.map((item, i) => {
-                                return (
-                                  <>
-                                    {showDevtaIntersaction && (
-                                      <circle
-                                        key={i}
-                                        cx={item.midpoint.x}
-                                        cy={item.midpoint.y}
-                                        r='5'
-                                        fill='black'
-                                        stroke='white'
-                                        strokeWidth='2'
-                                      />
-                                    )}
-                                    {/* <text
+                                {/* uncomment this */}
+                                {intersactMidIntermediatePoints.map((item, i) => {
+                                  return (
+                                    <>
+                                      {showDevtaIntersaction && (
+                                        <circle
+                                          key={i}
+                                          cx={item.midpoint.x}
+                                          cy={item.midpoint.y}
+                                          r='5'
+                                          fill='black'
+                                          stroke='white'
+                                          strokeWidth='2'
+                                        />
+                                      )}
+                                      {/* <text
                                     x={item.midpoint.x + 5}
                                     y={item.midpoint.y - 5}
                                     fontSize="10"
@@ -2009,78 +2009,78 @@ return (
                                   >
                                     {item.label}
                                   </text> */}
-                                  </>
-                                )
-                              })}
-                              {/* uncomment this */}
-                              {drawDevtaObject &&
-                                drawDevtaObject.map(item => {
-                                  return drawDevtaLineData(item.point1, item.point2)
+                                    </>
+                                  )
                                 })}
-                                
-                               
-                              
-                              {/* {drawDevtaLineData()} */}
+                                {/* uncomment this */}
+                                {drawDevtaObject &&
+                                  drawDevtaObject.map(item => {
+                                    return drawDevtaLineData(item.point1, item.point2)
+                                  })}
 
-                              {/* uncomment this */}
-                              {drawLinesForDevta('A1', 'A2', 'red', 2)}
-                              {drawLinesForDevta('A2', 'A3', 'red', 2)}
-                              {drawLinesForDevta('A3', 'A4', 'red', 2)}
-                              {drawLinesForDevta('A4', 'A5', 'red', 2)}
 
-                              {drawLinesForDevta('A6', 'A7', 'red', 2)}
-                              {drawLinesForDevta('A7', 'A8', 'red', 2)}
-                              {drawLinesForDevta('A8', 'A9', 'red', 2)}
-                              {drawLinesForDevta('A9', 'A10', 'red', 2)}
-                              {drawLinesForDevta('A11', 'A12', 'red', 2)}
-                              {drawLinesForDevta('A12', 'A13', 'red', 2)}
-                              {drawLinesForDevta('A13', 'A14', 'red', 2)}
-                              {drawLinesForDevta('A14', 'A15', 'red', 2)}
-                              {drawLinesForDevta('A16', 'A17', 'red', 2)}
-                              {drawLinesForDevta('A17', 'A18', 'red', 2)}
-                              {drawLinesForDevta('A18', 'A19', 'red', 2)}
-                              {drawLinesForDevta('A19', 'A20', 'red', 2)}
 
-                              {intermediatePoints1.length > 1 && (
-                                <polyline
-                                  points={
-                                    intermediatePoints1.map(p => `${p.x},${p.y}`).join(' ') +
-                                    ` ${intermediatePoints1[0].x},${intermediatePoints1[0].y}`
-                                  } // Connect back to the start point
-                                  fill='none'
-                                  stroke='purple'
-                                  strokeWidth='2'
-                                />
-                              )}
+                                {/* {drawDevtaLineData()} */}
 
-                              {intermediatePoints2.length > 1 && (
-                                <polyline
-                                  points={
-                                    intermediatePoints2.map(p => `${p.x},${p.y}`).join(' ') +
-                                    ` ${intermediatePoints2[0].x},${intermediatePoints2[0].y}`
-                                  }
-                                  fill='none'
-                                  stroke='orange' // Different color for distinction
-                                  strokeWidth='2'
-                                />
-                              )}
-                            </>
-                          ) : (
-                            <>
-                              {hideCircle && (
-                                <>
-                                  {intersectionsState.map((intersection, i) => (
-                                    <g key={i}>
-                                      {hideCircleIntersaction && (
-                                        <circle
-                                          cx={intersection.point.x}
-                                          cy={intersection.point.y}
-                                          r='3'
-                                          fill='red'
-                                        />
-                                      )}
+                                {/* uncomment this */}
+                                {drawLinesForDevta('A1', 'A2', 'red', 2)}
+                                {drawLinesForDevta('A2', 'A3', 'red', 2)}
+                                {drawLinesForDevta('A3', 'A4', 'red', 2)}
+                                {drawLinesForDevta('A4', 'A5', 'red', 2)}
 
-                                      {/* <text
+                                {drawLinesForDevta('A6', 'A7', 'red', 2)}
+                                {drawLinesForDevta('A7', 'A8', 'red', 2)}
+                                {drawLinesForDevta('A8', 'A9', 'red', 2)}
+                                {drawLinesForDevta('A9', 'A10', 'red', 2)}
+                                {drawLinesForDevta('A11', 'A12', 'red', 2)}
+                                {drawLinesForDevta('A12', 'A13', 'red', 2)}
+                                {drawLinesForDevta('A13', 'A14', 'red', 2)}
+                                {drawLinesForDevta('A14', 'A15', 'red', 2)}
+                                {drawLinesForDevta('A16', 'A17', 'red', 2)}
+                                {drawLinesForDevta('A17', 'A18', 'red', 2)}
+                                {drawLinesForDevta('A18', 'A19', 'red', 2)}
+                                {drawLinesForDevta('A19', 'A20', 'red', 2)}
+
+                                {intermediatePoints1.length > 1 && (
+                                  <polyline
+                                    points={
+                                      intermediatePoints1.map(p => `${p.x},${p.y}`).join(' ') +
+                                      ` ${intermediatePoints1[0].x},${intermediatePoints1[0].y}`
+                                    } // Connect back to the start point
+                                    fill='none'
+                                    stroke='purple'
+                                    strokeWidth='2'
+                                  />
+                                )}
+
+                                {intermediatePoints2.length > 1 && (
+                                  <polyline
+                                    points={
+                                      intermediatePoints2.map(p => `${p.x},${p.y}`).join(' ') +
+                                      ` ${intermediatePoints2[0].x},${intermediatePoints2[0].y}`
+                                    }
+                                    fill='none'
+                                    stroke='orange' // Different color for distinction
+                                    strokeWidth='2'
+                                  />
+                                )}
+                              </>
+                            ) : (
+                              <>
+                                {hideCircle && (
+                                  <>
+                                    {intersectionsState.map((intersection, i) => (
+                                      <g key={i}>
+                                        {hideCircleIntersaction && (
+                                          <circle
+                                            cx={intersection.point.x}
+                                            cy={intersection.point.y}
+                                            r='3'
+                                            fill='red'
+                                          />
+                                        )}
+
+                                        {/* <text
                                   x={intersection.point.x}
                                   y={intersection.point.y}
                                   fontSize="16"
@@ -2094,546 +2094,546 @@ return (
                                   }}>
                                   {intersection.label}
                                 </text> */}
-                                    </g>
-                                  ))}
-                                </>
-                              )}
-                            </>
-                          )}
-                        </>
-                      )}
+                                      </g>
+                                    ))}
+                                  </>
+                                )}
+                              </>
+                            )}
+                          </>
+                        )}
 
-                      {areas.map((area, index) => {
+                        {areas.map((area, index) => {
+                          return (
+                            <HoverArea
+                              key={area.id}
+                              currentIndex={index}
+                              coordinates={area.coordinates}
+                              hoverText={index + 1 + ' ' + devta[index]}
+                              devta={devta[index]}
+                            />
+                          )
+                        })}
+
+                        {hideMarmaLines && (
+                          <>
+                            {/* Direction fixed lines */}
+                            <g key='fixed-line-n8-w2'>{drawLines('N8', 'W2', 'orange', 1)}</g>
+                            <g key='fixed-line-e1-w1'>{drawLines('E1', 'W1', 'orange', 1)}</g>
+                            <g key='fixed-line-e2-s8'>{drawLines('E2', 'S8', 'orange', 1)}</g>
+                            <g key='fixed-line-w8-s2'>{drawLines('W8', 'S2', 'orange', 1)}</g>
+                            <g key='fixed-line-n1-s1'>{drawLines('N1', 'S1', 'orange', 1)}</g>
+                            <g key='fixed-line-n2-e8'>{drawLines('N2', 'E8', 'orange', 1)}</g>
+                          </>
+                        )}
+
+                        {hideMarmapoints && (
+                          <>
+                            {intersectionPoints.map((point, idx) => (
+                              <circle
+                                key={idx}
+                                cx={point.x}
+                                cy={point.y}
+                                r={4}
+                                fill={point.color}
+                                stroke='black'
+                                onMouseEnter={e =>
+                                  handleMouseEnter(e, point, point.newNumber, marmaDevta, point.lineNo, point.name)
+                                }
+                                onMouseLeave={handleMouseLeave}
+                              />
+                            ))}
+
+                            {leftIntersectionPoints.map((point, idx) => (
+                              <circle
+                                key={idx}
+                                cx={point.x}
+                                cy={point.y}
+                                r={4}
+                                fill={point.color}
+                                stroke='black'
+                                onMouseEnter={e =>
+                                  handleMouseEnter(e, point, point.newNumber, marmaDevta, point.lineNo, point.name)
+                                }
+                                onMouseLeave={handleMouseLeave}
+                              />
+                            ))}
+
+                            {/* uncomment this */}
+                            {newLeftintersectionPoints.map((point, idx) => (
+                              <circle
+                                key={idx}
+                                cx={point.x}
+                                cy={point.y}
+                                r={4}
+                                fill={point.color}
+                                stroke='black'
+                                onMouseEnter={e =>
+                                  handleMouseEnter(e, point, point.newNumber, marmaDevta, point.lineNo, point.name)
+                                }
+                                onMouseLeave={handleMouseLeave}
+                              />
+                            ))}
+                            {/* uncomment this  till this*/}
+                          </>
+                        )}
+                      </g>
+                    </g>
+                    <RectangleWithRotatedLines totalLines={32} width={width} height={height} degree={inputDegree} cx={centroid?.x} cy={centroid?.y} />
+                    {/* <RadialLines width={width} height={height} cx={centroid?.x} cy={centroid?.y} rotation={inputDegree} /> */}
+
+                    {hideCircle &&
+                      !hide16Circle &&
+                      !hide4Circle &&
+                      !hide8Circle &&
+                      Array.from({ length: totalLines }).map((_, index) => {
+                        const rotationIndex = index % totalLines
+                        const angle = rotationIndex * angleIncrement + (270 - inputDegree)
+                        const radian = (angle * Math.PI) / 180
+
+                        const squareSize = 783
+                        const halfSize = squareSize
+                        const margin = 26
+
+                        let endX, endY
+                        const slope = Math.tan(radian)
+                        const rightBoundary = centroid.x + halfSize - margin
+                        const leftBoundary = centroid.x - halfSize + margin
+                        const topBoundary = centroid.y - halfSize + margin
+                        const bottomBoundary = centroid.y + halfSize - margin
+
+                        if (Math.abs(slope) <= 1) {
+                          if (Math.cos(radian) > 0) {
+                            endX = rightBoundary
+                            endY = centroid.y + slope * (rightBoundary - centroid.x)
+                          } else {
+                            endX = leftBoundary
+                            endY = centroid.y - slope * (centroid.x - leftBoundary)
+                          }
+                        } else {
+                          if (Math.sin(radian) > 0) {
+                            endX = centroid.x + (1 / slope) * (bottomBoundary - centroid.y)
+                            endY = bottomBoundary
+                          } else {
+                            endX = centroid.x - (1 / slope) * (centroid.y - topBoundary)
+                            endY = topBoundary
+                          }
+                        }
+
+                        const style = lineSets[index % lineSets.length]
+
                         return (
-                          <HoverArea
-                            key={area.id}
-                            currentIndex={index}
-                            coordinates={area.coordinates}
-                            hoverText={index + 1 + ' ' + devta[index]}
-                            devta={devta[index]}
-                          />
+                          <g key={index}>
+                            {index % lineSets.length && (
+                              <line
+                                x1={centroid.x}
+                                y1={centroid.y}
+                                x2={endX}
+                                y2={endY}
+                                stroke={style.stroke}
+                                strokeWidth={style.strokeWidth}
+                                strokeDasharray={style.strokeDasharray}
+                              />
+                            )}
+                          </g>
                         )
                       })}
-
-                      {hideMarmaLines && (
-                        <>
-                          {/* Direction fixed lines */}
-                          <g key='fixed-line-n8-w2'>{drawLines('N8', 'W2', 'orange', 1)}</g>
-                          <g key='fixed-line-e1-w1'>{drawLines('E1', 'W1', 'orange', 1)}</g>
-                          <g key='fixed-line-e2-s8'>{drawLines('E2', 'S8', 'orange', 1)}</g>
-                          <g key='fixed-line-w8-s2'>{drawLines('W8', 'S2', 'orange', 1)}</g>
-                          <g key='fixed-line-n1-s1'>{drawLines('N1', 'S1', 'orange', 1)}</g>
-                          <g key='fixed-line-n2-e8'>{drawLines('N2', 'E8', 'orange', 1)}</g>
-                        </>
-                      )}
-
-                      {hideMarmapoints && (
-                        <>
-                          {intersectionPoints.map((point, idx) => (
-                            <circle
-                              key={idx}
-                              cx={point.x}
-                              cy={point.y}
-                              r={4}
-                              fill={point.color}
-                              stroke='black'
-                              onMouseEnter={e =>
-                                handleMouseEnter(e, point, point.newNumber, marmaDevta, point.lineNo, point.name)
-                              }
-                              onMouseLeave={handleMouseLeave}
-                            />
-                          ))}
-
-                          {leftIntersectionPoints.map((point, idx) => (
-                            <circle
-                              key={idx}
-                              cx={point.x}
-                              cy={point.y}
-                              r={4}
-                              fill={point.color}
-                              stroke='black'
-                              onMouseEnter={e =>
-                                handleMouseEnter(e, point, point.newNumber, marmaDevta, point.lineNo, point.name)
-                              }
-                              onMouseLeave={handleMouseLeave}
-                            />
-                          ))}
-
-                          {/* uncomment this */}
-                          {newLeftintersectionPoints.map((point, idx) => (
-                            <circle
-                              key={idx}
-                              cx={point.x}
-                              cy={point.y}
-                              r={4}
-                              fill={point.color}
-                              stroke='black'
-                              onMouseEnter={e =>
-                                handleMouseEnter(e, point, point.newNumber, marmaDevta, point.lineNo, point.name)
-                              }
-                              onMouseLeave={handleMouseLeave}
-                            />
-                          ))}
-                          {/* uncomment this  till this*/}
-                        </>
-                      )}
-                    </g>
-                  </g>
-                  <RectangleWithRotatedLines totalLines={32} width={width} height={height} degree={inputDegree} cx={centroid?.x} cy={centroid?.y} />
-                  {/* <RadialLines width={width} height={height} cx={centroid?.x} cy={centroid?.y} rotation={inputDegree} /> */}
-
-                  {hideCircle &&
-                    !hide16Circle &&
-                    !hide4Circle &&
-                    !hide8Circle &&
-                    Array.from({ length: totalLines }).map((_, index) => {
-                      const rotationIndex = index % totalLines
-                      const angle = rotationIndex * angleIncrement + (270 - inputDegree)
-                      const radian = (angle * Math.PI) / 180
-
-                      const squareSize = 783
-                      const halfSize = squareSize
-                      const margin = 26
-
-                      let endX, endY
-                      const slope = Math.tan(radian)
-                      const rightBoundary = centroid.x + halfSize - margin
-                      const leftBoundary = centroid.x - halfSize + margin
-                      const topBoundary = centroid.y - halfSize + margin
-                      const bottomBoundary = centroid.y + halfSize - margin
-
-                      if (Math.abs(slope) <= 1) {
-                        if (Math.cos(radian) > 0) {
-                          endX = rightBoundary
-                          endY = centroid.y + slope * (rightBoundary - centroid.x)
-                        } else {
-                          endX = leftBoundary
-                          endY = centroid.y - slope * (centroid.x - leftBoundary)
-                        }
-                      } else {
-                        if (Math.sin(radian) > 0) {
-                          endX = centroid.x + (1 / slope) * (bottomBoundary - centroid.y)
-                          endY = bottomBoundary
-                        } else {
-                          endX = centroid.x - (1 / slope) * (centroid.y - topBoundary)
-                          endY = topBoundary
-                        }
-                      }
-
-                      const style = lineSets[index % lineSets.length]
-
-                      return (
-                        <g key={index}>
-                          {index % lineSets.length && (
-                            <line
-                              x1={centroid.x}
-                              y1={centroid.y}
-                              x2={endX}
-                              y2={endY}
-                              stroke={style.stroke}
-                              strokeWidth={style.strokeWidth}
-                              strokeDasharray={style.strokeDasharray}
-                            />
-                          )}
-                        </g>
-                      )
-                    })}
-                  {polygons.map((polygon, polygonIndex) => (
-                    <g key={polygon.id}>
-                      {/* Polygon Shape */}
-                      <polygon
-                        points={polygon.points.map(point => `${point.x},${point.y}`).join(' ')}
-                        fill={polygon.color}
-                        fillOpacity='0.2' // Default opacity for all polygons
-                        stroke={'#000'}
-                        strokeWidth='1'
-                        onMouseDown={e => {
-                          handleMouseDown(e, polygonIndex, 'overlay')
-                        }}
-                        onDoubleClick={e => {
-                          handleDoubleClick(e, 'polyOverlay', polygon, '', polygonIndex)
-                        }}
-                      />
-                      {/* Display Title */}
-                      <text
-                        x={
-                          (Math.min(...polygon.points.map(point => point.x)) +
-                            Math.max(...polygon.points.map(point => point.x))) /
-                          2
-                        } // Horizontal center of the polygon
-                        y={Math.min(...polygon.points.map(point => point.y)) - 10} // 10px above the top edge
-                        fill={'#000'} // Title color matches the polygon's color
-                        fontSize='14'
-                        fontWeight='bold'
-                        textAnchor='middle' // Center the text horizontally
-                        style={{ userSelect: 'none', pointerEvents: 'none' }} // Make text non-selectable and ignore pointer events
-                      >
-                        {polygon.title || `Polygon ${polygon.id}`} {/* Default title if none is provided */}
-                      </text>
-
-                      <foreignObject
-                        x={
-                          (Math.min(...polygon.points.map(point => point.x)) +
-                            Math.max(...polygon.points.map(point => point.x))) /
-                          2 +
-                          15
-                        } // Positioned to the right of the title
-                        y={Math.min(...polygon.points.map(point => point.y)) - 25} // Aligned vertically with the title
-                        width='24'
-                        height='24'
-                      >
-                        <i
-                          className='tabler-pencil'
-                          style={{
-                            fontSize: '16px',
-                            color: 'blue',
-                            cursor: 'pointer'
+                    {polygons.map((polygon, polygonIndex) => (
+                      <g key={polygon.id}>
+                        {/* Polygon Shape */}
+                        <polygon
+                          points={polygon.points.map(point => `${point.x},${point.y}`).join(' ')}
+                          fill={polygon.color}
+                          fillOpacity='0.2' // Default opacity for all polygons
+                          stroke={'#000'}
+                          strokeWidth='1'
+                          onMouseDown={e => {
+                            handleMouseDown(e, polygonIndex, 'overlay')
                           }}
-                          onClick={() => handleOverlayEdit(polygon)} // Call the edit handler
-                        />
-                      </foreignObject>
-                      {/* Delete Icon */}
-                      <foreignObject
-                        x={
-                          (Math.min(...polygon.points.map(point => point.x)) +
-                            Math.max(...polygon.points.map(point => point.x))) /
-                          2 +
-                          30
-                        } // Positioned to the right of the Edit button
-                        y={Math.min(...polygon.points.map(point => point.y)) - 25} // Aligned vertically with the title
-                        width='24'
-                        height='24'
-                      >
-                        <i
-                          className='tabler-x'
-                          style={{
-                            fontSize: '16px',
-                            color: 'red',
-                            cursor: 'pointer'
+                          onDoubleClick={e => {
+                            handleDoubleClick(e, 'polyOverlay', polygon, '', polygonIndex)
                           }}
-                          onClick={() => handleOverlayDelete(polygonIndex)} // Call the delete handler
                         />
-                      </foreignObject>
-                      {/* Hide draggable circles when downloading */}
-                      {/* {!IsDownloading && !loading && ( */}
-                      {/* <g style={{ display: IsDownloading ? 'none' : 'block' }}> */}
-                      <g style={{ visibility: IsDownloading ? 'hidden' : 'visible' }}>
-                        {polygon.points.map((point, pointIndex) => (
-                          <circle
-                            key={pointIndex}
-                            cx={point.x}
-                            cy={point.y}
-                            r={3}
-                            fill={polygon.color}
-                            stroke='#fff'
-                            strokeWidth='0.5'
-                            onMouseDown={e => {
-                              handleMouseDown(e, polygonIndex, 'PointOverlay', pointIndex)
-                            }}
-                            onDoubleClick={e => {
-                              handleDoubleClick(e, 'overlay', polygon, pointIndex, polygonIndex)
-                            }}
-                          />
-                        ))}
-                      </g>
+                        {/* Display Title */}
+                        <text
+                          x={
+                            (Math.min(...polygon.points.map(point => point.x)) +
+                              Math.max(...polygon.points.map(point => point.x))) /
+                            2
+                          } // Horizontal center of the polygon
+                          y={Math.min(...polygon.points.map(point => point.y)) - 10} // 10px above the top edge
+                          fill={'#000'} // Title color matches the polygon's color
+                          fontSize='14'
+                          fontWeight='bold'
+                          textAnchor='middle' // Center the text horizontally
+                          style={{ userSelect: 'none', pointerEvents: 'none' }} // Make text non-selectable and ignore pointer events
+                        >
+                          {polygon.title || `Polygon ${polygon.id}`} {/* Default title if none is provided */}
+                        </text>
 
-                      {/* )} */}
-                    </g>
-                  ))}
-
-                  {graphDraw &&
-                    allResults.map((item, index) => {
-                      const width = 200 // Width of the SVG container
-                      const height = 150
-                      const barWidth = 20 // Width of each bar
-                      const barPadding = 20
-                      const barHeight = (item.area / maxValue) * (height - 20) // Scale the bar height
-                      const x = index * (barWidth + barPadding) + 20 // Calculate x position
-                      const y = height - barHeight // Calculate y position
-                      let additionalText = ''
-                      if (item.label === 'ESE') additionalText = 'Fire'
-                      if (item.label === 'W') additionalText = 'Air'
-                      if (item.label === 'NNE') additionalText = 'Water'
-
-                      return (
-                        <g key={index}>
-                          <rect
-                            x={x}
-                            y={y + 450}
-                            width={barWidth}
-                            height={barHeight}
-                            fill={item.color}
-                            onMouseEnter={e => handleMouseEnter(e, item.area)}
-                            onMouseLeave={handleMouseLeave}
-                          />
-                          <text
-                            x={x + barWidth / 2}
-                            y={height - 5 + 480}
-                            textAnchor='middle'
-                            fontSize='14'
-                            fontWeight='500'
-                            fill='purple'
-                            alignmentBaseline='middle'
+                        <foreignObject
+                          x={
+                            (Math.min(...polygon.points.map(point => point.x)) +
+                              Math.max(...polygon.points.map(point => point.x))) /
+                            2 +
+                            15
+                          } // Positioned to the right of the title
+                          y={Math.min(...polygon.points.map(point => point.y)) - 25} // Aligned vertically with the title
+                          width='24'
+                          height='24'
+                        >
+                          <i
+                            className='tabler-pencil'
                             style={{
-                              userSelect: 'none',
-                              cursor: 'default'
+                              fontSize: '16px',
+                              color: 'blue',
+                              cursor: 'pointer'
                             }}
-                          >
-                            {item.label}
-                          </text>
-                          {additionalText && (
+                            onClick={() => handleOverlayEdit(polygon)} // Call the edit handler
+                          />
+                        </foreignObject>
+                        {/* Delete Icon */}
+                        <foreignObject
+                          x={
+                            (Math.min(...polygon.points.map(point => point.x)) +
+                              Math.max(...polygon.points.map(point => point.x))) /
+                            2 +
+                            30
+                          } // Positioned to the right of the Edit button
+                          y={Math.min(...polygon.points.map(point => point.y)) - 25} // Aligned vertically with the title
+                          width='24'
+                          height='24'
+                        >
+                          <i
+                            className='tabler-x'
+                            style={{
+                              fontSize: '16px',
+                              color: 'red',
+                              cursor: 'pointer'
+                            }}
+                            onClick={() => handleOverlayDelete(polygonIndex)} // Call the delete handler
+                          />
+                        </foreignObject>
+                        {/* Hide draggable circles when downloading */}
+                        {/* {!IsDownloading && !loading && ( */}
+                        {/* <g style={{ display: IsDownloading ? 'none' : 'block' }}> */}
+                        <g style={{ visibility: IsDownloading ? 'hidden' : 'visible' }}>
+                          {polygon.points.map((point, pointIndex) => (
+                            <circle
+                              key={pointIndex}
+                              cx={point.x}
+                              cy={point.y}
+                              r={3}
+                              fill={polygon.color}
+                              stroke='#fff'
+                              strokeWidth='0.5'
+                              onMouseDown={e => {
+                                handleMouseDown(e, polygonIndex, 'PointOverlay', pointIndex)
+                              }}
+                              onDoubleClick={e => {
+                                handleDoubleClick(e, 'overlay', polygon, pointIndex, polygonIndex)
+                              }}
+                            />
+                          ))}
+                        </g>
+
+                        {/* )} */}
+                      </g>
+                    ))}
+
+                    {graphDraw &&
+                      allResults.map((item, index) => {
+                        const width = 200 // Width of the SVG container
+                        const height = 150
+                        const barWidth = 20 // Width of each bar
+                        const barPadding = 20
+                        const barHeight = (item.area / maxValue) * (height - 20) // Scale the bar height
+                        const x = index * (barWidth + barPadding) + 20 // Calculate x position
+                        const y = height - barHeight // Calculate y position
+                        let additionalText = ''
+                        if (item.label === 'ESE') additionalText = 'Fire'
+                        if (item.label === 'W') additionalText = 'Air'
+                        if (item.label === 'NNE') additionalText = 'Water'
+
+                        return (
+                          <g key={index}>
+                            <rect
+                              x={x}
+                              y={y + 450}
+                              width={barWidth}
+                              height={barHeight}
+                              fill={item.color}
+                              onMouseEnter={e => handleMouseEnter(e, item.area)}
+                              onMouseLeave={handleMouseLeave}
+                            />
                             <text
-                              x={x + barWidth / 2 + 20}
-                              y={height + 10 + 480}
+                              x={x + barWidth / 2}
+                              y={height - 5 + 480}
                               textAnchor='middle'
-                              fontSize='15'
+                              fontSize='14'
                               fontWeight='500'
                               fill='purple'
                               alignmentBaseline='middle'
                               style={{
-                                userSelect: 'none', // Prevent text selection
-                                cursor: 'default' // Optional: Make the cursor non-interactive
+                                userSelect: 'none',
+                                cursor: 'default'
                               }}
                             >
-                              {additionalText}
+                              {item.label}
                             </text>
-                          )}
-                        </g>
-                      )
-                    })}
+                            {additionalText && (
+                              <text
+                                x={x + barWidth / 2 + 20}
+                                y={height + 10 + 480}
+                                textAnchor='middle'
+                                fontSize='15'
+                                fontWeight='500'
+                                fill='purple'
+                                alignmentBaseline='middle'
+                                style={{
+                                  userSelect: 'none', // Prevent text selection
+                                  cursor: 'default' // Optional: Make the cursor non-interactive
+                                }}
+                              >
+                                {additionalText}
+                              </text>
+                            )}
+                          </g>
+                        )
+                      })}
 
-                  {tooltip.visible && (
-                    <text
-                      x={tooltip.x}
-                      y={tooltip.y - 10}
-                      fill='black'
-                      fontSize='14'
-                      textAnchor='middle'
-                      style={{ pointerEvents: 'none' }}
-                    >
-                      {tooltip.value}
-                    </text>
-                  )}
-                </>
+                    {tooltip.visible && (
+                      <text
+                        x={tooltip.x}
+                        y={tooltip.y - 10}
+                        fill='black'
+                        fontSize='14'
+                        textAnchor='middle'
+                        style={{ pointerEvents: 'none' }}
+                      >
+                        {tooltip.value}
+                      </text>
+                    )}
+                  </>
+                )}
+              </svg>
+
+              {tooltip.visible && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    left: tooltip.x + 20,
+                    top: tooltip.y - 30,
+                    backgroundColor: 'white',
+                    border: '1px solid black',
+                    padding: '5px',
+                    borderRadius: '5px',
+                    pointerEvents: 'none',
+                    fontSize: '12px'
+                  }}
+                >
+
+                  {tooltip.text}
+                </div>
               )}
-            </svg>
-
-            {tooltip.visible && (
-              <div
-                style={{
-                  position: 'absolute',
-                  left: tooltip.x + 20,
-                  top: tooltip.y - 30,
-                  backgroundColor: 'white',
-                  border: '1px solid black',
-                  padding: '5px',
-                  borderRadius: '5px',
-                  pointerEvents: 'none',
-                  fontSize: '12px'
-                }}
-              >
-               
-                {tooltip.text}
-              </div>
-            )}
+            </div>
           </div>
         </div>
-      </div>
-      <div className='flex flex-wrap lg:flex-col gap-3 p-4 lg:gap-0 bg-white'>
-        <RightPrintSection printRef1={printRef1} vastuLayoutData={vastuLayoutData} />
+        <div className='flex flex-wrap lg:flex-col gap-3 p-4 lg:gap-0 bg-white'>
+          <RightPrintSection printRef1={printRef1} vastuLayoutData={vastuLayoutData} />
 
-        <div
-          className='p-0 border-2 border-dashed border-gray-300 rounded-lg text-center hover:border-purple-500 transition-colors py-6 w-1/3 lg:w-full'
-          onDragOver={e => e.preventDefault()}
-          onDrop={handleFileUpload}
-        >
-          <label className='flex flex-col items-center gap-2 cursor-pointer'>
-            <Upload size={24} className='text-primary font-ea-sb' />
-            <span className='text-primary font-ea-sb'>Upload File</span>
-            <input type='file' className='hidden' accept='.jpg,.jpeg,.png,.pdf' onChange={handleFileUpload} />
-          </label>
-          <p className='text-sm text-gray-500 mt-2'>Supported: .jpg, .jpeg, .png, .pdf</p>
-        </div>
-
-        {/* <div className='mt-3 p-0 flex lg:flex-col gap-2'> */}
-        <div className='flex lg:justify-between gap-3 flex-wrap lg:flex-nowrap mt-4'>
-          <LoadingButton
-            variant='outlined'
-            onClick={() => updatePointsForAllTabs(selectedGroup, points)}
-            className='px-3 py-1 rounded transition w-full'
+          <div
+            className='p-0 border-2 border-dashed border-gray-300 rounded-lg text-center hover:border-purple-500 transition-colors py-6 w-1/3 lg:w-full'
+            onDragOver={e => e.preventDefault()}
+            onDrop={handleFileUpload}
           >
-            Save
-          </LoadingButton>
+            <label className='flex flex-col items-center gap-2 cursor-pointer'>
+              <Upload size={24} className='text-primary font-ea-sb' />
+              <span className='text-primary font-ea-sb'>Upload File</span>
+              <input type='file' className='hidden' accept='.jpg,.jpeg,.png,.pdf' onChange={handleFileUpload} />
+            </label>
+            <p className='text-sm text-gray-500 mt-2'>Supported: .jpg, .jpeg, .png, .pdf</p>
+          </div>
 
-          <LoadingButton
-            variant='contained'
-            onClick={() => handleAddPolygonToggle(selectedGroup)}
-            className='px-3 py-1 rounded transition w-full flex-wrap lg:flex-nowrap'
-          >
-            Add Overlay
-          </LoadingButton>
-        </div>
+          {/* <div className='mt-3 p-0 flex lg:flex-col gap-2'> */}
+          <div className='flex lg:justify-between gap-3 flex-wrap lg:flex-nowrap mt-4'>
+            <LoadingButton
+              variant='outlined'
+              onClick={() => updatePointsForAllTabs(selectedGroup, points)}
+              className='px-3 py-1 rounded transition w-full'
+            >
+              Save
+            </LoadingButton>
 
-        <div className='flex lg:justify-between gap-3 flex-wrap lg:flex-nowrap mt-4'>
-          <LoadingButton
-            onClick={handleZoomIn}
-            variant='contained'
-            className=' text-white px-3 py-1 rounded transition w-full'
-          >
-            Zoom In
-          </LoadingButton>
-          <LoadingButton onClick={handleZoomOut} variant='outlined' className='px-3 py-1 rounded transition w-full'>
-            Zoom Out
-          </LoadingButton>
-        </div>
-        {/* </div> */}
+            <LoadingButton
+              variant='contained'
+              onClick={() => handleAddPolygonToggle(selectedGroup)}
+              className='px-3 py-1 rounded transition w-full flex-wrap lg:flex-nowrap'
+            >
+              Add Overlay
+            </LoadingButton>
+          </div>
 
-        <div className='mt-3 flex flex-wrap gap-4'>
-          <fieldset className='p-4 border border-purple-300 rounded-lg flex-grow lg:min-w-[254px]'>
-            <legend className='font-semibold px-2'>Default Options</legend>
-            {[
-              { id: 'lockChakra', label: 'Lock Chakra', checked: lockChakra, onChange: setLockChakra },
-              { id: 'lockCentroid', label: 'Lock Center', checked: lockCentroid, onChange: setLockCentroid },
-              {
-                id: 'snapToCentroid',
-                label: 'Reset Auto Center',
-                checked: snapToCentroid,
-                onChange: setSnapToCentroid
-              }
-            ].map(({ id, label, checked, onChange }) => (
-              <div key={id} className='flex items-center gap-2'>
-                <FormControlLabel
-                  label={label}
-                  className='chkBoxLabel'
-                  control={<Checkbox checked={checked} onChange={e => onChange(e.target.checked)} />}
-                />
-              </div>
-            ))}
+          <div className='flex lg:justify-between gap-3 flex-wrap lg:flex-nowrap mt-4'>
+            <LoadingButton
+              onClick={handleZoomIn}
+              variant='contained'
+              className=' text-white px-3 py-1 rounded transition w-full'
+            >
+              Zoom In
+            </LoadingButton>
+            <LoadingButton onClick={handleZoomOut} variant='outlined' className='px-3 py-1 rounded transition w-full'>
+              Zoom Out
+            </LoadingButton>
+          </div>
+          {/* </div> */}
 
-          </fieldset>
-
-          <fieldset className='p-4 border border-purple-300 rounded-lg flex-grow'>
-            <legend className='font-semibold px-2'>Shakti Chakra Options</legend>
-            <div className='flex flex-col'>
-              <label className='flex items-center gap-2'>
-                <span className='text-sm text-gray-700 text-nowrap'>Chakra Degree:</span>
-                <TextField
-                  type='number'
-                  readOnly={lockChakra}
-                  value={inputDegree}
-                  onChange={handleInputChange}
-                  className='w-auto'
-                  placeholder='0'
-                  aria-label='Degree input'
-                  size='small'
-                />
-              </label>
-              {chakras.map(({ id, label, checked, textLabel }) => (
+          <div className='mt-3 flex flex-wrap gap-4'>
+            <fieldset className='p-4 border border-purple-300 rounded-lg flex-grow lg:min-w-[254px]'>
+              <legend className='font-semibold px-2'>Default Options</legend>
+              {[
+                { id: 'lockChakra', label: 'Lock Chakra', checked: lockChakra, onChange: setLockChakra },
+                { id: 'lockCentroid', label: 'Lock Center', checked: lockCentroid, onChange: setLockCentroid },
+                {
+                  id: 'snapToCentroid',
+                  label: 'Reset Auto Center',
+                  checked: snapToCentroid,
+                  onChange: setSnapToCentroid
+                }
+              ].map(({ id, label, checked, onChange }) => (
                 <div key={id} className='flex items-center gap-2'>
                   <FormControlLabel
                     label={label}
                     className='chkBoxLabel'
-                    control={
-                      <Checkbox checked={checked} onChange={e => handleShowChakra(textLabel, e.target.checked)} />
-                    }
+                    control={<Checkbox checked={checked} onChange={e => onChange(e.target.checked)} />}
                   />
                 </div>
               ))}
-            </div>
-          </fieldset>
-        </div>
 
-        <div className='mt-3 flex flex-wrap gap-4'>
-          <LineControls lineSet={lineSets[0]} setIndex={0} onUpdate={handleLineSetUpdate} />
-          <LineControls lineSet={lineSets[1]} setIndex={1} onUpdate={handleLineSetUpdate} />
-        </div>
+            </fieldset>
 
-        <div className='mt-3 flex flex-wrap gap-4'>
-          <fieldset className='p-4 border border-purple-300 rounded-lg flex-grow '>
-            <legend className='font-semibold px-2'>Marma Options</legend>
-            {[
-              {
-                id: 'hideMarmaLines',
-                label: 'Show Marma Lines',
-                checked: hideMarmaLines,
-                onChange: setHideMarmaLines
-              },
-              {
-                id: 'hideMarmapoints',
-                label: 'Show Marma Points',
-                checked: hideMarmapoints,
-                onChange: setHideMarmapoints
-              }
-            ].map(({ id, label, checked, onChange }) => (
-              <div key={id} className='flex items-center gap-2'>
-                <FormControlLabel
-                  label={label}
-                  className='chkBoxLabel'
-                  control={<Checkbox checked={checked} onChange={e => onChange(e.target.checked)} />}
-                />
+            <fieldset className='p-4 border border-purple-300 rounded-lg flex-grow'>
+              <legend className='font-semibold px-2'>Shakti Chakra Options</legend>
+              <div className='flex flex-col'>
+                <label className='flex items-center gap-2'>
+                  <span className='text-sm text-gray-700 text-nowrap'>Chakra Degree:</span>
+                  <TextField
+                    type='number'
+                    readOnly={lockChakra}
+                    value={inputDegree}
+                    onChange={handleInputChange}
+                    className='w-auto'
+                    placeholder='0'
+                    aria-label='Degree input'
+                    size='small'
+                  />
+                </label>
+                {chakras.map(({ id, label, checked, textLabel }) => (
+                  <div key={id} className='flex items-center gap-2'>
+                    <FormControlLabel
+                      label={label}
+                      className='chkBoxLabel'
+                      control={
+                        <Checkbox checked={checked} onChange={e => handleShowChakra(textLabel, e.target.checked)} />
+                      }
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
-          </fieldset>
-          <fieldset className='p-4 border border-purple-300 rounded-lg flex-grow lg:min-w-[254px]'>
-            <legend className='font-semibold px-2'>Devta Options</legend>
-            {[
-              { id: 'showDevta', label: 'Show Devta', checked: showDevta, onChange: setShowDevta },
-              {
-                id: 'showDevtaIntersaction',
-                label: 'Show Devta Intersaction points',
-                checked: showDevtaIntersaction,
-                onChange: setShowDevtaIntersaction
-              }
-            ].map(({ id, label, checked, onChange }) => (
-              <div key={id} className='flex items-center gap-2'>
-                <FormControlLabel
-                  label={label}
-                  className='chkBoxLabel'
-                  control={<Checkbox checked={checked} onChange={e => onChange(e.target.checked)} />}
-                />
-              </div>
-            ))}
-          </fieldset>
-        </div>
+            </fieldset>
+          </div>
 
-        <div className='mt-3 flex flex-wrap gap-4'>
-          <fieldset className='p-4 border border-purple-300 rounded-lg '>
-            <legend className='font-semibold px-2'>Other Options</legend>
-            {[
-              { id: 'imageDragDone', label: 'Lock Drag Image', checked: imageDragDone, onChange: setImageDragDone },
-              {
-                id: 'hideCircleIntersaction',
-                label: 'Show Chakra Intersaction points',
-                checked: hideCircleIntersaction,
-                onChange: setHideCircleIntersaction
-              },
-              { id: 'disableDraw', label: 'Done Drawing', checked: disableDraw, onChange: setDisableDraw },
-              { id: 'graphDraw', label: 'Graph Drawing', checked: graphDraw, onChange: setGraphDraw }
-            ].map(({ id, label, checked, onChange }) => (
-              <div key={id} className='flex items-center gap-2'>
-                <FormControlLabel
-                  label={label}
-                  className='chkBoxLabel'
-                  control={<Checkbox checked={checked} onChange={e => onChange(e.target.checked)} />}
-                />
-              </div>
-            ))}
-          </fieldset>
+          <div className='mt-3 flex flex-wrap gap-4'>
+            <LineControls lineSet={lineSets[0]} setIndex={0} onUpdate={handleLineSetUpdate} />
+            <LineControls lineSet={lineSets[1]} setIndex={1} onUpdate={handleLineSetUpdate} />
+          </div>
+
+          <div className='mt-3 flex flex-wrap gap-4'>
+            <fieldset className='p-4 border border-purple-300 rounded-lg flex-grow '>
+              <legend className='font-semibold px-2'>Marma Options</legend>
+              {[
+                {
+                  id: 'hideMarmaLines',
+                  label: 'Show Marma Lines',
+                  checked: hideMarmaLines,
+                  onChange: setHideMarmaLines
+                },
+                {
+                  id: 'hideMarmapoints',
+                  label: 'Show Marma Points',
+                  checked: hideMarmapoints,
+                  onChange: setHideMarmapoints
+                }
+              ].map(({ id, label, checked, onChange }) => (
+                <div key={id} className='flex items-center gap-2'>
+                  <FormControlLabel
+                    label={label}
+                    className='chkBoxLabel'
+                    control={<Checkbox checked={checked} onChange={e => onChange(e.target.checked)} />}
+                  />
+                </div>
+              ))}
+            </fieldset>
+            <fieldset className='p-4 border border-purple-300 rounded-lg flex-grow lg:min-w-[254px]'>
+              <legend className='font-semibold px-2'>Devta Options</legend>
+              {[
+                { id: 'showDevta', label: 'Show Devta', checked: showDevta, onChange: setShowDevta },
+                {
+                  id: 'showDevtaIntersaction',
+                  label: 'Show Devta Intersaction points',
+                  checked: showDevtaIntersaction,
+                  onChange: setShowDevtaIntersaction
+                }
+              ].map(({ id, label, checked, onChange }) => (
+                <div key={id} className='flex items-center gap-2'>
+                  <FormControlLabel
+                    label={label}
+                    className='chkBoxLabel'
+                    control={<Checkbox checked={checked} onChange={e => onChange(e.target.checked)} />}
+                  />
+                </div>
+              ))}
+            </fieldset>
+          </div>
+
+          <div className='mt-3 flex flex-wrap gap-4'>
+            <fieldset className='p-4 border border-purple-300 rounded-lg '>
+              <legend className='font-semibold px-2'>Other Options</legend>
+              {[
+                { id: 'imageDragDone', label: 'Lock Drag Image', checked: imageDragDone, onChange: setImageDragDone },
+                {
+                  id: 'hideCircleIntersaction',
+                  label: 'Show Chakra Intersaction points',
+                  checked: hideCircleIntersaction,
+                  onChange: setHideCircleIntersaction
+                },
+                { id: 'disableDraw', label: 'Done Drawing', checked: disableDraw, onChange: setDisableDraw },
+                { id: 'graphDraw', label: 'Graph Drawing', checked: graphDraw, onChange: setGraphDraw }
+              ].map(({ id, label, checked, onChange }) => (
+                <div key={id} className='flex items-center gap-2'>
+                  <FormControlLabel
+                    label={label}
+                    className='chkBoxLabel'
+                    control={<Checkbox checked={checked} onChange={e => onChange(e.target.checked)} />}
+                  />
+                </div>
+              ))}
+            </fieldset>
+          </div>
         </div>
       </div>
-    </div>
-    {openNewPolygon && (
-      <>
-        <NewPolygonPopUp
-          open={openNewPolygon}
-          handleClose={handleAddPolygonToggle}
-          handleSave={handleAddPolygon}
-          newPolygonData={NewOverlayPoly}
-        />
-      </>
-    )}
-  </>
-)
+      {openNewPolygon && (
+        <>
+          <NewPolygonPopUp
+            open={openNewPolygon}
+            handleClose={handleAddPolygonToggle}
+            handleSave={handleAddPolygon}
+            newPolygonData={NewOverlayPoly}
+          />
+        </>
+      )}
+    </>
+  )
 }
 
 export default DevtaVastu
