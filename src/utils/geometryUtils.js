@@ -83,26 +83,26 @@ export const drawDirectionLetters = (ctx) => {
   const canvasWidth = ctx.canvas.width;
   const canvasHeight = ctx.canvas.height;
   const padding = 30;
-  
+
   // Define fixed positions for direction letters
   // const positions = {
   //   // Top edge
   //   'N': { x: canvasWidth / 2 , y: padding, align: 'center' },
   //   'NNE': { x: canvasWidth * 0.75 - 85, y: padding, align: 'center' },
   //   'NE': { x: canvasWidth - padding - 85, y: padding, align: 'right' },
-    
+
   //   // Right edge
   //   'ENE': { x: canvasWidth - padding, y: canvasHeight * 0.25, align: 'right' },
   //   'E': { x: canvasWidth - padding, y: canvasHeight / 2, align: 'right' },
   //   'ESE': { x: canvasWidth - padding, y: canvasHeight * 0.75, align: 'right' },
-    
+
   //   // Bottom edge
   //   'SE': { x: canvasWidth - padding - 85 , y: canvasHeight - padding, align: 'right' },
   //   'SSE': { x: canvasWidth * 0.75 - 85, y: canvasHeight - padding, align: 'center' },
   //   'S': { x: canvasWidth / 2, y: canvasHeight - padding, align: 'center' },
   //   'SSW': { x: canvasWidth * 0.25 + 85, y: canvasHeight - padding, align: 'center' },
   //   'SW': { x: padding + 85 , y: canvasHeight - padding, align: 'left' },
-    
+
   //   // Left edge
   //   'WSW': { x: padding, y: canvasHeight * 0.75, align: 'left' },
   //   'W': { x: padding, y: canvasHeight / 2, align: 'left' },
@@ -123,36 +123,36 @@ export const drawDirectionLetters = (ctx) => {
     'ESE': { x: canvasWidth - padding, y: canvasHeight * 0.75 - 35, align: 'right' },
 
     // Bottom edge
-    'SE': { x: canvasWidth - padding , y: canvasHeight - padding, align: 'center' },
+    'SE': { x: canvasWidth - padding, y: canvasHeight - padding, align: 'center' },
     'SSE': { x: canvasWidth * 0.75 - 35, y: canvasHeight - padding, align: 'center' },
     'S': { x: canvasWidth / 2, y: canvasHeight - padding, align: 'center' },
     'SSW': { x: canvasWidth * 0.25 + 35, y: canvasHeight - padding, align: 'center' },
-    'SW': { x: padding , y: canvasHeight - padding, align: 'center' },
+    'SW': { x: padding, y: canvasHeight - padding, align: 'center' },
 
     // Left edge
     'WSW': { x: padding, y: canvasHeight * 0.75 - 35, align: 'left' },
     'W': { x: padding, y: canvasHeight / 2, align: 'left' },
     'WNW': { x: padding, y: canvasHeight * 0.25 + 35, align: 'left' },
-    'NW': { x: padding , y: padding, align: 'center' },
+    'NW': { x: padding, y: padding, align: 'center' },
     'NNW': { x: canvasWidth * 0.25 + 35, y: padding, align: 'center' },
   };
 
 
   ctx.font = '16px Arial';
   ctx.fillStyle = 'black';
-  
+
   // DIRECTION_DATA.forEach(direction => {
   //   const pos = positions[direction];
   //   if (pos) {
   //     ctx.textAlign = pos.align;
   //     ctx.textBaseline = 'middle';
   //     // ctx.textBaseline = 'start';
-      
+
   //     // Draw background
   //     const metrics = ctx.measureText(direction);
   //     const padding = 4;
   //     ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-      
+
   //     ctx.fillRect(
   //       pos.align === 'right' ? pos.x - metrics.width - padding * 2 : 
   //       pos.align === 'center' ? pos.x - metrics.width/2 - padding :
@@ -161,11 +161,11 @@ export const drawDirectionLetters = (ctx) => {
   //       metrics.width + padding * 2,
   //       metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent + padding * 2
   //     );
-      
+
   //     // Draw text
   //     ctx.fillStyle = 'black';
   //     ctx.fillText(direction, pos.x, pos.y);
-      
+
   //   }
   // });
 
@@ -177,7 +177,7 @@ export const drawDirectionLetters = (ctx) => {
         ctx.measureText(direction).actualBoundingBoxAscent +
         ctx.measureText(direction).actualBoundingBoxDescent;
       const padding = 0;
-  
+
       // Draw background rectangle
       if (pos.align === 'left' || pos.align === 'right') {
         // For vertical text (left and right)
@@ -188,7 +188,7 @@ export const drawDirectionLetters = (ctx) => {
         //   textHeight + padding * 2,
         //   textWidth + padding * 2
         // );
-  
+
         ctx.save();
         ctx.translate(pos.x, pos.y);
         ctx.rotate(pos.align === 'right' ? Math.PI / 2 : -Math.PI / 2); // Rotate vertically
@@ -198,7 +198,7 @@ export const drawDirectionLetters = (ctx) => {
         ctx.fillText(direction, 0, 0);
         ctx.restore();
       } else {
-  
+
         ctx.fillStyle = '#000000';
         ctx.textAlign = pos.align;
         // ctx.textBaseline = 'bottom';
@@ -206,5 +206,82 @@ export const drawDirectionLetters = (ctx) => {
       }
     }
   });
-  
+
 };
+
+export const isPointInPolygon = (point, polygon) => {
+  const { x, y } = point
+  let isInside = false
+
+  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+    const xi = polygon[i].x,
+      yi = polygon[i].y
+    const xj = polygon[j].x,
+      yj = polygon[j].y
+
+    const intersect = yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi
+    if (intersect) isInside = !isInside
+  }
+
+  return isInside
+}
+
+export function calculateIntersectionPoins(line1, line2) {
+  const [A, B] = line1
+  const [C, D] = line2
+  if (!A || !B || !C || !D) {
+    return null
+  }
+  const { x: x1, y: y1 } = A
+  const { x: x2, y: y2 } = B
+  const { x: x3, y: y3 } = C
+  const { x: x4, y: y4 } = D
+
+  // Calculate the denominator
+  const denom = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)
+
+  // Check if lines are parallel (denom == 0)
+  if (denom === 0) {
+    return null // No intersection (lines are parallel)
+  }
+
+  // Calculate the intersection point
+  const px = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / denom
+  const py = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / denom
+
+  // Check if the intersection point is within the line segments
+  const isWithinLine1 =
+    Math.min(x1, x2) <= px && px <= Math.max(x1, x2) && Math.min(y1, y2) <= py && py <= Math.max(y1, y2)
+  const isWithinLine2 =
+    Math.min(x3, x4) <= px && px <= Math.max(x3, x4) && Math.min(y3, y4) <= py && py <= Math.max(y3, y4)
+
+  if (isWithinLine1 && isWithinLine2) {
+    return { x: px, y: py } // Intersection point
+  } else {
+    return null // Intersection point is outside the line segments
+  }
+}
+
+export const calculateArea = points => {
+  const n = points.length
+  let area = 0
+
+  for (let i = 0; i < n; i++) {
+    const j = (i + 1) % n
+    area += points[i].x * points[j].y
+    area -= points[j].x * points[i].y
+  }
+
+  return Math.abs(area / 2)
+}
+
+export const calculateMidpoint = (pointA, pointB) => {
+  return {
+    x: (pointA.x + pointB.x) / 2,
+    y: (pointA.y + pointB.y) / 2
+  }
+}
+
+export const isPointNear = (x, y, point, threshold = 10) => {
+  return Math.sqrt((x - point.x) ** 2 + (y - point.y) ** 2) < threshold
+}
