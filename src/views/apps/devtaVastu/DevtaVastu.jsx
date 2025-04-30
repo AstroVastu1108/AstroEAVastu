@@ -8,11 +8,29 @@ import html2canvas from 'html2canvas'
 import { Upload } from 'lucide-react'
 import { GlobalWorkerOptions } from 'pdfjs-dist/build/pdf'
 import { LoadingButton } from '@mui/lab'
-import { Checkbox, FormControlLabel, TextField } from '@mui/material'
+// import { Checkbox, FormControlLabel, TextField, Paper, Box, Typography, Tooltip,Button } from '@mui/material'
+import {
+  Box,
+  Button,
+  Checkbox,
+  Divider,
+  FormControlLabel,
+  Paper,
+  Slider,
+  TextField,
+  Typography,
+  Tooltip,
+  IconButton,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Stack
+} from '@mui/material';
 import NewPolygonPopUp from '@/components/devta-vastu/NewPolygonPopUp/NewPolygonPopUp'
 import RightPrintSection from '@/components/devta-vastu/RightPrintSection/RightPrintSection'
 import RectangleWithRotatedLines from '@/components/devta-vastu/RadialLines/RadialLines'
 import { data, devta, devtaColors, intersectionCriteria, labelsToExtract, labelsToExtract1, leftintersectionCriteria, linemarmaDevta_1, linemarmaDevta_2, linemarmaDevta_3, marmaDevta, Marmalines, specificLeftLines, specificLines, targetLeftLines, targetLines } from '@/utils/directions'
+import CustomBarChart from '@/components/Charts/CustomBarChart'
 
 GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.js'
 
@@ -1779,7 +1797,10 @@ const DevtaVastu = ({
       <div className='flex flex-col lg:flex-row gap-5 py-4 justify-start '>
         <div className='bg-white'>
           <div ref={printRef} className='flex-grow '>
-            <div className='relative flex'>
+            {selectedGroup && selectedGroup == "16 Zone Bar Chart" ? (
+            <div style={{width:width,height:height}} ><CustomBarChart data={allResults}/></div>
+            ) : (
+              <div className='relative flex'>
               <svg
                 ref={svgRef}
                 width={width}
@@ -2437,189 +2458,418 @@ const DevtaVastu = ({
                 </div>
               )}
             </div>
+            )  
+            }
+            
           </div>
         </div>
-        <div className='flex flex-wrap lg:flex-col gap-3 p-4 lg:gap-0 bg-white'>
-          <RightPrintSection printRef1={printRef1} vastuLayoutData={vastuLayoutData} />
+        {/* <div className='flex flex-wrap lg:flex-col gap-3 p-4 lg:gap-0 bg-white' style={{ width: '550px' }}> */}
+        <div className='flex flex-wrap lg:flex-col gap-3 p-4 lg:gap-0 bg-white' 
+        style={{ 
+          width: '550px',
+          height: '748px', // Full viewport height
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden', // Container doesn't scroll
+          flexWrap: "nowrap"
+        }}>
 
-          <div
-            className='p-0 border-2 border-dashed border-gray-300 rounded-lg text-center hover:border-purple-500 transition-colors py-6 w-1/3 lg:w-full'
-            onDragOver={e => e.preventDefault()}
-            onDrop={handleFileUpload}
+          <Box
+            className="bg-gradient-to-r from-purple-100 to-purple-50 p-4 border-b border-purple-200 rounded-t"
+            sx={{
+              borderRadius: '8px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexShrink: 0, // Prevents header from shrinking
+              position: 'sticky',
+              top: 0,
+              zIndex: 10
+            }}
           >
-            <label className='flex flex-col items-center gap-2 cursor-pointer'>
-              <Upload size={24} className='text-primary font-ea-sb' />
-              <span className='text-primary font-ea-sb'>Upload File</span>
-              <input type='file' className='hidden' accept='.jpg,.jpeg,.png,.pdf' onChange={handleFileUpload} />
-            </label>
-            <p className='text-sm text-gray-500 mt-2'>Supported: .jpg, .jpeg, .png, .pdf</p>
-          </div>
+            <Typography variant="h6" className="font-bold text-purple-800">
+              Vastu Layout Editor
+            </Typography>
 
-          {/* <div className='mt-3 p-0 flex lg:flex-col gap-2'> */}
-          <div className='flex lg:justify-between gap-3 flex-wrap lg:flex-nowrap mt-4'>
-            <LoadingButton
-              variant='outlined'
-              onClick={() => updatePointsForAllTabs(selectedGroup, points)}
-              className='px-3 py-1 rounded transition w-full'
-            >
-              Save
-            </LoadingButton>
+            <Tooltip title="Save your changes">
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<i className="tabler-device-floppy" />}
+                onClick={() => updatePointsForAllTabs(selectedGroup, points)}
+                size="small"
+              >
+                Save
+              </Button>
+            </Tooltip>
+          </Box>
 
-            <LoadingButton
-              variant='contained'
-              onClick={() => handleAddPolygonToggle(selectedGroup)}
-              className='px-3 py-1 rounded transition w-full flex-wrap lg:flex-nowrap'
-            >
-              Add Overlay
-            </LoadingButton>
-          </div>
+          {/* Scrollable Content Area */}
+          <Box
+            sx={{
+              overflowY: 'auto',
+              flexGrow: 1, // Takes remaining height
+              msOverflowStyle: 'none',  // Hide scrollbar in IE and Edge
+              scrollbarWidth: 'none',   // Hide scrollbar in Firefox
+              '&::-webkit-scrollbar': {
+                display: 'none'         // Hide scrollbar in Chrome, Safari, and Opera
+              }
+            }}
+          >
+            <Stack spacing={3}>
+              {/* Print Section */}
+              <Box>
+                <RightPrintSection printRef1={printRef1} vastuLayoutData={vastuLayoutData} />
+              </Box>
 
-          <div className='flex lg:justify-between gap-3 flex-wrap lg:flex-nowrap mt-4'>
-            <LoadingButton
-              onClick={handleZoomIn}
-              variant='contained'
-              className=' text-white px-3 py-1 rounded transition w-full'
-            >
-              Zoom In
-            </LoadingButton>
-            <LoadingButton onClick={handleZoomOut} variant='outlined' className='px-3 py-1 rounded transition w-full'>
-              Zoom Out
-            </LoadingButton>
-          </div>
-          {/* </div> */}
+              {/* Main Action Buttons */}
+              <Box >
+                {/* File Upload */}
+                <Paper
+                  variant="outlined"
+                  className="border-2 border-dashed border-gray-300 hover:border-purple-500 transition-colors p-4 rounded-lg flex flex-col items-center justify-center"
+                  sx={{
+                    height: '120px',
+                    cursor: 'pointer',
+                    backgroundColor: 'rgba(250, 245, 255, 0.5)'
+                  }}
+                  onDragOver={e => e.preventDefault()}
+                  onDrop={handleFileUpload}
+                >
+                  <label className="flex flex-col items-center gap-2 cursor-pointer w-full h-full justify-center">
+                    <i className="tabler-upload text-purple-800" width="50" height="50" />
+                    <Typography variant="subtitle1" className="font-medium text-purple-700">
+                      Upload File
+                    </Typography>
+                    <input type="file" className="hidden" accept=".jpg,.jpeg,.png,.pdf" onChange={handleFileUpload} />
+                    <Typography variant="caption" className="text-gray-500">
+                      Drag & drop or clicked <br />
+                      <Typography variant="caption" className="font-semibold">
+                        (.jpg, .jpeg, .png, .pdf)
+                      </Typography>
+                    </Typography>
+                  </label>
+                </Paper>
 
-          <div className='mt-3 flex flex-wrap gap-4'>
-            <fieldset className='p-4 border border-purple-300 rounded-lg flex-grow lg:min-w-[254px]'>
-              <legend className='font-semibold px-2'>Default Options</legend>
-              {[
-                { id: 'lockChakra', label: 'Lock Chakra', checked: lockChakra, onChange: setLockChakra },
-                { id: 'lockCentroid', label: 'Lock Center', checked: lockCentroid, onChange: setLockCentroid },
-                {
-                  id: 'snapToCentroid',
-                  label: 'Reset Auto Center',
-                  checked: snapToCentroid,
-                  onChange: setSnapToCentroid
-                }
-              ].map(({ id, label, checked, onChange }) => (
-                <div key={id} className='flex items-center gap-2'>
-                  <FormControlLabel
-                    label={label}
-                    className='chkBoxLabel'
-                    control={<Checkbox checked={checked} onChange={e => onChange(e.target.checked)} />}
-                  />
-                </div>
-              ))}
+                {/* Action Buttons */}
 
-            </fieldset>
+              </Box>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                {/* Overlay Button */}
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  fullWidth
+                  startIcon={<i className="tabler-plus" width="20" height="20" />}
+                  onClick={() => handleAddPolygonToggle(selectedGroup)}
+                  sx={{ height: '48px' }}
+                >
+                  Add Overlay
+                </Button>
 
-            <fieldset className='p-4 border border-purple-300 rounded-lg flex-grow'>
-              <legend className='font-semibold px-2'>Shakti Chakra Options</legend>
-              <div className='flex flex-col'>
-                <label className='flex items-center gap-2'>
-                  <span className='text-sm text-gray-700 text-nowrap'>Chakra Degree:</span>
-                  <TextField
-                    type='number'
-                    readOnly={lockChakra}
-                    value={inputDegree}
-                    onChange={handleInputChange}
-                    className='w-auto'
-                    placeholder='0'
-                    aria-label='Degree input'
-                    size='small'
-                  />
-                </label>
-                {chakras.map(({ id, label, checked, textLabel }) => (
-                  <div key={id} className='flex items-center gap-2'>
-                    <FormControlLabel
-                      label={label}
-                      className='chkBoxLabel'
-                      control={
-                        <Checkbox checked={checked} onChange={e => handleShowChakra(textLabel, e.target.checked)} />
-                      }
-                    />
-                  </div>
-                ))}
-              </div>
-            </fieldset>
-          </div>
+                {/* Zoom Controls */}
+                <Box sx={{ display: 'flex', gap: 2 }}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<i className="tabler-zoom-in" width="20" height="20" />}
+                    onClick={handleZoomIn}
+                    fullWidth
+                  >
+                    Zoom In
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    startIcon={<i className="tabler-zoom-out" width="20" height="20" />}
+                    onClick={handleZoomOut}
+                    fullWidth
+                  >
+                    Zoom Out
+                  </Button>
+                </Box>
+              </Box>
 
-          <div className='mt-3 flex flex-wrap gap-4'>
-            <LineControls lineSet={lineSets[0]} setIndex={0} onUpdate={handleLineSetUpdate} />
-            <LineControls lineSet={lineSets[1]} setIndex={1} onUpdate={handleLineSetUpdate} />
-          </div>
+              {/* Compact Rotation Controls */}
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1, py: 1, px: 2, border: '1px solid #e5e7eb', borderRadius: '8px', backgroundColor: 'rgba(250, 245, 255, 0.5)' }}>
+                <i className="tabler-rotate text-purple-600" width="20" height="20" />
+                <Typography variant="body2" sx={{ minWidth: '40px' }}>
+                  {rotation}°
+                </Typography>
+                <Slider
+                  id="rotation-slider"
+                  value={rotation}
+                  onChange={handleRotationChange}
+                  min={0}
+                  max={360}
+                  step={1}
+                  valueLabelDisplay="auto"
+                  sx={{ flexGrow: 1 }}
+                  size="small"
+                />
+                <Tooltip title="Reset rotation">
+                  <IconButton
+                    onClick={() => setRotation(0)}
+                    size="small"
+                    color="primary"
+                    sx={{ p: 0.5 }}
+                  >
+                    <i className="tabler-refresh" width="16" height="16" />
+                  </IconButton>
+                </Tooltip>
+              </Box>
 
-          <div className='mt-3 flex flex-wrap gap-4'>
-            <fieldset className='p-4 border border-purple-300 rounded-lg flex-grow '>
-              <legend className='font-semibold px-2'>Marma Options</legend>
-              {[
-                {
-                  id: 'hideMarmaLines',
-                  label: 'Show Marma Lines',
-                  checked: hideMarmaLines,
-                  onChange: setHideMarmaLines
-                },
-                {
-                  id: 'hideMarmapoints',
-                  label: 'Show Marma Points',
-                  checked: hideMarmapoints,
-                  onChange: setHideMarmapoints
-                }
-              ].map(({ id, label, checked, onChange }) => (
-                <div key={id} className='flex items-center gap-2'>
-                  <FormControlLabel
-                    label={label}
-                    className='chkBoxLabel'
-                    control={<Checkbox checked={checked} onChange={e => onChange(e.target.checked)} />}
-                  />
-                </div>
-              ))}
-            </fieldset>
-            <fieldset className='p-4 border border-purple-300 rounded-lg flex-grow lg:min-w-[254px]'>
-              <legend className='font-semibold px-2'>Devta Options</legend>
-              {[
-                { id: 'showDevta', label: 'Show Devta', checked: showDevta, onChange: setShowDevta },
-                {
-                  id: 'showDevtaIntersaction',
-                  label: 'Show Devta Intersaction points',
-                  checked: showDevtaIntersaction,
-                  onChange: setShowDevtaIntersaction
-                }
-              ].map(({ id, label, checked, onChange }) => (
-                <div key={id} className='flex items-center gap-2'>
-                  <FormControlLabel
-                    label={label}
-                    className='chkBoxLabel'
-                    control={<Checkbox checked={checked} onChange={e => onChange(e.target.checked)} />}
-                  />
-                </div>
-              ))}
-            </fieldset>
-          </div>
+              {/* Control Sections as Accordions */}
+              <Box>
+                <Accordion defaultExpanded
+                  sx={{
+                    border: '1px solid transparent',
+                    '&.Mui-expanded': {
+                      borderColor: 'var(--primary-color)',
+                    },
+                    backgroundColor: 'transparent !important',
+                    boxShadow: 'none',
+                  }}>
+                  <AccordionSummary className='bg-gradient-to-r from-purple-100 to-purple-2'
+                    sx={{ borderRadius: "6px" }}
+                  >
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <i className="tabler-settings" width="20" height="20" />
+                      <Typography fontWeight="medium">Default Options</Typography>
+                    </Box>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Stack spacing={1}>
+                      {[
+                        { id: 'lockChakra', label: 'Lock Chakra', checked: lockChakra, onChange: setLockChakra },
+                        { id: 'lockCentroid', label: 'Lock Center', checked: lockCentroid, onChange: setLockCentroid },
+                        { id: 'snapToCentroid', label: 'Reset Auto Center', checked: snapToCentroid, onChange: setSnapToCentroid }
+                      ].map(({ id, label, checked, onChange }) => (
+                        <FormControlLabel
+                          key={id}
+                          control={
+                            <Checkbox
+                              checked={checked}
+                              onChange={e => onChange(e.target.checked)}
+                              color="secondary"
+                              size="small"
+                            />
+                          }
+                          label={<Typography variant="body2">{label}</Typography>}
+                        />
+                      ))}
+                    </Stack>
+                  </AccordionDetails>
+                </Accordion>
 
-          <div className='mt-3 flex flex-wrap gap-4'>
-            <fieldset className='p-4 border border-purple-300 rounded-lg '>
-              <legend className='font-semibold px-2'>Other Options</legend>
-              {[
-                { id: 'imageDragDone', label: 'Lock Drag Image', checked: imageDragDone, onChange: setImageDragDone },
-                {
-                  id: 'hideCircleIntersaction',
-                  label: 'Show Chakra Intersaction points',
-                  checked: hideCircleIntersaction,
-                  onChange: setHideCircleIntersaction
-                },
-                { id: 'disableDraw', label: 'Done Drawing', checked: disableDraw, onChange: setDisableDraw },
-                { id: 'graphDraw', label: 'Graph Drawing', checked: graphDraw, onChange: setGraphDraw }
-              ].map(({ id, label, checked, onChange }) => (
-                <div key={id} className='flex items-center gap-2'>
-                  <FormControlLabel
-                    label={label}
-                    className='chkBoxLabel'
-                    control={<Checkbox checked={checked} onChange={e => onChange(e.target.checked)} />}
-                  />
-                </div>
-              ))}
-            </fieldset>
-          </div>
+                {/* Shakti Chakra Options */}
+                <Accordion
+                  sx={{
+                    border: '1px solid transparent',
+                    '&.Mui-expanded': {
+                      borderColor: 'var(--primary-color)',
+                    },
+                    backgroundColor: 'transparent !important',
+                    boxShadow: 'none',
+                  }}>
+                  <AccordionSummary className='bg-gradient-to-r from-purple-100 to-purple-2'
+                    sx={{ borderRadius: "6px" }}
+                  >
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <i className="tabler-circle-dot" width="20" height="20" />
+                      <Typography fontWeight="medium">Shakti Chakra Options</Typography>
+                    </Box>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Box sx={{ mb: 2 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
+                        <Typography variant="body2">Chakra Degree:</Typography>
+                        <TextField
+                          type="number"
+                          disabled={lockChakra}
+                          value={inputDegree}
+                          onChange={handleInputChange}
+                          size="small"
+                          InputProps={{
+                            endAdornment: <Typography variant="caption">°</Typography>
+                          }}
+                        />
+                      </Box>
+                      <Divider sx={{ my: 2 }} />
+                      <Stack spacing={1}>
+                        {chakras.map(({ id, label, checked, textLabel }) => (
+                          <FormControlLabel
+                            key={id}
+                            control={
+                              <Checkbox
+                                checked={checked}
+                                onChange={e => handleShowChakra(textLabel, e.target.checked)}
+                                color="secondary"
+                                size="small"
+                              />
+                            }
+                            label={<Typography variant="body2">{label}</Typography>}
+                          />
+                        ))}
+                      </Stack>
+                    </Box>
+                  </AccordionDetails>
+                </Accordion>
+
+                {/* Line Controls */}
+                <Accordion
+                  sx={{
+                    border: '1px solid transparent',
+                    '&.Mui-expanded': {
+                      borderColor: 'var(--primary-color)',
+                    },
+                    backgroundColor: 'transparent !important',
+                    boxShadow: 'none',
+                  }}>
+                  <AccordionSummary className='bg-gradient-to-r from-purple-100 to-purple-2'
+                    sx={{ borderRadius: "6px" }}
+                  >
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <i className="tabler-line-dashed" width="20" height="20" />
+                      <Typography fontWeight="medium">Line Controls</Typography>
+                    </Box>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                      <LineControls lineSet={lineSets[0]} setIndex={0} onUpdate={handleLineSetUpdate} />
+                      <Divider />
+                      <LineControls lineSet={lineSets[1]} setIndex={1} onUpdate={handleLineSetUpdate} />
+                    </Box>
+                  </AccordionDetails>
+                </Accordion>
+
+                {/* Marma Options */}
+                <Accordion
+                  sx={{
+                    border: '1px solid transparent',
+                    '&.Mui-expanded': {
+                      borderColor: 'var(--primary-color)',
+                    },
+                    backgroundColor: 'transparent !important',
+                    boxShadow: 'none',
+                  }}>
+                  <AccordionSummary className='bg-gradient-to-r from-purple-100 to-purple-2'
+                    sx={{ borderRadius: "6px" }}
+                  >
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <i className="tabler-point" width="20" height="20" />
+                      <Typography fontWeight="medium">Marma Options</Typography>
+                    </Box>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Stack spacing={1}>
+                      {[
+                        { id: 'hideMarmaLines', label: 'Show Marma Lines', checked: hideMarmaLines, onChange: setHideMarmaLines },
+                        { id: 'hideMarmapoints', label: 'Show Marma Points', checked: hideMarmapoints, onChange: setHideMarmapoints }
+                      ].map(({ id, label, checked, onChange }) => (
+                        <FormControlLabel
+                          key={id}
+                          control={
+                            <Checkbox
+                              checked={checked}
+                              onChange={e => onChange(e.target.checked)}
+                              color="secondary"
+                              size="small"
+                            />
+                          }
+                          label={<Typography variant="body2">{label}</Typography>}
+                        />
+                      ))}
+                    </Stack>
+                  </AccordionDetails>
+                </Accordion>
+
+                {/* Devta Options */}
+                <Accordion
+                  sx={{
+                    border: '1px solid transparent',
+                    '&.Mui-expanded': {
+                      borderColor: 'var(--primary-color)',
+                    },
+                    backgroundColor: 'transparent !important',
+                    boxShadow: 'none',
+                  }}>
+                  <AccordionSummary className='bg-gradient-to-r from-purple-100 to-purple-2'
+                    sx={{ borderRadius: "6px" }}
+                  >
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <i className="tabler-hexagon" width="20" height="20" />
+                      <Typography fontWeight="medium">Devta Options</Typography>
+                    </Box>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Stack spacing={1}>
+                      {[
+                        { id: 'showDevta', label: 'Show Devta', checked: showDevta, onChange: setShowDevta },
+                        { id: 'showDevtaIntersaction', label: 'Show Devta Intersection Points', checked: showDevtaIntersaction, onChange: setShowDevtaIntersaction }
+                      ].map(({ id, label, checked, onChange }) => (
+                        <FormControlLabel
+                          key={id}
+                          control={
+                            <Checkbox
+                              checked={checked}
+                              onChange={e => onChange(e.target.checked)}
+                              color="secondary"
+                              size="small"
+                            />
+                          }
+                          label={<Typography variant="body2">{label}</Typography>}
+                        />
+                      ))}
+                    </Stack>
+                  </AccordionDetails>
+                </Accordion>
+
+                {/* Other Options */}
+                <Accordion
+                  sx={{
+                    border: '1px solid transparent',
+                    '&.Mui-expanded': {
+                      borderColor: 'var(--primary-color)',
+                    },
+                    backgroundColor: 'transparent !important',
+                    boxShadow: 'none',
+                  }}>
+                  <AccordionSummary className='bg-gradient-to-r from-purple-100 to-purple-2'
+                    sx={{ borderRadius: "6px" }}
+                  >
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <i className="tabler-adjustments" width="20" height="20" />
+                      <Typography fontWeight="medium">Other Options</Typography>
+                    </Box>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Stack spacing={1}>
+                      {[
+                        { id: 'imageDragDone', label: 'Lock Drag Image', checked: imageDragDone, onChange: setImageDragDone },
+                        { id: 'hideCircleIntersaction', label: 'Show Chakra Intersection Points', checked: hideCircleIntersaction, onChange: setHideCircleIntersaction },
+                        { id: 'disableDraw', label: 'Done Drawing', checked: disableDraw, onChange: setDisableDraw },
+                        { id: 'graphDraw', label: 'Graph Drawing', checked: graphDraw, onChange: setGraphDraw }
+                      ].map(({ id, label, checked, onChange }) => (
+                        <FormControlLabel
+                          key={id}
+                          control={
+                            <Checkbox
+                              checked={checked}
+                              onChange={e => onChange(e.target.checked)}
+                              color="secondary"
+                              size="small"
+                            />
+                          }
+                          label={<Typography variant="body2">{label}</Typography>}
+                        />
+                      ))}
+                    </Stack>
+                  </AccordionDetails>
+                </Accordion>
+              </Box>
+            </Stack>
+          </Box>
         </div>
       </div>
       {openNewPolygon && (

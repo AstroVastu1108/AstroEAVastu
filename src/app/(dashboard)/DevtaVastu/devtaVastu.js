@@ -216,6 +216,52 @@ function DevtaVastuPage({ id }) {
     })
   }
 
+  // const handleFileUpload = async event => {
+  //   const uploadedFile = event.target.files[0]
+
+  //   if (uploadedFile) {
+  //     const fileType = uploadedFile.type
+  //     const name = uploadedFile.name
+  //     setFileInfo(name)
+  //     if (fileType.includes('image')) {
+  //       // If the uploaded file is an image
+  //       setFileUploaded(true)
+  //       const reader = new FileReader()
+  //       reader.onloadend = () => {
+  //         // console.log("reader : ", reader.result)
+  //         setPreviewUrl(reader.result)
+  //       }
+  //       reader.readAsDataURL(uploadedFile)
+  //     } else if (fileType === 'application/pdf') {
+  //       // Extract all pages as images
+  //       const images = await readFileData(uploadedFile)
+
+  //       if (images.length > 0) {
+  //         // Default to the first page
+  //         setPreviewUrl(images[0])
+  //         setFileUploaded(true)
+
+  //         // Prompt the user for page selection
+  //         const pageNumber = prompt(`Enter the page number (1 to ${images.length}):`, '1')
+
+  //         if (pageNumber) {
+  //           const pageIndex = parseInt(pageNumber, 10) - 1
+
+  //           if (pageIndex >= 0 && pageIndex < images.length) {
+  //             setPreviewUrl(images[pageIndex])
+  //           } else {
+  //             alert('Invalid page number. Showing the first page.')
+  //           }
+  //         }
+  //       } else {
+  //         alert('No pages found in the PDF.')
+  //       }
+  //     } else {
+  //       alert('Unsupported file type. Please upload an image or PDF.')
+  //     }
+  //   }
+  // }
+
   const handleFileUpload = async event => {
     const uploadedFile = event.target.files[0]
 
@@ -223,8 +269,10 @@ function DevtaVastuPage({ id }) {
       const fileType = uploadedFile.type
       const name = uploadedFile.name
       setFileInfo(name)
-      if (fileType.includes('image')) {
-        // If the uploaded file is an image
+      
+      // Check for SVG specifically or any other image type
+      if (fileType.includes('image') || fileType === 'image/svg+xml') {
+        // If the uploaded file is an image (including SVG)
         setFileUploaded(true)
         const reader = new FileReader()
         reader.onloadend = () => {
@@ -242,7 +290,7 @@ function DevtaVastuPage({ id }) {
           setFileUploaded(true)
 
           // Prompt the user for page selection
-          const pageNumber = prompt(`Enter the page number (1 to ${images.length}):`, '1')
+          const pageNumber = prompt('Enter the page number (1 to ' + images.length + '):', '1')
 
           if (pageNumber) {
             const pageIndex = parseInt(pageNumber, 10) - 1
@@ -257,7 +305,7 @@ function DevtaVastuPage({ id }) {
           alert('No pages found in the PDF.')
         }
       } else {
-        alert('Unsupported file type. Please upload an image or PDF.')
+        alert('Unsupported file type. Please upload an image (including SVG) or PDF.')
       }
     }
   }
@@ -372,62 +420,184 @@ function DevtaVastuPage({ id }) {
   // };
 
 
+  // const handleDownload = async (data) => {
+  //   setIsDownloading(true);
+  //   await generatePDFsForAllGroups(data); // Your download function
+  //   setIsDownloading(false);
+  // };
+
+  // const generatePDFsForAllGroups = async data => {
+
+  //   if (savedGroups.length === 0) {
+  //     alert('Please add at least one group')
+  //     return
+  //   }
+
+  //   let preservedTab = activeTab
+  //   setLoading(true);
+
+  //   // Hide the scrollbar
+  //   document.body.style.overflow = 'hidden'
+  //   document.body.style.height = '100%'
+  //   document.body.style.position = 'fixed' // Prevent scrolling
+  //   document.body.style.width = '100%' // Ensure full width
+
+  //   const options = {
+  //     margin: 0,
+  //     filename: 'output.pdf',
+  //     image: { type: 'jpeg', quality: 1.0 },
+  //     html2canvas: { scale: 3, useCORS: true },
+  //     jsPDF: { unit: 'pt', format: 'a4', orientation: 'landscape' }
+  //   }
+
+  //   const pdfContainer = document.createElement('div')
+
+  //   for (let i = 0; i < data.length; i++) {
+  //     const groupIndex = tabGroup.findIndex(e => e.label == data[i]);
+
+  //     if (groupIndex === -1) {
+  //       continue
+  //     }
+
+  //     await waitForDOMUpdate()
+
+  //     const leftDivRef = leftprintRefs.current[groupIndex]
+  //     console.log(leftDivRef)
+  //     const rightDivRef = printRefs.current[groupIndex]
+
+  //     if (!leftDivRef || !rightDivRef) {
+  //       continue
+  //     }
+
+  //     leftDivRef.classList.remove('hidden-print')
+
+  //     const pageWrapper = document.createElement('div')
+  //     pageWrapper.style.display = 'flex'
+  //     pageWrapper.style.pageBreakAfter = 'always'
+
+
+  //     const leftClone = leftDivRef.cloneNode(true);
+  //     leftClone.style.width = "26%";
+  //     leftClone.style.height = "100%";
+  //     leftClone.style.display = "inline-block";
+  //     leftClone.style.overflow = "hidden";
+  //     leftClone.style.paddingTop = "24px"
+  //     leftClone.style.fontFamily = "'Segoe UI', Arial, sans-serif"; // Apply font-family
+  //     // leftClone.style.border = "2px solid red";
+
+  //     // Clone right section
+  //     const rightClone = rightDivRef.cloneNode(true);
+  //     rightClone.style.width = "74%";
+  //     rightClone.style.height = "790px";
+  //     rightClone.style.display = "inline-block";
+  //     rightClone.style.overflow = "hidden";
+  //     rightClone.style.paddingTop = "24px"
+  //     rightClone.style.paddingLeft = "8px"
+  //     rightClone.style.fontFamily = "'Segoe UI', Arial, sans-serif"; // Apply font-family
+  //     // rightClone.style.border = "2px solid red";
+
+  //     pageWrapper.appendChild(rightClone);
+  //     pageWrapper.appendChild(leftClone);
+  //     pdfContainer.appendChild(pageWrapper);
+  //   }
+
+  //   if (!pdfContainer.innerHTML.trim()) {
+  //     alert('No matching data found for PDF generation.')
+  //     setLoading(false)
+  //     document.body.style.overflow = '' // Restore scrollbar
+  //     document.body.style.height = '' // Restore body height
+  //     document.body.style.position = '' // Restore position
+  //     document.body.style.width = '' // Restore width
+  //     return
+  //   }
+
+  //   document.body.appendChild(pdfContainer)
+
+  //   await waitForImagesToLoad(pdfContainer)
+  //   await waitForDOMUpdate()
+
+  //   await html2pdf().from(pdfContainer).set(options).save()
+
+  //   setActiveTab(preservedTab)
+  //   document.body.removeChild(pdfContainer)
+  //   setLoading(false)
+
+  //   // Restore the scrollbar
+  //   document.body.style.overflow = ''
+  //   document.body.style.height = ''
+  //   document.body.style.position = ''
+  //   document.body.style.width = ''
+  // }
+
+  // // Helper function to ensure images load before rendering PDF
+  // const waitForImagesToLoad = container => {
+  //   const images = Array.from(container.getElementsByTagName('img'))
+  //   return Promise.all(
+  //     images.map(
+  //       img =>
+  //         new Promise(resolve => {
+  //           if (img.complete) {
+  //             resolve()
+  //           } else {
+  //             img.onload = resolve
+  //             img.onerror = resolve
+  //           }
+  //         })
+  //     )
+  //   )
+  // }
+
+  // // Helper function to wait for React state updates and re-renders
+  // const waitForDOMUpdate = () => new Promise(resolve => requestAnimationFrame(() => setTimeout(resolve, 300)))
+
   const handleDownload = async (data) => {
     setIsDownloading(true);
     await generatePDFsForAllGroups(data); // Your download function
     setIsDownloading(false);
   };
-
+  
   const generatePDFsForAllGroups = async data => {
-
     if (savedGroups.length === 0) {
       alert('Please add at least one group')
       return
     }
-
+  
     let preservedTab = activeTab
     setLoading(true);
-
+  
     // Hide the scrollbar
     document.body.style.overflow = 'hidden'
     document.body.style.height = '100%'
     document.body.style.position = 'fixed' // Prevent scrolling
     document.body.style.width = '100%' // Ensure full width
-
-    const options = {
-      margin: 0,
-      filename: 'output.pdf',
-      image: { type: 'jpeg', quality: 1.0 },
-      html2canvas: { scale: 3, useCORS: true },
-      jsPDF: { unit: 'pt', format: 'a4', orientation: 'landscape' }
-    }
-
+  
+    // Create a container for all pages
     const pdfContainer = document.createElement('div')
-
+  
     for (let i = 0; i < data.length; i++) {
       const groupIndex = tabGroup.findIndex(e => e.label == data[i]);
-
+  
       if (groupIndex === -1) {
         continue
       }
-
+  
       await waitForDOMUpdate()
-
+  
       const leftDivRef = leftprintRefs.current[groupIndex]
       console.log(leftDivRef)
       const rightDivRef = printRefs.current[groupIndex]
-
+  
       if (!leftDivRef || !rightDivRef) {
         continue
       }
-
+  
       leftDivRef.classList.remove('hidden-print')
-
+  
       const pageWrapper = document.createElement('div')
       pageWrapper.style.display = 'flex'
       pageWrapper.style.pageBreakAfter = 'always'
-
-
+  
+      // Clone left section
       const leftClone = leftDivRef.cloneNode(true);
       leftClone.style.width = "26%";
       leftClone.style.height = "100%";
@@ -435,8 +605,7 @@ function DevtaVastuPage({ id }) {
       leftClone.style.overflow = "hidden";
       leftClone.style.paddingTop = "24px"
       leftClone.style.fontFamily = "'Segoe UI', Arial, sans-serif"; // Apply font-family
-      // leftClone.style.border = "2px solid red";
-
+  
       // Clone right section
       const rightClone = rightDivRef.cloneNode(true);
       rightClone.style.width = "74%";
@@ -446,13 +615,12 @@ function DevtaVastuPage({ id }) {
       rightClone.style.paddingTop = "24px"
       rightClone.style.paddingLeft = "8px"
       rightClone.style.fontFamily = "'Segoe UI', Arial, sans-serif"; // Apply font-family
-      // rightClone.style.border = "2px solid red";
-
+  
       pageWrapper.appendChild(rightClone);
       pageWrapper.appendChild(leftClone);
       pdfContainer.appendChild(pageWrapper);
     }
-
+  
     if (!pdfContainer.innerHTML.trim()) {
       alert('No matching data found for PDF generation.')
       setLoading(false)
@@ -462,25 +630,53 @@ function DevtaVastuPage({ id }) {
       document.body.style.width = '' // Restore width
       return
     }
-
+  
     document.body.appendChild(pdfContainer)
-
+  
     await waitForImagesToLoad(pdfContainer)
     await waitForDOMUpdate()
-
-    await html2pdf().from(pdfContainer).set(options).save()
-
+  
+    // Apply the optimized settings we determined for the first function
+    const options = {
+      margin: 0,
+      filename: 'output.pdf',
+      image: { 
+        type: 'jpeg', 
+        quality: 0.85 // Optimized JPEG quality
+      },
+      html2canvas: { 
+        scale: 8, // Using the scale of 8 that worked well in your other function
+        useCORS: true,
+        allowTaint: true,
+        letterRendering: true,
+        imageTimeout: 0, // No timeout for large content
+        backgroundColor: '#FFFFFF' // Ensures white background
+      },
+      jsPDF: { 
+        unit: 'pt', 
+        format: 'a4', 
+        orientation: 'landscape',
+        compress: true, // Enable PDF compression
+        hotfixes: ["px_scaling"] // Help with better text rendering
+      }
+    }
+  
+    await html2pdf()
+      .from(pdfContainer)
+      .set(options)
+      .save()
+  
     setActiveTab(preservedTab)
     document.body.removeChild(pdfContainer)
     setLoading(false)
-
+  
     // Restore the scrollbar
     document.body.style.overflow = ''
     document.body.style.height = ''
     document.body.style.position = ''
     document.body.style.width = ''
   }
-
+  
   // Helper function to ensure images load before rendering PDF
   const waitForImagesToLoad = container => {
     const images = Array.from(container.getElementsByTagName('img'))
@@ -498,7 +694,7 @@ function DevtaVastuPage({ id }) {
       )
     )
   }
-
+  
   // Helper function to wait for React state updates and re-renders
   const waitForDOMUpdate = () => new Promise(resolve => requestAnimationFrame(() => setTimeout(resolve, 300)))
 
