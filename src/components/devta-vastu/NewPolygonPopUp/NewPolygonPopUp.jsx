@@ -61,7 +61,9 @@ function NewPolygonPopUp({ open, handleClose, handleSave, newPolygonData }) {
         }}
       >
         <DialogTitle className='text-primary text-2xl p-3 bg-[var(--secondary-color)] rounded-t-lg flex justify-between items-center'>
-          <span className='text-primary text-2xl font-ea-sb !pl-3'>Add New Polygon</span>
+          <span className='text-primary text-2xl font-ea-sb !pl-3'>
+            {formData?.isUpdate ? 'Update Polygon' : 'Add New Polygon'}
+          </span>
           <IconButton
             aria-label='close'
             onClick={handleClose}
@@ -94,6 +96,19 @@ function NewPolygonPopUp({ open, handleClose, handleSave, newPolygonData }) {
                   type='color'
                   value={formData.color}
                   onChange={e => handleInputChange('color', e.target.value)}
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={12}>
+                <TextField
+                  fullWidth
+                  label='Description'
+                  type='text'
+                  value={formData.description ? formData.description : ''}
+                  rows={2}
+                  multiline
+                  onChange={e => handleInputChange('description', e.target.value)}
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>

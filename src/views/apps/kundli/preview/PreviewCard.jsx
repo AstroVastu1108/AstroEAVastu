@@ -283,7 +283,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   const saveKundaliDateTime = async () => {
     try {
       let formattedData = {
-        // KundaliID: BirthDetails.KundaliID,
+        KundaliID: BirthDetails.KundaliID,
         FirstName: BirthDetails.FirstName,
         LastName: BirthDetails.LastName,
         MiddleName: BirthDetails.MiddleName,

@@ -13,19 +13,28 @@ import {
   TextField,
   ThemeProvider
 } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 function AddPagePopUp({ open, handleClose, handleSave, tabGroup, savedGroups }) {
   const [selectedGroup, setSelectedGroup] = useState(null)
   const [selectedBaseGroup, setSelectedBaseGroup] = useState(null)
   const [groupError, setGroupError] = useState(false)
   const [baseGroupError, setBaseGroupError] = useState(false)
+  const [tabTitle, setTabTitle] = useState(null)
+  const titleRef = useRef(null);
 
   const theme = createTheme({
     shape: {
       borderRadius: 8 // Set the global border radius here
     }
   })
+
+  useEffect(() => {
+    setTimeout(() => {
+      if(titleRef.current)
+        titleRef.current.focus()
+    }, 100);
+  }, [titleRef])
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -43,7 +52,7 @@ function AddPagePopUp({ open, handleClose, handleSave, tabGroup, savedGroups }) 
               if (!selectedGroup) setGroupError(true)
               if (!selectedBaseGroup) setBaseGroupError(true)
               if (selectedGroup && selectedBaseGroup) {
-                handleSave(selectedGroup,selectedBaseGroup)
+                handleSave(selectedGroup, selectedBaseGroup, tabTitle)
                 handleClose()
               }
             }
@@ -64,8 +73,22 @@ function AddPagePopUp({ open, handleClose, handleSave, tabGroup, savedGroups }) 
           <DialogContent className='px-4 pt-3'>
             <DialogContentText>
               <div className='flex flex-col gap-4'>
-                <Autocomplete
+                <TextField
+                  fullWidth
+                  label='Enter Page Title'
+                  value={tabTitle}
+                  onChange={e => setTabTitle(e.target.value)}
+                  inputRef={titleRef}
+                />
+                {/* <TextField
                   autoFocus
+                  variant='outlined'
+                  value={selectedBaseGroup ? tabGroup.find(item => item.label === selectedBaseGroup) : null}
+                  placeholder='Enter page name'
+                  className='w-full'
+                  // onChange={e => setTempValue(e.target.value)}
+                /> */}
+                <Autocomplete
                   options={tabGroup.filter(item => !savedGroups.includes(item.label))}
                   getOptionLabel={option => option.label} // Extracts label text
                   getOptionKey={option => option.label}

@@ -44,7 +44,7 @@ function DevtaVastuPage({ id }) {
   const [tabGroup, setTabGroup] = useState(TabsData);
   const [IsDownloading, setIsDownloading] = useState(false);
   const [forceRenderAllTabs, setForceRenderAllTabs] = useState(false);
-  const [isLayoutChange,setIsLayoutChange] = useState(false);
+  const [isLayoutChange, setIsLayoutChange] = useState(false);
 
   const [formData, setFormData] = useState({
     ProjectName: '',
@@ -105,6 +105,7 @@ function DevtaVastuPage({ id }) {
           if (matchingData) {
             return {
               ...tab,
+              title: matchingData.Title ? matchingData.Title : tab.label,
               points: matchingData.Points.map((point) => ({
                 x: point.x, // Convert X to x
                 y: point.y  // Convert Y to y
@@ -269,7 +270,7 @@ function DevtaVastuPage({ id }) {
       const fileType = uploadedFile.type
       const name = uploadedFile.name
       setFileInfo(name)
-      
+
       // Check for SVG specifically or any other image type
       if (fileType.includes('image') || fileType === 'image/svg+xml') {
         // If the uploaded file is an image (including SVG)
@@ -324,9 +325,7 @@ function DevtaVastuPage({ id }) {
   //     return toast.error('Please upload a file!!')
   //   }
 
-  //   console.warn(tabGroup.filter(tab => tab.label == selectedBaseGroup))
-    
-  //   return console.warn(selectedGroup,selectedBaseGroup)
+
   //   if (selectedGroup != 1) {
   //     setSaveLoading(true)
   //     setSavedGroups(prev => {
@@ -339,30 +338,28 @@ function DevtaVastuPage({ id }) {
   //   }
   // }
 
-  const handleSave = (selectedGroup, selectedBaseGroup) => {
+  const handleSave = (selectedGroup, selectedBaseGroup, tabTitle) => {
     if (!fileUploaded) {
       return toast.error('Please upload a file!!');
     }
-  
+
     // Find the base group data
     const baseGroupData = tabGroup.find(tab => tab.label === selectedBaseGroup);
-    
+
     if (!baseGroupData) {
       return toast.error('Base group not found!');
     }
-  
+
     // Update tabGroup by replacing selectedGroup with baseGroupData, keeping its label
-    setTabGroup(prevTabGroup => 
-      prevTabGroup.map(tab => 
-        tab.label === selectedGroup 
-          ? { ...baseGroupData, label: tab.label }  // Keep label, update other data
-          : tab
+    setTabGroup(prevTabGroup =>
+      prevTabGroup.map(tab =>
+        tab.label === selectedGroup
+          ? { ...baseGroupData, label: tab.label, title: tabTitle }  // Keep label, update other data
+          : tab // Keep existing data for other tabs
       )
     );
 
-  
-    console.warn("Updated tabGroup:", tabGroup);
-  
+
     if (selectedGroup !== 1) {
       setSaveLoading(true);
       setSavedGroups(prev => {
@@ -374,7 +371,7 @@ function DevtaVastuPage({ id }) {
       setActiveTab(savedGroups.length);
     }
   };
-  
+
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue)
@@ -555,48 +552,48 @@ function DevtaVastuPage({ id }) {
     await generatePDFsForAllGroups(data); // Your download function
     setIsDownloading(false);
   };
-  
+
   const generatePDFsForAllGroups = async data => {
     if (savedGroups.length === 0) {
       alert('Please add at least one group')
       return
     }
-  
+
     let preservedTab = activeTab
     setLoading(true);
-  
+
     // Hide the scrollbar
     document.body.style.overflow = 'hidden'
     document.body.style.height = '100%'
     document.body.style.position = 'fixed' // Prevent scrolling
     document.body.style.width = '100%' // Ensure full width
-  
+
     // Create a container for all pages
     const pdfContainer = document.createElement('div')
-  
+
     for (let i = 0; i < data.length; i++) {
       const groupIndex = tabGroup.findIndex(e => e.label == data[i]);
-  
+
       if (groupIndex === -1) {
         continue
       }
-  
+
       await waitForDOMUpdate()
-  
+
       const leftDivRef = leftprintRefs.current[groupIndex]
       console.log(leftDivRef)
       const rightDivRef = printRefs.current[groupIndex]
-  
+
       if (!leftDivRef || !rightDivRef) {
         continue
       }
-  
+
       leftDivRef.classList.remove('hidden-print')
-  
+
       const pageWrapper = document.createElement('div')
       pageWrapper.style.display = 'flex'
       pageWrapper.style.pageBreakAfter = 'always'
-  
+
       // Clone left section
       const leftClone = leftDivRef.cloneNode(true);
       leftClone.style.width = "26%";
@@ -605,7 +602,7 @@ function DevtaVastuPage({ id }) {
       leftClone.style.overflow = "hidden";
       leftClone.style.paddingTop = "24px"
       leftClone.style.fontFamily = "'Segoe UI', Arial, sans-serif"; // Apply font-family
-  
+
       // Clone right section
       const rightClone = rightDivRef.cloneNode(true);
       rightClone.style.width = "74%";
@@ -615,12 +612,12 @@ function DevtaVastuPage({ id }) {
       rightClone.style.paddingTop = "24px"
       rightClone.style.paddingLeft = "8px"
       rightClone.style.fontFamily = "'Segoe UI', Arial, sans-serif"; // Apply font-family
-  
+
       pageWrapper.appendChild(rightClone);
       pageWrapper.appendChild(leftClone);
       pdfContainer.appendChild(pageWrapper);
     }
-  
+
     if (!pdfContainer.innerHTML.trim()) {
       alert('No matching data found for PDF generation.')
       setLoading(false)
@@ -630,21 +627,21 @@ function DevtaVastuPage({ id }) {
       document.body.style.width = '' // Restore width
       return
     }
-  
+
     document.body.appendChild(pdfContainer)
-  
+
     await waitForImagesToLoad(pdfContainer)
     await waitForDOMUpdate()
-  
+
     // Apply the optimized settings we determined for the first function
     const options = {
       margin: 0,
       filename: 'output.pdf',
-      image: { 
-        type: 'jpeg', 
+      image: {
+        type: 'jpeg',
         quality: 0.85 // Optimized JPEG quality
       },
-      html2canvas: { 
+      html2canvas: {
         scale: 8, // Using the scale of 8 that worked well in your other function
         useCORS: true,
         allowTaint: true,
@@ -652,31 +649,31 @@ function DevtaVastuPage({ id }) {
         imageTimeout: 0, // No timeout for large content
         backgroundColor: '#FFFFFF' // Ensures white background
       },
-      jsPDF: { 
-        unit: 'pt', 
-        format: 'a4', 
+      jsPDF: {
+        unit: 'pt',
+        format: 'a4',
         orientation: 'landscape',
         compress: true, // Enable PDF compression
         hotfixes: ["px_scaling"] // Help with better text rendering
       }
     }
-  
+
     await html2pdf()
       .from(pdfContainer)
       .set(options)
       .save()
-  
+
     setActiveTab(preservedTab)
     document.body.removeChild(pdfContainer)
     setLoading(false)
-  
+
     // Restore the scrollbar
     document.body.style.overflow = ''
     document.body.style.height = ''
     document.body.style.position = ''
     document.body.style.width = ''
   }
-  
+
   // Helper function to ensure images load before rendering PDF
   const waitForImagesToLoad = container => {
     const images = Array.from(container.getElementsByTagName('img'))
@@ -694,7 +691,7 @@ function DevtaVastuPage({ id }) {
       )
     )
   }
-  
+
   // Helper function to wait for React state updates and re-renders
   const waitForDOMUpdate = () => new Promise(resolve => requestAnimationFrame(() => setTimeout(resolve, 300)))
 
@@ -795,7 +792,7 @@ function DevtaVastuPage({ id }) {
               </div>
             </Card>
             <Card>
-              {savedGroups.length > 0 && (
+              {savedGroups.length > 0 && tabGroup && (
                 <>
                   <div className='flex items-center space-x-2 overflow-auto'>
                     <MovableTabs savedGroups={savedGroups} setSavedGroups={setSavedGroups} handleRemoveOpen={handleRemoveOpen} activeTab={activeTab} handleTabChange={handleTabChange} groups={tabGroup} setActiveTab={setActiveTab} />
@@ -810,6 +807,7 @@ function DevtaVastuPage({ id }) {
                     <>
                       <DevtaVastu
                         key={index}
+                        tabTitle={group.title}
                         setPrintRef={el => (printRefs.current[index] = el)}
                         setleftPrintRef={el => (leftprintRefs.current[index] = el)}
                         downloadPDFLoading={downloadPDFLoading}
@@ -817,6 +815,15 @@ function DevtaVastuPage({ id }) {
                         saveLoading={saveLoading}
                         setSaveLoading={setSaveLoading}
                         selectedGroup={group.label}
+                        setPageTitle={(newName) => {
+                          console.warn("New Name : ", newName)
+                          console.warn("Group : ", tabGroup[index])
+                          setTabGroup((prev) => {
+                            const updatedGroup = [...prev];
+                            updatedGroup[index].title = newName;
+                            return updatedGroup;
+                          });
+                        }}
                         fileUploaded={fileUploaded}
                         setFileUploaded={setFileUploaded}
                         handleFileUpload={handleFileUpload}
@@ -885,7 +892,7 @@ function DevtaVastuPage({ id }) {
               <AddPagePopUp open={AddPage} handleClose={handleAddNewPage} handleSave={handleSave} tabGroup={tabGroup} savedGroups={savedGroups} />
             )}
             {LayoutSave && (
-              <SaveLayoutPopUp open={LayoutSave} layoutData={formData} setLayoutData={setVastuLayoutData} fileInfo={fileInfo} handleClose={handleSaveLayoutToggle} tabGroup={tabGroup} savedGroups={savedGroups} previewUrl={previewUrl} setLoading={setLoading} setIsLayoutChange={setIsLayoutChange}/>
+              <SaveLayoutPopUp open={LayoutSave} layoutData={formData} setLayoutData={setVastuLayoutData} fileInfo={fileInfo} handleClose={handleSaveLayoutToggle} tabGroup={tabGroup} savedGroups={savedGroups} previewUrl={previewUrl} setLoading={setLoading} setIsLayoutChange={setIsLayoutChange} />
             )}
           </div>
         </>
