@@ -233,8 +233,6 @@ function KundaliEventCard({ EventElement, index, handleEditEvent, SelectedEventV
   }
 
   const handleEdit = eid => {
-    console.warn("EventElement",EventElement)
-
     handleEditEvent(eid)
   }
 

@@ -26,7 +26,7 @@ const DraggableTab1 = ({ group, index, handleRemoveOpen, handleTabChange, active
           }}
           className='text-primary font-ea-n'
         >
-          {group}
+          {group?.title}
         </div>
         <IconButton
           size='small'

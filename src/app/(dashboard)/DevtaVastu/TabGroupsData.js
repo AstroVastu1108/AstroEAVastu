@@ -240,5 +240,5 @@ const TAB_LABELS = [
   'Geo Energy audit',
 ];
 
-export const TabsData = TAB_LABELS.map(label => ({ label, ...DEFAULT_TAB_CONFIG }));
+export const TabsData = TAB_LABELS.map(label => ({ label, title: label, ...DEFAULT_TAB_CONFIG }));
 
