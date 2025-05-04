@@ -2591,6 +2591,11 @@ const DevtaVastu = ({
           handleAddPolygonToggle={handleAddPolygonToggle}
           setCropImage={setCropImage}
           cropImage={cropImage}
+          handleShowCharts={handleShowCharts}
+          show45Charts={show45Charts}
+          show32Charts={show32Charts}
+          show8Charts={show8Charts}
+          show4Charts={show4Charts}
         />
       </div>
       {openNewPolygon && (

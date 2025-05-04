@@ -60,7 +60,12 @@ function RightSidePanel({
   setPageTitle,
   handleAddPolygonToggle,
   setCropImage,
-  cropImage
+  cropImage,
+  handleShowCharts,
+  show45Charts,
+  show32Charts,
+  show8Charts,
+  show4Charts
 }) {
   const printRef1 = useRef(null)
   const [tabNewName, setTabNewName] = useState(tabName)
@@ -379,6 +384,51 @@ function RightSidePanel({
                   </Stack>
                 </AccordionDetails>
               </Accordion>
+
+              {selectedGroup && selectedGroup == "16 Zone Bar Chart" && (
+                <Accordion
+                  sx={{
+                    border: '1px solid transparent',
+                    '&.Mui-expanded': {
+                      borderColor: 'var(--primary-color)',
+                    },
+                    backgroundColor: 'transparent !important',
+                    boxShadow: 'none',
+                  }}>
+                  <AccordionSummary className='bg-gradient-to-r from-purple-100 to-purple-2'
+                    sx={{ borderRadius: "6px" }}
+                  >
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <i className="tabler-settings" width="20" height="20" />
+                      <Typography fontWeight="medium">Chart Options</Typography>
+                    </Box>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Stack spacing={1}>
+                      {[
+                        { id: 'show45Charts', label: '45 Area Chart', checked: show45Charts, onChange: (e => handleShowCharts(45, !show45Charts)) },
+                        { id: 'show32Charts', label: '32 Area Chart', checked: show32Charts, onChange: (e => handleShowCharts(32, !show32Charts)) },
+                        { id: 'show8Charts', label: '8 Area Chart', checked: show8Charts, onChange: (e => handleShowCharts(8, !show8Charts)) },
+                        { id: 'show4Charts', label: '4 Area Chart', checked: show4Charts, onChange: (e => handleShowCharts(4, !show4Charts)) },
+                      ].map(({ id, label, checked, onChange }) => (
+                        <FormControlLabel
+                          key={id}
+                          control={
+                            <Checkbox
+                              checked={checked}
+                              onChange={onChange}
+                              // onChange={e => onChange(e.target.checked)}
+                              color="secondary"
+                              size="small"
+                            />
+                          }
+                          label={<Typography variant="body2">{label}</Typography>}
+                        />
+                      ))}
+                    </Stack>
+                  </AccordionDetails>
+                </Accordion>
+              )}
 
               {/* Shakti Chakra Options */}
               <Accordion
