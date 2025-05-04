@@ -8,7 +8,7 @@ import {
     TableCell, TableContainer, TableHead, TableRow
 } from '@mui/material';
 
-const CustomBarChart = ({ data }) => {
+const CustomBarChart = ({ data, vertical = false, barSize = 20}) => {
     const areas = data?.map(item => item.area);
 
     const { highValue, mediumValue, lowValue } = useMemo(() => {
@@ -23,7 +23,6 @@ const CustomBarChart = ({ data }) => {
         };
     }, [areas]);
 
-    // Custom legend component for reference lines using colors only
     const ReferenceLineLegend = () => (
         <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center', gap: 4 }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -69,11 +68,8 @@ const CustomBarChart = ({ data }) => {
     );
 
     return (
-        <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
-            <Typography variant="h6" gutterBottom>
-                Custom Bar Chart
-            </Typography>
-            <Box sx={{ width: '100%', height: 400 }}>
+        <Paper elevation={0} sx={{ p: 3, borderRadius: 2 }}>
+            <Box sx={{ width: '100%', height: '500px',boxShadow:'none' }}>
                 <ResponsiveContainer width="100%" height="100%">
                     <BarChart
                         data={data}
@@ -81,7 +77,7 @@ const CustomBarChart = ({ data }) => {
                             top: 20,
                             right: 30,
                             left: 20,
-                            bottom: 5,
+                            bottom: vertical ? 55 : 20, 
                         }}
                         barCategoryGap="20%"
                         barGap={0}
@@ -93,6 +89,17 @@ const CustomBarChart = ({ data }) => {
                             tickLine={true}
                             interval={0}
                             padding={{ left: 20, right: 20 }}
+                            tick={vertical ? {
+                                angle: -90,
+                                textAnchor: 'end',
+                                dy: -5,    // Adjust vertical position (move up)
+                                dx: -10,   // Adjust horizontal position
+                                fontSize: 12,  // Optional: adjust font size if needed
+                                width: 200,   // Ensure enough width for the text
+                                overflow: "hidden",  // Handle text overflow
+                                textOverflow: "ellipsis"  // Add ellipsis for long text
+                            } : {}}
+                            // tick={vertical ? { angle: -90, textAnchor: 'end' } : {}}
                         />
                         <YAxis />
                         <Tooltip formatter={(value) => [`${value}`, 'Area']} />
@@ -100,7 +107,7 @@ const CustomBarChart = ({ data }) => {
                         <Bar
                             dataKey="area"
                             name="Area"
-                            barSize={20}
+                            barSize={barSize}
                         >
                             {data.map((entry, index) => (
                                 <Cell key={`cell-${index}`} fill={entry.color} />
@@ -114,7 +121,7 @@ const CustomBarChart = ({ data }) => {
                 </ResponsiveContainer>
             </Box>
             {/* Horizontal Data Table */}
-            <Box sx={{ mt: 4 }}>
+            <Box sx={{ mt: 5 }}>
                 <TableContainer
                     variant="outlined"
                     sx={{

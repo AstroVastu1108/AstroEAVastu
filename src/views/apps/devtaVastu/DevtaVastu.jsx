@@ -1,13 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import {
-  calculateArea,
-  calculateCentroid,
-  calculateIntersectionPoins,
-  calculateMidpoint,
-  isPointInPolygon,
-  isPointNear,
-  pointToLineDistance
-} from '../../../utils/geometryUtils'
+import { calculateArea, calculateAreas, calculateCentroid, calculateIntersectionPoins, calculateMidpoint, isPointInPolygon, isPointNear, pointToLineDistance } from '../../../utils/geometryUtils'
 import GridBackground from './GridBackground'
 import jsPDF from 'jspdf'
 import './DevtaVastu.css'
@@ -113,6 +105,11 @@ const DevtaVastu = ({
   const [openNewPolygon, setOpenNewPolygon] = useState(false)
   const [draggingState, setDraggingState] = useState(null)
   const [OverlayPolyClick, setOverlayPolyClick] = useState(false)
+  const [show32Charts, setShow32Charts] = useState(false)
+  const [show45Charts, setShow45Charts] = useState(false)
+  const [show8Charts, setShow8Charts] = useState(false)
+  const [show4Charts, setShow4Charts] = useState(false)
+  const [showCharts, setShowCharts] = useState(false)
   const [NewOverlayPoly, setNewOverlayPoly] = useState({
     title: '',
     color: '#007BFF',
@@ -1082,271 +1079,13 @@ const DevtaVastu = ({
   const filteredData = (label, object) => {
     return object.filter(item => label === item.label)
   }
+
   useEffect(() => {
-    const intermediatePoints = [
-      { pointLookup: pointLookup['W4'], label: 'I15' },
-      { pointLookup: pointLookup['W5'], label: 'I16' },
-      { pointLookup: pointLookup['W6'], label: 'I17' },
-      { pointLookup: pointLookup['W7'], label: 'I18', intersectLabel: 'A11' },
-      { pointLookup: pointLookup['W8'], label: 'I19' },
-      { pointLookup: pointLookup['N1'], label: 'I20', intersectLabel: 'A13', extraIntersect: 'X20' },
-      { pointLookup: pointLookup['N2'], label: 'I21' },
-      { pointLookup: pointLookup['N3'], label: 'I22', intersectLabel: 'A15' },
-      // Another side
-      { pointLookup: pointLookup['N4'], label: 'I23' },
-      { pointLookup: pointLookup['N5'], label: 'I24' },
-      { pointLookup: pointLookup['N6'], label: 'I25' },
-      { pointLookup: pointLookup['N7'], label: 'I26', intersectLabel: 'A16' },
-      { pointLookup: pointLookup['N8'], label: 'I27' },
-      { pointLookup: pointLookup['E1'], label: 'I28', intersectLabel: 'A18', extraIntersect: 'X28' },
-      { pointLookup: pointLookup['E2'], label: 'I29' },
-      { pointLookup: pointLookup['E3'], label: 'I30', intersectLabel: 'A20' },
-      // Another side
-      { pointLookup: pointLookup['E4'], label: 'I31' },
-      { pointLookup: pointLookup['E5'], label: 'I0' },
-      { pointLookup: pointLookup['E6'], label: 'I1' },
-      { pointLookup: pointLookup['E7'], label: 'I2', intersectLabel: 'A1' },
-      { pointLookup: pointLookup['E8'], label: 'I3' },
-      { pointLookup: pointLookup['S1'], label: 'I4', intersectLabel: 'A3', extraIntersect: 'X4' },
-      { pointLookup: pointLookup['S2'], label: 'I5' },
-      { pointLookup: pointLookup['S3'], label: 'I6', intersectLabel: 'A5' },
-      // Another side
-      { pointLookup: pointLookup['S4'], label: 'I7' },
-      { pointLookup: pointLookup['S5'], label: 'I8' },
-      { pointLookup: pointLookup['S6'], label: 'I9' },
-      { pointLookup: pointLookup['S7'], label: 'I10', intersectLabel: 'A6' },
-      { pointLookup: pointLookup['S8'], label: 'I11' },
-      { pointLookup: pointLookup['W1'], label: 'I12', intersectLabel: 'A8', extraIntersect: 'X12' },
-      { pointLookup: pointLookup['W2'], label: 'I13' },
-      { pointLookup: pointLookup['W3'], label: 'I14', intersectLabel: 'A10' }
-    ]
+    var { areaData, drawDevtaObject } = calculateAreas(intersactMidIntermediatePoints, intermediatePoints1Test, intermediatePoints2Test, pointLookup)
 
-    const newDrawDevtaObject = intermediatePoints.reduce(
-      (acc, { pointLookup, label, intersectLabel, extraIntersect }) => {
-        const filteredPoint = filteredData(label, intermediatePoints1Test)
-        const intersectPoint = intersectLabel ? filteredData(intersectLabel, intersactMidIntermediatePoints) : null
-        const extraFilteredPoint = extraIntersect ? filteredData(extraIntersect, intermediatePoints2Test) : null
-
-        const obj = {
-          point1: pointLookup,
-          point2: filteredPoint[0]?.point || null,
-          midpoint: intersectPoint ? intersectPoint[0]?.midpoint || null : null,
-          extrapoint: extraFilteredPoint ? extraFilteredPoint[0]?.point || null : null
-        }
-
-        // Check and push the main object if point1 is not null
-        if (obj.point1 !== null) {
-          // Push the main object
-          if (obj.point2 !== null || obj.midpoint !== null) {
-            acc.push({
-              point1: obj.point1,
-              point2: obj.midpoint || obj.point2
-            })
-          }
-
-          // If extraIntersect is defined, push the extrapoint object as well
-          if (extraIntersect && obj.extrapoint !== null) {
-            acc.push({
-              point1: obj.extrapoint,
-              point2: obj.midpoint || obj.point2
-            })
-          }
-        }
-
-        return acc
-      },
-      []
-    )
-
-    const intermediatePointsTest = [
-      { pointLookup: pointLookup['E1'], label: 'I28', pointLookup1: pointLookup['E2'], label1: 'I29' },
-      { pointLookup: pointLookup['E2'], label: 'I29', pointLookup1: pointLookup['E3'], label1: 'I30' },
-      { pointLookup: pointLookup['E3'], label: 'I30', pointLookup1: pointLookup['E4'], label1: 'I31' },
-      { pointLookup: pointLookup['E4'], label: 'I31', pointLookup1: pointLookup['E5'], label1: 'I0' },
-      { pointLookup: pointLookup['E5'], label: 'I0', pointLookup1: pointLookup['E6'], label1: 'I1' },
-      { pointLookup: pointLookup['E6'], label: 'I1', pointLookup1: pointLookup['E7'], label1: 'I2' },
-      { pointLookup: pointLookup['E7'], label: 'I2', pointLookup1: pointLookup['E8'], label1: 'I3' },
-      { pointLookup: pointLookup['E8'], label: 'I3', pointLookup1: pointLookup['S1'], label1: 'I4' },
-      { pointLookup: pointLookup['S1'], label: 'I4', pointLookup1: pointLookup['S2'], label1: 'I5' },
-      { pointLookup: pointLookup['S2'], label: 'I5', pointLookup1: pointLookup['S3'], label1: 'I6' },
-      { pointLookup: pointLookup['S3'], label: 'I6', pointLookup1: pointLookup['S4'], label1: 'I7' },
-      { pointLookup: pointLookup['S4'], label: 'I7', pointLookup1: pointLookup['S5'], label1: 'I8' },
-      { pointLookup: pointLookup['S5'], label: 'I8', pointLookup1: pointLookup['S6'], label1: 'I9' },
-      { pointLookup: pointLookup['S6'], label: 'I9', pointLookup1: pointLookup['S7'], label1: 'I10' },
-      { pointLookup: pointLookup['S7'], label: 'I10', pointLookup1: pointLookup['S8'], label1: 'I11' },
-      { pointLookup: pointLookup['S8'], label: 'I11', pointLookup1: pointLookup['W1'], label1: 'I12' },
-      { pointLookup: pointLookup['W1'], label: 'I12', pointLookup1: pointLookup['W2'], label1: 'I13' },
-      { pointLookup: pointLookup['W2'], label: 'I13', pointLookup1: pointLookup['W3'], label1: 'I14' },
-      { pointLookup: pointLookup['W3'], label: 'I14', pointLookup1: pointLookup['W4'], label1: 'I15' },
-      { pointLookup: pointLookup['W4'], label: 'I15', pointLookup1: pointLookup['W5'], label1: 'I16' },
-      { pointLookup: pointLookup['W5'], label: 'I16', pointLookup1: pointLookup['W6'], label1: 'I17' },
-      { pointLookup: pointLookup['W6'], label: 'I17', pointLookup1: pointLookup['W7'], label1: 'I18' },
-      { pointLookup: pointLookup['W7'], label: 'I18', pointLookup1: pointLookup['W8'], label1: 'I19' },
-      { pointLookup: pointLookup['W8'], label: 'I19', pointLookup1: pointLookup['N1'], label1: 'I20' },
-      { pointLookup: pointLookup['N1'], label: 'I20', pointLookup1: pointLookup['N2'], label1: 'I21' },
-      { pointLookup: pointLookup['N2'], label: 'I21', pointLookup1: pointLookup['N3'], label1: 'I22' },
-      { pointLookup: pointLookup['N3'], label: 'I22', pointLookup1: pointLookup['N4'], label1: 'I23' },
-      { pointLookup: pointLookup['N4'], label: 'I23', pointLookup1: pointLookup['N5'], label1: 'I24' },
-      { pointLookup: pointLookup['N5'], label: 'I24', pointLookup1: pointLookup['N6'], label1: 'I25' },
-      { pointLookup: pointLookup['N6'], label: 'I25', pointLookup1: pointLookup['N7'], label1: 'I26' },
-      { pointLookup: pointLookup['N7'], label: 'I26', pointLookup1: pointLookup['N8'], label1: 'I27' },
-      { pointLookup: pointLookup['N8'], label: 'I27', pointLookup1: pointLookup['E1'], label1: 'I28' }
-    ]
-
-    const reversedIntermediatePointsTest = intermediatePointsTest.reverse()
-
-    const newDrawDevtaObjectTest = reversedIntermediatePointsTest.reduce(
-      (acc, { pointLookup, label, pointLookup1, label1 }) => {
-        const filteredPoint = filteredData(label, intermediatePoints1Test)
-        const filteredPoint2 = filteredData(label1, intermediatePoints1Test)
-
-        const newObject = {
-          point1: pointLookup,
-          point2: pointLookup1,
-          point3: filteredPoint2[0]?.point || null,
-          point4: filteredPoint[0]?.point || null
-        }
-
-        // Check if all points are not null
-        if (newObject.point1 && newObject.point2 && newObject.point3 && newObject.point4) {
-          acc.push(newObject)
-        }
-
-        return acc
-      },
-      []
-    )
-
-    const areas1 = newDrawDevtaObjectTest.map((area, index) => ({
-      id: index,
-      coordinates: convertPointsToCoordinates(area),
-      text: `Area ${index + 1}`
-    }))
-
-    const intermediatePointsTest1 = [
-      { points: { p1: 'I20', p2: 'A13', p3: 'I22', p4: 'A15' } },
-      { points: { p1: 'I18', p2: 'A11', p3: 'I20', p4: 'A13' } },
-      { points: { p1: 'I12', p2: 'A8', p3: 'I14', p4: 'A10' } },
-      { points: { p1: 'I10', p2: 'A6', p3: 'I12', p4: 'A8' } },
-      { points: { p1: 'I4', p2: 'A3', p3: 'I6', p4: 'A5' } },
-      { points: { p1: 'I2', p2: 'A1', p3: 'I4', p4: 'A3' } },
-      { points: { p1: 'I28', p2: 'A18', p3: 'I30', p4: 'A20' } },
-      { points: { p1: 'I26', p2: 'A16', p3: 'I28', p4: 'A18' } }
-    ]
-
-    const newDrawDevtaObjectTest1 = intermediatePointsTest1.reduce((acc, { points: { p1, p2, p3, p4 } }) => {
-      const filteredPoint1 = filteredData(p1, intermediatePoints1Test)
-      const filteredPoint2 = filteredData(p2, intersactMidIntermediatePoints)
-      const filteredPoint3 = filteredData(p3, intermediatePoints1Test)
-      const filteredPoint4 = filteredData(p4, intersactMidIntermediatePoints)
-
-      const newObject = {
-        point1: filteredPoint3[0]?.point || null,
-        point2: filteredPoint1[0]?.point || null,
-        point3: filteredPoint2[0]?.midpoint || null,
-        point4: filteredPoint4[0]?.midpoint || null
-      }
-
-      // Check if all points are not null
-      if (newObject.point1 && newObject.point2 && newObject.point3 && newObject.point4) {
-        acc.push(newObject)
-      }
-
-      return acc
-    }, [])
-
-    const intermediatePointsTest2 = [
-      { points: { p1: 'I14', p2: 'A10', p3: 'A8', p4: 'X12', p5: 'X20', p6: 'A13', p7: 'A11', p8: 'I20' } },
-      { points: { p1: 'I6', p2: 'A5', p3: 'A3', p4: 'X4', p5: 'X12', p6: 'A8', p7: 'A6', p8: 'I10' } },
-      { points: { p1: 'I30', p2: 'A20', p3: 'A18', p4: 'X28', p5: 'X4', p6: 'A3', p7: 'A1', p8: 'I2' } },
-      { points: { p1: 'I22', p2: 'A15', p3: 'A13', p4: 'X20', p5: 'X28', p6: 'A18', p7: 'A16', p8: 'I26' } }
-    ]
-
-    const newDrawDevtaObjectTest2 = intermediatePointsTest2.reduce(
-      (acc, { points: { p1, p2, p3, p4, p5, p6, p7, p8 } }) => {
-        const filteredPoint1 = filteredData(p1, intermediatePoints1Test)
-        const filteredPoint2 = filteredData(p2, intersactMidIntermediatePoints)
-        const filteredPoint3 = filteredData(p3, intersactMidIntermediatePoints)
-        const filteredPoint4 = filteredData(p4, intermediatePoints2Test)
-        const filteredPoint5 = filteredData(p5, intermediatePoints2Test)
-        const filteredPoint6 = filteredData(p6, intersactMidIntermediatePoints)
-        const filteredPoint7 = filteredData(p7, intersactMidIntermediatePoints)
-        const filteredPoint8 = filteredData(p8, intermediatePoints1Test)
-
-        const newObject = {
-          point1: filteredPoint1[0]?.point || null,
-          point2: filteredPoint2[0]?.midpoint || null,
-          point3: filteredPoint3[0]?.midpoint || null,
-          point4: filteredPoint4[0]?.point || null,
-          point5: filteredPoint5[0]?.point || null,
-          point6: filteredPoint6[0]?.midpoint || null,
-          point7: filteredPoint7[0]?.midpoint || null,
-          point8: filteredPoint8[0]?.point || null
-        }
-
-        // Check if all points are not null
-        if (
-          newObject.point1 &&
-          newObject.point2 &&
-          newObject.point3 &&
-          newObject.point4 &&
-          newObject.point5 &&
-          newObject.point6 &&
-          newObject.point7 &&
-          newObject.point8
-        ) {
-          acc.push(newObject)
-        }
-
-        return acc
-      },
-      []
-    )
-
-    const intermediatePointsTest3 = [{ points: { p1: 'X28', p2: 'X4', p3: 'X12', p4: 'X20' } }]
-
-    const newDrawDevtaObjectTest3 = intermediatePointsTest3.reduce((acc, { points: { p1, p2, p3, p4 } }) => {
-      const filteredPoint1 = filteredData(p1, intermediatePoints2Test)
-      const filteredPoint2 = filteredData(p2, intermediatePoints2Test)
-      const filteredPoint3 = filteredData(p3, intermediatePoints2Test)
-      const filteredPoint4 = filteredData(p4, intermediatePoints2Test)
-
-      const newObject = {
-        point1: filteredPoint1[0]?.point || null,
-        point2: filteredPoint2[0]?.point || null,
-        point3: filteredPoint3[0]?.point || null,
-        point4: filteredPoint4[0]?.point || null
-      }
-
-      // Check if all points are not null
-      if (newObject.point1 && newObject.point2 && newObject.point3 && newObject.point4) {
-        acc.push(newObject)
-      }
-
-      return acc
-    }, [])
-
-    const areas2 = newDrawDevtaObjectTest1.map((area, index) => ({
-      id: index + 33,
-      coordinates: convertPointsToCoordinates(area),
-      text: `Area ${index + 32 + 1}`
-    }))
-
-    const areas3 = newDrawDevtaObjectTest2.map((area, index) => ({
-      id: index + 40 + 1,
-      coordinates: convertPointsToCoordinates1(area),
-      text: `Area ${index + 40 + 1}`
-    }))
-
-    const areas4 = newDrawDevtaObjectTest3.map((area, index) => ({
-      id: index + 45,
-      coordinates: convertPointsToCoordinates(area),
-      text: `Area ${index + 45}`
-    }))
-
-    setAreas([...areas1, ...areas2, ...areas3, ...areas4].reverse())
-    setDrawDevtaObject(newDrawDevtaObject)
-  }, [intersactMidIntermediatePoints])
+    setAreas(areaData)
+    setDrawDevtaObject(drawDevtaObject)
+  }, [intersactMidIntermediatePoints, showCharts])
 
   const checkgetPointsBetween = (p1, p2) => {
     try {
@@ -1381,11 +1120,51 @@ const DevtaVastu = ({
     }
   }
 
+  let Area32Data = [];
+  let Area4Data = [];
+  let Area8Data = [];
+
+
+  const AreaCalculation = () => {
+    const Areas_32 = Area32Data?.map((area) => {
+      const ara = calculateArea(area.coordinates)
+      return {
+        result: area.coordinates,
+        area: ara,
+        label: area.text,
+        color: area.color
+      }
+    })
+    const Areas_8 = Area8Data?.map((area) => {
+      const ara = calculateArea(area.coordinates)
+      return {
+        result: area.coordinates,
+        area: ara,
+        label: area.text,
+        color: area.color
+      }
+    })
+    const Areas_4 = Area4Data?.map((area) => {
+      const ara = calculateArea(area.coordinates)
+      return {
+        result: area.coordinates,
+        area: ara,
+        label: area.text,
+        color: area.color
+      }
+    })
+    return {
+      Area_32_Data: Areas_32,
+      Area_8_Data: Areas_8,
+      Area_4_Data: Areas_4
+    }
+  }
+
+
   const HoverArea = ({ coordinates, hoverText, currentIndex, devta }) => {
     const [isHovered, setIsHovered] = useState(false)
     const centerX = (coordinates[0].x + coordinates[2].x) / 2 + 15
     const centerY = (coordinates[0].y + coordinates[2].y) / 2 + 15
-
     if (currentIndex >= 13 && currentIndex <= 44) {
       const p1 = coordinates[0]
       const p2 = coordinates[1]
@@ -1408,7 +1187,7 @@ const DevtaVastu = ({
         ]
       }
     }
-
+   
     if (currentIndex == 0) {
       coordinates = intermediatePoints2
     }
@@ -1821,14 +1600,278 @@ const DevtaVastu = ({
     setOpenNewPolygon(true)
   }
 
+  const handleShowCharts = (chartValue, isChecked) => {
+
+    if (isChecked) {
+      // When checking a checkbox
+      setShowCharts(true);
+      setShowDevta(true);
+      setShow45Charts(chartValue === 45);
+      setShow32Charts(chartValue === 32);
+      setShow8Charts(chartValue === 8);
+      setShow4Charts(chartValue === 4);
+      setHideCircle(true);  // If you need to show the circle when checked
+    } else {
+      setHideCircle(false);
+      switch (chartValue) {
+        case 45:
+          setShow45Charts(false);
+          break;
+        case 32:
+          setShow32Charts(false);
+          break;
+        case 8:
+          setShow8Charts(false);
+          break;
+        case 4:
+          setShow4Charts(false);
+          break;
+        default:
+          break;
+      }
+
+      // Check if all charts are unchecked
+      const isAllUnchecked = () => {
+        return !show45Charts && !show32Charts && !show8Charts && !show4Charts;
+      };
+
+      // Only hide Devta and Charts if all are unchecked
+      if (isAllUnchecked()) {
+        setShowDevta(false);
+        setShowCharts(false);
+      }
+    }
+  };
+
+  const [Area_45_Data, setArea_45_Data] = useState([])
+  const [Area_32_Data, setArea_32_Data] = useState([])
+  const [Area_8_Data, setArea_8_Data] = useState([])
+  const [Area_4_Data, setArea_4_Data] = useState([])
+
+  useEffect(() => {
+    if (selectedGroup && selectedGroup == "16 Zone Bar Chart") {
+      if (intersectionsState.length > 0) {
+        {
+          intersectionsState.map((intersection, i) => {
+            const dx = (centroid.x - intersection.point.x) / 3
+            const dy = (centroid.y - intersection.point.y) / 3
+            const point1 = { x: intersection.point.x + dx, y: intersection.point.y + dy }
+            intermediatePoints1.push(point1) // Add P1 to the array
+            intermediatePoints1Test.push({
+              point: point1,
+              label: `I${i}`
+            })
+            // Calculate the second intermediate point (P2)
+            const point2 = { x: intersection.point.x + 2 * dx, y: intersection.point.y + 2 * dy }
+            intermediatePoints2.push(point2) // Add P2 to the array
+            intermediatePoints2Test.push({
+              point: point2,
+              label: `X${i}`
+            })
+          })
+        }
+        const filteredData = intermediatePoints1Test.filter(item => labelsToExtract.includes(item.label))
+
+        const filteredData1 = intermediatePoints2Test.filter(item => labelsToExtract1.includes(item.label))
+
+        const midpoints = filteredData.map((item1, index) => {
+          const item2 = filteredData1[index]
+          const midpoint = calculateMidpoint(item1.point, item2.point)
+          return {
+            label: `A${index + 1}`,
+            midpoint
+          }
+        })
+        
+        var { areaData } = calculateAreas(midpoints, intermediatePoints1Test, intermediatePoints2Test, pointLookup)
+        const filteredData123 = (label, object) => {
+          return object.filter(item => label === item.label)
+        }
+        {
+          areaData.map((area, index) => {
+            var currentIndex = index
+            var coordinates = area.coordinates
+            var hoverText = index + 1 + ' ' + devta[index]
+            if (currentIndex >= 13 && currentIndex <= 44) {
+              const p1 = coordinates[0]
+              const p2 = coordinates[1]
+
+              const betweenPoints = checkgetPointsBetween(p1, p2) || [];
+
+              // Round function for comparison
+              const roundTo2 = num => Math.round(num * 100) / 100;
+
+              // Function to check if two points are the same
+              const isSamePoint = (a, b) =>
+                roundTo2(a.x) === roundTo2(b.x) && roundTo2(a.y) === roundTo2(b.y);
+
+              // Filter out points that are the same as p1 or p2
+              const filteredPoints = betweenPoints.filter(bp =>
+                !isSamePoint(bp, p1) && !isSamePoint(bp, p2)
+              );
+              if (filteredPoints.length > 0) {
+                coordinates = [
+                  p1,
+                  ...filteredPoints,
+                  ...coordinates.slice(1)  // Add the rest of coordinates starting from index 1
+                ];
+              }
+              if (!Area32Data.some(area => area.id === currentIndex)) {
+                Area32Data.push({
+                  coordinates: coordinates,
+                  text: hoverText,
+                  id: currentIndex,
+                  color: devtaColors[devta[index]]
+                });
+              }
+
+            }
+            // outer32AreaCalculation();
+            if (currentIndex == 0) {
+              coordinates = intermediatePoints2;
+            }
+
+            if (currentIndex > 0 && currentIndex < 13) {
+              const sources = {
+                'X': intermediatePoints2Test,
+                'A': midpoints,
+                'I': intermediatePoints1Test
+              };
+              
+              const configs = {
+                // Indices 1-4 use the 20-point pattern
+                1: [
+                  ["X20", "X", "point"], ["A13", "A", "midpoint"], ["A14", "A", "midpoint"], ["A15", "A", "midpoint"],
+                  ["I22", "I", "point"], ["I23", "I", "point"], ["I24", "I", "point"], ["I25", "I", "point"], ["I26", "I", "point"],
+                  ["A16", "A", "midpoint"], ["A17", "A", "midpoint"], ["A18", "A", "midpoint"],
+                  ["X28", "X", "point"], ["X27", "X", "point"], ["X26", "X", "point"], ["X25", "X", "point"],
+                  ["X24", "X", "point"], ["X23", "X", "point"], ["X22", "X", "point"], ["X21", "X", "point"]
+                ],
+                2: [
+                  ["X28", "X", "point"], ["A18", "A", "midpoint"], ["A19", "A", "midpoint"], ["A20", "A", "midpoint"],
+                  ["I30", "I", "point"], ["I31", "I", "point"], ["I0", "I", "point"], ["I1", "I", "point"], ["I2", "I", "point"],
+                  ["A1", "A", "midpoint"], ["A2", "A", "midpoint"], ["A3", "A", "midpoint"],
+                  ["X4", "X", "point"], ["X3", "X", "point"], ["X2", "X", "point"], ["X1", "X", "point"],
+                  ["X0", "X", "point"], ["X31", "X", "point"], ["X30", "X", "point"], ["X29", "X", "point"]
+                ],
+                3: [
+                  ["X4", "X", "point"], ["A3", "A", "midpoint"], ["A4", "A", "midpoint"], ["A5", "A", "midpoint"],
+                  ["I6", "I", "point"], ["I7", "I", "point"], ["I8", "I", "point"], ["I9", "I", "point"], ["I10", "I", "point"],
+                  ["A6", "A", "midpoint"], ["A7", "A", "midpoint"], ["A8", "A", "midpoint"],
+                  ["X12", "X", "point"], ["X11", "X", "point"], ["X10", "X", "point"], ["X9", "X", "point"],
+                  ["X8", "X", "point"], ["X7", "X", "point"], ["X6", "X", "point"], ["X5", "X", "point"]
+                ],
+                4: [
+                  ["X12", "X", "point"], ["A8", "A", "midpoint"], ["A9", "A", "midpoint"], ["A10", "A", "midpoint"],
+                  ["I14", "I", "point"], ["I15", "I", "point"], ["I16", "I", "point"], ["I17", "I", "point"], ["I18", "I", "point"],
+                  ["A11", "A", "midpoint"], ["A12", "A", "midpoint"], ["A13", "A", "midpoint"],
+                  ["X20", "X", "point"], ["X19", "X", "point"], ["X18", "X", "point"], ["X17", "X", "point"],
+                  ["X16", "X", "point"], ["X15", "X", "point"], ["X14", "X", "point"], ["X13", "X", "point"]
+                ],
+                // Indices 5-12 use the 6-point pattern
+                5: [
+                  ["A16", "A", "midpoint"], ["I26", "I", "point"], ["I27", "I", "point"], ["I28", "I", "point"],
+                  ["A18", "A", "midpoint"], ["A17", "A", "midpoint"]
+                ],
+                6: [
+                  ["A18", "A", "midpoint"], ["I28", "I", "point"], ["I29", "I", "point"], ["I30", "I", "point"],
+                  ["A20", "A", "midpoint"], ["A19", "A", "midpoint"]
+                ],
+                7: [
+                  ["A1", "A", "midpoint"], ["I2", "I", "point"], ["I3", "I", "point"], ["I4", "I", "point"],
+                  ["A3", "A", "midpoint"], ["A2", "A", "midpoint"]
+                ],
+                8: [
+                  ["A3", "A", "midpoint"], ["I4", "I", "point"], ["I5", "I", "point"], ["I6", "I", "point"],
+                  ["A5", "A", "midpoint"], ["A4", "A", "midpoint"]
+                ],
+                9: [
+                  ["A6", "A", "midpoint"], ["I10", "I", "point"], ["I11", "I", "point"], ["I12", "I", "point"],
+                  ["A8", "A", "midpoint"], ["A7", "A", "midpoint"]
+                ],
+                10: [
+                  ["A8", "A", "midpoint"], ["I12", "I", "point"], ["I13", "I", "point"], ["I14", "I", "point"],
+                  ["A10", "A", "midpoint"], ["A9", "A", "midpoint"]
+                ],
+                11: [
+                  ["A11", "A", "midpoint"], ["I18", "I", "point"], ["I19", "I", "point"], ["I20", "I", "point"],
+                  ["A13", "A", "midpoint"], ["A12", "A", "midpoint"]
+                ],
+                12: [
+                  ["A13", "A", "midpoint"], ["I20", "I", "point"], ["I21", "I", "point"], ["I22", "I", "point"],
+                  ["A15", "A", "midpoint"], ["A14", "A", "midpoint"]
+                ]
+              };
+
+              try {
+                if (configs[currentIndex]) {
+                  coordinates = configs[currentIndex].map(([id, sourceType, property]) => {
+                    const result = filteredData123(id, sources[sourceType]);
+                    return result[0][property];
+                  });
+                  if (currentIndex > 0 && currentIndex < 5) {
+                    if (!Area4Data.some(area => area.id === currentIndex)) {
+                      Area4Data.push({
+                        coordinates: coordinates,
+                        text: hoverText,
+                        id: currentIndex,
+                        color: devtaColors[devta[index]]
+                      });
+                    }
+                  }
+                  if (currentIndex > 4 && currentIndex < 13) {
+                    if (!Area8Data.some(area => area.id === currentIndex)) {
+                      Area8Data.push({
+                        coordinates: coordinates,
+                        text: hoverText,
+                        id: currentIndex,
+                        color: devtaColors[devta[index]]
+                      });
+                    }
+                  }
+                }
+              } catch (error) {
+                console.error(`Error processing points for index ${currentIndex}:`, error);
+              }
+            }
+          })
+        }
+        var dataArea = AreaCalculation()
+        setArea_32_Data(dataArea.Area_32_Data)
+        setArea_8_Data(dataArea.Area_8_Data)
+        setArea_4_Data(dataArea.Area_4_Data)
+        if (dataArea?.Area_32_Data && dataArea?.Area_8_Data && dataArea?.Area_4_Data) {
+          const combinedData = [
+            ...(dataArea.Area_32_Data || []),
+            ...(dataArea.Area_8_Data || []),
+            ...(dataArea.Area_4_Data || [])
+          ];
+          setArea_45_Data(combinedData);
+        }
+      }
+    }
+  }, [intersectionsState, show32Charts])
+
   return (
     <>
       <div className='flex flex-col lg:flex-row gap-5 py-4 justify-start '>
         <div className='bg-white'>
           <div ref={printRef} className='flex-grow '>
-            {selectedGroup && selectedGroup == '16 Zone Bar Chart' ? (
+            {selectedGroup && selectedGroup == "16 Zone Bar Chart" ? (
               <div style={{ width: width, height: height }}>
-                <CustomBarChart data={allResults} />
+                <CustomBarChart
+                  data={show45Charts ? Area_45_Data : show32Charts
+                    ? Area_32_Data
+                    : show8Charts
+                      ? Area_8_Data
+                      : show4Charts
+                        ? Area_4_Data
+                        : allResults   // This will show all combined data
+                  }
+
+                  vertical={show32Charts || show45Charts ? true : false}
+                  barSize={show32Charts || show45Charts ? 10 : 20}
+                />
               </div>
             ) : (
               <div className='relative flex'>
@@ -1923,14 +1966,7 @@ const DevtaVastu = ({
 
                           {centroid && (
                             <>
-                              <circle
-                                cx={centroid.x}
-                                cy={centroid.y}
-                                r='5'
-                                fill='green'
-                                stroke='white'
-                                strokeWidth='2'
-                              />
+                              <circle cx={centroid.x} cy={centroid.y} r='5' fill='green' stroke='white' strokeWidth='2' />
 
                               {hideCircle &&
                                 Array.from({ length: totalLines }).map((_, index) => {
@@ -1999,10 +2035,7 @@ const DevtaVastu = ({
                                       label: `I${i}`
                                     })
                                     // Calculate the second intermediate point (P2)
-                                    const point2 = {
-                                      x: intersection.point.x + 2 * dx,
-                                      y: intersection.point.y + 2 * dy
-                                    }
+                                    const point2 = { x: intersection.point.x + 2 * dx, y: intersection.point.y + 2 * dy }
                                     intermediatePoints2.push(point2) // Add P2 to the array
                                     intermediatePoints2Test.push({
                                       point: point2,
@@ -2260,17 +2293,8 @@ const DevtaVastu = ({
                           )}
                         </g>
                       </g>
+                      <RectangleWithRotatedLines totalLines={32} width={width} height={height} degree={inputDegree} cx={centroid?.x} cy={centroid?.y} />
 
-                      <VastuPurushSVG points={points} centroid={centroid} height={height} width={width} />
-
-                      <RectangleWithRotatedLines
-                        totalLines={32}
-                        width={width}
-                        height={height}
-                        degree={inputDegree}
-                        cx={centroid?.x}
-                        cy={centroid?.y}
-                      />
                       {/* <RadialLines width={width} height={height} cx={centroid?.x} cy={centroid?.y} rotation={inputDegree} /> */}
 
                       {hideCircle &&
@@ -2424,8 +2448,6 @@ const DevtaVastu = ({
                               </g>
                             </>
                           )}
-
-                          {/* )} */}
                         </g>
                       ))}
 
