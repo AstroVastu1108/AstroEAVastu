@@ -91,25 +91,25 @@ export default function MovableTabs({
   return (
     <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
       <SortableContext items={savedGroups.map((_, index) => index)} strategy={verticalListSortingStrategy}>
-        <Tabs
-          className=' flex-1 overflow-auto grid-tabs !h-[1rem]'
-          variant='scrollable'
-          scrollButtons='false'
-          value={activeTab}
-          onChange={handleTabChange}
-          aria-label='saved groups tabs'
-        >
-          {savedGroups.map((group, index) => (
-            <DraggableTab1
-              key={index}
-              index={index}
-              group={group}
-              handleRemoveOpen={handleRemoveOpen}
-              handleTabChange={handleTabChange} // Pass handleTabChange to DraggableTab
-              activeTab={activeTab}
-            />
-          ))}
-        </Tabs>
+          <Tabs
+            className=' flex-1 overflow-auto grid-tabs !h-[1rem]'
+            variant='scrollable'
+            scrollButtons='false'
+            value={activeTab}
+            onChange={handleTabChange}
+            aria-label='saved groups tabs'
+          >
+            {savedGroups.map((group, index) => (
+              <DraggableTab1
+                key={index}
+                index={index}
+                group={groups.filter(item => item.label === group)[0]}
+                handleRemoveOpen={handleRemoveOpen}
+                handleTabChange={handleTabChange} // Pass handleTabChange to DraggableTab
+                activeTab={activeTab}
+              />
+            ))}
+          </Tabs>
       </SortableContext>
     </DndContext>
   )
