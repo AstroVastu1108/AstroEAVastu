@@ -233,160 +233,114 @@ function RightSidePanel({
             </Box>
 
             {/* Main Action Buttons */}
-            <Box>
-              {/* File Upload */}
-              <Paper
-                variant='outlined'
-                className='border-2 border-dashed border-gray-300 hover:border-purple-500 transition-colors p-4 rounded-lg flex flex-col items-center justify-center'
-                sx={{
-                  height: '120px',
-                  cursor: 'pointer',
-                  backgroundColor: 'rgba(250, 245, 255, 0.5)'
-                }}
-                onDragOver={e => e.preventDefault()}
-                onDrop={handleFileUpload}
-              >
-                <label className='flex flex-col items-center gap-2 cursor-pointer w-full h-full justify-center'>
-                  <i className='tabler-upload text-purple-800' width='50' height='50' />
-                  <Typography variant='subtitle1' className='font-medium text-purple-700'>
-                    Upload File
-                  </Typography>
-                  <input type='file' className='hidden' accept='.jpg,.jpeg,.png,.pdf' onChange={handleFileUpload} />
-                  <Typography variant='caption' className='text-gray-500'>
-                    Drag & drop or clicked <br />
-                    <Typography variant='caption' className='font-semibold'>
-                      (.jpg, .jpeg, .png, .pdf)
-                    </Typography>
-                  </Typography>
-                </label>
-              </Paper>
+            {selectedGroup && selectedGroup != "16 Zone Bar Chart" && (
+              <>
+                <Box>
+                  {/* File Upload */}
+                  <Paper
+                    variant='outlined'
+                    className='border-2 border-dashed border-gray-300 hover:border-purple-500 transition-colors p-4 rounded-lg flex flex-col items-center justify-center'
+                    sx={{
+                      height: '120px',
+                      cursor: 'pointer',
+                      backgroundColor: 'rgba(250, 245, 255, 0.5)'
+                    }}
+                    onDragOver={e => e.preventDefault()}
+                    onDrop={handleFileUpload}
+                  >
+                    <label className='flex flex-col items-center gap-2 cursor-pointer w-full h-full justify-center'>
+                      <i className='tabler-upload text-purple-800' width='50' height='50' />
+                      <Typography variant='subtitle1' className='font-medium text-purple-700'>
+                        Upload File
+                      </Typography>
+                      <input type='file' className='hidden' accept='.jpg,.jpeg,.png,.pdf' onChange={handleFileUpload} />
+                      <Typography variant='caption' className='text-gray-500'>
+                        Drag & drop or clicked <br />
+                        <Typography variant='caption' className='font-semibold'>
+                          (.jpg, .jpeg, .png, .pdf)
+                        </Typography>
+                      </Typography>
+                    </label>
+                  </Paper>
 
-              {/* Action Buttons */}
-            </Box>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              {/* Overlay Button */}
-              <Button
-                variant='contained'
-                color='secondary'
-                fullWidth
-                startIcon={<i className='tabler-plus' width='20' height='20' />}
-                onClick={() => handleAddPolygonToggle(selectedGroup)}
-                sx={{ height: '48px' }}
-              >
-                Add Overlay
-              </Button>
+                  {/* Action Buttons */}
+                </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  {/* Overlay Button */}
+                  <Button
+                    variant='contained'
+                    color='secondary'
+                    fullWidth
+                    startIcon={<i className='tabler-plus' width='20' height='20' />}
+                    onClick={() => handleAddPolygonToggle(selectedGroup)}
+                    sx={{ height: '48px' }}
+                  >
+                    Add Overlay
+                  </Button>
 
-              {/* Zoom Controls */}
-              <Box sx={{ display: 'flex', gap: 2 }}>
-                <Button
-                  variant='contained'
-                  color='primary'
-                  startIcon={<i className='tabler-zoom-in' width='20' height='20' />}
-                  onClick={handleZoomIn}
-                  fullWidth
-                >
-                  Zoom In
-                </Button>
-                <Button
-                  variant='outlined'
-                  color='primary'
-                  startIcon={<i className='tabler-zoom-out' width='20' height='20' />}
-                  onClick={handleZoomOut}
-                  fullWidth
-                >
-                  Zoom Out
-                </Button>
-              </Box>
-            </Box>
-
-            {/* Compact Rotation Controls */}
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 2,
-                mb: 1,
-                py: 1,
-                px: 2,
-                border: '1px solid #e5e7eb',
-                borderRadius: '8px',
-                backgroundColor: 'rgba(250, 245, 255, 0.5)'
-              }}
-            >
-              <i className='tabler-rotate text-purple-600' width='20' height='20' />
-              <Typography variant='body2' sx={{ minWidth: '40px' }}>
-                {rotation}°
-              </Typography>
-              <Slider
-                id='rotation-slider'
-                value={rotation}
-                onChange={handleRotationChange}
-                min={0}
-                max={360}
-                step={1}
-                valueLabelDisplay='auto'
-                sx={{ flexGrow: 1 }}
-                size='small'
-              />
-              <Tooltip title='Reset rotation'>
-                <IconButton onClick={() => setRotation(0)} size='small' color='primary' sx={{ p: 0.5 }}>
-                  <i className='tabler-refresh' width='16' height='16' />
-                </IconButton>
-              </Tooltip>
-            </Box>
-
-            {/* Control Sections as Accordions */}
-            <Box>
-
-              <Accordion
-                defaultExpanded
-                sx={{
-                  border: '1px solid transparent',
-                  '&.Mui-expanded': {
-                    borderColor: 'var(--primary-color)'
-                  },
-                  backgroundColor: 'transparent !important',
-                  boxShadow: 'none'
-                }}
-              >
-                <AccordionSummary className='bg-gradient-to-r from-purple-100 to-purple-2' sx={{ borderRadius: '6px' }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <i className='tabler-settings' width='20' height='20' />
-                    <Typography fontWeight='medium'>Default Options</Typography>
+                  {/* Zoom Controls */}
+                  <Box sx={{ display: 'flex', gap: 2 }}>
+                    <Button
+                      variant='contained'
+                      color='primary'
+                      startIcon={<i className='tabler-zoom-in' width='20' height='20' />}
+                      onClick={handleZoomIn}
+                      fullWidth
+                    >
+                      Zoom In
+                    </Button>
+                    <Button
+                      variant='outlined'
+                      color='primary'
+                      startIcon={<i className='tabler-zoom-out' width='20' height='20' />}
+                      onClick={handleZoomOut}
+                      fullWidth
+                    >
+                      Zoom Out
+                    </Button>
                   </Box>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Stack spacing={1}>
-                    {[
-                      { id: 'lockChakra', label: 'Lock Chakra', checked: lockChakra, onChange: setLockChakra },
-                      { id: 'lockCentroid', label: 'Lock Center', checked: lockCentroid, onChange: setLockCentroid },
-                      {
-                        id: 'snapToCentroid',
-                        label: 'Reset Auto Center',
-                        checked: snapToCentroid,
-                        onChange: setSnapToCentroid
-                      },
-                      { id: 'cropImage', label: 'Crop Image', checked: cropImage, onChange: setCropImage }
-                    ].map(({ id, label, checked, onChange }) => (
-                      <FormControlLabel
-                        key={id}
-                        control={
-                          <Checkbox
-                            checked={checked}
-                            onChange={e => onChange(e.target.checked)}
-                            color='secondary'
-                            size='small'
-                          />
-                        }
-                        label={<Typography variant='body2'>{label}</Typography>}
-                      />
-                    ))}
-                  </Stack>
-                </AccordionDetails>
-              </Accordion>
+                </Box>
+                {/* Compact Rotation Controls */}
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 2,
+                    mb: 1,
+                    py: 1,
+                    px: 2,
+                    border: '1px solid #e5e7eb',
+                    borderRadius: '8px',
+                    backgroundColor: 'rgba(250, 245, 255, 0.5)'
+                  }}
+                >
+                  <i className='tabler-rotate text-purple-600' width='20' height='20' />
+                  <Typography variant='body2' sx={{ minWidth: '40px' }}>
+                    {rotation}°
+                  </Typography>
+                  <Slider
+                    id='rotation-slider'
+                    value={rotation}
+                    onChange={handleRotationChange}
+                    min={0}
+                    max={360}
+                    step={1}
+                    valueLabelDisplay='auto'
+                    sx={{ flexGrow: 1 }}
+                    size='small'
+                  />
+                  <Tooltip title='Reset rotation'>
+                    <IconButton onClick={() => setRotation(0)} size='small' color='primary' sx={{ p: 0.5 }}>
+                      <i className='tabler-refresh' width='16' height='16' />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+              </>
+            )}
 
+            <Box>
               {selectedGroup && selectedGroup == "16 Zone Bar Chart" && (
-                <Accordion
+                <Accordion defaultExpanded
                   sx={{
                     border: '1px solid transparent',
                     '&.Mui-expanded': {
@@ -400,13 +354,13 @@ function RightSidePanel({
                   >
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                       <i className="tabler-settings" width="20" height="20" />
-                      <Typography fontWeight="medium">Chart Options</Typography>
+                      <Typography fontWeight="medium">Devta Bar Chart Options</Typography>
                     </Box>
                   </AccordionSummary>
                   <AccordionDetails>
                     <Stack spacing={1}>
                       {[
-                        { id: 'show45Charts', label: '45 Area Chart', checked: show45Charts, onChange: (e => handleShowCharts(45, !show45Charts)) },
+                        { id: 'show45Charts', label: '44 Area Chart', checked: show45Charts, onChange: (e => handleShowCharts(45, !show45Charts)) },
                         { id: 'show32Charts', label: '32 Area Chart', checked: show32Charts, onChange: (e => handleShowCharts(32, !show32Charts)) },
                         { id: 'show8Charts', label: '8 Area Chart', checked: show8Charts, onChange: (e => handleShowCharts(8, !show8Charts)) },
                         { id: 'show4Charts', label: '4 Area Chart', checked: show4Charts, onChange: (e => handleShowCharts(4, !show4Charts)) },
@@ -429,232 +383,283 @@ function RightSidePanel({
                   </AccordionDetails>
                 </Accordion>
               )}
+              {selectedGroup && selectedGroup != "16 Zone Bar Chart" && (
+                <>
+                  <Accordion
+                    defaultExpanded
+                    sx={{
+                      border: '1px solid transparent',
+                      '&.Mui-expanded': {
+                        borderColor: 'var(--primary-color)'
+                      },
+                      backgroundColor: 'transparent !important',
+                      boxShadow: 'none'
+                    }}
+                  >
+                    <AccordionSummary className='bg-gradient-to-r from-purple-100 to-purple-2' sx={{ borderRadius: '6px' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <i className='tabler-settings' width='20' height='20' />
+                        <Typography fontWeight='medium'>Default Options</Typography>
+                      </Box>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Stack spacing={1}>
+                        {[
+                          { id: 'lockChakra', label: 'Lock Chakra', checked: lockChakra, onChange: setLockChakra },
+                          { id: 'lockCentroid', label: 'Lock Center', checked: lockCentroid, onChange: setLockCentroid },
+                          {
+                            id: 'snapToCentroid',
+                            label: 'Reset Auto Center',
+                            checked: snapToCentroid,
+                            onChange: setSnapToCentroid
+                          },
+                          { id: 'cropImage', label: 'Crop Image', checked: cropImage, onChange: setCropImage }
+                        ].map(({ id, label, checked, onChange }) => (
+                          <FormControlLabel
+                            key={id}
+                            control={
+                              <Checkbox
+                                checked={checked}
+                                onChange={e => onChange(e.target.checked)}
+                                color='secondary'
+                                size='small'
+                              />
+                            }
+                            label={<Typography variant='body2'>{label}</Typography>}
+                          />
+                        ))}
+                      </Stack>
+                    </AccordionDetails>
+                  </Accordion>
 
-              {/* Shakti Chakra Options */}
-              <Accordion
-                sx={{
-                  border: '1px solid transparent',
-                  '&.Mui-expanded': {
-                    borderColor: 'var(--primary-color)'
-                  },
-                  backgroundColor: 'transparent !important',
-                  boxShadow: 'none'
-                }}
-              >
-                <AccordionSummary className='bg-gradient-to-r from-purple-100 to-purple-2' sx={{ borderRadius: '6px' }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <i className='tabler-circle-dot' width='20' height='20' />
-                    <Typography fontWeight='medium'>Shakti Chakra Options</Typography>
-                  </Box>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Box sx={{ mb: 2 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
-                      <Typography variant='body2'>Chakra Degree:</Typography>
-                      <TextField
-                        type='number'
-                        disabled={lockChakra}
-                        value={inputDegree}
-                        onChange={handleInputChange}
-                        size='small'
-                        InputProps={{
-                          endAdornment: <Typography variant='caption'>°</Typography>
-                        }}
-                      />
-                    </Box>
-                    <Divider sx={{ my: 2 }} />
-                    <Stack spacing={1}>
-                      {chakras.map(({ id, label, checked, textLabel }) => (
-                        <FormControlLabel
-                          key={id}
-                          control={
-                            <Checkbox
-                              checked={checked}
-                              onChange={e => handleShowChakra(textLabel, e.target.checked)}
-                              color='secondary'
-                              size='small'
+
+                  {/* Shakti Chakra Options */}
+                  <Accordion
+                    sx={{
+                      border: '1px solid transparent',
+                      '&.Mui-expanded': {
+                        borderColor: 'var(--primary-color)'
+                      },
+                      backgroundColor: 'transparent !important',
+                      boxShadow: 'none'
+                    }}
+                  >
+                    <AccordionSummary className='bg-gradient-to-r from-purple-100 to-purple-2' sx={{ borderRadius: '6px' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <i className='tabler-circle-dot' width='20' height='20' />
+                        <Typography fontWeight='medium'>Shakti Chakra Options</Typography>
+                      </Box>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Box sx={{ mb: 2 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
+                          <Typography variant='body2'>Chakra Degree:</Typography>
+                          <TextField
+                            type='number'
+                            disabled={lockChakra}
+                            value={inputDegree}
+                            onChange={handleInputChange}
+                            size='small'
+                            InputProps={{
+                              endAdornment: <Typography variant='caption'>°</Typography>
+                            }}
+                          />
+                        </Box>
+                        <Divider sx={{ my: 2 }} />
+                        <Stack spacing={1}>
+                          {chakras.map(({ id, label, checked, textLabel }) => (
+                            <FormControlLabel
+                              key={id}
+                              control={
+                                <Checkbox
+                                  checked={checked}
+                                  onChange={e => handleShowChakra(textLabel, e.target.checked)}
+                                  color='secondary'
+                                  size='small'
+                                />
+                              }
+                              label={<Typography variant='body2'>{label}</Typography>}
                             />
+                          ))}
+                        </Stack>
+                      </Box>
+                    </AccordionDetails>
+                  </Accordion>
+
+                  {/* Line Controls */}
+                  <Accordion
+                    sx={{
+                      border: '1px solid transparent',
+                      '&.Mui-expanded': {
+                        borderColor: 'var(--primary-color)'
+                      },
+                      backgroundColor: 'transparent !important',
+                      boxShadow: 'none'
+                    }}
+                  >
+                    <AccordionSummary className='bg-gradient-to-r from-purple-100 to-purple-2' sx={{ borderRadius: '6px' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <i className='tabler-line-dashed' width='20' height='20' />
+                        <Typography fontWeight='medium'>Line Controls</Typography>
+                      </Box>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                        <LineControls lineSet={lineSets[0]} setIndex={0} onUpdate={handleLineSetUpdate} />
+                        <Divider />
+                        <LineControls lineSet={lineSets[1]} setIndex={1} onUpdate={handleLineSetUpdate} />
+                      </Box>
+                    </AccordionDetails>
+                  </Accordion>
+
+                  {/* Marma Options */}
+                  <Accordion
+                    sx={{
+                      border: '1px solid transparent',
+                      '&.Mui-expanded': {
+                        borderColor: 'var(--primary-color)'
+                      },
+                      backgroundColor: 'transparent !important',
+                      boxShadow: 'none'
+                    }}
+                  >
+                    <AccordionSummary className='bg-gradient-to-r from-purple-100 to-purple-2' sx={{ borderRadius: '6px' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <i className='tabler-point' width='20' height='20' />
+                        <Typography fontWeight='medium'>Marma Options</Typography>
+                      </Box>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Stack spacing={1}>
+                        {[
+                          {
+                            id: 'hideMarmaLines',
+                            label: 'Show Marma Lines',
+                            checked: hideMarmaLines,
+                            onChange: setHideMarmaLines
+                          },
+                          {
+                            id: 'hideMarmapoints',
+                            label: 'Show Marma Points',
+                            checked: hideMarmapoints,
+                            onChange: setHideMarmapoints
                           }
-                          label={<Typography variant='body2'>{label}</Typography>}
-                        />
-                      ))}
-                    </Stack>
-                  </Box>
-                </AccordionDetails>
-              </Accordion>
-
-              {/* Line Controls */}
-              <Accordion
-                sx={{
-                  border: '1px solid transparent',
-                  '&.Mui-expanded': {
-                    borderColor: 'var(--primary-color)'
-                  },
-                  backgroundColor: 'transparent !important',
-                  boxShadow: 'none'
-                }}
-              >
-                <AccordionSummary className='bg-gradient-to-r from-purple-100 to-purple-2' sx={{ borderRadius: '6px' }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <i className='tabler-line-dashed' width='20' height='20' />
-                    <Typography fontWeight='medium'>Line Controls</Typography>
-                  </Box>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                    <LineControls lineSet={lineSets[0]} setIndex={0} onUpdate={handleLineSetUpdate} />
-                    <Divider />
-                    <LineControls lineSet={lineSets[1]} setIndex={1} onUpdate={handleLineSetUpdate} />
-                  </Box>
-                </AccordionDetails>
-              </Accordion>
-
-              {/* Marma Options */}
-              <Accordion
-                sx={{
-                  border: '1px solid transparent',
-                  '&.Mui-expanded': {
-                    borderColor: 'var(--primary-color)'
-                  },
-                  backgroundColor: 'transparent !important',
-                  boxShadow: 'none'
-                }}
-              >
-                <AccordionSummary className='bg-gradient-to-r from-purple-100 to-purple-2' sx={{ borderRadius: '6px' }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <i className='tabler-point' width='20' height='20' />
-                    <Typography fontWeight='medium'>Marma Options</Typography>
-                  </Box>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Stack spacing={1}>
-                    {[
-                      {
-                        id: 'hideMarmaLines',
-                        label: 'Show Marma Lines',
-                        checked: hideMarmaLines,
-                        onChange: setHideMarmaLines
-                      },
-                      {
-                        id: 'hideMarmapoints',
-                        label: 'Show Marma Points',
-                        checked: hideMarmapoints,
-                        onChange: setHideMarmapoints
-                      }
-                    ].map(({ id, label, checked, onChange }) => (
-                      <FormControlLabel
-                        key={id}
-                        control={
-                          <Checkbox
-                            checked={checked}
-                            onChange={e => onChange(e.target.checked)}
-                            color='secondary'
-                            size='small'
+                        ].map(({ id, label, checked, onChange }) => (
+                          <FormControlLabel
+                            key={id}
+                            control={
+                              <Checkbox
+                                checked={checked}
+                                onChange={e => onChange(e.target.checked)}
+                                color='secondary'
+                                size='small'
+                              />
+                            }
+                            label={<Typography variant='body2'>{label}</Typography>}
                           />
-                        }
-                        label={<Typography variant='body2'>{label}</Typography>}
-                      />
-                    ))}
-                  </Stack>
-                </AccordionDetails>
-              </Accordion>
+                        ))}
+                      </Stack>
+                    </AccordionDetails>
+                  </Accordion>
 
-              {/* Devta Options */}
-              <Accordion
-                sx={{
-                  border: '1px solid transparent',
-                  '&.Mui-expanded': {
-                    borderColor: 'var(--primary-color)'
-                  },
-                  backgroundColor: 'transparent !important',
-                  boxShadow: 'none'
-                }}
-              >
-                <AccordionSummary className='bg-gradient-to-r from-purple-100 to-purple-2' sx={{ borderRadius: '6px' }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <i className='tabler-hexagon' width='20' height='20' />
-                    <Typography fontWeight='medium'>Devta Options</Typography>
-                  </Box>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Stack spacing={1}>
-                    {[
-                      { id: 'showDevta', label: 'Show Devta', checked: showDevta, onChange: setShowDevta },
-                      {
-                        id: 'showDevtaIntersaction',
-                        label: 'Show Devta Intersection Points',
-                        checked: showDevtaIntersaction,
-                        onChange: setShowDevtaIntersaction
-                      }
-                    ].map(({ id, label, checked, onChange }) => (
-                      <FormControlLabel
-                        key={id}
-                        control={
-                          <Checkbox
-                            checked={checked}
-                            onChange={e => onChange(e.target.checked)}
-                            color='secondary'
-                            size='small'
+                  {/* Devta Options */}
+                  <Accordion
+                    sx={{
+                      border: '1px solid transparent',
+                      '&.Mui-expanded': {
+                        borderColor: 'var(--primary-color)'
+                      },
+                      backgroundColor: 'transparent !important',
+                      boxShadow: 'none'
+                    }}
+                  >
+                    <AccordionSummary className='bg-gradient-to-r from-purple-100 to-purple-2' sx={{ borderRadius: '6px' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <i className='tabler-hexagon' width='20' height='20' />
+                        <Typography fontWeight='medium'>Devta Options</Typography>
+                      </Box>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Stack spacing={1}>
+                        {[
+                          { id: 'showDevta', label: 'Show Devta', checked: showDevta, onChange: setShowDevta },
+                          {
+                            id: 'showDevtaIntersaction',
+                            label: 'Show Devta Intersection Points',
+                            checked: showDevtaIntersaction,
+                            onChange: setShowDevtaIntersaction
+                          }
+                        ].map(({ id, label, checked, onChange }) => (
+                          <FormControlLabel
+                            key={id}
+                            control={
+                              <Checkbox
+                                checked={checked}
+                                onChange={e => onChange(e.target.checked)}
+                                color='secondary'
+                                size='small'
+                              />
+                            }
+                            label={<Typography variant='body2'>{label}</Typography>}
                           />
-                        }
-                        label={<Typography variant='body2'>{label}</Typography>}
-                      />
-                    ))}
-                  </Stack>
-                </AccordionDetails>
-              </Accordion>
+                        ))}
+                      </Stack>
+                    </AccordionDetails>
+                  </Accordion>
 
-              {/* Other Options */}
-              <Accordion
-                sx={{
-                  border: '1px solid transparent',
-                  '&.Mui-expanded': {
-                    borderColor: 'var(--primary-color)'
-                  },
-                  backgroundColor: 'transparent !important',
-                  boxShadow: 'none'
-                }}
-              >
-                <AccordionSummary className='bg-gradient-to-r from-purple-100 to-purple-2' sx={{ borderRadius: '6px' }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <i className='tabler-adjustments' width='20' height='20' />
-                    <Typography fontWeight='medium'>Other Options</Typography>
-                  </Box>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Stack spacing={1}>
-                    {[
-                      {
-                        id: 'imageDragDone',
-                        label: 'Lock Drag Image',
-                        checked: imageDragDone,
-                        onChange: setImageDragDone
+                  {/* Other Options */}
+                  <Accordion
+                    sx={{
+                      border: '1px solid transparent',
+                      '&.Mui-expanded': {
+                        borderColor: 'var(--primary-color)'
                       },
-                      {
-                        id: 'hideCircleIntersaction',
-                        label: 'Show Chakra Intersection Points',
-                        checked: hideCircleIntersaction,
-                        onChange: setHideCircleIntersaction
-                      },
-                      { id: 'disableDraw', label: 'Done Drawing', checked: disableDraw, onChange: setDisableDraw },
-                      { id: 'graphDraw', label: 'Graph Drawing', checked: graphDraw, onChange: setGraphDraw }
-                    ].map(({ id, label, checked, onChange }) => (
-                      <FormControlLabel
-                        key={id}
-                        control={
-                          <Checkbox
-                            checked={checked}
-                            onChange={e => onChange(e.target.checked)}
-                            color='secondary'
-                            size='small'
+                      backgroundColor: 'transparent !important',
+                      boxShadow: 'none'
+                    }}
+                  >
+                    <AccordionSummary className='bg-gradient-to-r from-purple-100 to-purple-2' sx={{ borderRadius: '6px' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <i className='tabler-adjustments' width='20' height='20' />
+                        <Typography fontWeight='medium'>Other Options</Typography>
+                      </Box>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Stack spacing={1}>
+                        {[
+                          {
+                            id: 'imageDragDone',
+                            label: 'Lock Drag Image',
+                            checked: imageDragDone,
+                            onChange: setImageDragDone
+                          },
+                          {
+                            id: 'hideCircleIntersaction',
+                            label: 'Show Chakra Intersection Points',
+                            checked: hideCircleIntersaction,
+                            onChange: setHideCircleIntersaction
+                          },
+                          { id: 'disableDraw', label: 'Done Drawing', checked: disableDraw, onChange: setDisableDraw },
+                          { id: 'graphDraw', label: 'Graph Drawing', checked: graphDraw, onChange: setGraphDraw }
+                        ].map(({ id, label, checked, onChange }) => (
+                          <FormControlLabel
+                            key={id}
+                            control={
+                              <Checkbox
+                                checked={checked}
+                                onChange={e => onChange(e.target.checked)}
+                                color='secondary'
+                                size='small'
+                              />
+                            }
+                            label={<Typography variant='body2'>{label}</Typography>}
                           />
-                        }
-                        label={<Typography variant='body2'>{label}</Typography>}
-                      />
-                    ))}
-                  </Stack>
-                </AccordionDetails>
-              </Accordion>
+                        ))}
+                      </Stack>
+                    </AccordionDetails>
+                  </Accordion>
+                </>
+              )}
             </Box>
           </Stack>
         </Box>

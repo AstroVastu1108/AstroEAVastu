@@ -1601,7 +1601,6 @@ const DevtaVastu = ({
   }
 
   const handleShowCharts = (chartValue, isChecked) => {
-
     if (isChecked) {
       // When checking a checkbox
       setShowCharts(true);
@@ -1719,7 +1718,7 @@ const DevtaVastu = ({
               if (!Area32Data.some(area => area.id === currentIndex)) {
                 Area32Data.push({
                   coordinates: coordinates,
-                  text: hoverText,
+                  text: hoverText.split(" ")[1],
                   id: currentIndex,
                   color: devtaColors[devta[index]]
                 });
@@ -1813,7 +1812,7 @@ const DevtaVastu = ({
                     if (!Area4Data.some(area => area.id === currentIndex)) {
                       Area4Data.push({
                         coordinates: coordinates,
-                        text: hoverText,
+                        text: hoverText.split(" ")[1],
                         id: currentIndex,
                         color: devtaColors[devta[index]]
                       });
@@ -1823,7 +1822,7 @@ const DevtaVastu = ({
                     if (!Area8Data.some(area => area.id === currentIndex)) {
                       Area8Data.push({
                         coordinates: coordinates,
-                        text: hoverText,
+                        text: hoverText.split(" ")[1],
                         id: currentIndex,
                         color: devtaColors[devta[index]]
                       });
@@ -1871,6 +1870,7 @@ const DevtaVastu = ({
 
                   vertical={show32Charts || show45Charts ? true : false}
                   barSize={show32Charts || show45Charts ? 10 : 20}
+                  showLines={show32Charts || show45Charts || show4Charts || show8Charts? false : true}
                 />
               </div>
             ) : (
