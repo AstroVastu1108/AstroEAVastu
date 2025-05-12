@@ -45,7 +45,7 @@ function DiscardPopUp({ open, handleClose, TabData, handleRemoveGroup}) {
               <div>
                 Are you sure want to discard
                 <span className='font-ea-sb text-red-700 ms-1'>
-                  {TabData} ?
+                  {TabData?.title}
                 </span>
                 {/* <div className='font-ea-n text-black'>
                   <span className='font-ea-sb'>{userData?.BirthDate} </span>{userData?.BirthTime.substring(0, 2)}:{userData?.BirthTime.substring(2, 4)}:{(userData?.BirthTime.substring(4, 6) ? userData?.BirthTime.substring(4, 6) : '00')}, {userData?.City}, {userData?.Country}

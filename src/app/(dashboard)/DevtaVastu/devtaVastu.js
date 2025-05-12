@@ -234,6 +234,54 @@ function DevtaVastuPage({ id }) {
   //       }
   //       reader.readAsDataURL(uploadedFile)
   //     } else if (fileType === 'application/pdf') {
+        // // Extract all pages as images
+        // const images = await readFileData(uploadedFile)
+
+        // if (images.length > 0) {
+        //   // Default to the first page
+        //   setPreviewUrl(images[0])
+        //   setFileUploaded(true)
+
+        //   // Prompt the user for page selection
+        //   const pageNumber = prompt(`Enter the page number (1 to ${images.length}):`, '1')
+
+        //   if (pageNumber) {
+        //     const pageIndex = parseInt(pageNumber, 10) - 1
+
+        //     if (pageIndex >= 0 && pageIndex < images.length) {
+        //       setPreviewUrl(images[pageIndex])
+        //     } else {
+        //       alert('Invalid page number. Showing the first page.')
+        //     }
+        //   }
+        // } else {
+        //   alert('No pages found in the PDF.')
+        // }
+  //     } else {
+  //       alert('Unsupported file type. Please upload an image or PDF.')
+  //     }
+  //   }
+  // }
+
+  // const handleFileUpload = async event => {
+  //   const uploadedFile = event.target.files[0]
+
+  //   if (uploadedFile) {
+  //     const fileType = uploadedFile.type
+  //     const name = uploadedFile.name
+  //     setFileInfo(name)
+
+  //     // Check for SVG specifically or any other image type
+  //     if (fileType.includes('image') || fileType === 'image/svg+xml') {
+  //       // If the uploaded file is an image (including SVG)
+  //       setFileUploaded(true)
+  //       const reader = new FileReader()
+  //       reader.onloadend = () => {
+  //         // console.log("reader : ", reader.result)
+  //         setPreviewUrl(reader.result)
+  //       }
+  //       reader.readAsDataURL(uploadedFile)
+  //     } else if (fileType === 'application/pdf') {
   //       // Extract all pages as images
   //       const images = await readFileData(uploadedFile)
 
@@ -243,7 +291,7 @@ function DevtaVastuPage({ id }) {
   //         setFileUploaded(true)
 
   //         // Prompt the user for page selection
-  //         const pageNumber = prompt(`Enter the page number (1 to ${images.length}):`, '1')
+  //         const pageNumber = prompt('Enter the page number (1 to ' + images.length + '):', '1')
 
   //         if (pageNumber) {
   //           const pageIndex = parseInt(pageNumber, 10) - 1
@@ -258,59 +306,241 @@ function DevtaVastuPage({ id }) {
   //         alert('No pages found in the PDF.')
   //       }
   //     } else {
-  //       alert('Unsupported file type. Please upload an image or PDF.')
+  //       alert('Unsupported file type. Please upload an image (including SVG) or PDF.')
   //     }
   //   }
   // }
 
-  const handleFileUpload = async event => {
-    const uploadedFile = event.target.files[0]
+  // const handleFileUpload =async (tabGroup, tabIndex) => async (event) => {
+  //   console.log("tabGroup : ", tabGroup);
+  //   console.log("tabIndex : ", tabIndex);
+    
+  //   const uploadedFile = event.target.files[0];
+  
+  //   if (uploadedFile) {
+  //     const fileType = uploadedFile.type;
+  //     const name = uploadedFile.name;
+  //     setFileInfo(name);
+  
+  //     // Create a reader to get the Base64 representation of the file
+  //     const reader = new FileReader();
+      
+  //     reader.onloadend = () => {
+  //       const base64Data = reader.result;
+        
+  //       // Log the state before update for debugging
+  //       console.log("before updatedTabGroup : ", tabGroup);
+        
+  //       // Update the NecessaryFiles for this specific tabGroup using the tabIndex
+  //       setTabGroup(prevTabGroup => {
+  //         // Create a deep copy to avoid reference issues
+  //         const updatedTabGroup = JSON.parse(JSON.stringify(prevTabGroup));
+          
+  //         // Ensure NecessaryFiles exists at this index
+  //         if (!updatedTabGroup[tabIndex].NecessaryFiles) {
+  //           updatedTabGroup[tabIndex].NecessaryFiles = [];
+  //         }
+          
+  //         // Update the file information
+  //         updatedTabGroup[tabIndex].NecessaryFiles[0] = {
+  //           OriginalFileName: name,
+  //           Base64File: base64Data
+  //         };
+          
+  //         console.log("after update for index", tabIndex, ":", updatedTabGroup[tabIndex].NecessaryFiles);
+  //         return updatedTabGroup;
+  //       });
+        
+  //       // Process file for preview based on type
+  //       if (fileType.includes('image') || fileType === 'image/svg+xml') {
+  //         setFileUploaded(true);
+  //         setPreviewUrl(base64Data);
+  //       } else if (fileType === 'application/pdf') {
+  //         const images =  await readFileData(uploadedFile)
 
+  //         if (images.length > 0) {
+  //           // Default to the first page
+  //           setPreviewUrl(images[0])
+  //           setFileUploaded(true)
+  
+  //           // Prompt the user for page selection
+  //           const pageNumber = prompt(`Enter the page number (1 to ${images.length}):`, '1')
+  
+  //           if (pageNumber) {
+  //             const pageIndex = parseInt(pageNumber, 10) - 1
+  
+  //             if (pageIndex >= 0 && pageIndex < images.length) {
+  //               setPreviewUrl(images[pageIndex])
+  //             } else {
+  //               alert('Invalid page number. Showing the first page.')
+  //             }
+  //           }
+  //         } else {
+  //           alert('No pages found in the PDF.')
+  //         }
+  //         // Handle PDF as before
+  //         // readFileData(uploadedFile).then(images => {
+  //         //   if (images.length > 0) {
+  //         //     setPreviewUrl(images[0]);
+  //         //     setFileUploaded(true);
+  
+            //   const pageNumber = prompt('Enter the page number (1 to ' + images.length + '):', '1');
+            //   if (pageNumber) {
+            //     const pageIndex = parseInt(pageNumber, 10) - 1;
+            //     if (pageIndex >= 0 && pageIndex < images.length) {
+            //       setPreviewUrl(images[pageIndex]);
+            //     } else {
+            //       alert('Invalid page number. Showing the first page.');
+            //     }
+            //   }
+            // } else {
+            //   alert('No pages found in the PDF.');
+            // }
+  //         // });
+  //       } else {
+  //         alert('Unsupported file type. Please upload an image (including SVG) or PDF.');
+  //       }
+  //     };
+      
+  //     // Start reading the file as a Data URL (base64)
+  //     reader.readAsDataURL(uploadedFile);
+  //   }
+  // };
+
+  // Correct implementation - removes the double async and fixes PDF handling
+  const handleFileUpload = (tabGroup, tabIndex) => (event) => {
+    console.log("tabGroup : ", tabGroup);
+    console.log("tabIndex : ", tabIndex);
+    
+    const uploadedFile = event.target.files[0];
+  
     if (uploadedFile) {
-      const fileType = uploadedFile.type
-      const name = uploadedFile.name
-      setFileInfo(name)
-
-      // Check for SVG specifically or any other image type
-      if (fileType.includes('image') || fileType === 'image/svg+xml') {
-        // If the uploaded file is an image (including SVG)
-        setFileUploaded(true)
-        const reader = new FileReader()
-        reader.onloadend = () => {
-          // console.log("reader : ", reader.result)
-          setPreviewUrl(reader.result)
-        }
-        reader.readAsDataURL(uploadedFile)
-      } else if (fileType === 'application/pdf') {
-        // Extract all pages as images
-        const images = await readFileData(uploadedFile)
-
-        if (images.length > 0) {
-          // Default to the first page
-          setPreviewUrl(images[0])
-          setFileUploaded(true)
-
-          // Prompt the user for page selection
-          const pageNumber = prompt('Enter the page number (1 to ' + images.length + '):', '1')
-
-          if (pageNumber) {
-            const pageIndex = parseInt(pageNumber, 10) - 1
-
-            if (pageIndex >= 0 && pageIndex < images.length) {
-              setPreviewUrl(images[pageIndex])
-            } else {
-              alert('Invalid page number. Showing the first page.')
+      const fileType = uploadedFile.type;
+      const name = uploadedFile.name;
+      setFileInfo(name);
+  
+      // Create a reader to get the Base64 representation of the file
+      const reader = new FileReader();
+      
+      reader.onloadend = () => {
+        const base64Data = reader.result;
+        
+        // Log the state before update for debugging
+        console.log("before updatedTabGroup : ", tabGroup);
+        
+        // For images, we can update the tabGroup immediately
+        if (fileType.includes('image') || fileType === 'image/svg+xml') {
+          // Update the NecessaryFiles for this specific tabGroup using the tabIndex
+          setTabGroup(prevTabGroup => {
+            // Create a deep copy to avoid reference issues
+            const updatedTabGroup = JSON.parse(JSON.stringify(prevTabGroup));
+            
+            // Ensure NecessaryFiles exists at this index
+            if (!updatedTabGroup[tabIndex].NecessaryFiles) {
+              updatedTabGroup[tabIndex].NecessaryFiles = [];
             }
-          }
+            
+            // Update the file information
+            updatedTabGroup[tabIndex].NecessaryFiles[0] = {
+              OriginalFileName: name,
+              Base64File: base64Data
+            };
+            
+            console.log("after update for index (image)", tabIndex, ":", updatedTabGroup[tabIndex].NecessaryFiles);
+            return updatedTabGroup;
+          });
+          
+          setFileUploaded(true);
+          setPreviewUrl(base64Data);
+        } 
+        // For PDFs, we need to process them first, then update the tabGroup
+        else if (fileType === 'application/pdf') {
+          // First, store the original PDF file in the tabGroup
+          // setTabGroup(prevTabGroup => {
+          //   // Create a deep copy to avoid reference issues
+          //   const updatedTabGroup = JSON.parse(JSON.stringify(prevTabGroup));
+            
+          //   // Ensure NecessaryFiles exists at this index
+          //   if (!updatedTabGroup[tabIndex].NecessaryFiles) {
+          //     updatedTabGroup[tabIndex].NecessaryFiles = [];
+          //   }
+            
+          //   // Update the file information with the original PDF file
+          //   updatedTabGroup[tabIndex].NecessaryFiles[0] = {
+          //     OriginalFileName: name,
+          //     Base64File: base64Data, // Original PDF data
+          //     isPdf: true  // Flag to indicate this is a PDF
+          //   };
+            
+          //   console.log("after update for index (original PDF)", tabIndex, ":", updatedTabGroup[tabIndex].NecessaryFiles);
+          //   return updatedTabGroup;
+          // });
+  
+          // Handle PDF processing with promise
+          readFileData(uploadedFile)
+            .then(images => {
+              if (images.length > 0) {
+                console.log("Processed PDF images:", images.length);
+                
+                // Store all PDF pages for later use if you implement the dropdown
+                // setPdfPages(images);
+                // setTotalPdfPages(images.length);
+                // setSelectedPage(1);
+                
+                // Set preview to first page
+                console.log("First PDF page:", images[0]);
+                setPreviewUrl(images[0]);
+                setFileUploaded(true);
+                const pageNumber = prompt('Enter the page number (1 to ' + images.length + '):', '1');
+                if (pageNumber) {
+                  const pageIndex = parseInt(pageNumber, 10) - 1;
+                  if (pageIndex >= 0 && pageIndex < images.length) {
+                    setPreviewUrl(images[pageIndex-1]);
+                    setTabGroup(prevTabGroup => {
+                      // Create a deep copy to avoid reference issues
+                      const updatedTabGroup = JSON.parse(JSON.stringify(prevTabGroup));
+                      
+                      // Ensure NecessaryFiles exists at this index
+                      if (!updatedTabGroup[tabIndex].NecessaryFiles) {
+                        updatedTabGroup[tabIndex].NecessaryFiles = [];
+                      }
+                      
+                      // Add PDF pages information to the NecessaryFiles
+                      // Store processed pages
+                      updatedTabGroup[tabIndex].NecessaryFiles[0] = {
+                        ...updatedTabGroup[tabIndex].NecessaryFiles[0], // Keep existing data
+                              OriginalFileName: name,
+                              Base64File: images[pageIndex], 
+                              isPdf: true, // Flag to indicate this is a PDF
+                              pdfImages: images, // Store all processed images
+                              pdfPages: images.length, // Total number of pages
+                              selectedPage: pageNumber-1 // Default to the first page
+                      };
+                      
+                      console.log("after update for index (processed PDF)", tabIndex, ":", updatedTabGroup[tabIndex].NecessaryFiles);
+                      return updatedTabGroup;
+                    });
+                  } else {
+                    alert('Invalid page number. Showing the first page.');
+                  }
+                }
+              } else {
+                alert('No pages found in the PDF.');
+              }
+            })
+            .catch(error => {
+              console.error("Error processing PDF file:", error);
+              alert('Error processing PDF file. Please try again.');
+            });
         } else {
-          alert('No pages found in the PDF.')
+          alert('Unsupported file type. Please upload an image (including SVG) or PDF.');
         }
-      } else {
-        alert('Unsupported file type. Please upload an image (including SVG) or PDF.')
-      }
+      };
+      
+      // Start reading the file as a Data URL (base64)
+      reader.readAsDataURL(uploadedFile);
     }
-  }
-
+  };
   const downloadPDF = () => {
     // setLoading(!loading);
     handleAnchorElClose();
@@ -399,8 +629,17 @@ function DevtaVastuPage({ id }) {
 
   const handleRemoveGroup = value => {
     if (savedGroups.length > 1) {
-      setSavedGroups(prev => prev.filter(group => group !== selectedTab))
-      setActiveTab(activeTab - 1)
+      setSavedGroups(prev => prev.filter(group => group !== selectedTab.label))
+      const removeIndex = savedGroups.indexOf(selectedTab.label);
+      if(activeTab == removeIndex && activeTab != 0 && savedGroups.length > 1){
+        setActiveTab(activeTab - 1)
+      }else if(removeIndex == 0 && savedGroups.length == 2){
+        setActiveTab(0)
+      }else if(removeIndex == 0 && savedGroups.length > 2){
+        setActiveTab(0)
+      }else if(activeTab == removeIndex && savedGroups.length > 1){
+        setActiveTab(activeTab + 1)
+      }
     }
   }
 
@@ -741,6 +980,18 @@ function DevtaVastuPage({ id }) {
   }, [activeTab])
 
 
+  const updatePdfPages = (selectedGroup, pageNumber) => {
+    console.log("Page Number : ", pageNumber)
+    const index = tabGroup.findIndex(tab => tab.label === selectedGroup);
+
+    
+    setTabGroup((prev) => {
+      const updatedGroup = [...prev];
+      updatedGroup[index].NecessaryFiles[0].selectedPage = pageNumber;
+      return updatedGroup;
+    });
+  }
+
   return (
     <>
       {loading ? (
@@ -806,7 +1057,6 @@ function DevtaVastuPage({ id }) {
                   (
                     <>
                       <DevtaVastu
-                        key={index}
                         tabTitle={group.title}
                         setPrintRef={el => (printRefs.current[index] = el)}
                         setleftPrintRef={el => (leftprintRefs.current[index] = el)}
@@ -826,8 +1076,8 @@ function DevtaVastuPage({ id }) {
                         }}
                         fileUploaded={fileUploaded}
                         setFileUploaded={setFileUploaded}
-                        handleFileUpload={handleFileUpload}
-                        previewUrl={previewUrl}
+                        handleFileUpload={handleFileUpload(tabGroup[index], index)}
+                        previewUrl={tabGroup[index].NecessaryFiles[0]}
                         setPreviewUrl={setPreviewUrl}
                         points={tabGroup[index].points}
                         setPoints={newPoints => handleTabGroupChange(index, 'points', newPoints)}
@@ -865,6 +1115,7 @@ function DevtaVastuPage({ id }) {
                         loading={loading}
                         IsDownloading={IsDownloading}
                         isLayoutChange={isLayoutChange}
+                        updatePdfPages={updatePdfPages}
                       />
                     </>
                     // <div key={index} style={{ display: activeHouse?.label === group.label ? 'block' : 'none' }}>

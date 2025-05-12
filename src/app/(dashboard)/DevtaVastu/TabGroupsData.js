@@ -23,6 +23,15 @@ const DEFAULT_LINE_SETS = [
 
 
 const DEFAULT_TAB_CONFIG = {
+  NecessaryFiles: [
+  {
+    OriginalFileName: null,
+    Base64File: null,
+    isPdf: false,
+    pdfImages:[],
+    pdfPages:0,
+    selectedPage:0,
+  }],
   points: DEFAULT_POINTS,
   centroid: null,
   setCentroid: null,
@@ -53,176 +62,7 @@ const DEFAULT_TAB_CONFIG = {
   lineSets:DEFAULT_LINE_SETS,
   setLineSets:DEFAULT_LINE_SETS
 };
-// export const TabsData = [
-//   {
-//     label: 'Google Layout',
-//     points: DEFAULT_POINTS,
-//     centroid: null,
-//     setCentroid: null,
-//     snapToCentroid: false,
-//     setSnapToCentroid: null,
-//     inputDegree: 0,
-//     setInputDegree: null,
-//     translate:{ x: 0, y: 0 },
-//     setTranslate:null,
-//     zoom:1,
-//     setZoom:1
-//   },
-//   {
-//     label: 'House Plan',
-//     points: DEFAULT_POINTS,
-//     centroid: null,
-//     setCentroid: null,
-//     snapToCentroid: false,
-//     setSnapToCentroid: null,
-//     inputDegree: 0,
-//     setInputDegree: null,
-//     translate:{ x: 0, y: 0 },
-//     setTranslate:null,
-//     zoom:1,
-//     setZoom:1
-//   },
-//   {
-//     label: 'Griding With 16 Zone',
-//     points: DEFAULT_POINTS,
-//     centroid: null,
-//     setCentroid: null,
-//     snapToCentroid: false,
-//     setSnapToCentroid: null,
-//     inputDegree: 0,
-//     setInputDegree: null,
-//     translate:{ x: 0, y: 0 },
-//     setTranslate:null,
-//     zoom:1,
-//     setZoom:1
-//   },
-//   {
-//     label: '16 Zone Bar Chart',
-//     points: DEFAULT_POINTS,
-//     centroid: null,
-//     setCentroid: null,
-//     snapToCentroid: false,
-//     setSnapToCentroid: null,
-//     inputDegree: 0,
-//     setInputDegree: null,
-//     translate:{ x: 0, y: 0 },
-//     setTranslate:null,
-//     zoom:1,
-//     setZoom:1
-//   },
-//   {
-//     label: 'Civil Energy',
-//     points: DEFAULT_POINTS,
-//     centroid: null,
-//     setCentroid: null,
-//     snapToCentroid: false,
-//     setSnapToCentroid: null,
-//     inputDegree: 0,
-//     setInputDegree: null,
-//     translate:{ x: 0, y: 0 },
-//     setTranslate:null,
-//     zoom:1,
-//     setZoom:1
-//   },
-//   {
-//     label: 'Devta Mark',
-//     points: DEFAULT_POINTS,
-//     centroid: null,
-//     setCentroid: null,
-//     snapToCentroid: false,
-//     setSnapToCentroid: null,
-//     inputDegree: 0,
-//     setInputDegree: null,
-//     translate:{ x: 0, y: 0 },
-//     setTranslate:null,
-//     zoom:1,
-//     setZoom:1
-//   },
-//   {
-//     label: 'Devta Marking Color',
-//     points: DEFAULT_POINTS,
-//     centroid: null,
-//     setCentroid: null,
-//     snapToCentroid: false,
-//     setSnapToCentroid: null,
-//     inputDegree: 0,
-//     setInputDegree: null,
-//     translate:{ x: 0, y: 0 },
-//     setTranslate:null,
-//     zoom:1,
-//     setZoom:1
-//   },
-//   {
-//     label: 'Devta bar chart',
-//     points: DEFAULT_POINTS,
-//     centroid: null,
-//     setCentroid: null,
-//     snapToCentroid: false,
-//     setSnapToCentroid: null,
-//     inputDegree: 0,
-//     setInputDegree: null,
-//     translate:{ x: 0, y: 0 },
-//     setTranslate:null,
-//     zoom:1,
-//     setZoom:1
-//   },
-//   {
-//     label: 'Devta + Marma Points',
-//     points: DEFAULT_POINTS,
-//     centroid: null,
-//     setCentroid: null,
-//     snapToCentroid: false,
-//     setSnapToCentroid: null,
-//     inputDegree: 0,
-//     setInputDegree: null,
-//     translate:{ x: 0, y: 0 },
-//     setTranslate:null,
-//     zoom:1,
-//     setZoom:1
-//   },
-//   {
-//     label: 'Custom Remedial Marking',
-//     points: DEFAULT_POINTS,
-//     centroid: null,
-//     setCentroid: null,
-//     snapToCentroid: false,
-//     setSnapToCentroid: null,
-//     inputDegree: 0,
-//     setInputDegree: null,
-//     translate:{ x: 0, y: 0 },
-//     setTranslate:null,
-//     zoom:1,
-//     setZoom:1
-//   },
-//   {
-//     label: 'Site Energy audit',
-//     points: DEFAULT_POINTS,
-//     centroid: null,
-//     setCentroid: null,
-//     snapToCentroid: false,
-//     setSnapToCentroid: null,
-//     inputDegree: 0,
-//     setInputDegree: null,
-//     translate:{ x: 0, y: 0 },
-//     setTranslate:null,
-//     zoom:1,
-//     setZoom:1
-//   },
-//   {
-//     label: 'Geo ',
-//     points: DEFAULT_POINTS,
-//     centroid: null,
-//     setCentroid: null,
-//     snapToCentroid: false,
-//     setSnapToCentroid: null,
-//     inputDegree: 0,
-//     setInputDegree: null,
-//     translate:{ x: 0, y: 0 },
-//     setTranslate:null,
-//     zoom:1,
-//     setZoom:1
-//   }
-// ]
+
 
 const TAB_LABELS = [
   'Google Layout',

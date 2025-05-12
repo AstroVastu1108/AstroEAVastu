@@ -91,7 +91,8 @@ const DevtaVastu = ({
   setLoading,
   IsDownloading,
   isLayoutChange,
-  setPageTitle
+  setPageTitle,
+  updatePdfPages
 }) => {
   const [hideMarmaLines, setHideMarmaLines] = useState(false)
   const [hideMarmapoints, setHideMarmapoints] = useState(false)
@@ -1910,7 +1911,7 @@ const DevtaVastu = ({
                           <CropImageWithSVG
                             height={height}
                             width={width}
-                            previewUrl={previewUrl}
+                            previewUrl={previewUrl?.Base64File}
                             points={points}
                             zoom={zoom}
                             rotation={rotation}
@@ -1924,7 +1925,7 @@ const DevtaVastu = ({
                             {previewUrl ? (
                               <>
                                 <image
-                                  href={previewUrl}
+                                  href={previewUrl?.isPdf ? previewUrl?.pdfImages[previewUrl?.selectedPage] : previewUrl?.Base64File}
                                   style={{ maxWidth: '100%', maxHeight: '500px', imageRendering: 'auto' }}
                                   width={width}
                                   height={height}
@@ -2551,6 +2552,7 @@ const DevtaVastu = ({
         </div>
         {/* <div className='flex flex-wrap lg:flex-col gap-3 p-4 lg:gap-0 bg-white' style={{ width: '550px' }}> */}
         <RightSidePanel
+          previewUrl={previewUrl}
           selectedGroup={selectedGroup}
           handleFileUpload={handleFileUpload}
           tabName={tabTitle}
@@ -2596,6 +2598,7 @@ const DevtaVastu = ({
           show32Charts={show32Charts}
           show8Charts={show8Charts}
           show4Charts={show4Charts}
+          updatePdfPages={updatePdfPages}
         />
       </div>
       {openNewPolygon && (

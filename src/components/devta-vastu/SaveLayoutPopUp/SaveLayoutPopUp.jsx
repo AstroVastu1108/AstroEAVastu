@@ -197,7 +197,7 @@ function SaveLayoutPopUp({
       ],
       TabGroups: matchingItems
     }
-
+    console.log("payload : ", payload)
     try {
       setLoading(true)
       let data

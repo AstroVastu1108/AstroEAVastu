@@ -15,12 +15,15 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  Stack
+  Stack,
+  Select,
+  MenuItem
 } from '@mui/material'
 import RightPrintSection from '../RightPrintSection/RightPrintSection'
 import LineControls from '@/views/apps/devtaVastu/LineControls'
 
 function RightSidePanel({
+  previewUrl,
   tabName,
   vastuLayoutData,
   handleFileUpload,
@@ -65,7 +68,8 @@ function RightSidePanel({
   show45Charts,
   show32Charts,
   show8Charts,
-  show4Charts
+  show4Charts,
+  updatePdfPages
 }) {
   const printRef1 = useRef(null)
   const [tabNewName, setTabNewName] = useState(tabName)
@@ -141,6 +145,8 @@ function RightSidePanel({
     setPageTitle(tempValue) // Assuming setPageTitle is a function to update the page title
     setIsEditing(false)
   }
+
+  const [selectedPage, setSelectedPage] = useState(previewUrl?.selectedPage);
 
   return (
     <>
@@ -237,6 +243,103 @@ function RightSidePanel({
               <>
                 <Box>
                   {/* File Upload */}
+                  {/* {previewUrl?.OriginalFileName && (
+                    <>
+                    <div className="flex flex-col items-center gap-2 w-full mb-2">
+                      <div className="bg-purple-100 w-full p-2 rounded-md flex items-center gap-2">
+                        <i className="tabler-file text-purple-800" width="20" height="20" />
+                        <Typography
+                          variant="body2"
+                          className="font-medium text-purple-800 flex-1 truncate"
+                        >
+                          {previewUrl?.OriginalFileName}
+                        </Typography>
+                       
+                      </div>
+                    </div>
+                    </>
+                  )} */}
+
+                  {previewUrl?.OriginalFileName && (
+                    <div className="flex flex-col items-center gap-2 w-full mb-2">
+                      <div className="bg-purple-100 w-full p-2 rounded-md flex items-center gap-2">
+                        {/* File icon based on file type */}
+                        {previewUrl.OriginalFileName.toLowerCase().endsWith('.pdf') ? (
+                          <i className="tabler-file-type-pdf text-red-600" width="24" height="24" />
+                        ) : previewUrl.OriginalFileName.toLowerCase().match(/\.(jpg|jpeg|png|gif)$/) ? (
+                          <i className="tabler-photo text-blue-600" width="24" height="24" />
+                        ) : (
+                          <i className="tabler-file text-purple-800" width="24" height="24" />
+                        )}
+
+                        {/* Filename with truncation */}
+                        <Typography
+                          variant="body2"
+                          className="font-medium text-purple-800 flex-1 truncate"
+                          title={previewUrl.OriginalFileName} // Show full name on hover
+                        >
+                          {previewUrl.OriginalFileName}
+                        </Typography>
+
+                        {/* File actions */}
+                        <div className="flex items-center gap-2">
+                          {/* PDF Page Selector - Only visible for PDF files */}
+                          {previewUrl.OriginalFileName.toLowerCase().endsWith('.pdf') && (
+                            <div className="flex items-center gap-1">
+                              <Typography variant="caption" className="text-gray-600 whitespace-nowrap">
+                                Page:
+                              </Typography>
+                              <Select
+                                size="small"
+                                value={selectedPage || previewUrl?.selectedPage}
+                                onChange={(e) => {
+                                  const pageIndex = e.target.value - 1;
+                                  setSelectedPage(e.target.value);
+                                  updatePdfPages(selectedGroup, pageIndex);
+                                }}
+                                className="min-w-[70px] bg-white"
+                                sx={{
+                                  '.MuiSelect-select': {
+                                    padding: '4px 8px',
+                                  },
+                                  height: '32px'
+                                }}
+                              >
+                                {/* Generate options based on total pages */}
+                                {Array.from({ length: previewUrl?.pdfPages || 1 }, (_, i) => (
+                                  <MenuItem key={i + 1} value={i}>
+                                    {i + 1}
+                                  </MenuItem>
+                                ))}
+                              </Select>
+                            </div>
+                          )}
+
+                          {/* Delete button */}
+                          {/* <IconButton
+          size="small"
+          className="text-gray-500 hover:text-red-600 transition-colors"
+          onClick={(e) => {
+            e.stopPropagation();
+            // // Clear the file information
+            // setPreviewUrl(null);
+            // setFileUploaded(false);
+            // setSelectedPage(1);
+            
+            // Also update the tabGroup if needed
+            // updateTabGroupFileInfo(tabIndex, null);
+          }}
+        >
+          <i className="tabler-trash text-sm" />
+        </IconButton> */}
+                        </div>
+                      </div>
+
+
+
+                    </div>
+                  )}
+
                   <Paper
                     variant='outlined'
                     className='border-2 border-dashed border-gray-300 hover:border-purple-500 transition-colors p-4 rounded-lg flex flex-col items-center justify-center'
@@ -262,6 +365,8 @@ function RightSidePanel({
                       </Typography>
                     </label>
                   </Paper>
+
+
 
                   {/* Action Buttons */}
                 </Box>

@@ -35,6 +35,9 @@ function AddPagePopUp({ open, handleClose, handleSave, tabGroup, savedGroups }) 
         titleRef.current.focus()
     }, 100);
   }, [titleRef])
+
+  const [shouldShrink, setShouldShrink] = useState(!!tabTitle);
+
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -79,6 +82,7 @@ function AddPagePopUp({ open, handleClose, handleSave, tabGroup, savedGroups }) 
                   value={tabTitle}
                   onChange={e => setTabTitle(e.target.value)}
                   inputRef={titleRef}
+                  InputLabelProps={{ shrink: shouldShrink || !!tabTitle }}
                 />
                 {/* <TextField
                   autoFocus
@@ -94,6 +98,10 @@ function AddPagePopUp({ open, handleClose, handleSave, tabGroup, savedGroups }) 
                   getOptionKey={option => option.label}
                   value={selectedGroup ? tabGroup.find(item => item.label === selectedGroup) : null}
                   onChange={(_, newValue) => {
+                    if(tabTitle == null || tabTitle == "") {
+                      setShouldShrink(true);
+                      setTabTitle(newValue.label)
+                    }
                     setSelectedGroup(newValue ? newValue.label : null)
                     setGroupError(false)
                   }}
