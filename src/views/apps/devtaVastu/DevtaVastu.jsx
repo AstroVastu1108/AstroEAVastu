@@ -1,10 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { calculateArea, calculateAreas, calculateCentroid, calculateIntersectionPoins, calculateMidpoint, isPointInPolygon, isPointNear, pointToLineDistance } from '../../../utils/geometryUtils'
+import {
+  calculateArea,
+  calculateAreas,
+  calculateCentroid,
+  calculateIntersectionPoins,
+  calculateMidpoint,
+  isPointInPolygon,
+  isPointNear,
+  pointToLineDistance
+} from '../../../utils/geometryUtils'
 import GridBackground from './GridBackground'
 import jsPDF from 'jspdf'
 import './DevtaVastu.css'
 import html2canvas from 'html2canvas'
-import { Upload } from 'lucide-react'
+import { Box, Upload } from 'lucide-react'
 import { GlobalWorkerOptions } from 'pdfjs-dist/build/pdf'
 import { LoadingButton } from '@mui/lab'
 // import { Checkbox, FormControlLabel, TextField, Paper, Box, Typography, Tooltip,Button } from '@mui/material'
@@ -34,6 +43,8 @@ import RightSidePanel from '@/components/devta-vastu/RightSidePanel/RightSidePan
 import CropImageWithSVG from '@/components/devta-vastu/CropImage/CropImage'
 import { description } from 'valibot'
 import VastuPurushSVG from '@/components/devta-vastu/VastuPurushSVG/VastuPurushSVG'
+import { Button } from '@mui/material'
+import RightPrintSection from '@/components/devta-vastu/RightPrintSection/RightPrintSection'
 
 GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.js'
 
@@ -1081,7 +1092,12 @@ const DevtaVastu = ({
   }
 
   useEffect(() => {
-    var { areaData, drawDevtaObject } = calculateAreas(intersactMidIntermediatePoints, intermediatePoints1Test, intermediatePoints2Test, pointLookup)
+    var { areaData, drawDevtaObject } = calculateAreas(
+      intersactMidIntermediatePoints,
+      intermediatePoints1Test,
+      intermediatePoints2Test,
+      pointLookup
+    )
 
     setAreas(areaData)
     setDrawDevtaObject(drawDevtaObject)
@@ -1632,16 +1648,16 @@ const DevtaVastu = ({
 
       // Check if all charts are unchecked
       const isAllUnchecked = () => {
-        return !show45Charts && !show32Charts && !show8Charts && !show4Charts;
-      };
+        return !show45Charts && !show32Charts && !show8Charts && !show4Charts
+      }
 
       // Only hide Devta and Charts if all are unchecked
       if (isAllUnchecked()) {
-        setShowDevta(false);
-        setShowCharts(false);
+        setShowDevta(false)
+        setShowCharts(false)
       }
     }
-  };
+  }
 
   const [Area_45_Data, setArea_45_Data] = useState([])
   const [Area_32_Data, setArea_32_Data] = useState([])
@@ -1649,7 +1665,7 @@ const DevtaVastu = ({
   const [Area_4_Data, setArea_4_Data] = useState([])
 
   useEffect(() => {
-    if (selectedGroup && selectedGroup == "16 Zone Bar Chart") {
+    if (selectedGroup && selectedGroup == '16 Zone Bar Chart') {
       if (intersectionsState.length > 0) {
         {
           intersectionsState.map((intersection, i) => {
@@ -1682,7 +1698,7 @@ const DevtaVastu = ({
             midpoint
           }
         })
-        
+
         var { areaData } = calculateAreas(midpoints, intermediatePoints1Test, intermediatePoints2Test, pointLookup)
         const filteredData123 = (label, object) => {
           return object.filter(item => label === item.label)
@@ -1696,25 +1712,22 @@ const DevtaVastu = ({
               const p1 = coordinates[0]
               const p2 = coordinates[1]
 
-              const betweenPoints = checkgetPointsBetween(p1, p2) || [];
+              const betweenPoints = checkgetPointsBetween(p1, p2) || []
 
               // Round function for comparison
-              const roundTo2 = num => Math.round(num * 100) / 100;
+              const roundTo2 = num => Math.round(num * 100) / 100
 
               // Function to check if two points are the same
-              const isSamePoint = (a, b) =>
-                roundTo2(a.x) === roundTo2(b.x) && roundTo2(a.y) === roundTo2(b.y);
+              const isSamePoint = (a, b) => roundTo2(a.x) === roundTo2(b.x) && roundTo2(a.y) === roundTo2(b.y)
 
               // Filter out points that are the same as p1 or p2
-              const filteredPoints = betweenPoints.filter(bp =>
-                !isSamePoint(bp, p1) && !isSamePoint(bp, p2)
-              );
+              const filteredPoints = betweenPoints.filter(bp => !isSamePoint(bp, p1) && !isSamePoint(bp, p2))
               if (filteredPoints.length > 0) {
                 coordinates = [
                   p1,
                   ...filteredPoints,
-                  ...coordinates.slice(1)  // Add the rest of coordinates starting from index 1
-                ];
+                  ...coordinates.slice(1) // Add the rest of coordinates starting from index 1
+                ]
               }
               if (!Area32Data.some(area => area.id === currentIndex)) {
                 Area32Data.push({
@@ -1722,93 +1735,184 @@ const DevtaVastu = ({
                   text: hoverText,
                   id: currentIndex,
                   color: devtaColors[devta[index]]
-                });
+                })
               }
-
             }
             // outer32AreaCalculation();
             if (currentIndex == 0) {
-              coordinates = intermediatePoints2;
+              coordinates = intermediatePoints2
             }
 
             if (currentIndex > 0 && currentIndex < 13) {
               const sources = {
-                'X': intermediatePoints2Test,
-                'A': midpoints,
-                'I': intermediatePoints1Test
-              };
-              
+                X: intermediatePoints2Test,
+                A: midpoints,
+                I: intermediatePoints1Test
+              }
+
               const configs = {
                 // Indices 1-4 use the 20-point pattern
                 1: [
-                  ["X20", "X", "point"], ["A13", "A", "midpoint"], ["A14", "A", "midpoint"], ["A15", "A", "midpoint"],
-                  ["I22", "I", "point"], ["I23", "I", "point"], ["I24", "I", "point"], ["I25", "I", "point"], ["I26", "I", "point"],
-                  ["A16", "A", "midpoint"], ["A17", "A", "midpoint"], ["A18", "A", "midpoint"],
-                  ["X28", "X", "point"], ["X27", "X", "point"], ["X26", "X", "point"], ["X25", "X", "point"],
-                  ["X24", "X", "point"], ["X23", "X", "point"], ["X22", "X", "point"], ["X21", "X", "point"]
+                  ['X20', 'X', 'point'],
+                  ['A13', 'A', 'midpoint'],
+                  ['A14', 'A', 'midpoint'],
+                  ['A15', 'A', 'midpoint'],
+                  ['I22', 'I', 'point'],
+                  ['I23', 'I', 'point'],
+                  ['I24', 'I', 'point'],
+                  ['I25', 'I', 'point'],
+                  ['I26', 'I', 'point'],
+                  ['A16', 'A', 'midpoint'],
+                  ['A17', 'A', 'midpoint'],
+                  ['A18', 'A', 'midpoint'],
+                  ['X28', 'X', 'point'],
+                  ['X27', 'X', 'point'],
+                  ['X26', 'X', 'point'],
+                  ['X25', 'X', 'point'],
+                  ['X24', 'X', 'point'],
+                  ['X23', 'X', 'point'],
+                  ['X22', 'X', 'point'],
+                  ['X21', 'X', 'point']
                 ],
                 2: [
-                  ["X28", "X", "point"], ["A18", "A", "midpoint"], ["A19", "A", "midpoint"], ["A20", "A", "midpoint"],
-                  ["I30", "I", "point"], ["I31", "I", "point"], ["I0", "I", "point"], ["I1", "I", "point"], ["I2", "I", "point"],
-                  ["A1", "A", "midpoint"], ["A2", "A", "midpoint"], ["A3", "A", "midpoint"],
-                  ["X4", "X", "point"], ["X3", "X", "point"], ["X2", "X", "point"], ["X1", "X", "point"],
-                  ["X0", "X", "point"], ["X31", "X", "point"], ["X30", "X", "point"], ["X29", "X", "point"]
+                  ['X28', 'X', 'point'],
+                  ['A18', 'A', 'midpoint'],
+                  ['A19', 'A', 'midpoint'],
+                  ['A20', 'A', 'midpoint'],
+                  ['I30', 'I', 'point'],
+                  ['I31', 'I', 'point'],
+                  ['I0', 'I', 'point'],
+                  ['I1', 'I', 'point'],
+                  ['I2', 'I', 'point'],
+                  ['A1', 'A', 'midpoint'],
+                  ['A2', 'A', 'midpoint'],
+                  ['A3', 'A', 'midpoint'],
+                  ['X4', 'X', 'point'],
+                  ['X3', 'X', 'point'],
+                  ['X2', 'X', 'point'],
+                  ['X1', 'X', 'point'],
+                  ['X0', 'X', 'point'],
+                  ['X31', 'X', 'point'],
+                  ['X30', 'X', 'point'],
+                  ['X29', 'X', 'point']
                 ],
                 3: [
-                  ["X4", "X", "point"], ["A3", "A", "midpoint"], ["A4", "A", "midpoint"], ["A5", "A", "midpoint"],
-                  ["I6", "I", "point"], ["I7", "I", "point"], ["I8", "I", "point"], ["I9", "I", "point"], ["I10", "I", "point"],
-                  ["A6", "A", "midpoint"], ["A7", "A", "midpoint"], ["A8", "A", "midpoint"],
-                  ["X12", "X", "point"], ["X11", "X", "point"], ["X10", "X", "point"], ["X9", "X", "point"],
-                  ["X8", "X", "point"], ["X7", "X", "point"], ["X6", "X", "point"], ["X5", "X", "point"]
+                  ['X4', 'X', 'point'],
+                  ['A3', 'A', 'midpoint'],
+                  ['A4', 'A', 'midpoint'],
+                  ['A5', 'A', 'midpoint'],
+                  ['I6', 'I', 'point'],
+                  ['I7', 'I', 'point'],
+                  ['I8', 'I', 'point'],
+                  ['I9', 'I', 'point'],
+                  ['I10', 'I', 'point'],
+                  ['A6', 'A', 'midpoint'],
+                  ['A7', 'A', 'midpoint'],
+                  ['A8', 'A', 'midpoint'],
+                  ['X12', 'X', 'point'],
+                  ['X11', 'X', 'point'],
+                  ['X10', 'X', 'point'],
+                  ['X9', 'X', 'point'],
+                  ['X8', 'X', 'point'],
+                  ['X7', 'X', 'point'],
+                  ['X6', 'X', 'point'],
+                  ['X5', 'X', 'point']
                 ],
                 4: [
-                  ["X12", "X", "point"], ["A8", "A", "midpoint"], ["A9", "A", "midpoint"], ["A10", "A", "midpoint"],
-                  ["I14", "I", "point"], ["I15", "I", "point"], ["I16", "I", "point"], ["I17", "I", "point"], ["I18", "I", "point"],
-                  ["A11", "A", "midpoint"], ["A12", "A", "midpoint"], ["A13", "A", "midpoint"],
-                  ["X20", "X", "point"], ["X19", "X", "point"], ["X18", "X", "point"], ["X17", "X", "point"],
-                  ["X16", "X", "point"], ["X15", "X", "point"], ["X14", "X", "point"], ["X13", "X", "point"]
+                  ['X12', 'X', 'point'],
+                  ['A8', 'A', 'midpoint'],
+                  ['A9', 'A', 'midpoint'],
+                  ['A10', 'A', 'midpoint'],
+                  ['I14', 'I', 'point'],
+                  ['I15', 'I', 'point'],
+                  ['I16', 'I', 'point'],
+                  ['I17', 'I', 'point'],
+                  ['I18', 'I', 'point'],
+                  ['A11', 'A', 'midpoint'],
+                  ['A12', 'A', 'midpoint'],
+                  ['A13', 'A', 'midpoint'],
+                  ['X20', 'X', 'point'],
+                  ['X19', 'X', 'point'],
+                  ['X18', 'X', 'point'],
+                  ['X17', 'X', 'point'],
+                  ['X16', 'X', 'point'],
+                  ['X15', 'X', 'point'],
+                  ['X14', 'X', 'point'],
+                  ['X13', 'X', 'point']
                 ],
                 // Indices 5-12 use the 6-point pattern
                 5: [
-                  ["A16", "A", "midpoint"], ["I26", "I", "point"], ["I27", "I", "point"], ["I28", "I", "point"],
-                  ["A18", "A", "midpoint"], ["A17", "A", "midpoint"]
+                  ['A16', 'A', 'midpoint'],
+                  ['I26', 'I', 'point'],
+                  ['I27', 'I', 'point'],
+                  ['I28', 'I', 'point'],
+                  ['A18', 'A', 'midpoint'],
+                  ['A17', 'A', 'midpoint']
                 ],
                 6: [
-                  ["A18", "A", "midpoint"], ["I28", "I", "point"], ["I29", "I", "point"], ["I30", "I", "point"],
-                  ["A20", "A", "midpoint"], ["A19", "A", "midpoint"]
+                  ['A18', 'A', 'midpoint'],
+                  ['I28', 'I', 'point'],
+                  ['I29', 'I', 'point'],
+                  ['I30', 'I', 'point'],
+                  ['A20', 'A', 'midpoint'],
+                  ['A19', 'A', 'midpoint']
                 ],
                 7: [
-                  ["A1", "A", "midpoint"], ["I2", "I", "point"], ["I3", "I", "point"], ["I4", "I", "point"],
-                  ["A3", "A", "midpoint"], ["A2", "A", "midpoint"]
+                  ['A1', 'A', 'midpoint'],
+                  ['I2', 'I', 'point'],
+                  ['I3', 'I', 'point'],
+                  ['I4', 'I', 'point'],
+                  ['A3', 'A', 'midpoint'],
+                  ['A2', 'A', 'midpoint']
                 ],
                 8: [
-                  ["A3", "A", "midpoint"], ["I4", "I", "point"], ["I5", "I", "point"], ["I6", "I", "point"],
-                  ["A5", "A", "midpoint"], ["A4", "A", "midpoint"]
+                  ['A3', 'A', 'midpoint'],
+                  ['I4', 'I', 'point'],
+                  ['I5', 'I', 'point'],
+                  ['I6', 'I', 'point'],
+                  ['A5', 'A', 'midpoint'],
+                  ['A4', 'A', 'midpoint']
                 ],
                 9: [
-                  ["A6", "A", "midpoint"], ["I10", "I", "point"], ["I11", "I", "point"], ["I12", "I", "point"],
-                  ["A8", "A", "midpoint"], ["A7", "A", "midpoint"]
+                  ['A6', 'A', 'midpoint'],
+                  ['I10', 'I', 'point'],
+                  ['I11', 'I', 'point'],
+                  ['I12', 'I', 'point'],
+                  ['A8', 'A', 'midpoint'],
+                  ['A7', 'A', 'midpoint']
                 ],
                 10: [
-                  ["A8", "A", "midpoint"], ["I12", "I", "point"], ["I13", "I", "point"], ["I14", "I", "point"],
-                  ["A10", "A", "midpoint"], ["A9", "A", "midpoint"]
+                  ['A8', 'A', 'midpoint'],
+                  ['I12', 'I', 'point'],
+                  ['I13', 'I', 'point'],
+                  ['I14', 'I', 'point'],
+                  ['A10', 'A', 'midpoint'],
+                  ['A9', 'A', 'midpoint']
                 ],
                 11: [
-                  ["A11", "A", "midpoint"], ["I18", "I", "point"], ["I19", "I", "point"], ["I20", "I", "point"],
-                  ["A13", "A", "midpoint"], ["A12", "A", "midpoint"]
+                  ['A11', 'A', 'midpoint'],
+                  ['I18', 'I', 'point'],
+                  ['I19', 'I', 'point'],
+                  ['I20', 'I', 'point'],
+                  ['A13', 'A', 'midpoint'],
+                  ['A12', 'A', 'midpoint']
                 ],
                 12: [
-                  ["A13", "A", "midpoint"], ["I20", "I", "point"], ["I21", "I", "point"], ["I22", "I", "point"],
-                  ["A15", "A", "midpoint"], ["A14", "A", "midpoint"]
+                  ['A13', 'A', 'midpoint'],
+                  ['I20', 'I', 'point'],
+                  ['I21', 'I', 'point'],
+                  ['I22', 'I', 'point'],
+                  ['A15', 'A', 'midpoint'],
+                  ['A14', 'A', 'midpoint']
                 ]
-              };
+              }
 
               try {
                 if (configs[currentIndex]) {
                   coordinates = configs[currentIndex].map(([id, sourceType, property]) => {
-                    const result = filteredData123(id, sources[sourceType]);
-                    return result[0][property];
-                  });
+                    const result = filteredData123(id, sources[sourceType])
+                    return result[0][property]
+                  })
                   if (currentIndex > 0 && currentIndex < 5) {
                     if (!Area4Data.some(area => area.id === currentIndex)) {
                       Area4Data.push({
@@ -1816,7 +1920,7 @@ const DevtaVastu = ({
                         text: hoverText,
                         id: currentIndex,
                         color: devtaColors[devta[index]]
-                      });
+                      })
                     }
                   }
                   if (currentIndex > 4 && currentIndex < 13) {
@@ -1826,12 +1930,12 @@ const DevtaVastu = ({
                         text: hoverText,
                         id: currentIndex,
                         color: devtaColors[devta[index]]
-                      });
+                      })
                     }
                   }
                 }
               } catch (error) {
-                console.error(`Error processing points for index ${currentIndex}:`, error);
+                console.error(`Error processing points for index ${currentIndex}:`, error)
               }
             }
           })
@@ -1845,30 +1949,202 @@ const DevtaVastu = ({
             ...(dataArea.Area_32_Data || []),
             ...(dataArea.Area_8_Data || []),
             ...(dataArea.Area_4_Data || [])
-          ];
-          setArea_45_Data(combinedData);
+          ]
+          setArea_45_Data(combinedData)
         }
       }
     }
   }, [intersectionsState, show32Charts])
 
+  // const printHandler = () => {
+  //   if (!printRef.current) {
+  //     console.error('Print container ref is null')
+  //     return
+  //   }
+
+  //   try {
+  //     // Clone the content to avoid modifying the original
+  //     const content = printRef.current.cloneNode(true)
+
+  //     // Create a hidden iframe to handle the PDF generation
+  //     const iframe = document.createElement('iframe')
+  //     iframe.style.display = 'none'
+  //     document.body.appendChild(iframe)
+
+  //     // Format the current date in YYYY-MM-DD HH:MM:SS format
+  //     const currentDate = new Date()
+  //     const formattedDate = currentDate.toISOString().split('T')[0]
+  //     const formattedTime = currentDate.toTimeString().split(' ')[0]
+  //     const fullDateTime = `${formattedDate} ${formattedTime}`
+
+  //     // User information
+  //     const username = 'DhruviRana4' // Using the username you provided
+
+  //     // Add necessary styles for printing with landscape orientation
+  //     iframe.contentDocument.write(`
+  //       <!DOCTYPE html>
+  //       <html>
+  //       <head>
+  //         <title>Print Document</title>
+  //         <style>
+  //           @page {
+  //             size: landscape;
+  //             margin: 0;
+  //           }
+
+  //           @media print {
+  //             body {
+  //               margin: 0;
+  //               background-color: white;
+  //               color: black;
+  //             }
+
+  //             h1 {
+  //               font-size: 24px;
+  //               color: black;
+  //               margin-bottom: 16px;
+  //             }
+
+  //             p {
+  //               font-size: 16px;
+  //               line-height: 1.5;
+  //               color: black;
+  //             }
+
+  //             .red-box {
+  //               width: 100px;
+  //               height: 100px;
+  //               background-color: red;
+  //               border: 2px solid black;
+  //             }
+
+  //             /* Force color printing */
+  //             * {
+  //               -webkit-print-color-adjust: exact !important;
+  //               print-color-adjust: exact !important;
+  //               color-adjust: exact !important;
+  //             }
+
+  //             /* Page break styling */
+  //             .page-break {
+  //               page-break-after: always;
+  //               break-after: page;
+  //             }
+
+  //             /* Make sure last page doesn't have a break */
+  //             .new-page:last-of-type {
+  //               page-break-after: avoid;
+  //               break-after: avoid;
+  //             }
+  //           }
+
+  //           /* Non-print styles */
+  //           body {
+  //             margin: 0;
+  //             padding: 20px;
+  //             background-color: white;
+  //             color: black;
+  //             font-family: Arial, sans-serif;
+  //           }
+
+  //           h1 {
+  //             font-size: 24px;
+  //             color: black;
+  //             margin-bottom: 16px;
+  //           }
+
+  //           p {
+  //             font-size: 16px;
+  //             line-height: 1.5;
+  //             color: black;
+  //           }
+
+  //           .red-box {
+  //             width: 100px;
+  //             height: 100px;
+  //             background-color: red;
+  //             border: 2px solid black;
+  //             margin: 20px 0;
+  //           }
+
+  //           /* Page break styling for preview */
+  //           .page-break {
+  //             margin-bottom: 30px;
+  //             border-bottom: 1px dashed #ccc;
+  //             padding-bottom: 30px;
+  //           }
+
+  //           .new-page {
+  //             padding-top: 20px;
+  //           }
+  //         </style>
+  //       </head>
+  //       <body>
+  //         <div id="print-content">
+  //           ${content.innerHTML}
+  //         </div>
+  //       </body>
+  //       </html>
+  //     `)
+
+  //     iframe.contentDocument.close()
+
+  //     // Trigger print dialog and wait for it to complete
+  //     iframe.contentWindow.focus()
+
+  //     // Use a timeout to ensure the content is fully loaded
+  //     setTimeout(() => {
+  //       // Generate a dynamic filename with user and date
+  //       const simpleDate = formattedDate.replace(/-/g, '')
+  //       const dynamicFileName = `report_${username}_${simpleDate}.pdf`
+
+  //       // Store the original title
+  //       const originalTitle = document.title
+
+  //       // Set the new title (filename)
+  //       document.title = dynamicFileName
+
+  //       // Print the document
+  //       iframe.contentWindow.print()
+
+  //       // Listen for the afterprint event to clean up
+  //       iframe.contentWindow.addEventListener(
+  //         'afterprint',
+  //         () => {
+  //           // Restore the original document title
+  //           document.title = originalTitle
+
+  //           // Remove the iframe after printing is done
+  //           document.body.removeChild(iframe)
+  //         },
+  //         { once: true }
+  //       )
+  //     }, 500)
+  //   } catch (err) {
+  //     console.error('Print error:', err)
+  //     alert('There was an error preparing the print view. Please try again.')
+  //   }
+  // }
+
   return (
     <>
-      <div className='flex flex-col lg:flex-row gap-5 py-4 justify-start '>
+      <div className='flex lg:flex-row gap-5 py-4 justify-start '>
         <div className='bg-white'>
-          <div ref={printRef} className='flex-grow '>
-            {selectedGroup && selectedGroup == "16 Zone Bar Chart" ? (
+          <div id={selectedGroup} ref={printRef} className='flex-grow main-print-div'>
+            {selectedGroup && selectedGroup == '16 Zone Bar Chart' ? (
               <div style={{ width: width, height: height }}>
                 <CustomBarChart
-                  data={show45Charts ? Area_45_Data : show32Charts
-                    ? Area_32_Data
-                    : show8Charts
-                      ? Area_8_Data
-                      : show4Charts
-                        ? Area_4_Data
-                        : allResults   // This will show all combined data
+                  data={
+                    show45Charts
+                      ? Area_45_Data
+                      : show32Charts
+                        ? Area_32_Data
+                        : show8Charts
+                          ? Area_8_Data
+                          : show4Charts
+                            ? Area_4_Data
+                            : allResults // This will show all combined data
                   }
-
                   vertical={show32Charts || show45Charts ? true : false}
                   barSize={show32Charts || show45Charts ? 10 : 20}
                 />
@@ -1966,7 +2242,14 @@ const DevtaVastu = ({
 
                           {centroid && (
                             <>
-                              <circle cx={centroid.x} cy={centroid.y} r='5' fill='green' stroke='white' strokeWidth='2' />
+                              <circle
+                                cx={centroid.x}
+                                cy={centroid.y}
+                                r='5'
+                                fill='green'
+                                stroke='white'
+                                strokeWidth='2'
+                              />
 
                               {hideCircle &&
                                 Array.from({ length: totalLines }).map((_, index) => {
@@ -2035,7 +2318,10 @@ const DevtaVastu = ({
                                       label: `I${i}`
                                     })
                                     // Calculate the second intermediate point (P2)
-                                    const point2 = { x: intersection.point.x + 2 * dx, y: intersection.point.y + 2 * dy }
+                                    const point2 = {
+                                      x: intersection.point.x + 2 * dx,
+                                      y: intersection.point.y + 2 * dy
+                                    }
                                     intermediatePoints2.push(point2) // Add P2 to the array
                                     intermediatePoints2Test.push({
                                       point: point2,
@@ -2293,7 +2579,14 @@ const DevtaVastu = ({
                           )}
                         </g>
                       </g>
-                      <RectangleWithRotatedLines totalLines={32} width={width} height={height} degree={inputDegree} cx={centroid?.x} cy={centroid?.y} />
+                      <RectangleWithRotatedLines
+                        totalLines={32}
+                        width={width}
+                        height={height}
+                        degree={inputDegree}
+                        cx={centroid?.x}
+                        cy={centroid?.y}
+                      />
 
                       {/* <RadialLines width={width} height={height} cx={centroid?.x} cy={centroid?.y} rotation={inputDegree} /> */}
 
@@ -2547,6 +2840,7 @@ const DevtaVastu = ({
                 )}
               </div>
             )}
+            <RightPrintSection vastuLayoutData={vastuLayoutData} />
           </div>
         </div>
         {/* <div className='flex flex-wrap lg:flex-col gap-3 p-4 lg:gap-0 bg-white' style={{ width: '550px' }}> */}
