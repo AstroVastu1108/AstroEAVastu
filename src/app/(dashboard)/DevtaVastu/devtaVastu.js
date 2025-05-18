@@ -1069,7 +1069,7 @@ function DevtaVastuPage({ id }) {
             console.warn(`No element found with ID: ${item}`)
           }
         })
-      } else{
+      } else {
         return toast.error('No matching data found for PDF generation.')
       }
 
@@ -1197,12 +1197,14 @@ function DevtaVastuPage({ id }) {
 
 
   const updatePdfPages = (selectedGroup, pageNumber) => {
-    console.log("Page Number : ", pageNumber)
-    const index = tabGroup.findIndex(tab => tab.title === selectedGroup);
-
+    const index = tabGroup.findIndex(tab => tab.label === selectedGroup);
     setTabGroup((prev) => {
       const updatedGroup = [...prev];
-      updatedGroup[index].NecessaryFiles[0].selectedPage = pageNumber;
+      const tabToUpdate = { ...updatedGroup[index] };
+      const updatedNecessaryFiles = [...tabToUpdate.NecessaryFiles];
+      updatedNecessaryFiles[0] = { ...updatedNecessaryFiles[0], selectedPage: pageNumber };
+      tabToUpdate.NecessaryFiles = updatedNecessaryFiles;
+      updatedGroup[index] = tabToUpdate;
       return updatedGroup;
     });
   }
