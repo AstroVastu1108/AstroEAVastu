@@ -64,7 +64,21 @@ const DEFAULT_TAB_CONFIG = {
   hideCircle:false,
   setHideCircle:null,
   lineSets:DEFAULT_LINE_SETS,
-  setLineSets:DEFAULT_LINE_SETS
+  setLineSets:DEFAULT_LINE_SETS,
+  hideMarmaLines: false,
+  setHideMarmaLines: null,
+  hideMarmapoints: false,
+  setHideMarmapoints: null,
+  imageDragDone: false,
+  setImageDragDone: null,
+  hideCircleIntersaction: false,
+  setHideCircleIntersaction: null,
+  showDevta: false,
+  setShowDevta: null,
+  showDevtaIntersaction: false,
+  setShowDevtaIntersaction: null,
+  disableDraw: false,
+  setDisableDraw: null,
 };
 
 

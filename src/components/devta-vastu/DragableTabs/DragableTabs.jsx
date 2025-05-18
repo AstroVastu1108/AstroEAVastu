@@ -8,7 +8,7 @@ import './DragableTabs.css'
 
 const DraggableTab1 = ({ group, index, handleRemoveOpen, handleTabChange, activeTab }) => {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: index })
-
+  console.log("group", group)
   const style = {
     transform: transform ? `translateX(${transform.x}px)` : undefined,
     transition
@@ -76,6 +76,7 @@ export default function MovableTabs({
   groups,
   setActiveTab
 }) {
+  console.log("SavesdGroups", savedGroups)
   const handleDragEnd = event => {
     const { active, over } = event
     if (active.id !== over.id) {
@@ -103,7 +104,7 @@ export default function MovableTabs({
               <DraggableTab1
                 key={index}
                 index={index}
-                group={groups.filter(item => item.label === group)[0]}
+                group={groups.filter(item => item.title === group)[0]}
                 handleRemoveOpen={handleRemoveOpen}
                 handleTabChange={handleTabChange} // Pass handleTabChange to DraggableTab
                 activeTab={activeTab}

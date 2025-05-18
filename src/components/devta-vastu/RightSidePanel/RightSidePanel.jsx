@@ -69,7 +69,7 @@ function RightSidePanel({
   show32Charts,
   show8Charts,
   show4Charts,
-  updatePdfPages
+  updatePdfPages,
 }) {
   const printRef1 = useRef(null)
   const [tabNewName, setTabNewName] = useState(tabName)
@@ -295,7 +295,7 @@ function RightSidePanel({
                                 onChange={(e) => {
                                   const pageIndex = e.target.value-1;
                                   setSelectedPage(e.target.value + 1);
-                                  updatePdfPages(selectedGroup, pageIndex);
+                                  updatePdfPages(tempValue, pageIndex);
                                 }}
                                 className="min-w-[70px] bg-white"
                                 sx={{

@@ -169,7 +169,7 @@ function SaveLayoutPopUp({
 
 
     const matchingItems = savedGroups
-      .map(label => tabGroup.find(item => item.label === label))
+      .map(label => tabGroup.find(item => item.title === label))
       .filter(item => item !== undefined)
 
     // return console.log('mat', matchingItems)

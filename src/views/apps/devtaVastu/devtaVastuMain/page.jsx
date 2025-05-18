@@ -80,7 +80,8 @@ export default function DevtaVastuMain() {
       //   // });
       // }
       // return;
-      return toastDisplayer("error", res.error);
+      // return toastDisplayer("error", res.error);
+      return toast.error(res.error);
     } else {
       const index = vastuListingData.findIndex(item => item.VPID === selectedTab?.VPID);
       if (index !== -1) {

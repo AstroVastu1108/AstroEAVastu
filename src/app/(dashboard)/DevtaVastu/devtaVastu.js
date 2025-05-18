@@ -100,44 +100,173 @@ function DevtaVastuPage({ id }) {
         })
         setVastuLayoutData(res.responseData?.Result?.VastuLayout)
         const incomingData = res.responseData?.Result?.VastuLayout?.TabGroups
-        const updatedTabGroup = tabGroup.map((tab) => {
-          const matchingData = incomingData?.find((data) => data.Label === tab.label);
-          if (matchingData) {
-            return {
+        // const updatedTabGroup = tabGroup.map((tab) => {
+        //   const matchingData = incomingData?.find((data) => data.Label === tab.label && data.Title ===( tab.title || tab.label));
+        //   if (matchingData) {
+        //     return {
+        //       ...tab,
+        //       title: matchingData.Title ? matchingData.Title : tab.title,
+        //       points: matchingData.Points.map((point) => ({
+        //         x: point.x, // Convert X to x
+        //         y: point.y  // Convert Y to y
+        //       })),
+        //       centroid: { x: matchingData.Centroid.x, y: matchingData.Centroid.y },
+        //       snapToCentroid: matchingData.SnapToCentroid,
+        //       inputDegree: matchingData.InputDegree,
+        //       translate: { x: matchingData.Translate?.x, y: matchingData.Translate?.y },
+        //       zoom: matchingData.Zoom,
+        //       polygons: matchingData.Polygons,
+        //       lockChakra: matchingData.lockChakra,
+        //       lockCentroid: matchingData.lockCentroid,
+        //       lineSets: matchingData.LineSets,
+        //       hideCircle: matchingData.hideCircle,
+        //       hide32Circle: matchingData.hide32Circle,
+        //       hide4Circle: matchingData.hide4Circle,
+        //       hide16Circle: matchingData.hide16Circle,
+        //       hide8Circle: matchingData.hide8Circle,
+        //       NecessaryFiles: matchingData.NecessaryFiles.map((file) => ({
+        //         OriginalFileName: file.OriginalFileName,
+        //         Base64File: file.Base64File,
+        //         isPdf: file.isPdf,
+        //         pdfImages: file.pdfImages,
+        //         pdfPages: file.pdfPages,
+        //         selectedPage: file.selectedPage
+        //       })),
+        //       cropImage: matchingData.CropImage,
+        //       rotation: matchingData.Rotation,
+        //       showDevta: matchingData.ShowDevta,
+        //       showDevtaIntersaction: matchingData.ShowDevtaIntersaction,
+        //       hideMarmaLines: matchingData.HideMarmaLines,
+        //       hideMarmapoints: matchingData.HideMarmapoints,
+        //       imageDragDone: matchingData.ImageDragDone,
+        //       hideCircleIntersaction: matchingData.HideCircleIntersaction,
+        //       disableDraw: matchingData.DisableDraw,
+        //       hideDevta: matchingData.HideDevta,
+        //       hideDevtaIntersaction: matchingData.HideDevtaIntersaction,
+        //     };
+        //   }
+        //   return tab;
+        // });
+
+        const updatedTabGroup = [];
+
+        tabGroup.forEach((tab) => {
+          // Find ALL matching data items instead of just the first one
+          const matchingDataItems = incomingData?.filter(
+            (data) => data.Label === tab.label
+          );
+
+          if (matchingDataItems && matchingDataItems.length > 0) {
+            // Add the first match as an update to the existing tab
+            updatedTabGroup.push({
               ...tab,
-              title: matchingData.Title ? matchingData.Title : tab.label,
-              points: matchingData.Points.map((point) => ({
-                x: point.x, // Convert X to x
-                y: point.y  // Convert Y to y
+              title: matchingDataItems[0].Title ? matchingDataItems[0].Title : tab.title,
+              points: matchingDataItems[0].Points.map((point) => ({
+                x: point.x,
+                y: point.y
               })),
-              centroid: { x: matchingData.Centroid.x, y: matchingData.Centroid.y },
-              snapToCentroid: matchingData.SnapToCentroid,
-              inputDegree: matchingData.InputDegree,
-              translate: { x: matchingData.Translate?.x, y: matchingData.Translate?.y },
-              zoom: matchingData.Zoom,
-              polygons: matchingData.Polygons,
-              lockChakra: matchingData.lockChakra,
-              lockCentroid: matchingData.lockCentroid,
-              lineSets: matchingData.LineSets,
-              hideCircle: matchingData.hideCircle,
-              hide32Circle: matchingData.hide32Circle,
-              hide4Circle: matchingData.hide4Circle,
-              hide16Circle: matchingData.hide16Circle,
-              hide8Circle: matchingData.hide8Circle
-            };
+              centroid: { x: matchingDataItems[0].Centroid.x, y: matchingDataItems[0].Centroid.y },
+              snapToCentroid: matchingDataItems[0].SnapToCentroid,
+              inputDegree: matchingDataItems[0].InputDegree,
+              translate: { x: matchingDataItems[0].Translate?.x, y: matchingDataItems[0].Translate?.y },
+              zoom: matchingDataItems[0].Zoom,
+              polygons: matchingDataItems[0].Polygons,
+              lockChakra: matchingDataItems[0].lockChakra,
+              lockCentroid: matchingDataItems[0].lockCentroid,
+              lineSets: matchingDataItems[0].LineSets,
+              hideCircle: matchingDataItems[0].hideCircle,
+              hide32Circle: matchingDataItems[0].hide32Circle,
+              hide4Circle: matchingDataItems[0].hide4Circle,
+              hide16Circle: matchingDataItems[0].hide16Circle,
+              hide8Circle: matchingDataItems[0].hide8Circle,
+              NecessaryFiles: matchingDataItems[0].NecessaryFiles.map((file) => ({
+                OriginalFileName: file.OriginalFileName,
+                Base64File: file.Base64File,
+                isPdf: file.isPdf,
+                pdfImages: file.pdfImages,
+                pdfPages: file.pdfPages,
+                selectedPage: file.selectedPage
+              })),
+              cropImage: matchingDataItems[0].cropImage,
+              rotation: matchingDataItems[0].rotation,
+              showDevta: matchingDataItems[0].showDevta,
+              showDevtaIntersaction: matchingDataItems[0].showDevtaIntersaction,
+              hideMarmaLines: matchingDataItems[0].showMarma,
+              hideMarmapoints: matchingDataItems[0].showMarmaPoints,
+              imageDragDone: matchingDataItems[0].lockDragImage,
+              hideCircleIntersaction: matchingDataItems[0].showChakraIntersactionPoints,
+              disableDraw: matchingDataItems[0].doneDrowing,
+              showDevta: matchingDataItems[0].showDevta,
+              hideDevtaIntersaction: matchingDataItems[0].showDevtaPoints,
+            });
+
+            // // Add any additional matches as new tabs
+            if (matchingDataItems.length > 1) {
+              for (let i = 1; i < matchingDataItems.length; i++) {
+                updatedTabGroup.push({
+                  ...tab, // Base properties from the original tab
+                  label: tab.label, // Keep the same label
+                  title: matchingDataItems[i].Title ? matchingDataItems[i].Title : tab.title,
+                  points: matchingDataItems[i].Points.map((point) => ({
+                    x: point.x,
+                    y: point.y
+                  })),
+                  centroid: { x: matchingDataItems[i].Centroid.x, y: matchingDataItems[i].Centroid.y },
+                  snapToCentroid: matchingDataItems[i].SnapToCentroid,
+                  inputDegree: matchingDataItems[i].InputDegree,
+                  translate: { x: matchingDataItems[i].Translate?.x, y: matchingDataItems[i].Translate?.y },
+                  zoom: matchingDataItems[i].Zoom,
+                  polygons: matchingDataItems[i].Polygons,
+                  lockChakra: matchingDataItems[i].lockChakra,
+                  lockCentroid: matchingDataItems[i].lockCentroid,
+                  lineSets: matchingDataItems[i].LineSets,
+                  hideCircle: matchingDataItems[i].hideCircle,
+                  hide32Circle: matchingDataItems[i].hide32Circle,
+                  hide4Circle: matchingDataItems[i].hide4Circle,
+                  hide16Circle: matchingDataItems[i].hide16Circle,
+                  hide8Circle: matchingDataItems[i].hide8Circle,
+                  NecessaryFiles: matchingDataItems[i].NecessaryFiles.map((file) => ({
+                    OriginalFileName: file.OriginalFileName,
+                    Base64File: file.Base64File,
+                    isPdf: file.isPdf,
+                    pdfImages: file.pdfImages,
+                    pdfPages: file.pdfPages,
+                    selectedPage: file.selectedPage
+                  })),
+                  cropImage: matchingDataItems[i].cropImage,
+                  rotation: matchingDataItems[i].rotation,
+                  showDevta: matchingDataItems[i].showDevta,
+                  showDevtaIntersaction: matchingDataItems[i].showDevtaIntersaction,
+                  hideMarmaLines: matchingDataItems[i].showMarma,
+                  hideMarmapoints: matchingDataItems[i].showMarmaPoints,
+                  imageDragDone: matchingDataItems[i].lockDragImage,
+                  hideCircleIntersaction: matchingDataItems[i].showChakraIntersactionPoints,
+                  disableDraw: matchingDataItems[i].doneDrowing,
+                  showDevta: matchingDataItems[i].showDevta,
+                  showDevtaPoints: matchingDataItems[i].showDevtaPoints,
+                  // id: `${tab.id || tab.label}_additional_${i}`, // Create a unique ID for each additional tab
+                });
+              }
+            }
+          } else {
+            // If no match is found, keep the original tab
+            updatedTabGroup.push(tab);
           }
-          return tab;
         });
 
-        const matchedLabels = incomingData?.map((data) => data.Label)
-          .filter((label) => updatedTabGroup.some((tab) => tab.label === label));
+        const matchedLabels = incomingData?.map((data) => data.Title)
+          .filter((label) => updatedTabGroup.some((tab) => tab.title === label));
+
+        console.log("matchedLabels : ", matchedLabels);
+        console.log("incomingData00", incomingData);
+        console.log("updatedTabGroup", updatedTabGroup);
 
         setTabGroup(updatedTabGroup);
         setSavedGroups(matchedLabels);
-        setActiveHouse(updatedTabGroup.filter((item) => item.label == matchedLabels[0])[0]);
+        setActiveHouse(updatedTabGroup.filter((item) => item.title == matchedLabels[0])[0]);
         setFileUploaded(true)
-        setPreviewUrl(res.responseData?.Result?.VastuLayout?.NecessaryFiles[0]?.Base64File)
-        setFileInfo(res.responseData?.Result?.VastuLayout?.NecessaryFiles[0]?.OriginalFileName)
+        // setPreviewUrl(res.responseData?.Result?.VastuLayout?.NecessaryFiles[0]?.Base64File)
+        // setFileInfo(res.responseData?.Result?.VastuLayout?.NecessaryFiles[0]?.OriginalFileName)
       }
     } else {
       router.push('/vastu-list')
@@ -625,7 +754,7 @@ function DevtaVastuPage({ id }) {
       if (isTitleUnique) {
         return [
           ...prevTabGroup,
-          { ...baseGroupData, label: tabTitle, title: tabTitle }
+          { ...baseGroupData, label: baseGroupData.label, title: tabTitle }
         ];
       }
     });
@@ -643,6 +772,7 @@ function DevtaVastuPage({ id }) {
   };
 
   const handleTabChange = (event, newValue) => {
+    console.log("newValue : ", newValue);
     setActiveTab(newValue)
   }
 
@@ -668,8 +798,8 @@ function DevtaVastuPage({ id }) {
 
   const handleRemoveGroup = value => {
     if (savedGroups.length > 1) {
-      setSavedGroups(prev => prev.filter(group => group !== selectedTab.label))
-      const removeIndex = savedGroups.indexOf(selectedTab.label);
+      setSavedGroups(prev => prev.filter(group => group !== selectedTab.title))
+      const removeIndex = savedGroups.indexOf(selectedTab.title);
       if (activeTab == removeIndex && activeTab != 0 && savedGroups.length > 1) {
         setActiveTab(activeTab - 1)
       } else if (removeIndex == 0 && savedGroups.length == 2) {
@@ -868,10 +998,10 @@ function DevtaVastuPage({ id }) {
     setLayoutSave(!LayoutSave);
   }
 
-  const [activeHouse, setActiveHouse] = useState(tabGroup.findIndex((e) => e.label == savedGroups[activeTab])[0]);
+  const [activeHouse, setActiveHouse] = useState(tabGroup.findIndex((e) => e.title == savedGroups[activeTab])[0]);
 
   useEffect(() => {
-    setActiveHouse(tabGroup.filter((e) => e.label == savedGroups[activeTab])[0]);
+    setActiveHouse(tabGroup.filter((e) => e.title == savedGroups[activeTab])[0]);
   }, [activeTab]);
 
   // const printHandler = (data) => {
@@ -1197,17 +1327,22 @@ function DevtaVastuPage({ id }) {
 
 
   const updatePdfPages = (selectedGroup, pageNumber) => {
-    const index = tabGroup.findIndex(tab => tab.label === selectedGroup);
+    const index = tabGroup.findIndex(tab => tab.title === selectedGroup);
     setTabGroup((prev) => {
       const updatedGroup = [...prev];
       const tabToUpdate = { ...updatedGroup[index] };
-      const updatedNecessaryFiles = [...tabToUpdate.NecessaryFiles];
+      const updatedNecessaryFiles = [...tabToUpdate?.NecessaryFiles];
       updatedNecessaryFiles[0] = { ...updatedNecessaryFiles[0], selectedPage: pageNumber };
       tabToUpdate.NecessaryFiles = updatedNecessaryFiles;
       updatedGroup[index] = tabToUpdate;
       return updatedGroup;
     });
   }
+
+  useEffect(() => {
+    console.log("========================tabGroup : ", tabGroup);
+    console.log("========================savedGroups : ", savedGroups);
+  })
 
   return (
     <>
@@ -1268,9 +1403,10 @@ function DevtaVastuPage({ id }) {
 
                 </>
               )}
+              {console.log("activeHouse : ", activeHouse?.title)}
               {activeHouse && tabGroup && tabGroup.map(
                 (group, index) => (
-                  ((savedGroups.includes(group.label) ? forceRenderAllTabs : false) || activeHouse?.label === group.label) &&
+                  ((savedGroups.includes(group.title) ? forceRenderAllTabs : false) || activeHouse?.title === group.title) &&
                   (
                     <>
                       <DevtaVastu
@@ -1281,10 +1417,16 @@ function DevtaVastuPage({ id }) {
                         setDownloadPDFLoading={setDownloadPDFLoading}
                         saveLoading={saveLoading}
                         setSaveLoading={setSaveLoading}
-                        selectedGroup={group.title}
+                        selectedGroup={group.label}
                         setPageTitle={(newName) => {
                           console.warn("New Name : ", newName)
+                          console.warn("New Name : ", savedGroups[activeTab])
                           console.warn("Group : ", tabGroup[index])
+                          setSavedGroups(prevGroups => {
+                            const updatedGroups = [...prevGroups]
+                            updatedGroups[activeTab] = newName
+                            return updatedGroups
+                          })
                           setTabGroup((prev) => {
                             const updatedGroup = [...prev];
                             updatedGroup[index].title = newName;
@@ -1337,6 +1479,20 @@ function DevtaVastuPage({ id }) {
                         IsDownloading={IsDownloading}
                         isLayoutChange={isLayoutChange}
                         updatePdfPages={updatePdfPages}
+                        hideMarmaLines={tabGroup[index].hideMarmaLines}
+                        setHideMarmaLines={newHideMarmaLines => handleTabGroupChange(index, 'hideMarmaLines', newHideMarmaLines)}
+                        hideMarmapoints={tabGroup[index].hideMarmapoints}
+                        setHideMarmapoints={newHideMarmapoints => handleTabGroupChange(index, 'hideMarmapoints', newHideMarmapoints)}
+                        imageDragDone={tabGroup[index].imageDragDone}
+                        setImageDragDone={newImageDragDone => handleTabGroupChange(index, 'imageDragDone', newImageDragDone)}
+                        hideCircleIntersaction={tabGroup[index].hideCircleIntersaction}
+                        setHideCircleIntersaction={newHideCircleIntersaction => handleTabGroupChange(index, 'hideCircleIntersaction', newHideCircleIntersaction)}
+                        showDevta={tabGroup[index].showDevta}
+                        setShowDevta={newShowDevta => handleTabGroupChange(index, 'showDevta', newShowDevta)}
+                        showDevtaIntersaction={tabGroup[index].showDevtaIntersaction}
+                        setShowDevtaIntersaction={newShowDevtaIntersaction => handleTabGroupChange(index, 'showDevtaIntersaction', newShowDevtaIntersaction)}
+                        disableDraw={tabGroup[index].disableDraw}
+                        setDisableDraw={newDisableDraw => handleTabGroupChange(index, 'disableDraw', newDisableDraw)}
                       />
                     </>
                     // <div key={index} style={{ display: activeHouse?.label === group.label ? 'block' : 'none' }}>
