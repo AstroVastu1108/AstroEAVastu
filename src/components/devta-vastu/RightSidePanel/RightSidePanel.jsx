@@ -291,10 +291,10 @@ function RightSidePanel({
                               </Typography>
                               <Select
                                 size="small"
-                                value={selectedPage || previewUrl?.selectedPage}
+                                value={previewUrl?.selectedPage + 1 || selectedPage}
                                 onChange={(e) => {
-                                  const pageIndex = e.target.value - 1;
-                                  setSelectedPage(e.target.value);
+                                  const pageIndex = e.target.value-1;
+                                  setSelectedPage(e.target.value + 1);
                                   updatePdfPages(selectedGroup, pageIndex);
                                 }}
                                 className="min-w-[70px] bg-white"
@@ -305,9 +305,8 @@ function RightSidePanel({
                                   height: '32px'
                                 }}
                               >
-                                {/* Generate options based on total pages */}
-                                {Array.from({ length: previewUrl?.pdfPages || 1 }, (_, i) => (
-                                  <MenuItem key={i + 1} value={i}>
+                                {Array.from({ length: previewUrl?.pdfPages }, (_, i) => (
+                                  <MenuItem key={i} value={i + 1}>
                                     {i + 1}
                                   </MenuItem>
                                 ))}

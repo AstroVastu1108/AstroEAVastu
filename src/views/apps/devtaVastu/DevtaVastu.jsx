@@ -92,7 +92,11 @@ const DevtaVastu = ({
   IsDownloading,
   isLayoutChange,
   setPageTitle,
-  updatePdfPages
+  updatePdfPages,
+  cropImage,
+  setCropImage,
+  rotation,
+  setRotation,
 }) => {
   const [hideMarmaLines, setHideMarmaLines] = useState(false)
   const [hideMarmapoints, setHideMarmapoints] = useState(false)
@@ -102,7 +106,7 @@ const DevtaVastu = ({
   const [showDevtaIntersaction, setShowDevtaIntersaction] = useState(false)
   const [disableDraw, setDisableDraw] = useState(false)
   const [graphDraw, setGraphDraw] = useState(false)
-  const [cropImage, setCropImage] = useState(false)
+  // const [cropImage, setCropImage] = useState(false)
   const [openNewPolygon, setOpenNewPolygon] = useState(false)
   const [draggingState, setDraggingState] = useState(null)
   const [OverlayPolyClick, setOverlayPolyClick] = useState(false)
@@ -119,7 +123,7 @@ const DevtaVastu = ({
     width: 100,
     height: 100
   })
-  const [rotation, setRotation] = useState(0)
+  // const [rotation, setRotation] = useState(0)
 
   useEffect(() => {
     setLoading(false)
@@ -1583,7 +1587,8 @@ const DevtaVastu = ({
         ],
         id: polygons.length + 1,
         color: formData.color || 'rgba(0, 123, 255, 0.2)',
-        title: formData.title
+        title: formData.title,
+        description: formData.description || polygons.description
       }
       setPolygons([...polygons, newPolygon])
     }

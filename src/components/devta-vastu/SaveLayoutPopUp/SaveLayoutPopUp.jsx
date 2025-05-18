@@ -189,12 +189,18 @@ function SaveLayoutPopUp({
       Remark: formData?.Remark,
       Revision: formData?.Revision,
       AuditDate: new Date(),
-      NecessaryFiles: [
-        {
-          OriginalFileName: fileInfo,
-          Base64File: previewUrl
-        }
-      ],
+      // NecessaryFiles: [
+      //   {
+      //     "OriginalFileName": "string",
+      //     "Base64File": "string",
+      //     "isPdf": true,
+      //     "pdfImages": [
+      //       "string"
+      //     ],
+      //     "pdfPages": 0,
+      //     "selectedPage": 0
+      //   }
+      // ],
       TabGroups: matchingItems
     }
     console.log("payload : ", payload)

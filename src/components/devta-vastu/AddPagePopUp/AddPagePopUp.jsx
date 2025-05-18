@@ -93,7 +93,7 @@ function AddPagePopUp({ open, handleClose, handleSave, tabGroup, savedGroups }) 
                   // onChange={e => setTempValue(e.target.value)}
                 /> */}
                 <Autocomplete
-                  options={tabGroup.filter(item => !savedGroups.includes(item.label))}
+                  options={tabGroup}
                   getOptionLabel={option => option.label} // Extracts label text
                   getOptionKey={option => option.label}
                   value={selectedGroup ? tabGroup.find(item => item.label === selectedGroup) : null}
@@ -108,12 +108,12 @@ function AddPagePopUp({ open, handleClose, handleSave, tabGroup, savedGroups }) 
                   renderInput={params => <TextField {...params} label='Select Page' error={groupError} />}
                 />
                 <Autocomplete
-                  options={tabGroup.filter(item => savedGroups.includes(item.label))}
-                  getOptionLabel={option => option.label} // Extracts label text
-                  getOptionKey={option => option.label}
-                  value={selectedBaseGroup ? tabGroup.find(item => item.label === selectedBaseGroup) : null}
+                  options={tabGroup.filter(item => savedGroups.includes(item.title))}
+                  getOptionLabel={option => option.title} // Extracts title text
+                  getOptionKey={option => option.title}
+                  value={selectedBaseGroup ? tabGroup.find(item => item.title === selectedBaseGroup) : null}
                   onChange={(_, newValue) => {
-                    setSelectedBaseGroup(newValue ? newValue.label : null)
+                    setSelectedBaseGroup(newValue ? newValue.title : null)
                     setBaseGroupError(false)
                   }}
                   renderInput={params => <TextField {...params} label='Select Base plan' error={baseGroupError} />}
