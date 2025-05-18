@@ -4,7 +4,7 @@ import PageTitle from '@/components/common/PageTitle/PageTitle'
 import DiscardPopUp from '@/components/devta-vastu/DiscardTabPopUp/DiscardPopUp'
 import DevtaVastu from '@/views/apps/devtaVastu/DevtaVastu'
 import { LoadingButton } from '@mui/lab'
-import { Card, MenuItem, Select, Tabs, Tab, IconButton, Menu } from '@mui/material'
+import { Card, MenuItem, Select, Tabs, Tab, IconButton, Menu, Button } from '@mui/material'
 import React, { useEffect, useRef, useState } from 'react'
 // import html2canvas from 'html2canvas';
 // import jsPDF from "jspdf";
@@ -681,153 +681,9 @@ function DevtaVastuPage({ id }) {
       }
     }
   }
-
-  // const handleDownload = async () => {
-  //   const response = await fetch("/api/generate-pdf");
-  //   console.log(response)
-  //   const blob = await response.blob();
-  //   const url = window.URL.createObjectURL(blob);
-  //   const a = document.createElement("a");
-  //   a.href = url;
-  //   a.download = "my-pdf.pdf";
-  //   a.click();
-  //   window.URL.revokeObjectURL(url);
-  // };
-
-
-  // const handleDownload = async (data) => {
-  //   setIsDownloading(true);
-  //   await generatePDFsForAllGroups(data); // Your download function
-  //   setIsDownloading(false);
-  // };
-
-  // const generatePDFsForAllGroups = async data => {
-
-  //   if (savedGroups.length === 0) {
-  //     alert('Please add at least one group')
-  //     return
-  //   }
-
-  //   let preservedTab = activeTab
-  //   setLoading(true);
-
-  //   // Hide the scrollbar
-  //   document.body.style.overflow = 'hidden'
-  //   document.body.style.height = '100%'
-  //   document.body.style.position = 'fixed' // Prevent scrolling
-  //   document.body.style.width = '100%' // Ensure full width
-
-  //   const options = {
-  //     margin: 0,
-  //     filename: 'output.pdf',
-  //     image: { type: 'jpeg', quality: 1.0 },
-  //     html2canvas: { scale: 3, useCORS: true },
-  //     jsPDF: { unit: 'pt', format: 'a4', orientation: 'landscape' }
-  //   }
-
-  //   const pdfContainer = document.createElement('div')
-
-  //   for (let i = 0; i < data.length; i++) {
-  //     const groupIndex = tabGroup.findIndex(e => e.label == data[i]);
-
-  //     if (groupIndex === -1) {
-  //       continue
-  //     }
-
-  //     await waitForDOMUpdate()
-
-  //     const leftDivRef = leftprintRefs.current[groupIndex]
-  //     console.log(leftDivRef)
-  //     const rightDivRef = printRefs.current[groupIndex]
-
-  //     if (!leftDivRef || !rightDivRef) {
-  //       continue
-  //     }
-
-  //     leftDivRef.classList.remove('hidden-print')
-
-  //     const pageWrapper = document.createElement('div')
-  //     pageWrapper.style.display = 'flex'
-  //     pageWrapper.style.pageBreakAfter = 'always'
-
-
-  //     const leftClone = leftDivRef.cloneNode(true);
-  //     leftClone.style.width = "26%";
-  //     leftClone.style.height = "100%";
-  //     leftClone.style.display = "inline-block";
-  //     leftClone.style.overflow = "hidden";
-  //     leftClone.style.paddingTop = "24px"
-  //     leftClone.style.fontFamily = "'Segoe UI', Arial, sans-serif"; // Apply font-family
-  //     // leftClone.style.border = "2px solid red";
-
-  //     // Clone right section
-  //     const rightClone = rightDivRef.cloneNode(true);
-  //     rightClone.style.width = "74%";
-  //     rightClone.style.height = "790px";
-  //     rightClone.style.display = "inline-block";
-  //     rightClone.style.overflow = "hidden";
-  //     rightClone.style.paddingTop = "24px"
-  //     rightClone.style.paddingLeft = "8px"
-  //     rightClone.style.fontFamily = "'Segoe UI', Arial, sans-serif"; // Apply font-family
-  //     // rightClone.style.border = "2px solid red";
-
-  //     pageWrapper.appendChild(rightClone);
-  //     pageWrapper.appendChild(leftClone);
-  //     pdfContainer.appendChild(pageWrapper);
-  //   }
-
-  //   if (!pdfContainer.innerHTML.trim()) {
-  //     alert('No matching data found for PDF generation.')
-  //     setLoading(false)
-  //     document.body.style.overflow = '' // Restore scrollbar
-  //     document.body.style.height = '' // Restore body height
-  //     document.body.style.position = '' // Restore position
-  //     document.body.style.width = '' // Restore width
-  //     return
-  //   }
-
-  //   document.body.appendChild(pdfContainer)
-
-  //   await waitForImagesToLoad(pdfContainer)
-  //   await waitForDOMUpdate()
-
-  //   await html2pdf().from(pdfContainer).set(options).save()
-
-  //   setActiveTab(preservedTab)
-  //   document.body.removeChild(pdfContainer)
-  //   setLoading(false)
-
-  //   // Restore the scrollbar
-  //   document.body.style.overflow = ''
-  //   document.body.style.height = ''
-  //   document.body.style.position = ''
-  //   document.body.style.width = ''
-  // }
-
-  // // Helper function to ensure images load before rendering PDF
-  // const waitForImagesToLoad = container => {
-  //   const images = Array.from(container.getElementsByTagName('img'))
-  //   return Promise.all(
-  //     images.map(
-  //       img =>
-  //         new Promise(resolve => {
-  //           if (img.complete) {
-  //             resolve()
-  //           } else {
-  //             img.onload = resolve
-  //             img.onerror = resolve
-  //           }
-  //         })
-  //     )
-  //   )
-  // }
-
-  // // Helper function to wait for React state updates and re-renders
-  // const waitForDOMUpdate = () => new Promise(resolve => requestAnimationFrame(() => setTimeout(resolve, 300)))
-
   const handleDownload = async (data) => {
     setIsDownloading(true);
-    await generatePDFsForAllGroups(data); // Your download function
+    await printHandler(data); // Your download function
     setIsDownloading(false);
   };
 
@@ -1016,7 +872,328 @@ function DevtaVastuPage({ id }) {
 
   useEffect(() => {
     setActiveHouse(tabGroup.filter((e) => e.label == savedGroups[activeTab])[0]);
-  }, [activeTab])
+  }, [activeTab]);
+
+  // const printHandler = (data) => {
+  //   // Check if we have any refs to print
+  //   if (!printRefs.current || printRefs.current.length === 0) {
+  //     console.error('Print container refs are empty or null')
+  //     return
+  //   }
+  //   console.warn('Print container refs:', printRefs)
+  //   console.warn('Print container refs:', data)
+  //   // return;
+
+  //   try {
+  //     // Create a container for all content
+  //     const printContainer = document.createElement('div')
+
+  //     // Loop through all refs and add their content to the container
+  //     printRefs.current.forEach((ref, index) => {
+  //       const pageWrapper = document.createElement('div')
+  //       pageWrapper.className = index < printRefs.current.length - 1 ? 'new-page page-break' : 'new-page'
+  //       if (ref) {
+  //         // Clone the content to avoid modifying the original
+  //         const content = ref.cloneNode(true)
+
+  //         // Create a wrapper for each component with page break styling
+
+  //         pageWrapper.appendChild(content)
+
+  //         // Add to the print container
+  //         printContainer.appendChild(pageWrapper)
+  //       }
+  //     })
+
+  //     // Create a hidden iframe to handle the PDF generation
+  //     const iframe = document.createElement('iframe')
+  //     iframe.style.display = 'none'
+  //     document.body.appendChild(iframe)
+
+  //     // Format the current date in YYYY-MM-DD HH:MM:SS format
+  //     const currentDate = new Date()
+  //     const formattedDate = currentDate.toISOString().split('T')[0]
+  //     const formattedTime = currentDate.toTimeString().split(' ')[0]
+  //     const fullDateTime = `${formattedDate} ${formattedTime}`
+
+  //     // User information
+  //     const username = 'DhruviRana4' // Using the username you provided
+
+  //     // Add necessary styles for printing with landscape orientation
+  //     iframe.contentDocument.write(`
+  //     <!DOCTYPE html>
+  //     <html>
+  //     <head>
+  //       <title>Print Document</title>
+  //       <style>
+  //         @page {
+  //           size: landscape;
+  //           margin: 0;
+  //         }
+
+  //         @media print {
+  //           body {
+  //             margin: 0;
+  //             background-color: white;
+  //             color: black;
+  //           }
+
+  //           /* Force color printing */
+  //           * {
+  //             -webkit-print-color-adjust: exact !important;
+  //             print-color-adjust: exact !important;
+  //             color-adjust: exact !important;
+  //           }
+
+  //           /* Page break styling */
+  //           .page-break {
+  //             page-break-after: always;
+  //             break-after: page;
+  //           }
+
+  //           /* Make sure last page doesn't have a break */
+  //           .new-page:last-of-type {
+  //             page-break-after: avoid;
+  //             break-after: avoid;
+  //           }
+  //         }
+
+  //         /* Non-print styles */
+  //         body {
+  //           margin: 0;
+  //           padding: 20px;
+  //           background-color: white;
+  //           color: black;
+  //           font-family: Arial, sans-serif;
+  //         }
+
+
+
+  //         /* Page break styling for preview */
+  //         .page-break {
+  //           margin-bottom: 30px;
+  //           border-bottom: 1px dashed #ccc;
+  //           padding-bottom: 30px;
+  //         }
+
+
+  //       </style>
+  //     </head>
+  //     <body>
+  //       <div id="print-content">
+  //         ${printContainer.innerHTML}
+  //       </div>
+  //     </body>
+  //     </html>
+  //     `)
+
+  //     iframe.contentDocument.close()
+
+  //     // Trigger print dialog and wait for it to complete
+  //     iframe.contentWindow.focus()
+
+  //     // Use a timeout to ensure the content is fully loaded
+  //     setTimeout(() => {
+  //       // Generate a dynamic filename with user and date
+  //       const simpleDate = formattedDate.replace(/-/g, '')
+  //       const dynamicFileName = `report_${username}_${simpleDate}.pdf`
+
+  //       // Store the original title
+  //       const originalTitle = document.title
+
+  //       // Set the new title (filename)
+  //       document.title = dynamicFileName
+
+  //       // Print the document
+  //       iframe.contentWindow.print()
+
+  //       // Listen for the afterprint event to clean up
+  //       iframe.contentWindow.addEventListener(
+  //         'afterprint',
+  //         () => {
+  //           // Restore the original document title
+  //           document.title = originalTitle
+
+  //           // Remove the iframe after printing is done
+  //           document.body.removeChild(iframe)
+  //         },
+  //         { once: true }
+  //       )
+  //     }, 500)
+  //   } catch (err) {
+  //     console.error('Print error:', err)
+  //     alert('There was an error preparing the print view. Please try again.')
+  //   }
+  // }
+
+  const printHandler = (data) => {
+    // Check if we have any refs to print
+    if (!printRefs.current || printRefs.current.length === 0) {
+      console.error('Print container refs are empty or null')
+      return
+    }
+
+    try {
+      // Create a container for all content
+      const printContainer = document.createElement('div')
+
+      // If data array is provided, use it to find divs with matching IDs
+      if (Array.isArray(data) && data.length > 0) {
+        // Loop through the data array
+        data.forEach((item, i) => {
+          // Find the ref with ID matching the data item
+          const ref = printRefs.current.find(element => element.id === item)
+          const groupIndex = tabGroup.findIndex(e => e.label == data[i]);
+          console.warn('Group Index:', groupIndex)
+          if (groupIndex === -1) {
+            console.warn(`No matching group found for item: ${item}`)
+            return
+          }
+
+          if (ref) {
+            const pageWrapper = document.createElement('div')
+            // pageWrapper.className = i < data.length - 1 ? 'new-page page-break' : 'new-page'
+            pageWrapper.className = 'new-page page-break'
+
+            // Clone the content to avoid modifying the original
+            const content = ref.cloneNode(true);
+            const rightDivRef = leftprintRefs.current[groupIndex]
+            console.log(rightDivRef);
+            const rightClone = rightDivRef.cloneNode(true);
+            console.warn('Right Clone:', rightClone)
+
+            pageWrapper.appendChild(content)
+            // pageWrapper.appendChild(rightClone);
+            printContainer.appendChild(pageWrapper)
+          } else {
+            console.warn(`No element found with ID: ${item}`)
+          }
+        })
+      } else{
+        return toast.error('No matching data found for PDF generation.')
+      }
+
+      // Create a hidden iframe to handle the PDF generation
+      const iframe = document.createElement('iframe')
+      iframe.style.display = 'none'
+      document.body.appendChild(iframe)
+
+      // Get current date and time from the provided details
+      const fullDateTime = '2025-05-11 05:30:45' // From your input
+      const formattedDate = fullDateTime.split(' ')[0]
+
+      // User information from the provided details
+      const username = 'DhruviRana4' // From your input
+
+      // Add necessary styles for printing with landscape orientation
+      iframe.contentDocument.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Print Document</title>
+      <style>
+        @page {
+          size: landscape;
+          margin: 0;
+        }
+        
+        @media print {
+          body {
+            margin: 0;
+            // padding: 20px;
+            background-color: white;
+            color: black;
+          }
+          
+          /* Force color printing */
+          * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            color-adjust: exact !important;
+          }
+          
+          /* Page break styling */
+          .page-break {
+            page-break-after: always;
+            break-after: page;
+          }
+          
+          .new-page:last-of-type {
+            page-break-after: avoid;
+            break-after: avoid;
+          }
+          .main-print-div{
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+          }
+          .hidden-print {
+            position: static; /* Restore to default position during print */
+            left: auto;
+            width: 25%;
+          }
+        }
+        
+        /* Non-print styles */
+        body {
+          margin: 0;
+          background-color: white;
+          color: black;
+          font-family: Arial, sans-serif;
+        }
+        
+        /* Page break styling for preview */
+        .page-break {
+          padding: 20px 10px;
+        }
+      </style>
+    </head>
+    <body>
+      <div>
+        ${printContainer.innerHTML}
+      </div>
+    </body>
+    </html>
+    `)
+
+      iframe.contentDocument.close()
+
+      // Trigger print dialog and wait for it to complete
+      iframe.contentWindow.focus()
+
+      // Use a timeout to ensure the content is fully loaded
+      setTimeout(() => {
+        // Generate a dynamic filename with user and date
+        const simpleDate = formattedDate.replace(/-/g, '')
+        const dynamicFileName = `report_${username}_${simpleDate}.pdf`
+
+        // Store the original title
+        const originalTitle = document.title
+
+        // Set the new title (filename)
+        document.title = dynamicFileName
+
+        // Print the document
+        iframe.contentWindow.print()
+
+        // Listen for the afterprint event to clean up
+        iframe.contentWindow.addEventListener(
+          'afterprint',
+          () => {
+            // Restore the original document title
+            document.title = originalTitle
+
+            // Remove the iframe after printing is done
+            document.body.removeChild(iframe)
+          },
+          { once: true }
+        )
+      }, 500)
+    } catch (err) {
+      console.error('Print error:', err)
+      alert('There was an error preparing the print view. Please try again.')
+    }
+  }
 
 
   const updatePdfPages = (selectedGroup, pageNumber) => {
@@ -1091,7 +1268,7 @@ function DevtaVastuPage({ id }) {
               )}
               {activeHouse && tabGroup && tabGroup.map(
                 (group, index) => (
-                  (forceRenderAllTabs || activeHouse?.label === group.label) &&
+                  ((savedGroups.includes(group.label) ? forceRenderAllTabs : false) || activeHouse?.label === group.label) &&
                   (
                     <>
                       <DevtaVastu

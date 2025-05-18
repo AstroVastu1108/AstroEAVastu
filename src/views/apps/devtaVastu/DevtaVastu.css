@@ -1,44 +1,54 @@
-.hidden-print {
-    position: absolute;
-    left: -9999px; /* Move off-screen */
-    top: 0;
+@media print {
+  body {
+    margin: 0;
+    padding: 20px;
+    background-color: white;
+    color: black;
   }
 
-  @media print {
-    .hidden-print {
-      position: static; /* Restore to default position during print */
-      left: auto;
-    }
-
-    #hiddenDiv {
-      min-height: 100vh; /* Ensures it takes full height */
-      display: flex;
-      flex-direction: column;
-    }
-
-    .card-content {
-      flex-grow: 1; /* Ensures it stretches */
-    }
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
   }
 
+  .page-break {
+    page-break-after: always;
+    break-after: page;
+  }
 
-   #hiddenDiv {
-    min-height: 100vh;
+  .new-page:last-of-type {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+  .main-print-div {
     display: flex;
-    flex-direction: column;
-    display: none;
+    justify-content: space-between;
+    gap: 10px;
   }
-
-  .card-content {
-    flex-grow: 1;
+  .hidden-print {
+    position: static; /* Restore to default position during print */
+    left: auto;
+    width: 30%;
   }
+}
 
-  .design-card {
-    /* width: 300px; Reduced width to better match the 30% proportion */
-    /* padding: 0px 20px; */
-    background: white;
-    /* border: 1px solid #ccc; */
-    border-radius: 8px;
-    /* box-shadow: 0 2px 4px rgba(0,0,0,0.1); */
-  }
+#hiddenDiv {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  display: none;
+}
 
+.card-content {
+  flex-grow: 1;
+}
+
+.design-card {
+  /* width: 300px; Reduced width to better match the 30% proportion */
+  /* padding: 0px 20px; */
+  background: white;
+  /* border: 1px solid #ccc; */
+  border-radius: 8px;
+  /* box-shadow: 0 2px 4px rgba(0,0,0,0.1); */
+}

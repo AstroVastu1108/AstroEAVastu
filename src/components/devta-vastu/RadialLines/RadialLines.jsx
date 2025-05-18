@@ -157,7 +157,7 @@ const RectangleWithRotatedLines = ({ height, width, degree = 0, cx = 300, cy = 3
               transform={`rotate(${rotation}, ${adjustedX}, ${adjustedY})`}
               fontSize='22'
               fontWeight={700}
-              fill='var(--primary-color)'
+              fill='#590a73'
               textAnchor='middle'
               alignmentBaseline='middle'
               style={{
@@ -207,7 +207,7 @@ const RectangleWithRotatedLines = ({ height, width, degree = 0, cx = 300, cy = 3
             x={midX}
             y={midY}
             fontSize='18'
-            fill='var(--green-color)'
+            fill='#00a75a'
             fontWeight={700}
             fontFamily='Segoe UI'
             textAnchor='middle'

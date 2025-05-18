@@ -22,7 +22,7 @@ const GridBackground = ({ width, height }) => {
               y={10}
               fontSize='12'
               textAnchor='middle'
-              fill='var(--primary-color)'
+              fill='#590a73'
               fontFamily='Segoe UI'
               fontWeight={600}
               style={{ userSelect: 'none', cursor: 'default' }}
@@ -35,7 +35,7 @@ const GridBackground = ({ width, height }) => {
               y={height - 5}
               fontSize='12'
               textAnchor='middle'
-              fill='var(--primary-color)'
+              fill='#590a73'
               fontFamily='Segoe UI'
               fontWeight={600}
               style={{ userSelect: 'none', cursor: 'default' }}
@@ -59,7 +59,7 @@ const GridBackground = ({ width, height }) => {
               fontSize='12'
               textAnchor='start'
               alignmentBaseline='middle'
-              fill='var(--primary-color)'
+              fill='#590a73'
               fontFamily="'Segoe UI', Arial, sans-serif"
               fontWeight={600}
               style={{ userSelect: 'none', cursor: 'default' }}
@@ -73,7 +73,7 @@ const GridBackground = ({ width, height }) => {
               fontSize='12'
               textAnchor='end'
               alignmentBaseline='middle'
-              fill='var(--primary-color)'
+              fill='#590a73'
               fontFamily="'Segoe UI', Arial, sans-serif"
               fontWeight={600}
               style={{ userSelect: 'none', cursor: 'default' }}

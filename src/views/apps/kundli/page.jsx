@@ -34,6 +34,7 @@ export default function KundliMain() {
 
   const highlightText = (text, searchText) => {
     if (!searchText) return text;
+    if (text=="" || text == null || text == undefined) return;
 
     const regex = new RegExp(`(${searchText})`, 'gi');
     const parts = text.split(regex);
