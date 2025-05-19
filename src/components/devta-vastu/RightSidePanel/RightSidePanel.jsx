@@ -30,6 +30,7 @@ function RightSidePanel({
   selectedGroup,
   setleftPrintRef,
   setZoom,
+  zoom,
   setRotation,
   rotation,
   lockChakra,

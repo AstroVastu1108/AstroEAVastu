@@ -491,7 +491,8 @@ function DevtaVastuPage({ id }) {
                 console.log("First PDF page:", images[0]);
                 setPreviewUrl(images[0]);
                 setFileUploaded(true);
-                const pageNumber = prompt('Enter the page number (1 to ' + images.length + '):', '1');
+                // const pageNumber = prompt('Enter the page number (1 to ' + images.length + '):', '1');
+                const pageNumber = 1;
                 if (pageNumber) {
                   const pageIndex = parseInt(pageNumber, 10) - 1;
                   if (pageIndex >= 0 && pageIndex < images.length) {
@@ -647,12 +648,17 @@ function DevtaVastuPage({ id }) {
   }
 
   const handleTabGroupChange = (index, key, value) => {
-    setIsLayoutChange(true);
-    setTabGroup((prev) => {
-      const updatedGroup = [...prev];
-      updatedGroup[index][key] = value;
-      return updatedGroup;
-    });
+    try {
+
+      setIsLayoutChange(true);
+      setTabGroup((prev) => {
+        const updatedGroup = [...prev];
+        updatedGroup[index][key] = value;
+        return updatedGroup;
+      });
+    } catch (error) {
+      console.error("Error in handleTabGroupChange:", error);
+    }
   };
 
   const updatePointsForAllTabs = (selectedGroup, newPoints) => {
@@ -849,7 +855,7 @@ function DevtaVastuPage({ id }) {
     let layoutCount = parseInt(localStorage.getItem("layoutCount") || "1", 10);
     layoutCount++;
     localStorage.setItem("layoutCount", layoutCount);
-    window.open(`${process.env.NEXT_PUBLIC_APP_URL}/devta-vastu`, "_blank");
+    window.open(`${process.env.NEXT_PUBLIC_APP_URL}/devta-vastu/NEW`, "_blank");
   }
 
   const handleAddNewPage = () => {
@@ -1069,7 +1075,7 @@ function DevtaVastuPage({ id }) {
             console.warn(`No element found with ID: ${item}`)
           }
         })
-      } else{
+      } else {
         return toast.error('No matching data found for PDF generation.')
       }
 

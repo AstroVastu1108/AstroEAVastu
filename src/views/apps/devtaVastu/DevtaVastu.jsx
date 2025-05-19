@@ -2858,6 +2858,7 @@ const DevtaVastu = ({
           vastuLayoutData={vastuLayoutData}
           setleftPrintRef={setleftPrintRef}
           setZoom={setZoom}
+          zoom={zoom}
           setRotation={setRotation}
           rotation={rotation}
           lockChakra={lockChakra}
