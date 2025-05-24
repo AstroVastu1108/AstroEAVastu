@@ -14,6 +14,7 @@ import {
   ThemeProvider
 } from '@mui/material'
 import React, { useEffect, useRef, useState } from 'react'
+import { toast } from 'react-toastify'
 
 function AddPagePopUp({ open, handleClose, handleSave, tabGroup, savedGroups }) {
   const [selectedGroup, setSelectedGroup] = useState(null)
@@ -55,8 +56,13 @@ function AddPagePopUp({ open, handleClose, handleSave, tabGroup, savedGroups }) 
               if (!selectedGroup) setGroupError(true)
               if (!selectedBaseGroup) setBaseGroupError(true)
               if (selectedGroup && selectedBaseGroup) {
+                const isTitleUnique = !savedGroups.some(tab => tab === tabTitle);
+                if (!isTitleUnique) {
+                  titleRef.current.focus();
+                  return toast.error('Title already exists! Please choose a different title.');
+                }
                 handleSave(selectedGroup, selectedBaseGroup, tabTitle)
-                handleClose()
+                handleClose();
               }
             }
           }}

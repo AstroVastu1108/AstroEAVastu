@@ -225,7 +225,6 @@ function PrakritiPopUp({ open, handlePraClose }) {
 
   const handleSave = () => {
     localStorage.setItem('prakritiSelections', JSON.stringify(selectedOptions));
-    // console.log('Saved options:', selectedOptions);
     // Calculate checked counts
     const counts = { vata: 0, pitta: 0, kapha: 0 };
     Object.values(selectedOptions).forEach((options) => {
@@ -285,7 +284,6 @@ function PrakritiPopUp({ open, handlePraClose }) {
       </DialogContent>
       <DialogActions className='p-0'>
         <div className='p-4'>
-          {/* <Button variant='contained' type='submit' disabled={false} onClick={() => console.log(selectedOptions)} > */}
           <Button variant='contained' type='submit' disabled={false} onClick={handleSave} >
             Save
           </Button>

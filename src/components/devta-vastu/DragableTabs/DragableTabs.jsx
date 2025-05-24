@@ -103,7 +103,7 @@ export default function MovableTabs({
               <DraggableTab1
                 key={index}
                 index={index}
-                group={groups.filter(item => item.label === group)[0]}
+                group={groups.filter(item => item.title === group)[0]}
                 handleRemoveOpen={handleRemoveOpen}
                 handleTabChange={handleTabChange} // Pass handleTabChange to DraggableTab
                 activeTab={activeTab}
