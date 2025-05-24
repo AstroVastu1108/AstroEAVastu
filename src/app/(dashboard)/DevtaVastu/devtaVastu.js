@@ -147,7 +147,6 @@ function DevtaVastuPage({ id }) {
         //   }
         //   return tab;
         // });
-
         const updatedTabGroup = [];
 
         tabGroup.forEach((tab) => {
@@ -183,9 +182,10 @@ function DevtaVastuPage({ id }) {
                 OriginalFileName: file.OriginalFileName,
                 Base64File: file.Base64File,
                 isPdf: file.isPdf,
-                pdfImages: file.pdfImages,
                 pdfPages: file.pdfPages,
-                selectedPage: file.selectedPage
+                selectedPage: file.selectedPage,
+                currentPageBase64: file.currentPageBase64,
+                originalPdfBase64: file.originalPdfBase64 // Add this line to include the original PDF Base64
               })),
               cropImage: matchingDataItems[0].cropImage,
               rotation: matchingDataItems[0].rotation,
@@ -229,9 +229,10 @@ function DevtaVastuPage({ id }) {
                     OriginalFileName: file.OriginalFileName,
                     Base64File: file.Base64File,
                     isPdf: file.isPdf,
-                    pdfImages: file.pdfImages,
                     pdfPages: file.pdfPages,
-                    selectedPage: file.selectedPage
+                    selectedPage: file.selectedPage,
+                    currentPageBase64: file.currentPageBase64,
+                    originalPdfBase64: file.originalPdfBase64 // Add this line to include the original PDF Base64
                   })),
                   cropImage: matchingDataItems[i].cropImage,
                   rotation: matchingDataItems[i].rotation,
@@ -256,10 +257,6 @@ function DevtaVastuPage({ id }) {
 
         const matchedLabels = incomingData?.map((data) => data.Title)
           .filter((label) => updatedTabGroup.some((tab) => tab.title === label));
-
-        console.log("matchedLabels : ", matchedLabels);
-        console.log("incomingData00", incomingData);
-        console.log("updatedTabGroup", updatedTabGroup);
 
         setTabGroup(updatedTabGroup);
         setSavedGroups(matchedLabels);
@@ -440,107 +437,7 @@ function DevtaVastuPage({ id }) {
   //   }
   // }
 
-  // const handleFileUpload =async (tabGroup, tabIndex) => async (event) => {
-  //   console.log("tabGroup : ", tabGroup);
-  //   console.log("tabIndex : ", tabIndex);
-
-  //   const uploadedFile = event.target.files[0];
-
-  //   if (uploadedFile) {
-  //     const fileType = uploadedFile.type;
-  //     const name = uploadedFile.name;
-  //     setFileInfo(name);
-
-  //     // Create a reader to get the Base64 representation of the file
-  //     const reader = new FileReader();
-
-  //     reader.onloadend = () => {
-  //       const base64Data = reader.result;
-
-  //       // Log the state before update for debugging
-  //       console.log("before updatedTabGroup : ", tabGroup);
-
-  //       // Update the NecessaryFiles for this specific tabGroup using the tabIndex
-  //       setTabGroup(prevTabGroup => {
-  //         // Create a deep copy to avoid reference issues
-  //         const updatedTabGroup = JSON.parse(JSON.stringify(prevTabGroup));
-
-  //         // Ensure NecessaryFiles exists at this index
-  //         if (!updatedTabGroup[tabIndex].NecessaryFiles) {
-  //           updatedTabGroup[tabIndex].NecessaryFiles = [];
-  //         }
-
-  //         // Update the file information
-  //         updatedTabGroup[tabIndex].NecessaryFiles[0] = {
-  //           OriginalFileName: name,
-  //           Base64File: base64Data
-  //         };
-
-  //         console.log("after update for index", tabIndex, ":", updatedTabGroup[tabIndex].NecessaryFiles);
-  //         return updatedTabGroup;
-  //       });
-
-  //       // Process file for preview based on type
-  //       if (fileType.includes('image') || fileType === 'image/svg+xml') {
-  //         setFileUploaded(true);
-  //         setPreviewUrl(base64Data);
-  //       } else if (fileType === 'application/pdf') {
-  //         const images =  await readFileData(uploadedFile)
-
-  //         if (images.length > 0) {
-  //           // Default to the first page
-  //           setPreviewUrl(images[0])
-  //           setFileUploaded(true)
-
-  //           // Prompt the user for page selection
-  //           const pageNumber = prompt(`Enter the page number (1 to ${images.length}):`, '1')
-
-  //           if (pageNumber) {
-  //             const pageIndex = parseInt(pageNumber, 10) - 1
-
-  //             if (pageIndex >= 0 && pageIndex < images.length) {
-  //               setPreviewUrl(images[pageIndex])
-  //             } else {
-  //               alert('Invalid page number. Showing the first page.')
-  //             }
-  //           }
-  //         } else {
-  //           alert('No pages found in the PDF.')
-  //         }
-  //         // Handle PDF as before
-  //         // readFileData(uploadedFile).then(images => {
-  //         //   if (images.length > 0) {
-  //         //     setPreviewUrl(images[0]);
-  //         //     setFileUploaded(true);
-
-  //   const pageNumber = prompt('Enter the page number (1 to ' + images.length + '):', '1');
-  //   if (pageNumber) {
-  //     const pageIndex = parseInt(pageNumber, 10) - 1;
-  //     if (pageIndex >= 0 && pageIndex < images.length) {
-  //       setPreviewUrl(images[pageIndex]);
-  //     } else {
-  //       alert('Invalid page number. Showing the first page.');
-  //     }
-  //   }
-  // } else {
-  //   alert('No pages found in the PDF.');
-  // }
-  //         // });
-  //       } else {
-  //         alert('Unsupported file type. Please upload an image (including SVG) or PDF.');
-  //       }
-  //     };
-
-  //     // Start reading the file as a Data URL (base64)
-  //     reader.readAsDataURL(uploadedFile);
-  //   }
-  // };
-
-  // Correct implementation - removes the double async and fixes PDF handling
   const handleFileUpload = (tabGroup, tabIndex) => (event) => {
-    console.log("tabGroup : ", tabGroup);
-    console.log("tabIndex : ", tabIndex);
-
     const uploadedFile = event.target.files[0];
 
     if (uploadedFile) {
@@ -553,123 +450,138 @@ function DevtaVastuPage({ id }) {
 
       reader.onloadend = () => {
         const base64Data = reader.result;
-
-        // Log the state before update for debugging
-        console.log("before updatedTabGroup : ", tabGroup);
-
-        // For images, we can update the tabGroup immediately
         if (fileType.includes('image') || fileType === 'image/svg+xml') {
-          // Update the NecessaryFiles for this specific tabGroup using the tabIndex
           setTabGroup(prevTabGroup => {
-            // Create a deep copy to avoid reference issues
             const updatedTabGroup = JSON.parse(JSON.stringify(prevTabGroup));
-
-            // Ensure NecessaryFiles exists at this index
             if (!updatedTabGroup[tabIndex].NecessaryFiles) {
               updatedTabGroup[tabIndex].NecessaryFiles = [];
             }
-
-            // Update the file information
             updatedTabGroup[tabIndex].NecessaryFiles[0] = {
               OriginalFileName: name,
               Base64File: base64Data
             };
-
-            console.log("after update for index (image)", tabIndex, ":", updatedTabGroup[tabIndex].NecessaryFiles);
             return updatedTabGroup;
           });
 
           setFileUploaded(true);
           setPreviewUrl(base64Data);
         }
-        // For PDFs, we need to process them first, then update the tabGroup
         else if (fileType === 'application/pdf') {
-          // First, store the original PDF file in the tabGroup
-          // setTabGroup(prevTabGroup => {
-          //   // Create a deep copy to avoid reference issues
-          //   const updatedTabGroup = JSON.parse(JSON.stringify(prevTabGroup));
+          setTabGroup(prevTabGroup => {
+            const updatedTabGroup = JSON.parse(JSON.stringify(prevTabGroup));
 
-          //   // Ensure NecessaryFiles exists at this index
-          //   if (!updatedTabGroup[tabIndex].NecessaryFiles) {
-          //     updatedTabGroup[tabIndex].NecessaryFiles = [];
-          //   }
+            if (!updatedTabGroup[tabIndex].NecessaryFiles) {
+              updatedTabGroup[tabIndex].NecessaryFiles = [];
+            }
 
-          //   // Update the file information with the original PDF file
-          //   updatedTabGroup[tabIndex].NecessaryFiles[0] = {
-          //     OriginalFileName: name,
-          //     Base64File: base64Data, // Original PDF data
-          //     isPdf: true  // Flag to indicate this is a PDF
-          //   };
+            updatedTabGroup[tabIndex].NecessaryFiles[0] = {
+              OriginalFileName: name,
+              Base64File: "", 
+              isPdf: true,
+              pdfPages: 0,
+              selectedPage: 0
+            };
 
-          //   console.log("after update for index (original PDF)", tabIndex, ":", updatedTabGroup[tabIndex].NecessaryFiles);
-          //   return updatedTabGroup;
-          // });
+            return updatedTabGroup;
+          });
 
-          // Handle PDF processing with promise
-          readFileData(uploadedFile)
-            .then(images => {
-              if (images.length > 0) {
-                console.log("Processed PDF images:", images.length);
-
-                // Store all PDF pages for later use if you implement the dropdown
-                // setPdfPages(images);
-                // setTotalPdfPages(images.length);
-                // setSelectedPage(1);
-
-                // Set preview to first page
-                console.log("First PDF page:", images[0]);
-                setPreviewUrl(images[0]);
-                setFileUploaded(true);
-                const pageNumber = prompt('Enter the page number (1 to ' + images.length + '):', '1');
-                if (pageNumber) {
-                  const pageIndex = parseInt(pageNumber, 10) - 1;
-                  if (pageIndex >= 0 && pageIndex < images.length) {
-                    setPreviewUrl(images[pageIndex - 1]);
-                    setTabGroup(prevTabGroup => {
-                      // Create a deep copy to avoid reference issues
-                      const updatedTabGroup = JSON.parse(JSON.stringify(prevTabGroup));
-
-                      // Ensure NecessaryFiles exists at this index
-                      if (!updatedTabGroup[tabIndex].NecessaryFiles) {
-                        updatedTabGroup[tabIndex].NecessaryFiles = [];
-                      }
-
-                      // Add PDF pages information to the NecessaryFiles
-                      // Store processed pages
-                      updatedTabGroup[tabIndex].NecessaryFiles[0] = {
-                        ...updatedTabGroup[tabIndex].NecessaryFiles[0], // Keep existing data
-                        OriginalFileName: name,
-                        Base64File: images[pageIndex],
-                        isPdf: true, // Flag to indicate this is a PDF
-                        pdfImages: images, // Store all processed images
-                        pdfPages: images.length, // Total number of pages
-                        selectedPage: pageNumber - 1 // Default to the first page
-                      };
-
-                      console.log("after update for index (processed PDF)", tabIndex, ":", updatedTabGroup[tabIndex].NecessaryFiles);
-                      return updatedTabGroup;
-                    });
-                  } else {
-                    alert('Invalid page number. Showing the first page.');
-                  }
-                }
-              } else {
-                alert('No pages found in the PDF.');
-              }
-            })
-            .catch(error => {
-              console.error("Error processing PDF file:", error);
-              alert('Error processing PDF file. Please try again.');
-            });
+          processPdfWithPdfJs(base64Data, tabIndex, name);
         } else {
           alert('Unsupported file type. Please upload an image (including SVG) or PDF.');
         }
       };
 
-      // Start reading the file as a Data URL (base64)
       reader.readAsDataURL(uploadedFile);
     }
   };
+
+  // PDF.js processing function
+  const processPdfWithPdfJs = (pdfBase64, tabIndex, fileName) => {
+    const base64Data = pdfBase64.substring(pdfBase64.indexOf(',') + 1);
+
+    const binaryString = atob(base64Data);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+
+    pdfjsLib.getDocument({ data: bytes }).promise
+      .then((pdf) => {
+        const totalPages = pdf.numPages;
+        renderPdfPage(pdf, 1, tabIndex, fileName, pdfBase64, totalPages);
+
+        setTabGroup(prevTabGroup => {
+          const updatedTabGroup = JSON.parse(JSON.stringify(prevTabGroup));
+
+          if (!updatedTabGroup[tabIndex].NecessaryFiles) {
+            updatedTabGroup[tabIndex].NecessaryFiles = [];
+          }
+
+          updatedTabGroup[tabIndex].NecessaryFiles[0] = {
+            ...updatedTabGroup[tabIndex].NecessaryFiles[0],
+            pdfPages: totalPages,
+          };
+
+          return updatedTabGroup;
+        });
+
+        renderPdfPage(pdf, 1, tabIndex, fileName, pdfBase64, totalPages);
+      })
+      .catch(error => {
+        console.error("Error loading PDF:", error);
+      });
+  };
+
+  // Function to render a specific PDF page
+  const renderPdfPage = (pdfDocument, pageNumber, tabIndex, fileName, originalPdfBase64, totalPages) => {
+    pdfDocument.getPage(pageNumber).then(page => {
+      const scale = 1.5;
+      const viewport = page.getViewport({ scale });
+
+      // Create an off-screen canvas to render the PDF page
+      const canvas = document.createElement('canvas');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+
+      const renderContext = {
+        canvasContext: canvas.getContext('2d'),
+        viewport: viewport
+      };
+
+      // Render the page
+      page.render(renderContext).promise.then(() => {
+        // Convert the rendered page to base64
+        const pageBase64 = canvas.toDataURL('image/png');
+
+        setPreviewUrl(pageBase64);
+        setFileUploaded(true);
+
+        // Update the tabGroup with the rendered page
+        setTabGroup(prevTabGroup => {
+          const updatedTabGroup = JSON.parse(JSON.stringify(prevTabGroup));
+
+          if (!updatedTabGroup[tabIndex].NecessaryFiles) {
+            updatedTabGroup[tabIndex].NecessaryFiles = [];
+          }
+
+          // Update with the rendered page
+          updatedTabGroup[tabIndex].NecessaryFiles[0] = {
+            OriginalFileName: fileName,
+            Base64File: "", // Current page as image
+            originalPdfBase64: originalPdfBase64, // Store original PDF data for later use
+            isPdf: true,
+            pdfPages: totalPages,
+            selectedPage: pageNumber - 1,
+            currentPageBase64: pageBase64 // Store current page separately
+          };
+
+          return updatedTabGroup;
+        });
+      });
+    });
+  };
+
+
   const downloadPDF = () => {
     // setLoading(!loading);
     handleAnchorElClose();
@@ -772,7 +684,6 @@ function DevtaVastuPage({ id }) {
   };
 
   const handleTabChange = (event, newValue) => {
-    console.log("newValue : ", newValue);
     setActiveTab(newValue)
   }
 
@@ -845,7 +756,6 @@ function DevtaVastuPage({ id }) {
       await waitForDOMUpdate()
 
       const leftDivRef = leftprintRefs.current[groupIndex]
-      console.log(leftDivRef)
       const rightDivRef = printRefs.current[groupIndex]
 
       if (!leftDivRef || !rightDivRef) {
@@ -1188,9 +1098,7 @@ function DevtaVastuPage({ id }) {
             // Clone the content to avoid modifying the original
             const content = ref.cloneNode(true);
             const rightDivRef = leftprintRefs.current[groupIndex]
-            console.log(rightDivRef);
             const rightClone = rightDivRef.cloneNode(true);
-            console.warn('Right Clone:', rightClone)
 
             pageWrapper.appendChild(content)
             // pageWrapper.appendChild(rightClone);
@@ -1326,23 +1234,108 @@ function DevtaVastuPage({ id }) {
   }
 
 
-  const updatePdfPages = (selectedGroup, pageNumber) => {
-    const index = tabGroup.findIndex(tab => tab.title === selectedGroup);
-    setTabGroup((prev) => {
-      const updatedGroup = [...prev];
-      const tabToUpdate = { ...updatedGroup[index] };
-      const updatedNecessaryFiles = [...tabToUpdate?.NecessaryFiles];
-      updatedNecessaryFiles[0] = { ...updatedNecessaryFiles[0], selectedPage: pageNumber };
-      tabToUpdate.NecessaryFiles = updatedNecessaryFiles;
-      updatedGroup[index] = tabToUpdate;
-      return updatedGroup;
-    });
-  }
+  // const updatePdfPages = (selectedGroup, pageNumber) => {
+  //   const index = tabGroup.findIndex(tab => tab.title === selectedGroup);
+  //   setTabGroup((prev) => {
+  //     const updatedGroup = [...prev];
+  //     const tabToUpdate = { ...updatedGroup[index] };
+  //     const updatedNecessaryFiles = [...tabToUpdate?.NecessaryFiles];
+  //     updatedNecessaryFiles[0] = { ...updatedNecessaryFiles[0], selectedPage: pageNumber };
+  //     tabToUpdate.NecessaryFiles = updatedNecessaryFiles;
+  //     updatedGroup[index] = tabToUpdate;
+  //     return updatedGroup;
+  //   });
+  // }
 
-  useEffect(() => {
-    console.log("========================tabGroup : ", tabGroup);
-    console.log("========================savedGroups : ", savedGroups);
-  })
+  const updatePdfPages = async (selectedGroup, pageNumber) => {
+    try {
+      // Find the index of the selected tab group
+      const index = tabGroup.findIndex(tab => tab.title === selectedGroup);
+
+      if (index === -1) {
+        toast.error("Selected tab group not found");
+        return;
+      }
+
+      // Get the current necessary files data
+      const currentNecessaryFiles = tabGroup[index]?.NecessaryFiles?.[0];
+      if (!currentNecessaryFiles || !currentNecessaryFiles.isPdf || !currentNecessaryFiles.originalPdfBase64) {
+        toast.error("No valid PDF data found in selected tab group");
+        return;
+      }
+      setLoading(true);
+
+      // Extract the base64 data (remove data URL prefix if present)
+      let base64Data = currentNecessaryFiles.originalPdfBase64;
+      if (base64Data.includes('base64,')) {
+        base64Data = base64Data.substring(base64Data.indexOf(',') + 1);
+      }
+
+      // Convert base64 to binary
+      const binaryString = atob(base64Data);
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+
+      // Load the PDF document
+      const pdfDocument = await pdfjsLib.getDocument({ data: bytes }).promise;
+      const totalPages = pdfDocument.numPages;
+
+      // Validate page number
+      if (pageNumber < 0 || pageNumber >= totalPages) {
+        setLoading(false);
+        toast.error(`Invalid page number. Must be between 1 and ${totalPages}`);
+        return;
+      }
+
+      const page = await pdfDocument.getPage(pageNumber + 1); // +1 because PDF.js uses 1-based indexing
+
+      const scale = 1.5;
+      const viewport = page.getViewport({ scale });
+
+      const canvas = document.createElement('canvas');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+
+      const renderContext = {
+        canvasContext: canvas.getContext('2d'),
+        viewport: viewport
+      };
+
+      await page.render(renderContext).promise;
+      const pageBase64 = canvas.toDataURL('image/png');
+      setPreviewUrl(pageBase64);
+      setTabGroup(prevTabGroup => {
+        const updatedTabGroup = [...prevTabGroup];
+
+        const updatedTab = { ...updatedTabGroup[index] };
+
+        if (!updatedTab.NecessaryFiles) {
+          updatedTab.NecessaryFiles = [];
+        }
+
+        updatedTab.NecessaryFiles[0] = {
+          ...updatedTab.NecessaryFiles[0],
+          selectedPage: pageNumber,
+          currentPageBase64: pageBase64,
+          pdfPages: totalPages
+        };
+
+        updatedTabGroup[index] = updatedTab;
+
+        return updatedTabGroup;
+      });
+
+      setLoading(false);
+
+      return pageBase64;
+    } catch (error) {
+      setLoading(false);
+      toast.error("Error updating PDF page. Please try again.");
+    }
+  };
+
 
   return (
     <>
@@ -1403,7 +1396,6 @@ function DevtaVastuPage({ id }) {
 
                 </>
               )}
-              {console.log("activeHouse : ", activeHouse?.title)}
               {activeHouse && tabGroup && tabGroup.map(
                 (group, index) => (
                   ((savedGroups.includes(group.title) ? forceRenderAllTabs : false) || activeHouse?.title === group.title) &&

@@ -2211,7 +2211,7 @@ const DevtaVastu = ({
                             {previewUrl ? (
                               <>
                                 <image
-                                  href={previewUrl?.isPdf ? previewUrl?.pdfImages[previewUrl?.selectedPage] : previewUrl?.Base64File}
+                                  href={previewUrl?.isPdf ? previewUrl?.currentPageBase64 : previewUrl?.Base64File}
                                   style={{ maxWidth: '100%', maxHeight: '500px', imageRendering: 'auto' }}
                                   width={width}
                                   height={height}
