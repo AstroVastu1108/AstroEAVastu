@@ -1117,8 +1117,14 @@ function DevtaVastuPage({ id }) {
         // Loop through the data array
         data.forEach((item, i) => {
           // Find the ref with ID matching the data item
-          const ref = printRefs.current.find(element => element.id === item)
-          const groupIndex = tabGroup.findIndex(e => e.label == data[i]);
+          const ref = printRefs.current.find(element => {
+            if (typeof element === 'object' && element !== null && element.id) {
+              return element.id === item
+            }
+            return false
+          })
+          
+          const groupIndex = tabGroup.findIndex(e => e.title == data[i]);
           if (groupIndex === -1) {
             return
           }
