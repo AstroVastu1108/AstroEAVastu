@@ -581,7 +581,7 @@ function DevtaVastuPage({ id }) {
 
   useEffect(() => {
     setActiveHouse(tabGroup.filter((e) => e.title == savedGroups[activeTab])[0]);
-  }, [activeTab]);
+  }, [activeTab,savedGroups]);
 
   // const printHandler = (data) => {
   //   // Check if we have any refs to print
@@ -971,7 +971,7 @@ function DevtaVastuPage({ id }) {
               )}
               {activeHouse && tabGroup && tabGroup.map(
                 (group, index) => (
-                  ((savedGroups.includes(group.label) ? forceRenderAllTabs : false) || activeHouse?.label === group.label) &&
+                  ((savedGroups.includes(group.title) ? forceRenderAllTabs : false) || activeHouse?.title === group.title) &&
                   (
                     <>
                       <DevtaVastu
@@ -1045,6 +1045,7 @@ function DevtaVastuPage({ id }) {
                         IsDownloading={IsDownloading}
                         isLayoutChange={isLayoutChange}
                         updatePdfPages={updatePdfPages}
+                        savedGroups={savedGroups}
                       />
                     </>
                     // <div key={index} style={{ display: activeHouse?.label === group.label ? 'block' : 'none' }}>

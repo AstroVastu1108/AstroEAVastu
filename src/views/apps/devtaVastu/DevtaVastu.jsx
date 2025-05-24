@@ -49,6 +49,7 @@ import RightPrintSection from '@/components/devta-vastu/RightPrintSection/RightP
 GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.js'
 
 const DevtaVastu = ({
+  savedGroups,
   setPrintRef,
   tabTitle,
   setleftPrintRef,
@@ -2851,6 +2852,7 @@ const DevtaVastu = ({
         </div>
         {/* <div className='flex flex-wrap lg:flex-col gap-3 p-4 lg:gap-0 bg-white' style={{ width: '550px' }}> */}
         <RightSidePanel
+        savedGroups={savedGroups}
           previewUrl={previewUrl}
           selectedGroup={selectedGroup}
           handleFileUpload={handleFileUpload}
