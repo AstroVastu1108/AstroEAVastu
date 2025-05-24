@@ -285,18 +285,6 @@ function DevtaVastuPage({ id }) {
   const [layoutCount] = useState(parseInt(localStorage.getItem("layoutCount") || "1"));
   const openEl = Boolean(anchorEl);
 
-  // const [points, setPoints] = useState(DEFAULT_POINTS);
-
-  // const [previewUrl, setPreviewUrl] = useState(null)
-
-  // useEffect(() => {
-  //   const getLayouts = async () => {
-  //     const data = await getVastuLayouts()
-  //     console.log('Data : ', data)
-  //   }
-  //   getLayouts()
-  // }, [])
-
   async function readFileData(uploadedFile) {
     const fileReader = new FileReader()
 
@@ -437,7 +425,107 @@ function DevtaVastuPage({ id }) {
   //   }
   // }
 
+  // const handleFileUpload =async (tabGroup, tabIndex) => async (event) => {
+  //   console.log("tabGroup : ", tabGroup);
+  //   console.log("tabIndex : ", tabIndex);
+
+  //   const uploadedFile = event.target.files[0];
+
+  //   if (uploadedFile) {
+  //     const fileType = uploadedFile.type;
+  //     const name = uploadedFile.name;
+  //     setFileInfo(name);
+
+  //     // Create a reader to get the Base64 representation of the file
+  //     const reader = new FileReader();
+
+  //     reader.onloadend = () => {
+  //       const base64Data = reader.result;
+
+  //       // Log the state before update for debugging
+  //       console.log("before updatedTabGroup : ", tabGroup);
+
+  //       // Update the NecessaryFiles for this specific tabGroup using the tabIndex
+  //       setTabGroup(prevTabGroup => {
+  //         // Create a deep copy to avoid reference issues
+  //         const updatedTabGroup = JSON.parse(JSON.stringify(prevTabGroup));
+
+  //         // Ensure NecessaryFiles exists at this index
+  //         if (!updatedTabGroup[tabIndex].NecessaryFiles) {
+  //           updatedTabGroup[tabIndex].NecessaryFiles = [];
+  //         }
+
+  //         // Update the file information
+  //         updatedTabGroup[tabIndex].NecessaryFiles[0] = {
+  //           OriginalFileName: name,
+  //           Base64File: base64Data
+  //         };
+
+  //         console.log("after update for index", tabIndex, ":", updatedTabGroup[tabIndex].NecessaryFiles);
+  //         return updatedTabGroup;
+  //       });
+
+  //       // Process file for preview based on type
+  //       if (fileType.includes('image') || fileType === 'image/svg+xml') {
+  //         setFileUploaded(true);
+  //         setPreviewUrl(base64Data);
+  //       } else if (fileType === 'application/pdf') {
+  //         const images =  await readFileData(uploadedFile)
+
+  //         if (images.length > 0) {
+  //           // Default to the first page
+  //           setPreviewUrl(images[0])
+  //           setFileUploaded(true)
+
+  //           // Prompt the user for page selection
+  //           const pageNumber = prompt(`Enter the page number (1 to ${images.length}):`, '1')
+
+  //           if (pageNumber) {
+  //             const pageIndex = parseInt(pageNumber, 10) - 1
+
+  //             if (pageIndex >= 0 && pageIndex < images.length) {
+  //               setPreviewUrl(images[pageIndex])
+  //             } else {
+  //               alert('Invalid page number. Showing the first page.')
+  //             }
+  //           }
+  //         } else {
+  //           alert('No pages found in the PDF.')
+  //         }
+  //         // Handle PDF as before
+  //         // readFileData(uploadedFile).then(images => {
+  //         //   if (images.length > 0) {
+  //         //     setPreviewUrl(images[0]);
+  //         //     setFileUploaded(true);
+
+  //   const pageNumber = prompt('Enter the page number (1 to ' + images.length + '):', '1');
+  //   if (pageNumber) {
+  //     const pageIndex = parseInt(pageNumber, 10) - 1;
+  //     if (pageIndex >= 0 && pageIndex < images.length) {
+  //       setPreviewUrl(images[pageIndex]);
+  //     } else {
+  //       alert('Invalid page number. Showing the first page.');
+  //     }
+  //   }
+  // } else {
+  //   alert('No pages found in the PDF.');
+  // }
+  //         // });
+  //       } else {
+  //         alert('Unsupported file type. Please upload an image (including SVG) or PDF.');
+  //       }
+  //     };
+
+  //     // Start reading the file as a Data URL (base64)
+  //     reader.readAsDataURL(uploadedFile);
+  //   }
+  // };
+
+  // Correct implementation - removes the double async and fixes PDF handling
   const handleFileUpload = (tabGroup, tabIndex) => (event) => {
+    console.log("tabGroup : ", tabGroup);
+    console.log("tabIndex : ", tabIndex);
+
     const uploadedFile = event.target.files[0];
 
     if (uploadedFile) {
@@ -591,61 +679,6 @@ function DevtaVastuPage({ id }) {
     // setLoading(false);
   }
 
-  // const handleSave = (selectedGroup,selectedBaseGroup) => {
-  //   if (!fileUploaded) {
-  //     return toast.error('Please upload a file!!')
-  //   }
-
-
-  //   if (selectedGroup != 1) {
-  //     setSaveLoading(true)
-  //     setSavedGroups(prev => {
-  //       if (!prev.includes(selectedGroup)) {
-  //         return [...prev, selectedGroup]
-  //       }
-  //       return prev
-  //     })
-  //     setActiveTab(savedGroups.length)
-  //   }
-  // }
-
-  // const handleSave = (selectedGroup, selectedBaseGroup, tabTitle) => {
-  //   console.log("selectedGroup : ", selectedGroup);
-  //   console.log("selectedBaseGroup : ", selectedBaseGroup);
-  //   console.log("tabTitle : ", tabTitle);
-  //   if (!fileUploaded) {
-  //     return toast.error('Please upload a file!!');
-  //   }
-
-  //   // Find the base group data
-  //   const baseGroupData = tabGroup.find(tab => tab.title === selectedBaseGroup);
-
-  //   if (!baseGroupData) {
-  //     return toast.error('Base group not found!');
-  //   }
-
-  //   // Update tabGroup by replacing selectedGroup with baseGroupData, keeping its label
-  //   setTabGroup(prevTabGroup =>
-  //     prevTabGroup.map(tab =>
-  //       tab.title === selectedGroup
-  //         ? { ...baseGroupData, label: tab.label, title: tabTitle }  // Keep label, update other data
-  //         : tab // Keep existing data for other tabs
-  //     )
-  //   );
-
-
-  //   if (selectedGroup !== 1) {
-  //     setSaveLoading(true);
-  //     setSavedGroups(prev => {
-  //       if (!prev.includes(selectedGroup)) {
-  //         return [...prev, selectedGroup];
-  //       }
-  //       return prev;
-  //     });
-  //     setActiveTab(savedGroups.length);
-  //   }
-  // };
-
   const handleSave = (selectedGroup, selectedBaseGroup, tabTitle) => {
     if (!fileUploaded) {
       return toast.error('Please upload a file!!');
@@ -658,17 +691,14 @@ function DevtaVastuPage({ id }) {
       return toast.error('Base group not found!');
     }
 
-    const isTitleUnique = !tabGroup.some(tab => tab.title === tabTitle);
-    if (!isTitleUnique) {
-      return toast.error('Title already exists! Please choose a different title.');
-    }
+    
     setTabGroup(prevTabGroup => {
-      if (isTitleUnique) {
+      // if (isTitleUnique) {
         return [
           ...prevTabGroup,
           { ...baseGroupData, label: baseGroupData.label, title: tabTitle }
         ];
-      }
+      // }
     });
 
     if (selectedGroup != 1) {
@@ -917,7 +947,7 @@ function DevtaVastuPage({ id }) {
 
   useEffect(() => {
     setActiveHouse(tabGroup.filter((e) => e.title == savedGroups[activeTab])[0]);
-  }, [activeTab]);
+  }, [activeTab,savedGroups]);
 
   // const printHandler = (data) => {
   //   // Check if we have any refs to print
@@ -925,8 +955,8 @@ function DevtaVastuPage({ id }) {
   //     console.error('Print container refs are empty or null')
   //     return
   //   }
-  //   console.warn('Print container refs:', printRefs)
-  //   console.warn('Print container refs:', data)
+  //   // console.log('Print container refs:', printRefs)
+  //   // console.log('Print container refs:', data)
   //   // return;
 
   //   try {
@@ -1089,9 +1119,7 @@ function DevtaVastuPage({ id }) {
           // Find the ref with ID matching the data item
           const ref = printRefs.current.find(element => element.id === item)
           const groupIndex = tabGroup.findIndex(e => e.label == data[i]);
-          console.warn('Group Index:', groupIndex)
           if (groupIndex === -1) {
-            console.warn(`No matching group found for item: ${item}`)
             return
           }
 
@@ -1109,7 +1137,6 @@ function DevtaVastuPage({ id }) {
             // pageWrapper.appendChild(rightClone);
             printContainer.appendChild(pageWrapper)
           } else {
-            console.warn(`No element found with ID: ${item}`)
           }
         })
       } else {
@@ -1417,17 +1444,19 @@ function DevtaVastuPage({ id }) {
                         selectedGroup={group.label}
                         setPageTitle={(newName) => {
                           console.warn("New Name : ", newName)
-                          console.warn("New Name : ", savedGroups[activeTab])
                           console.warn("Group : ", tabGroup[index])
-                          setSavedGroups(prevGroups => {
-                            const updatedGroups = [...prevGroups]
-                            updatedGroups[activeTab] = newName
-                            return updatedGroups
-                          })
                           setTabGroup((prev) => {
                             const updatedGroup = [...prev];
                             updatedGroup[index].title = newName;
                             return updatedGroup;
+                          });
+                          setSavedGroups(prev => {
+                            const updatedGroups = [...prev];
+                            const groupIndex = updatedGroups.indexOf(group.label);
+                            if (groupIndex !== -1) {
+                              updatedGroups[groupIndex] = newName;
+                            }
+                            return updatedGroups;
                           });
                         }}
                         fileUploaded={fileUploaded}
@@ -1490,6 +1519,7 @@ function DevtaVastuPage({ id }) {
                         setShowDevtaIntersaction={newShowDevtaIntersaction => handleTabGroupChange(index, 'showDevtaIntersaction', newShowDevtaIntersaction)}
                         disableDraw={tabGroup[index].disableDraw}
                         setDisableDraw={newDisableDraw => handleTabGroupChange(index, 'disableDraw', newDisableDraw)}
+                        savedGroups={savedGroups}
                       />
                     </>
                     // <div key={index} style={{ display: activeHouse?.label === group.label ? 'block' : 'none' }}>

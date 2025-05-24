@@ -49,6 +49,7 @@ import RightPrintSection from '@/components/devta-vastu/RightPrintSection/RightP
 GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.js'
 
 const DevtaVastu = ({
+  savedGroups,
   setPrintRef,
   tabTitle,
   setleftPrintRef,
@@ -2138,7 +2139,7 @@ const DevtaVastu = ({
 
   return (
     <>
-      <div className='flex lg:flex-row gap-5 py-4 justify-start '>
+      <div className='flex flex-col lg:flex-row gap-5 py-4 justify-start '>
         <div className='bg-white'>
           <div id={selectedGroup} ref={printRef} className='flex-grow main-print-div'>
             {selectedGroup && selectedGroup == '16 Zone Bar Chart' ? (
@@ -2856,6 +2857,7 @@ const DevtaVastu = ({
         </div>
         {/* <div className='flex flex-wrap lg:flex-col gap-3 p-4 lg:gap-0 bg-white' style={{ width: '550px' }}> */}
         <RightSidePanel
+        savedGroups={savedGroups}
           previewUrl={previewUrl}
           selectedGroup={selectedGroup}
           handleFileUpload={handleFileUpload}

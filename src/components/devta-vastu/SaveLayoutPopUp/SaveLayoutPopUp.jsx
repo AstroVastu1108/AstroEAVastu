@@ -172,7 +172,6 @@ function SaveLayoutPopUp({
       .map(label => tabGroup.find(item => item.title === label))
       .filter(item => item !== undefined)
 
-    // return console.log('mat', matchingItems)
 
     const payload = {
       // "CompanyID": "string",
@@ -203,7 +202,6 @@ function SaveLayoutPopUp({
       // ],
       TabGroups: matchingItems
     }
-    console.log("payload : ", payload)
     try {
       setLoading(true)
       let data
@@ -220,7 +218,6 @@ function SaveLayoutPopUp({
         data = await saveVastuLayouts(payload)
         msg = 'Vastu Griding Saved Successfully.'
       }
-      console.log('data result  : ', data)
       if (data.hasError) {
         setLoading(false)
         return toast.error(data.error)

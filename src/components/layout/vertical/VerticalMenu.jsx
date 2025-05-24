@@ -32,8 +32,6 @@ const VerticalMenu = ({ scrollMenu }) => {
   const verticalNavOptions = useVerticalNav()
 
   const { authRuleContext } = useAuth()
-  // console.log("Navigation : ",navigation)
-  // console.log("authRuleContext : ",authRuleContext)
   // Vars
   const { isBreakpointReached, transitionDuration } = verticalNavOptions
   const ScrollWrapper = isBreakpointReached ? 'div' : PerfectScrollbar

@@ -44,7 +44,6 @@ function Rotation({ open, handleClose, rotationType, hanldeRotationChange }) {
   const highlightText = (value, tb) => {
     const abbreviation = value.trim().slice(0, 2);
     const fullName = shorthandMap[abbreviation];
-    // console.log(value)
     return (
       <div onClick={(e) => setSelectedRow({ value, "table": tb, "formattedStr": value })} className={`pl-${fullName} planetName`} key={abbreviation}>
         {value}
@@ -54,7 +53,6 @@ function Rotation({ open, handleClose, rotationType, hanldeRotationChange }) {
 
   const houseText = (value, tb) => {
     const houseValue = value.split(" ")[1];
-    // console.log(houseValue)
     return (
       <div onClick={(e) => setSelectedRow({ "value": houseValue, "table": tb, "formattedStr": value })}>
         {value}
@@ -115,7 +113,6 @@ function Rotation({ open, handleClose, rotationType, hanldeRotationChange }) {
   ];
 
   const handleRowSelection = (table, params) => {
-    // console.log("here")
     // setSelectedRow({ table, params })
     // if (table === 'table1') {
     //   setSelectedRowsTable1([params.id]);

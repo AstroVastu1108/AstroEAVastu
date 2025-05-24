@@ -38,11 +38,6 @@ const HorizontalMenu = () => {
   const verticalNavOptions = useVerticalNav()
   const theme = useTheme()
   const { authRuleContext } = useAuth()
-  // const routePermissions = JSON.parse(authRuleContext);
-  // console.log("authRuleContext -: ",authRuleContext)
-  // const hrefsWithAccess = authRuleContext
-  // .filter(item => item.HasAccess);
-  // console.log("hrefsWithAccess -: ",hrefsWithAccess)
   // Vars
   const { transitionDuration } = verticalNavOptions
 

@@ -21,8 +21,10 @@ import {
 } from '@mui/material'
 import RightPrintSection from '../RightPrintSection/RightPrintSection'
 import LineControls from '@/views/apps/devtaVastu/LineControls'
+import { toast } from 'react-toastify'
 
 function RightSidePanel({
+  savedGroups,
   previewUrl,
   tabName,
   vastuLayoutData,
@@ -142,12 +144,16 @@ function RightSidePanel({
   }
 
   const handleSave = () => {
+    const isTitleUnique = !savedGroups.some(tab => tab === tempValue)
+    if (!isTitleUnique) {
+      return toast.error('Title already exists! Please choose a different title.')
+    }
     setTabNewName(tempValue)
     setPageTitle(tempValue) // Assuming setPageTitle is a function to update the page title
     setIsEditing(false)
   }
 
-  const [selectedPage, setSelectedPage] = useState(previewUrl?.selectedPage);
+  const [selectedPage, setSelectedPage] = useState(previewUrl?.selectedPage)
 
   return (
     <>
@@ -240,7 +246,7 @@ function RightSidePanel({
             </Box>
 
             {/* Main Action Buttons */}
-            {selectedGroup && selectedGroup != "16 Zone Bar Chart" && (
+            {selectedGroup && selectedGroup != '16 Zone Bar Chart' && (
               <>
                 <Box>
                   {/* File Upload */}
@@ -262,46 +268,46 @@ function RightSidePanel({
                   )} */}
 
                   {previewUrl?.OriginalFileName && (
-                    <div className="flex flex-col items-center gap-2 w-full mb-2">
-                      <div className="bg-purple-100 w-full p-2 rounded-md flex items-center gap-2">
+                    <div className='flex flex-col items-center gap-2 w-full mb-2'>
+                      <div className='bg-purple-100 w-full p-2 rounded-md flex items-center gap-2'>
                         {/* File icon based on file type */}
                         {previewUrl.OriginalFileName.toLowerCase().endsWith('.pdf') ? (
-                          <i className="tabler-file-type-pdf text-red-600" width="24" height="24" />
+                          <i className='tabler-file-type-pdf text-red-600' width='24' height='24' />
                         ) : previewUrl.OriginalFileName.toLowerCase().match(/\.(jpg|jpeg|png|gif)$/) ? (
-                          <i className="tabler-photo text-blue-600" width="24" height="24" />
+                          <i className='tabler-photo text-blue-600' width='24' height='24' />
                         ) : (
-                          <i className="tabler-file text-purple-800" width="24" height="24" />
+                          <i className='tabler-file text-purple-800' width='24' height='24' />
                         )}
 
                         {/* Filename with truncation */}
                         <Typography
-                          variant="body2"
-                          className="font-medium text-purple-800 flex-1 truncate"
+                          variant='body2'
+                          className='font-medium text-purple-800 flex-1 truncate'
                           title={previewUrl.OriginalFileName} // Show full name on hover
                         >
                           {previewUrl.OriginalFileName}
                         </Typography>
 
                         {/* File actions */}
-                        <div className="flex items-center gap-2">
+                        <div className='flex items-center gap-2'>
                           {/* PDF Page Selector - Only visible for PDF files */}
                           {previewUrl.OriginalFileName.toLowerCase().endsWith('.pdf') && (
-                            <div className="flex items-center gap-1">
-                              <Typography variant="caption" className="text-gray-600 whitespace-nowrap">
+                            <div className='flex items-center gap-1'>
+                              <Typography variant='caption' className='text-gray-600 whitespace-nowrap'>
                                 Page:
                               </Typography>
                               <Select
-                                size="small"
+                                size='small'
                                 value={previewUrl?.selectedPage + 1 || selectedPage}
                                 onChange={(e) => {
                                   const pageIndex = e.target.value-1;
                                   setSelectedPage(e.target.value + 1);
                                   updatePdfPages(tempValue, pageIndex);
                                 }}
-                                className="min-w-[70px] bg-white"
+                                className='min-w-[70px] bg-white'
                                 sx={{
                                   '.MuiSelect-select': {
-                                    padding: '4px 8px',
+                                    padding: '4px 8px'
                                   },
                                   height: '32px'
                                 }}
@@ -334,9 +340,6 @@ function RightSidePanel({
         </IconButton> */}
                         </div>
                       </div>
-
-
-
                     </div>
                   )}
 
@@ -365,8 +368,6 @@ function RightSidePanel({
                       </Typography>
                     </label>
                   </Paper>
-
-
 
                   {/* Action Buttons */}
                 </Box>
@@ -444,31 +445,54 @@ function RightSidePanel({
             )}
 
             <Box>
-              {selectedGroup && selectedGroup == "16 Zone Bar Chart" && (
-                <Accordion defaultExpanded
+              {selectedGroup && selectedGroup == '16 Zone Bar Chart' && (
+                <Accordion
+                  defaultExpanded
                   sx={{
                     border: '1px solid transparent',
                     '&.Mui-expanded': {
-                      borderColor: 'var(--primary-color)',
+                      borderColor: 'var(--primary-color)'
                     },
                     backgroundColor: 'transparent !important',
-                    boxShadow: 'none',
-                  }}>
-                  <AccordionSummary className='bg-gradient-to-r from-purple-100 to-purple-2'
-                    sx={{ borderRadius: "6px" }}
+                    boxShadow: 'none'
+                  }}
+                >
+                  <AccordionSummary
+                    className='bg-gradient-to-r from-purple-100 to-purple-2'
+                    sx={{ borderRadius: '6px' }}
                   >
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <i className="tabler-settings" width="20" height="20" />
-                      <Typography fontWeight="medium">Devta Bar Chart Options</Typography>
+                      <i className='tabler-settings' width='20' height='20' />
+                      <Typography fontWeight='medium'>Devta Bar Chart Options</Typography>
                     </Box>
                   </AccordionSummary>
                   <AccordionDetails>
                     <Stack spacing={1}>
                       {[
-                        { id: 'show45Charts', label: '44 Area Chart', checked: show45Charts, onChange: (e => handleShowCharts(45, !show45Charts)) },
-                        { id: 'show32Charts', label: '32 Area Chart', checked: show32Charts, onChange: (e => handleShowCharts(32, !show32Charts)) },
-                        { id: 'show8Charts', label: '8 Area Chart', checked: show8Charts, onChange: (e => handleShowCharts(8, !show8Charts)) },
-                        { id: 'show4Charts', label: '4 Area Chart', checked: show4Charts, onChange: (e => handleShowCharts(4, !show4Charts)) },
+                        {
+                          id: 'show45Charts',
+                          label: '44 Area Chart',
+                          checked: show45Charts,
+                          onChange: e => handleShowCharts(45, !show45Charts)
+                        },
+                        {
+                          id: 'show32Charts',
+                          label: '32 Area Chart',
+                          checked: show32Charts,
+                          onChange: e => handleShowCharts(32, !show32Charts)
+                        },
+                        {
+                          id: 'show8Charts',
+                          label: '8 Area Chart',
+                          checked: show8Charts,
+                          onChange: e => handleShowCharts(8, !show8Charts)
+                        },
+                        {
+                          id: 'show4Charts',
+                          label: '4 Area Chart',
+                          checked: show4Charts,
+                          onChange: e => handleShowCharts(4, !show4Charts)
+                        }
                       ].map(({ id, label, checked, onChange }) => (
                         <FormControlLabel
                           key={id}
@@ -477,18 +501,18 @@ function RightSidePanel({
                               checked={checked}
                               onChange={onChange}
                               // onChange={e => onChange(e.target.checked)}
-                              color="secondary"
-                              size="small"
+                              color='secondary'
+                              size='small'
                             />
                           }
-                          label={<Typography variant="body2">{label}</Typography>}
+                          label={<Typography variant='body2'>{label}</Typography>}
                         />
                       ))}
                     </Stack>
                   </AccordionDetails>
                 </Accordion>
               )}
-              {selectedGroup && selectedGroup != "16 Zone Bar Chart" && (
+              {selectedGroup && selectedGroup != '16 Zone Bar Chart' && (
                 <>
                   <Accordion
                     defaultExpanded
@@ -501,7 +525,10 @@ function RightSidePanel({
                       boxShadow: 'none'
                     }}
                   >
-                    <AccordionSummary className='bg-gradient-to-r from-purple-100 to-purple-2' sx={{ borderRadius: '6px' }}>
+                    <AccordionSummary
+                      className='bg-gradient-to-r from-purple-100 to-purple-2'
+                      sx={{ borderRadius: '6px' }}
+                    >
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <i className='tabler-settings' width='20' height='20' />
                         <Typography fontWeight='medium'>Default Options</Typography>
@@ -511,7 +538,12 @@ function RightSidePanel({
                       <Stack spacing={1}>
                         {[
                           { id: 'lockChakra', label: 'Lock Chakra', checked: lockChakra, onChange: setLockChakra },
-                          { id: 'lockCentroid', label: 'Lock Center', checked: lockCentroid, onChange: setLockCentroid },
+                          {
+                            id: 'lockCentroid',
+                            label: 'Lock Center',
+                            checked: lockCentroid,
+                            onChange: setLockCentroid
+                          },
                           {
                             id: 'snapToCentroid',
                             label: 'Reset Auto Center',
@@ -537,7 +569,6 @@ function RightSidePanel({
                     </AccordionDetails>
                   </Accordion>
 
-
                   {/* Shakti Chakra Options */}
                   <Accordion
                     sx={{
@@ -549,7 +580,10 @@ function RightSidePanel({
                       boxShadow: 'none'
                     }}
                   >
-                    <AccordionSummary className='bg-gradient-to-r from-purple-100 to-purple-2' sx={{ borderRadius: '6px' }}>
+                    <AccordionSummary
+                      className='bg-gradient-to-r from-purple-100 to-purple-2'
+                      sx={{ borderRadius: '6px' }}
+                    >
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <i className='tabler-circle-dot' width='20' height='20' />
                         <Typography fontWeight='medium'>Shakti Chakra Options</Typography>
@@ -602,7 +636,10 @@ function RightSidePanel({
                       boxShadow: 'none'
                     }}
                   >
-                    <AccordionSummary className='bg-gradient-to-r from-purple-100 to-purple-2' sx={{ borderRadius: '6px' }}>
+                    <AccordionSummary
+                      className='bg-gradient-to-r from-purple-100 to-purple-2'
+                      sx={{ borderRadius: '6px' }}
+                    >
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <i className='tabler-line-dashed' width='20' height='20' />
                         <Typography fontWeight='medium'>Line Controls</Typography>
@@ -628,7 +665,10 @@ function RightSidePanel({
                       boxShadow: 'none'
                     }}
                   >
-                    <AccordionSummary className='bg-gradient-to-r from-purple-100 to-purple-2' sx={{ borderRadius: '6px' }}>
+                    <AccordionSummary
+                      className='bg-gradient-to-r from-purple-100 to-purple-2'
+                      sx={{ borderRadius: '6px' }}
+                    >
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <i className='tabler-point' width='20' height='20' />
                         <Typography fontWeight='medium'>Marma Options</Typography>
@@ -678,7 +718,10 @@ function RightSidePanel({
                       boxShadow: 'none'
                     }}
                   >
-                    <AccordionSummary className='bg-gradient-to-r from-purple-100 to-purple-2' sx={{ borderRadius: '6px' }}>
+                    <AccordionSummary
+                      className='bg-gradient-to-r from-purple-100 to-purple-2'
+                      sx={{ borderRadius: '6px' }}
+                    >
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <i className='tabler-hexagon' width='20' height='20' />
                         <Typography fontWeight='medium'>Devta Options</Typography>
@@ -723,7 +766,10 @@ function RightSidePanel({
                       boxShadow: 'none'
                     }}
                   >
-                    <AccordionSummary className='bg-gradient-to-r from-purple-100 to-purple-2' sx={{ borderRadius: '6px' }}>
+                    <AccordionSummary
+                      className='bg-gradient-to-r from-purple-100 to-purple-2'
+                      sx={{ borderRadius: '6px' }}
+                    >
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <i className='tabler-adjustments' width='20' height='20' />
                         <Typography fontWeight='medium'>Other Options</Typography>
