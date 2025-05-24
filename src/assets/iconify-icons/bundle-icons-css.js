@@ -20,8 +20,7 @@ import { getIcons, getIconsCSS, stringToIcon } from '@iconify/utils'
 const sources = {
   json: [
     // Iconify JSON file (@iconify/json is a package name, /json/ is directory where files are, then filename)
-    // require.resolve('@iconify/json/json/tabler.json')
-    async () => (await import('@iconify/json/json/tabler.json')).default
+    require.resolve('@iconify/json/json/tabler.json')
 
     // Custom file with only few icons
     /* {
@@ -57,10 +56,7 @@ const sources = {
 }
 
 // File to save bundle to
-// const target = join(__dirname, 'generated-icons.css')
-const __dirname = dirname(new URL(import.meta.url).pathname)
 const target = join(__dirname, 'generated-icons.css')
-
 
 ;(async function () {
   // Create directory for output if missing
