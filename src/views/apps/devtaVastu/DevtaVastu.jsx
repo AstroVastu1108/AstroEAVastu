@@ -2141,7 +2141,7 @@ const DevtaVastu = ({
     <>
       <div className='flex flex-col lg:flex-row gap-5 py-4 justify-start '>
         <div className='bg-white'>
-          <div id={selectedGroup} ref={printRef} className='flex-grow main-print-div'>
+          <div id={tabTitle} ref={printRef} className='flex-grow main-print-div'>
             {selectedGroup && selectedGroup == '16 Zone Bar Chart' ? (
               <div style={{ width: width, height: height }}>
                 <CustomBarChart
