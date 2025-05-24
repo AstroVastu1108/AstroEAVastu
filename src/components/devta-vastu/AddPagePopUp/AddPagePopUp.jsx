@@ -38,6 +38,10 @@ function AddPagePopUp({ open, handleClose, handleSave, tabGroup, savedGroups }) 
   }, [titleRef])
 
   const [shouldShrink, setShouldShrink] = useState(!!tabTitle);
+  console.log("shouldShrink", tabGroup.filter(item => {
+    console.log("item", item.title)
+    return savedGroups.includes(item.title)
+  }))
 
   return (
     <>
@@ -99,7 +103,8 @@ function AddPagePopUp({ open, handleClose, handleSave, tabGroup, savedGroups }) 
                   // onChange={e => setTempValue(e.target.value)}
                 /> */}
                 <Autocomplete
-                  options={tabGroup}
+                  // options={tabGroup}
+                  options={Array.from(new Map(tabGroup.map(tab => [tab.label, tab])).values())}
                   getOptionLabel={option => option.label} // Extracts label text
                   getOptionKey={option => option.label}
                   value={selectedGroup ? tabGroup.find(item => item.label === selectedGroup) : null}

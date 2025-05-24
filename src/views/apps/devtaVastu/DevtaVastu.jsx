@@ -109,16 +109,22 @@ const DevtaVastu = ({
   setCropImage,
   rotation,
   setRotation,
+  hideMarmaLines,
+  setHideMarmaLines,
+  hideMarmapoints,
+  setHideMarmapoints,
+  hideCircleIntersaction,
+  setHideCircleIntersaction,
+  showDevta,
+  setShowDevta,
+  showDevtaIntersaction,
+  setShowDevtaIntersaction,
+  disableDraw,
+  setDisableDraw,
+  imageDragDone,
+  setImageDragDone
 }) => {
-  const [hideMarmaLines, setHideMarmaLines] = useState(false)
-  const [hideMarmapoints, setHideMarmapoints] = useState(false)
-  const [imageDragDone, setImageDragDone] = useState(false)
-  const [hideCircleIntersaction, setHideCircleIntersaction] = useState(false)
-  const [showDevta, setShowDevta] = useState(false)
-  const [showDevtaIntersaction, setShowDevtaIntersaction] = useState(false)
-  const [disableDraw, setDisableDraw] = useState(false)
   const [graphDraw, setGraphDraw] = useState(false)
-  // const [cropImage, setCropImage] = useState(false)
   const [openNewPolygon, setOpenNewPolygon] = useState(false)
   const [draggingState, setDraggingState] = useState(null)
   const [OverlayPolyClick, setOverlayPolyClick] = useState(false)
@@ -135,7 +141,6 @@ const DevtaVastu = ({
     width: 100,
     height: 100
   })
-  // const [rotation, setRotation] = useState(0)
 
   useEffect(() => {
     setLoading(false)
@@ -2207,7 +2212,7 @@ const DevtaVastu = ({
                             {previewUrl ? (
                               <>
                                 <image
-                                  href={previewUrl?.isPdf ? previewUrl?.pdfImages[previewUrl?.selectedPage] : previewUrl?.Base64File}
+                                  href={previewUrl?.isPdf ? previewUrl?.currentPageBase64 : previewUrl?.Base64File}
                                   style={{ maxWidth: '100%', maxHeight: '500px', imageRendering: 'auto' }}
                                   width={width}
                                   height={height}
