@@ -57,7 +57,10 @@ const sources = {
 }
 
 // File to save bundle to
+// const target = join(__dirname, 'generated-icons.css')
+const __dirname = dirname(new URL(import.meta.url).pathname)
 const target = join(__dirname, 'generated-icons.css')
+
 
 ;(async function () {
   // Create directory for output if missing
