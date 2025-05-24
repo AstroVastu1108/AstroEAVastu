@@ -2133,7 +2133,7 @@ const DevtaVastu = ({
 
   return (
     <>
-      <div className='flex lg:flex-row gap-5 py-4 justify-start '>
+      <div className='flex flex-col lg:flex-row gap-5 py-4 justify-start '>
         <div className='bg-white'>
           <div id={selectedGroup} ref={printRef} className='flex-grow main-print-div'>
             {selectedGroup && selectedGroup == '16 Zone Bar Chart' ? (
