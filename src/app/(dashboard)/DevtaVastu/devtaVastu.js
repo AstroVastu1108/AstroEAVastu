@@ -688,12 +688,17 @@ function DevtaVastuPage({ id }) {
   }
 
   const handleTabGroupChange = (index, key, value) => {
-    setIsLayoutChange(true);
-    setTabGroup((prev) => {
-      const updatedGroup = [...prev];
-      updatedGroup[index][key] = value;
-      return updatedGroup;
-    });
+    try {
+
+      setIsLayoutChange(true);
+      setTabGroup((prev) => {
+        const updatedGroup = [...prev];
+        updatedGroup[index][key] = value;
+        return updatedGroup;
+      });
+    } catch (error) {
+      console.error("Error in handleTabGroupChange:", error);
+    }
   };
 
   const updatePointsForAllTabs = (selectedGroup, newPoints) => {
@@ -889,7 +894,7 @@ function DevtaVastuPage({ id }) {
     let layoutCount = parseInt(localStorage.getItem("layoutCount") || "1", 10);
     layoutCount++;
     localStorage.setItem("layoutCount", layoutCount);
-    window.open(`${process.env.NEXT_PUBLIC_APP_URL}/devta-vastu`, "_blank");
+    window.open(`${process.env.NEXT_PUBLIC_APP_URL}/devta-vastu/NEW`, "_blank");
   }
 
   const handleAddNewPage = () => {
