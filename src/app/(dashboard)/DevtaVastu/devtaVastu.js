@@ -1344,27 +1344,26 @@ function DevtaVastuPage({ id }) {
       await page.render(renderContext).promise;
       const pageBase64 = canvas.toDataURL('image/png');
       setPreviewUrl(pageBase64);
-      setTabGroup(prevTabGroup => {
-        const updatedTabGroup = [...prevTabGroup];
-
-        const updatedTab = { ...updatedTabGroup[index] };
-
-        if (!updatedTab.NecessaryFiles) {
-          updatedTab.NecessaryFiles = [];
-        }
-
-        updatedTab.NecessaryFiles[0] = {
-          ...updatedTab.NecessaryFiles[0],
-          selectedPage: pageNumber,
-          currentPageBase64: pageBase64,
-          pdfPages: totalPages
-        };
-
-        updatedTabGroup[index] = updatedTab;
-
-        return updatedTabGroup;
-      });
-
+      
+       setTabGroup(prevTabGroup => {
+      // Create a deep copy of the previous state
+      const updatedTabGroup = JSON.parse(JSON.stringify(prevTabGroup));
+      
+      // Update only the necessary fields for the selected page
+      if (updatedTabGroup[index]?.NecessaryFiles?.[0]) {
+        // Keep all existing properties and only update these specific ones
+        updatedTabGroup[index].NecessaryFiles[0].selectedPage = pageNumber;
+        updatedTabGroup[index].NecessaryFiles[0].currentPageBase64 = pageBase64;
+        
+        // Update the Base64File to show the current page
+        updatedTabGroup[index].NecessaryFiles[0].Base64File = pageBase64;
+        
+        // Ensure we have the total pages count
+        updatedTabGroup[index].NecessaryFiles[0].pdfPages = totalPages;
+      }
+      
+      return updatedTabGroup;
+    });
       setLoading(false);
 
       return pageBase64;
