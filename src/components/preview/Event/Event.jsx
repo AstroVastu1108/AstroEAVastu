@@ -293,7 +293,7 @@ function AddEvent({ AddEventData,setAddEventData, open, handleClose, getAllEvent
                   title="Select Event"
                   id='event-select'
                   options={EventOptionData && EventOptionData}
-                  defaultValue={EventOptionData && AddEventData && AddEventData.Event}
+                  defaultValue={EventOptionData && AddEventData && AddEventData.Event && EventOptionData.find(option => option.Event == AddEventData.Event)}
                   getOptionLabel={(option) => option?.EventName}
                   getOptionKey={(option) => option?.Event}
                   onChange={(event, newValue) => handleInputChange('Event', newValue, 'Event', true)}
