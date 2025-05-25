@@ -30,7 +30,7 @@ function KundaliEvent({ EventsData, KID, getAllEvent }) {
     ClientID: '',
     KundaliID: KID,
     EventID: '',
-    Event: '',
+    Event: '1',
     EventDate: dayjs(),
     City: { CityID: 1255364, FormattedCity: 'Surat, Gujarat' },
     Country: { CountryCode: 'IN', Country: 'India' },
@@ -65,17 +65,17 @@ function KundaliEvent({ EventsData, KID, getAllEvent }) {
   }
 
   const handleAddEventOpen = () => {
-    // setNewEventData({
-    //   ClientID: '',
-    //   KundaliID: KID,
-    //   EventID: '',
-    //   Event: '',
-    //   EventDate: dayjs(),
-    //   City: { CityID: 1255364, FormattedCity: 'Surat, Gujarat' },
-    //   Country: { CountryCode: 'IN', Country: 'India' },
-    //   Remark: '',
-    //   isUpdate: false
-    // })
+    setNewEventData({
+      ClientID: '',
+      KundaliID: KID,
+      EventID: '',
+      Event: '1',
+      EventDate: dayjs(),
+      City: { CityID: 1255364, FormattedCity: 'Surat, Gujarat' },
+      Country: { CountryCode: 'IN', Country: 'India' },
+      Remark: '',
+      isUpdate: false
+    })
     setOpenAddEvent(true)
   }
 
