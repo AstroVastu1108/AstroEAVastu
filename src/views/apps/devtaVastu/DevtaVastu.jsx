@@ -2198,7 +2198,7 @@ const DevtaVastu = ({
                           <CropImageWithSVG
                             height={height}
                             width={width}
-                            previewUrl={previewUrl?.Base64File}
+                            previewUrl={previewUrl?.isPdf ? previewUrl?.currentPageBase64 : previewUrl?.Base64File}
                             points={points}
                             zoom={zoom}
                             rotation={rotation}

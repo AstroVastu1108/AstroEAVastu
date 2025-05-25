@@ -147,7 +147,7 @@ export default function DevtaVastuMain() {
       width: 150,
       headerAlign: 'left',
       renderCell: (params) => {
-        const dateValue = params.row.AuditDate;
+        const dateValue = params.row.EditDateTime;
         const searchText = searchValue;
 
         const { formattedDate, formattedTime } = formatDateTime(dateValue);

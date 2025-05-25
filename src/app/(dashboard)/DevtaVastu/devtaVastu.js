@@ -523,8 +523,6 @@ function DevtaVastuPage({ id }) {
 
   // Correct implementation - removes the double async and fixes PDF handling
   const handleFileUpload = (tabGroup, tabIndex) => (event) => {
-    console.log("tabGroup : ", tabGroup);
-    console.log("tabIndex : ", tabIndex);
 
     const uploadedFile = event.target.files[0];
 
@@ -696,7 +694,7 @@ function DevtaVastuPage({ id }) {
       // if (isTitleUnique) {
         return [
           ...prevTabGroup,
-          { ...baseGroupData, label: baseGroupData.label, title: tabTitle }
+          { ...baseGroupData, label: selectedGroup, title: tabTitle }
         ];
       // }
     });
@@ -947,7 +945,7 @@ function DevtaVastuPage({ id }) {
 
   useEffect(() => {
     setActiveHouse(tabGroup.filter((e) => e.title == savedGroups[activeTab])[0]);
-  }, [activeTab,savedGroups]);
+  }, [activeTab]);
 
   // const printHandler = (data) => {
   //   // Check if we have any refs to print
@@ -1301,7 +1299,7 @@ function DevtaVastuPage({ id }) {
         toast.error("No valid PDF data found in selected tab group");
         return;
       }
-      setLoading(true);
+      // setLoading(true);
 
       // Extract the base64 data (remove data URL prefix if present)
       let base64Data = currentNecessaryFiles.originalPdfBase64;
@@ -1448,21 +1446,20 @@ function DevtaVastuPage({ id }) {
                         setSaveLoading={setSaveLoading}
                         selectedGroup={group.label}
                         setPageTitle={(newName) => {
-                          console.warn("New Name : ", newName)
-                          console.warn("Group : ", tabGroup[index])
+                           setSavedGroups(prev => {
+                            const updatedGroups = [...prev];
+                            const groupIndex = updatedGroups.indexOf(group.title);
+                            if (groupIndex !== -1) {
+                              updatedGroups[groupIndex] = newName;
+                            }
+                            return updatedGroups;
+                          });   
                           setTabGroup((prev) => {
                             const updatedGroup = [...prev];
                             updatedGroup[index].title = newName;
                             return updatedGroup;
                           });
-                          setSavedGroups(prev => {
-                            const updatedGroups = [...prev];
-                            const groupIndex = updatedGroups.indexOf(group.label);
-                            if (groupIndex !== -1) {
-                              updatedGroups[groupIndex] = newName;
-                            }
-                            return updatedGroups;
-                          });
+                         
                         }}
                         fileUploaded={fileUploaded}
                         setFileUploaded={setFileUploaded}

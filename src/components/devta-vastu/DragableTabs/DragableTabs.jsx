@@ -76,7 +76,7 @@ export default function MovableTabs({
   groups,
   setActiveTab
 }) {
-  console.log("SavesdGroups", savedGroups)
+  // console.warn("SavesdGroups", savedGroups)
   const handleDragEnd = event => {
     const { active, over } = event
     if (active.id !== over.id) {
