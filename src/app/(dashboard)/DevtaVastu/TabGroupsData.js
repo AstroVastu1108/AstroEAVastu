@@ -25,8 +25,8 @@ const DEFAULT_LINE_SETS = [
 const DEFAULT_TAB_CONFIG = {
   NecessaryFiles: [
   {
-    OriginalFileName: null,
-    Base64File: null,
+    OriginalFileName: "",
+    Base64File: "",
     isPdf: false,
     pdfImages:[],
     pdfPages:0,

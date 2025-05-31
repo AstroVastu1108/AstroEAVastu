@@ -249,23 +249,7 @@ function RightSidePanel({
             {selectedGroup && selectedGroup != '16 Zone Bar Chart' && (
               <>
                 <Box>
-                  {/* File Upload */}
-                  {/* {previewUrl?.OriginalFileName && (
-                    <>
-                    <div className="flex flex-col items-center gap-2 w-full mb-2">
-                      <div className="bg-purple-100 w-full p-2 rounded-md flex items-center gap-2">
-                        <i className="tabler-file text-purple-800" width="20" height="20" />
-                        <Typography
-                          variant="body2"
-                          className="font-medium text-purple-800 flex-1 truncate"
-                        >
-                          {previewUrl?.OriginalFileName}
-                        </Typography>
-                       
-                      </div>
-                    </div>
-                    </>
-                  )} */}
+                  
 
                   {previewUrl?.OriginalFileName && (
                     <div className='flex flex-col items-center gap-2 w-full mb-2'>
@@ -321,23 +305,6 @@ function RightSidePanel({
                             </div>
                           )}
 
-                          {/* Delete button */}
-                          {/* <IconButton
-          size="small"
-          className="text-gray-500 hover:text-red-600 transition-colors"
-          onClick={(e) => {
-            e.stopPropagation();
-            // // Clear the file information
-            // setPreviewUrl(null);
-            // setFileUploaded(false);
-            // setSelectedPage(1);
-            
-            // Also update the tabGroup if needed
-            // updateTabGroupFileInfo(tabIndex, null);
-          }}
-        >
-          <i className="tabler-trash text-sm" />
-        </IconButton> */}
                         </div>
                       </div>
                     </div>
