@@ -25,8 +25,8 @@ const DEFAULT_LINE_SETS = [
 const DEFAULT_TAB_CONFIG = {
   NecessaryFiles: [
   {
-    OriginalFileName: null,
-    Base64File: null,
+    OriginalFileName: "",
+    Base64File: "",
     isPdf: false,
     pdfImages:[],
     pdfPages:0,
@@ -83,19 +83,19 @@ const DEFAULT_TAB_CONFIG = {
 
 
 const TAB_LABELS = [
-  'Google Layout',
+  // 'Google Layout',
   'House Plan',
-  'Griding With 16 Zone',
-  '16 Zone Bar Chart',
-  'Marma Lines + Marma Points',
-  'Civil Energy',
-  'Devta Mark',
-  'Devta Marking Color',
-  'Devta bar chart',
-  'Devta + Marma Points',
-  'Custom Remedial Marking',
-  'Site Energy audit',
-  'Geo Energy audit',
+  // 'Griding With 16 Zone',
+  // '16 Zone Bar Chart',
+  // 'Marma Lines + Marma Points',
+  // 'Civil Energy',
+  // 'Devta Mark',
+  // 'Devta Marking Color',
+  // 'Devta bar chart',
+  // 'Devta + Marma Points',
+  // 'Custom Remedial Marking',
+  // 'Site Energy audit',
+  // 'Geo Energy audit',
 ];
 
 export const TabsData = TAB_LABELS.map(label => ({ label, title: label, ...DEFAULT_TAB_CONFIG }));

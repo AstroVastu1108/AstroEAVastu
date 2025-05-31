@@ -148,65 +148,17 @@ function DevtaVastuPage({ id }) {
         //   return tab;
         // });
         const updatedTabGroup = [];
-
-        tabGroup.forEach((tab) => {
+        // incomingData.forEach((tab) => {
           // Find ALL matching data items instead of just the first one
-          const matchingDataItems = incomingData?.filter(
-            (data) => data.Label === tab.label
-          );
-
+          const matchingDataItems = incomingData;
           if (matchingDataItems && matchingDataItems.length > 0) {
-            // Add the first match as an update to the existing tab
-            updatedTabGroup.push({
-              ...tab,
-              title: matchingDataItems[0].Title ? matchingDataItems[0].Title : tab.title,
-              points: matchingDataItems[0].Points.map((point) => ({
-                x: point.x,
-                y: point.y
-              })),
-              centroid: { x: matchingDataItems[0].Centroid.x, y: matchingDataItems[0].Centroid.y },
-              snapToCentroid: matchingDataItems[0].SnapToCentroid,
-              inputDegree: matchingDataItems[0].InputDegree,
-              translate: { x: matchingDataItems[0].Translate?.x, y: matchingDataItems[0].Translate?.y },
-              zoom: matchingDataItems[0].Zoom,
-              polygons: matchingDataItems[0].Polygons,
-              lockChakra: matchingDataItems[0].lockChakra,
-              lockCentroid: matchingDataItems[0].lockCentroid,
-              lineSets: matchingDataItems[0].LineSets,
-              hideCircle: matchingDataItems[0].hideCircle,
-              hide32Circle: matchingDataItems[0].hide32Circle,
-              hide4Circle: matchingDataItems[0].hide4Circle,
-              hide16Circle: matchingDataItems[0].hide16Circle,
-              hide8Circle: matchingDataItems[0].hide8Circle,
-              NecessaryFiles: matchingDataItems[0].NecessaryFiles.map((file) => ({
-                OriginalFileName: file.OriginalFileName,
-                Base64File: file.Base64File,
-                isPdf: file.isPdf,
-                pdfPages: file.pdfPages,
-                selectedPage: file.selectedPage,
-                currentPageBase64: file.currentPageBase64,
-                originalPdfBase64: file.originalPdfBase64 // Add this line to include the original PDF Base64
-              })),
-              cropImage: matchingDataItems[0].cropImage,
-              rotation: matchingDataItems[0].rotation,
-              showDevta: matchingDataItems[0].showDevta,
-              showDevtaIntersaction: matchingDataItems[0].showDevtaIntersaction,
-              hideMarmaLines: matchingDataItems[0].showMarma,
-              hideMarmapoints: matchingDataItems[0].showMarmaPoints,
-              imageDragDone: matchingDataItems[0].lockDragImage,
-              hideCircleIntersaction: matchingDataItems[0].showChakraIntersactionPoints,
-              disableDraw: matchingDataItems[0].doneDrowing,
-              showDevta: matchingDataItems[0].showDevta,
-              hideDevtaIntersaction: matchingDataItems[0].showDevtaPoints,
-            });
-
-            // // Add any additional matches as new tabs
-            if (matchingDataItems.length > 1) {
-              for (let i = 1; i < matchingDataItems.length; i++) {
+            
+              for (let i = 0; i < matchingDataItems.length; i++) {
                 updatedTabGroup.push({
-                  ...tab, // Base properties from the original tab
-                  label: tab.label, // Keep the same label
-                  title: matchingDataItems[i].Title ? matchingDataItems[i].Title : tab.title,
+                  // ...tab, // Base properties from the original tab
+                  // label: tab.label, // Keep the same label
+                  title: matchingDataItems[i].Title ? matchingDataItems[i].Title : "",
+                  label: matchingDataItems[i].Label ? matchingDataItems[i].Label : "",
                   points: matchingDataItems[i].Points.map((point) => ({
                     x: point.x,
                     y: point.y
@@ -248,12 +200,12 @@ function DevtaVastuPage({ id }) {
                   // id: `${tab.id || tab.label}_additional_${i}`, // Create a unique ID for each additional tab
                 });
               }
-            }
           } else {
             // If no match is found, keep the original tab
-            updatedTabGroup.push(tab);
+            // updatedTabGroup.push(tab);
           }
-        });
+        // });
+
 
         const matchedLabels = incomingData?.map((data) => data.Title)
           .filter((label) => updatedTabGroup.some((tab) => tab.title === label));
@@ -523,8 +475,6 @@ function DevtaVastuPage({ id }) {
 
   // Correct implementation - removes the double async and fixes PDF handling
   const handleFileUpload = (tabGroup, tabIndex) => (event) => {
-    console.log("tabGroup : ", tabGroup);
-    console.log("tabIndex : ", tabIndex);
 
     const uploadedFile = event.target.files[0];
 
@@ -696,7 +646,7 @@ function DevtaVastuPage({ id }) {
       // if (isTitleUnique) {
         return [
           ...prevTabGroup,
-          { ...baseGroupData, label: baseGroupData.label, title: tabTitle }
+          { ...baseGroupData, label: selectedGroup, title: tabTitle }
         ];
       // }
     });
@@ -947,159 +897,8 @@ function DevtaVastuPage({ id }) {
 
   useEffect(() => {
     setActiveHouse(tabGroup.filter((e) => e.title == savedGroups[activeTab])[0]);
-  }, [activeTab,savedGroups]);
-
-  // const printHandler = (data) => {
-  //   // Check if we have any refs to print
-  //   if (!printRefs.current || printRefs.current.length === 0) {
-  //     console.error('Print container refs are empty or null')
-  //     return
-  //   }
-  //   // console.log('Print container refs:', printRefs)
-  //   // console.log('Print container refs:', data)
-  //   // return;
-
-  //   try {
-  //     // Create a container for all content
-  //     const printContainer = document.createElement('div')
-
-  //     // Loop through all refs and add their content to the container
-  //     printRefs.current.forEach((ref, index) => {
-  //       const pageWrapper = document.createElement('div')
-  //       pageWrapper.className = index < printRefs.current.length - 1 ? 'new-page page-break' : 'new-page'
-  //       if (ref) {
-  //         // Clone the content to avoid modifying the original
-  //         const content = ref.cloneNode(true)
-
-  //         // Create a wrapper for each component with page break styling
-
-  //         pageWrapper.appendChild(content)
-
-  //         // Add to the print container
-  //         printContainer.appendChild(pageWrapper)
-  //       }
-  //     })
-
-  //     // Create a hidden iframe to handle the PDF generation
-  //     const iframe = document.createElement('iframe')
-  //     iframe.style.display = 'none'
-  //     document.body.appendChild(iframe)
-
-  //     // Format the current date in YYYY-MM-DD HH:MM:SS format
-  //     const currentDate = new Date()
-  //     const formattedDate = currentDate.toISOString().split('T')[0]
-  //     const formattedTime = currentDate.toTimeString().split(' ')[0]
-  //     const fullDateTime = `${formattedDate} ${formattedTime}`
-
-  //     // User information
-  //     const username = 'DhruviRana4' // Using the username you provided
-
-  //     // Add necessary styles for printing with landscape orientation
-  //     iframe.contentDocument.write(`
-  //     <!DOCTYPE html>
-  //     <html>
-  //     <head>
-  //       <title>Print Document</title>
-  //       <style>
-  //         @page {
-  //           size: landscape;
-  //           margin: 0;
-  //         }
-
-  //         @media print {
-  //           body {
-  //             margin: 0;
-  //             background-color: white;
-  //             color: black;
-  //           }
-
-  //           /* Force color printing */
-  //           * {
-  //             -webkit-print-color-adjust: exact !important;
-  //             print-color-adjust: exact !important;
-  //             color-adjust: exact !important;
-  //           }
-
-  //           /* Page break styling */
-  //           .page-break {
-  //             page-break-after: always;
-  //             break-after: page;
-  //           }
-
-  //           /* Make sure last page doesn't have a break */
-  //           .new-page:last-of-type {
-  //             page-break-after: avoid;
-  //             break-after: avoid;
-  //           }
-  //         }
-
-  //         /* Non-print styles */
-  //         body {
-  //           margin: 0;
-  //           padding: 20px;
-  //           background-color: white;
-  //           color: black;
-  //           font-family: Arial, sans-serif;
-  //         }
-
-
-
-  //         /* Page break styling for preview */
-  //         .page-break {
-  //           margin-bottom: 30px;
-  //           border-bottom: 1px dashed #ccc;
-  //           padding-bottom: 30px;
-  //         }
-
-
-  //       </style>
-  //     </head>
-  //     <body>
-  //       <div id="print-content">
-  //         ${printContainer.innerHTML}
-  //       </div>
-  //     </body>
-  //     </html>
-  //     `)
-
-  //     iframe.contentDocument.close()
-
-  //     // Trigger print dialog and wait for it to complete
-  //     iframe.contentWindow.focus()
-
-  //     // Use a timeout to ensure the content is fully loaded
-  //     setTimeout(() => {
-  //       // Generate a dynamic filename with user and date
-  //       const simpleDate = formattedDate.replace(/-/g, '')
-  //       const dynamicFileName = `report_${username}_${simpleDate}.pdf`
-
-  //       // Store the original title
-  //       const originalTitle = document.title
-
-  //       // Set the new title (filename)
-  //       document.title = dynamicFileName
-
-  //       // Print the document
-  //       iframe.contentWindow.print()
-
-  //       // Listen for the afterprint event to clean up
-  //       iframe.contentWindow.addEventListener(
-  //         'afterprint',
-  //         () => {
-  //           // Restore the original document title
-  //           document.title = originalTitle
-
-  //           // Remove the iframe after printing is done
-  //           document.body.removeChild(iframe)
-  //         },
-  //         { once: true }
-  //       )
-  //     }, 500)
-  //   } catch (err) {
-  //     console.error('Print error:', err)
-  //     alert('There was an error preparing the print view. Please try again.')
-  //   }
-  // }
+  }, [activeTab, savedGroups]);
+  
 
   const printHandler = (data) => {
     // Check if we have any refs to print
@@ -1271,20 +1070,6 @@ function DevtaVastuPage({ id }) {
     }
   }
 
-
-  // const updatePdfPages = (selectedGroup, pageNumber) => {
-  //   const index = tabGroup.findIndex(tab => tab.title === selectedGroup);
-  //   setTabGroup((prev) => {
-  //     const updatedGroup = [...prev];
-  //     const tabToUpdate = { ...updatedGroup[index] };
-  //     const updatedNecessaryFiles = [...tabToUpdate?.NecessaryFiles];
-  //     updatedNecessaryFiles[0] = { ...updatedNecessaryFiles[0], selectedPage: pageNumber };
-  //     tabToUpdate.NecessaryFiles = updatedNecessaryFiles;
-  //     updatedGroup[index] = tabToUpdate;
-  //     return updatedGroup;
-  //   });
-  // }
-
   const updatePdfPages = async (selectedGroup, pageNumber) => {
     try {
       // Find the index of the selected tab group
@@ -1301,7 +1086,7 @@ function DevtaVastuPage({ id }) {
         toast.error("No valid PDF data found in selected tab group");
         return;
       }
-      setLoading(true);
+      // setLoading(true);
 
       // Extract the base64 data (remove data URL prefix if present)
       let base64Data = currentNecessaryFiles.originalPdfBase64;
@@ -1448,21 +1233,20 @@ function DevtaVastuPage({ id }) {
                         setSaveLoading={setSaveLoading}
                         selectedGroup={group.label}
                         setPageTitle={(newName) => {
-                          console.warn("New Name : ", newName)
-                          console.warn("Group : ", tabGroup[index])
+                          setSavedGroups(prev => {
+                            const updatedGroups = [...prev];
+                            const groupIndex = updatedGroups.indexOf(group.title);
+                            if (groupIndex !== -1) {
+                              updatedGroups[groupIndex] = newName;
+                            }
+                            return updatedGroups;
+                          });   
                           setTabGroup((prev) => {
                             const updatedGroup = [...prev];
                             updatedGroup[index].title = newName;
                             return updatedGroup;
                           });
-                          setSavedGroups(prev => {
-                            const updatedGroups = [...prev];
-                            const groupIndex = updatedGroups.indexOf(group.label);
-                            if (groupIndex !== -1) {
-                              updatedGroups[groupIndex] = newName;
-                            }
-                            return updatedGroups;
-                          });
+                         
                         }}
                         fileUploaded={fileUploaded}
                         setFileUploaded={setFileUploaded}

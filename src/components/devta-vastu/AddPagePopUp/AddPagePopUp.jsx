@@ -24,6 +24,22 @@ function AddPagePopUp({ open, handleClose, handleSave, tabGroup, savedGroups }) 
   const [tabTitle, setTabTitle] = useState(null)
   const titleRef = useRef(null);
 
+  const TAB_LABELS = [
+  'Google Layout',
+  'House Plan',
+  'Griding With 16 Zone',
+  '16 Zone Bar Chart',
+  'Marma Lines + Marma Points',
+  'Civil Energy',
+  'Devta Mark',
+  'Devta Marking Color',
+  'Devta bar chart',
+  'Devta + Marma Points',
+  'Custom Remedial Marking',
+  'Site Energy audit',
+  'Geo Energy audit',
+];
+
   const theme = createTheme({
     shape: {
       borderRadius: 8 // Set the global border radius here
@@ -38,10 +54,6 @@ function AddPagePopUp({ open, handleClose, handleSave, tabGroup, savedGroups }) 
   }, [titleRef])
 
   const [shouldShrink, setShouldShrink] = useState(!!tabTitle);
-  console.log("shouldShrink", tabGroup.filter(item => {
-    console.log("item", item.title)
-    return savedGroups.includes(item.title)
-  }))
 
   return (
     <>
@@ -104,16 +116,16 @@ function AddPagePopUp({ open, handleClose, handleSave, tabGroup, savedGroups }) 
                 /> */}
                 <Autocomplete
                   // options={tabGroup}
-                  options={Array.from(new Map(tabGroup.map(tab => [tab.label, tab])).values())}
-                  getOptionLabel={option => option.label} // Extracts label text
-                  getOptionKey={option => option.label}
-                  value={selectedGroup ? tabGroup.find(item => item.label === selectedGroup) : null}
+                  options={TAB_LABELS}
+                  // getOptionLabel={option => option.label} // Extracts label text
+                  // getOptionKey={option => option.label}
+                  value={selectedGroup ? TAB_LABELS.find(item => item === selectedGroup) : null}
                   onChange={(_, newValue) => {
                     if(tabTitle == null || tabTitle == "") {
                       setShouldShrink(true);
-                      setTabTitle(newValue.label)
+                      setTabTitle(newValue)
                     }
-                    setSelectedGroup(newValue ? newValue.label : null)
+                    setSelectedGroup(newValue ? newValue : null)
                     setGroupError(false)
                   }}
                   renderInput={params => <TextField {...params} label='Select Page' error={groupError} />}
