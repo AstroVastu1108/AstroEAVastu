@@ -20,7 +20,10 @@ function NewPolygonPopUp({ open, handleClose, handleSave, newPolygonData }) {
     }
   })
 
-  const inputRef = useRef(null)
+  const inputRef = useRef(null);
+  const [errors, setErrors] = useState({
+    title: false
+  })
 
   useEffect(() => {
     setTimeout(() => {
@@ -40,10 +43,32 @@ function NewPolygonPopUp({ open, handleClose, handleSave, newPolygonData }) {
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }))
+    setErrors(prev => ({
+      ...prev,
+      [field]: false
+    }))
   }
 
   const handleFormSubmit = e => {
     e.preventDefault()
+    let isValid = true;
+    Object.keys(formData).forEach(key => {
+      if (!formData[key]) {
+        isValid = false;
+        if(key == 'description')
+          formData[key] = formData.title;
+        return setErrors(prev => ({
+          ...prev,
+          [key]: true
+        }))
+      }
+    });
+    if (!isValid) {
+      if (open && inputRef.current) {
+        inputRef.current.focus()
+      }
+      return;
+    }
     handleSave(formData) // Pass the polygon data back to the parent
     handleClose()
   }
@@ -85,6 +110,7 @@ function NewPolygonPopUp({ open, handleClose, handleSave, newPolygonData }) {
                   inputRef={inputRef}
                   value={formData.title}
                   onChange={e => handleInputChange('title', e.target.value)}
+                  {...(errors.title && { error: true })}
                 />
               </Grid>
 

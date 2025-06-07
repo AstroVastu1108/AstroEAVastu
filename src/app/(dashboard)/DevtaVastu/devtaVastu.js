@@ -1049,7 +1049,9 @@ function DevtaVastuPage({ id }) {
         document.title = dynamicFileName
 
         // Print the document
-        iframe.contentWindow.print()
+        iframe.contentWindow.print();
+        document.title = originalTitle; // Restore the original title immediately after setting the new one
+
 
         // Listen for the afterprint event to clean up
         iframe.contentWindow.addEventListener(
@@ -1065,8 +1067,8 @@ function DevtaVastuPage({ id }) {
         )
       }, 500)
     } catch (err) {
-      console.error('Print error:', err)
-      alert('There was an error preparing the print view. Please try again.')
+      console.error('Print error:', err);
+      return toast.error('An error occurred while printing. Please try again.');
     }
   }
 
