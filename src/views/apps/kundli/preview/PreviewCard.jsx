@@ -12,7 +12,7 @@ import NakshtraSummary from '@/components/preview/NakshtraSummary/NakshtraSummar
 import RahuKetu from '@/components/preview/RahuKetu/RahuKetu';
 import DashaDetails from '@/components/preview/DashaDetails/DashaDetails';
 import LoardPlanet from '@/components/preview/LoardPlanet/LoardPlanet'
-import { Button, Chip, Divider, IconButton, Menu, MenuItem } from '@mui/material'
+import { Button, Chip, Collapse, Divider, IconButton, Menu, MenuItem } from '@mui/material'
 import { useEffect, useRef, useState } from 'react'
 import Event from '@/components/preview/Event/Event'
 import PrakritiPopUp from '@/components/preview/InfoTable/PrakritiPopUp'
@@ -27,6 +27,7 @@ import LifeEvent from '@/components/preview/LifeEvent/LifeEvent'
 import Loader from '@/components/common/Loader/Loader'
 import ConfirmationPopup from '@/components/common/ConfirmationPopup/ConfirmationPopup'
 import { toast } from 'react-toastify'
+import NSubLordPopUp from '@/components/preview/Nakshatra-SubLord/NSubLord'
 
 const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, TransitData, setTransitData, getTransitData, getDivisionalChartData, DivisionalData, setDivisionalData, birthDate, setKundliData, SetKundliConstData }) => {
   // var
@@ -50,6 +51,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   const [EventValue, setEventValue] = useState(null);
   const [kundliOptValue, setKundliOptValue] = useState("V");
   const [isPrakritiVisible, setIsPrakritiVisible] = useState(false);
+  const [isNSLordVisible, setIsNSLoardVisible] = useState(false);
   const [openLifeEvent, setOpenLifeEvent] = useState(false);
   const [openKundli, setOpenKundli] = useState(false);
   const [openJCK, setJCK] = useState(false);
@@ -64,6 +66,8 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   const [DashaDate, setDashaDate] = useState(DashaDetailData?.MahaDasha.filter((e) => e.IsCurrent == true)[0]?.StartDt);
   const [rotationTital, setRotationTitle] = useState("");
   const [SaveKundali, setSaveKundali] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false)
+
 
   const open = Boolean(anchorEl);
   const divRef = useRef(null);
@@ -77,8 +81,17 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     setIsPrakritiVisible(true)
   }
 
+  const handleIsNSLordOpen = () => {
+    handleClose();
+    setIsNSLoardVisible(true)
+  }
+
   const handleIsPraClose = () => {
     setIsPrakritiVisible(false)
+  }
+
+    const handleIsNLLordClose = () => {
+    setIsNSLoardVisible(false)
   }
 
   const handleClick = (event) => {
@@ -381,6 +394,10 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     setSaveKundali(false);
   }
 
+  const toggleHeader = () => {
+    setIsExpanded(prev => !prev)
+  }
+
   return (
     <>
       {/* {Loading && <Loader />} */}
@@ -397,6 +414,27 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               <div className='flex flex-row gap-1 chart-date items-center'>
                 <span className='label font-ea-n'>Place: </span>
                 <span className='value font-ea-sb'>{BirthDetails?.City}, {BirthDetails?.Country}</span>
+              </div>
+              <div className='flex-grow flex justify-end items-center'>
+                <IconButton
+                  variant='outlined'
+                  size='small'
+                  onClick={toggleHeader}
+                  sx={{
+                    borderColor: 'var(--border-color)',
+                    color: 'white',
+                    ':hover': {
+                      backgroundColor: 'var(--primary-soft-color)',
+                      borderColor: 'var(--primary-color)'
+                    }
+                  }}
+                >
+                  {isExpanded ? (
+                    <i className='tabler-circle-arrow-up'></i>
+                  ) : (
+                    <i className='tabler-circle-arrow-down'></i>
+                  )}
+                </IconButton>
               </div>
               <div className='flex justify-end'>
                 <>
@@ -420,6 +458,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
                     <MenuItem onClick={handleJCK} className="flex gap-1"><i className={'tabler-aspect-ratio me-2'} />Jaimini Char Karakas</MenuItem>
                     <MenuItem onClick={handleNTC} className="flex gap-1"><i className={'tabler-jewish-star me-2'} />NavTara Chakra</MenuItem>
                     <MenuItem onClick={handleIsPraOpen} className="flex gap-1"><i className={'tabler-arrow-up-right me-2'} />Prakriti</MenuItem>
+                    <MenuItem onClick={handleIsNSLordOpen} className="flex gap-1"><i className={'tabler-arrow-up-right me-2'} />Nakshatra Lord & Sub Lord</MenuItem>
                     {/* <MenuItem className="flex gap-1"><i className={'tabler-arrow-up-right me-2'} />Save</MenuItem> */}
                     <MenuItem onClick={handleMenuTimeTool} className="flex gap-1"><i className={'tabler-calendar-share me-2'} />TimeTool</MenuItem>
                     <MenuItem className="flex gap-1"><i className={'tabler-calendar-share me-2'} />Transit Analysis</MenuItem>
@@ -431,41 +470,44 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               </div>
             </div>
           </div>
-          <div className={`${!isPrintDiv ? 'xs:flex-col sm:flex-row' : ""} birth-info-table`}>
-            <div className='flex flex-row block-detail'>
 
-              <InfoTable InfoTableTextArr={[
-                { "label": "Rashi / Alphabet ", "value": `${AstroDetails?.Rashi} / A` },
-                { "label": "Nakshatra / Pada ", "value": `${AstroDetails?.Nakshatra?.Nakshatra} / ${AstroDetails?.Nakshatra.Pada} (${AstroDetails?.Nakshatra?.PlanetName})` },
-                { "label": "Gana / TriGuna ", "value": `${AstroDetails?.Nakshatra?.Gana == 'R' ? 'Rakshasa' : 'Manushya'} / ${AstroDetails?.Nakshatra?.TriGuna}` },
-                { "label": "Yoga / Karana ", "value": `${AstroDetails?.JanmaYoga} / ${AstroDetails?.JanmaKarana}` },
-              ]} isPrintDiv={isPrintDiv} />
+          <Collapse in={isExpanded} timeout='auto' unmountOnExit>
+            <div className={`${!isPrintDiv ? 'xs:flex-col sm:flex-row' : ""} birth-info-table`}>
+              <div className='flex flex-row block-detail'>
+
+                <InfoTable InfoTableTextArr={[
+                  { "label": "Rashi / Alphabet ", "value": `${AstroDetails?.Rashi} / A` },
+                  { "label": "Nakshatra / Pada ", "value": `${AstroDetails?.Nakshatra?.Nakshatra} / ${AstroDetails?.Nakshatra.Pada} (${AstroDetails?.Nakshatra?.PlanetName})` },
+                  { "label": "Gana / TriGuna ", "value": `${AstroDetails?.Nakshatra?.Gana == 'R' ? 'Rakshasa' : 'Manushya'} / ${AstroDetails?.Nakshatra?.TriGuna}` },
+                  { "label": "Yoga / Karana ", "value": `${AstroDetails?.JanmaYoga} / ${AstroDetails?.JanmaKarana}` },
+                ]} isPrintDiv={isPrintDiv} />
+              </div>
+              <div className='flex flex-row block-detail'>
+                <InfoTable InfoTableTextArr={[
+                  { "label": "Vikram Samvant ", "value": AstroDetails?.VikramSamvat },
+                  { "label": "Birth Tithi / Sun Rise ", "value": `${AstroDetails?.JanmaTithi} / ${AstroDetails?.SunRiseTime}` },
+                  { "label": "Astro / Western Day ", "value": `${AstroDetails?.AstroWeekday} / ${AstroDetails?.WesternWeekday}` },
+                  // { "label": "Location ", "value": `${BirthDetails?.City}, ${BirthDetails?.Country}` },
+                ]} isPrintDiv={isPrintDiv} />
+              </div>
+              <div className='flex flex-row block-detail'>
+                <InfoTable InfoTableTextArr={[
+                  { "label": "Lucky / Destiny # ", "value": `${AstroDetails?.Numerology?.BirthNumber} / ${AstroDetails?.Numerology?.DestinyNumber} (${AstroDetails?.Numerology?.DestinyYearNumber})` },
+                  { "label": "Destiny Year ", "value": ` ${AstroDetails?.Numerology?.DestinyYear - 1} - ${AstroDetails?.Numerology?.DestinyYear}` },
+                  { "label": "Lat, Lng ", "value": `${BirthDetails?.Latitude}, ${BirthDetails?.Longitude}` },
+                  { "label": "Timezone ", "value": ` ${BirthDetails?.Timezone}` },
+                ]} isPrintDiv={isPrintDiv} />
+              </div>
+              <div className='flex flex-row block-detail'>
+                <InfoTable InfoTableTextArr={[
+                  { "label": "Reference", "value": `${BirthDetails?.Reference || ""}` },
+                  { "label": "Remark", "value": `${BirthDetails?.Remark || ""}` },
+                  { "label": "Group ", "value": ` ${BirthDetails?.Group || ""}` },
+                  { "label": "Prakriti", "value": `${BirthDetails?.Gender} / ${BirthDetails?.Prakriti}` },
+                ]} isPrintDiv={isPrintDiv} />
+              </div>
             </div>
-            <div className='flex flex-row block-detail'>
-              <InfoTable InfoTableTextArr={[
-                { "label": "Vikram Samvant ", "value": AstroDetails?.VikramSamvat },
-                { "label": "Birth Tithi / Sun Rise ", "value": `${AstroDetails?.JanmaTithi} / ${AstroDetails?.SunRiseTime}` },
-                { "label": "Astro / Western Day ", "value": `${AstroDetails?.AstroWeekday} / ${AstroDetails?.WesternWeekday}` },
-                // { "label": "Location ", "value": `${BirthDetails?.City}, ${BirthDetails?.Country}` },
-              ]} isPrintDiv={isPrintDiv} />
-            </div>
-            <div className='flex flex-row block-detail'>
-              <InfoTable InfoTableTextArr={[
-                { "label": "Lucky / Destiny # ", "value": `${AstroDetails?.Numerology?.BirthNumber} / ${AstroDetails?.Numerology?.DestinyNumber} (${AstroDetails?.Numerology?.DestinyYearNumber})` },
-                { "label": "Destiny Year ", "value": ` ${AstroDetails?.Numerology?.DestinyYear - 1} - ${AstroDetails?.Numerology?.DestinyYear}` },
-                { "label": "Lat, Lng ", "value": `${BirthDetails?.Latitude}, ${BirthDetails?.Longitude}` },
-                { "label": "Timezone ", "value": ` ${BirthDetails?.Timezone}` },
-              ]} isPrintDiv={isPrintDiv} />
-            </div>
-            <div className='flex flex-row block-detail'>
-              <InfoTable InfoTableTextArr={[
-                { "label": "Reference", "value": `${BirthDetails?.Reference || ""}` },
-                { "label": "Remark", "value": `${BirthDetails?.Remark || ""}` },
-                { "label": "Group ", "value": ` ${BirthDetails?.Group || ""}` },
-                { "label": "Prakriti", "value": `${BirthDetails?.Gender} / ${BirthDetails?.Prakriti}` },
-              ]} isPrintDiv={isPrintDiv} />
-            </div>
-          </div>
+          </Collapse>
 
           <div className={`flex px-1 pt-4 gap-5 overflow-auto md:flex-wrap lg:flex-nowrap`}>
             {openKundli && (
@@ -617,62 +659,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
                 <div>⮌ Retro</div></p>
             </div>
           </div>
-          <div className='main-MahaDasha-Div pt-4'>
-            {/* <div className='chart-title'>❋ Nakshatra Astrology ↠ House Script ❋</div> */}
-            <div className='flex px-4 w-[100%] justify-between'>
-              <div className=' w-[30%]'></div>
-              <div className='chart-title w-[40%] pt-5'>
-                <span>
-                  ❋ Nakshatra Astrology ↠ House Script ❋
-                </span>
-              </div>
-              <div className='mb-1 w-[30%] flex justify-end pt-4'>
-                <Button variant='text' className='' onClick={handleLifeEventOpen}>
-                  <span className='text-[var(--green-color)]'>Life Event</span>
-                  <span className='arrow text-black'>🡒</span>
-                  <span>
-                    {LifeEventValue ? `${LifeEventValue.EventName}` : "NA"}
-                  </span>
-                </Button>
-              </div>
-            </div>
-            <div className='planet-table'>
-              <NakshtraSummary SummaryData={HouseNSummaryData} Aspect={"H"} symbols={Symbols} SelectedEventVal={LifeEventValue} />
-            </div>
-          </div>
 
-          <div className='main-RahuKetu-Div pt-4'>
-            {/* <div className='chart-title'>❋ Planet Script with Nakshatra Lord & Sub Lord ❋</div> */}
-            <div className='flex px-4 w-[100%] justify-between'>
-              <div className=' w-[25%]'></div>
-              <div className='chart-title w-[50%] pt-5'>
-                <span>
-                  ❋ Planet Script with Nakshatra Lord & Sub Lord ❋
-                </span>
-              </div>
-              <div className='mb-1 w-[25%] flex justify-end pt-4'>
-                <Button variant='text' className='' onClick={handleLifeEventOpen}>
-                  <span className='text-[var(--green-color)]'>Life Event</span>
-                  <span className='arrow text-black'>🡒</span>
-                  <span>
-                    {LifeEventValue ? `${LifeEventValue.EventName}` : "NA"}
-                  </span>
-                </Button>
-              </div>
-            </div>
-            <div
-              className="Loard-Div sm:grid md:grid-rows-3 md:grid-cols-3 sm:grid-rows-5 sm:grid-cols-2 xs:flex xs:flex-col grid-flow-col gap-4 auto-rows-auto"
-            >
-              {PlaneNSummaryData.length
-                ? PlaneNSummaryData.slice(0, 9).map((element, index) => ( // only display first 9 elements
-                  <div key={index} className=''>
-                    <LoardPlanet LoardData={element} SelectedEventVal={LifeEventValue} symbols={Symbols} />
-                  </div>
-                ))
-                : null
-              }
-            </div>
-          </div>
 
           <div className='main-RahuKetu-Div pt-8'>
             <div className='flex px-4 w-[100%] justify-between'>
@@ -698,6 +685,33 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
             </div>
           </div>
 
+
+          <div className='main-MahaDasha-Div pt-4'>
+            {/* <div className='chart-title'>❋ Nakshatra Astrology ↠ House Script ❋</div> */}
+            <div className='flex px-4 w-[100%] justify-between'>
+              <div className=' w-[30%]'></div>
+              <div className='chart-title w-[40%] pt-5'>
+                <span>
+                  ❋ Nakshatra Astrology ↠ House Script ❋
+                </span>
+              </div>
+              <div className='mb-1 w-[30%] flex justify-end pt-4'>
+                <Button variant='text' className='' onClick={handleLifeEventOpen}>
+                  <span className='text-[var(--green-color)]'>Life Event</span>
+                  <span className='arrow text-black'>🡒</span>
+                  <span>
+                    {LifeEventValue ? `${LifeEventValue.EventName}` : "NA"}
+                  </span>
+                </Button>
+              </div>
+            </div>
+            <div className='planet-table'>
+              <NakshtraSummary SummaryData={HouseNSummaryData} Aspect={"H"} symbols={Symbols} SelectedEventVal={LifeEventValue} />
+            </div>
+          </div>
+
+
+
           <div className='main-AstroVastuScript-Div pt-8'>
             <div className='chart-title'>❋ Planet ↠ Planet Aspects Summary ❋</div>
             <div className='Summary-Div'>
@@ -711,15 +725,19 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
             </div>
           </div>
 
+
+
           <div className='main-AstroVastuScript-Div pt-8'>
-            <div className='chart-title'>❋ Astro Vastu Insights ❋</div>
+            <div className='chart-title'>❋ Remedial Astro Vastu Insights ❋</div>
             <div className='AstroVastuScript-Div'>
               <House houseArr={AstroVastuHouseScript} Symbols={Symbols}></House>
             </div>
           </div>
+
         </Grid>
       </Grid>
       {isPrakritiVisible && <PrakritiPopUp open={isPrakritiVisible} handlePraClose={handleIsPraClose} />}
+      {isNSLordVisible && <NSubLordPopUp open={isNSLordVisible} handleNSLordClose={handleIsNLLordClose} PlaneNSummaryData={PlaneNSummaryData}  LifeEventValue={LifeEventValue} Symbols={Symbols}/>}
       {openJCK && <JaiminiCharKarakasPopUp open={openJCK} handleClose={handleJCK} JaiminiCharKarakasData={JaiminiCharKarakas} />}
       {openNTC && <NavTaraChakra open={openNTC} handleClose={handleNTC} NavTaraChakraData={NavTaraChakraData} />}
       {openRotation && <Rotation open={openRotation} handleClose={handleRoatationClose} rotationType={rotationType} hanldeRotationChange={hanldeRotationChange} />}

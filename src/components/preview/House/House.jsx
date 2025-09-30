@@ -128,11 +128,11 @@ function House({ houseArr, Symbols }) {
                               <span>{houseaspect?.Planet}</span>
                               <span className='ps-1'>⦿</span>
                             </div>) : (
-                            <div className='sub-div3 font-ea-sb'>
-                              <div>{houseaspect?.Aspect}°</div>
-                              <span className='item-aspect-arrow'>↠</span>
-                              <span>{houseaspect?.Planet}</span>
-                            </div>)
+                              <div className='sub-div3 font-ea-sb'>
+                                <div>{houseaspect?.Aspect}°</div>
+                                <span className='item-aspect-arrow'>↠</span>
+                                <span>{houseaspect?.Planet}</span>
+                              </div>)
                         }
 
 
@@ -155,7 +155,6 @@ function House({ houseArr, Symbols }) {
                         {rashi?.Planets?.length &&
                           (<div className='rahi-Div2'>{rashi?.Planets.map((Planet, key) =>
                           (
-                            <>
                               <div className='planet-Div ' key={key}>
                                 <div className='planet-Div-sub'>
                                   <div className={`planet-Div1 item-title-planet-bg-${Planet?.Planet.toLowerCase()}`}>
@@ -191,27 +190,29 @@ function House({ houseArr, Symbols }) {
                                     <div className="sub-div">❖ {Planet?.PlanetDescVastu} </div>
                                   </div>
                                 </div>
-                                <div className='rahi-Div3 '>
+                                <div className={`rahi-Div3 border-t-[5px] p-2 item-title-planet-border-${Planet?.Planet.toLowerCase()}`} >
                                   {Planet?.PlanetAspectsZero?.length ?
                                     <div>{Planet?.PlanetAspectsZero?.map((Planetaspect, key) => (
-                                      <div className='rashi-div-sub' key={key}>
-                                        {
-                                          Planetaspect?.IsWithRaKe ?
-                                            (
-                                              <div className='sub-div-rake cursor-pointer font-ea-sb' onClick={() => { handleEvent('planetAspect', `House-${(index + 1)}`, "", `${Planetaspect?.Aspect}° `) }}><div>
-                                                {Planetaspect?.Aspect}°
-                                              </div>
+                                      <div>
+                                        <div className='rashi-div-sub' key={key}>
+                                          {
+                                            Planetaspect?.IsWithRaKe ?
+                                              (
+                                                <div className='sub-div-rake cursor-pointer font-ea-sb' onClick={() => { handleEvent('planetAspect', `House-${(index + 1)}`, "", `${Planetaspect?.Aspect}° `) }}><div>
+                                                  {Planetaspect?.Aspect}°
+                                                </div>
+                                                  <span className='item-aspect-arrow'>↠</span>
+                                                  <span>{Planetaspect?.Planet}</span>
+                                                  <span className='ps-1'>⦿</span>
+                                                </div>) :
+                                              <div className='sub-div1 cursor-pointer font-ea-sb' onClick={() => { handleEvent('planetAspect', `House-${(index + 1)}`, "", `${Planetaspect?.Aspect}° `) }}>
+                                                <div>{Planetaspect?.Aspect}°</div>
                                                 <span className='item-aspect-arrow'>↠</span>
-                                                <span>{Planetaspect?.Planet}</span>
-                                                <span className='ps-1'>⦿</span>
-                                              </div>) :
-                                            <div className='sub-div1 cursor-pointer font-ea-sb' onClick={() => { handleEvent('planetAspect', `House-${(index + 1)}`, "", `${Planetaspect?.Aspect}° `) }}>
-                                              <div>{Planetaspect?.Aspect}°</div>
-                                              <span className='item-aspect-arrow'>↠</span>
-                                              <span> {Planetaspect?.Planet}</span>
-                                            </div>
-                                        }
-                                        <div>{Planetaspect?.PlanetRashiShort}. {Planetaspect?.ScriptFull}</div>
+                                                <span> {Planetaspect?.Planet}</span>
+                                              </div>
+                                          }
+                                          <div>{Planetaspect?.PlanetRashiShort}. {Planetaspect?.ScriptFull}</div>
+                                        </div>
                                       </div>
                                     ))} </div> : ""
                                   }
@@ -222,8 +223,8 @@ function House({ houseArr, Symbols }) {
                                           Planetaspect?.IsWithRaKe ?
                                             (<div className='sub-div-rake cursor-pointer font-ea-sb' onClick={() => { handleEvent('planetAspect', `House-${(index + 1)}`, "", `${Planetaspect?.Aspect}° `) }}>
                                               <div>
-                                              {Planetaspect?.Aspect}°
-                                            </div>
+                                                {Planetaspect?.Aspect}°
+                                              </div>
                                               <span className='item-aspect-arrow'>↠</span>
                                               <span>{Planetaspect?.Planet}</span>
                                               <span className='ps-1'>⦿</span></div>) :
@@ -245,12 +246,12 @@ function House({ houseArr, Symbols }) {
                                             (<div className='sub-div-rake cursor-pointer font-ea-sb' onClick={() => { handleEvent('planetAspect', `House-${(index + 1)}`, "", `${Planetaspect?.Aspect}° `) }}>
                                               <div>{Planetaspect?.Aspect}°</div>
                                               <span className='item-aspect-arrow'>↠</span>
-                                                <span>{Planetaspect?.Planet}</span>
+                                              <span>{Planetaspect?.Planet}</span>
                                               <span className='ps-1'>⦿</span></div>) :
                                             <div className='sub-div3 cursor-pointer font-ea-sb' onClick={() => { handleEvent('planetAspect', `House-${(index + 1)}`, "", `${Planetaspect?.Aspect}° `) }}>
                                               <div>{Planetaspect?.Aspect}°</div>
                                               <span className='item-aspect-arrow'>↠</span>
-                                                <span>{Planetaspect?.Planet}</span>
+                                              <span>{Planetaspect?.Planet}</span>
                                             </div>
                                         }
                                         <div>{Planetaspect?.PlanetRashiShort}. {Planetaspect?.ScriptFull}</div>
@@ -259,7 +260,6 @@ function House({ houseArr, Symbols }) {
                                   }
                                 </div>
                               </div>
-                            </>
                           )
                           )}</div>)
                         }
