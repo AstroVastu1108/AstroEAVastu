@@ -370,6 +370,7 @@
 //   }
 // }
 // End 
+import { NextResponse } from "next/server";
 import puppeteer from "puppeteer-core";
 import chromium from "@sparticuz/chromium";
 
@@ -379,11 +380,12 @@ export const maxDuration = 10; // 10 seconds max on free tier
 
 export async function POST(request) {
   let browser = null;
+  console.log("coming here")
 
   try {
     const body = await request.json();
     const { html } = body;
-    
+
     if (!html) {
       return new Response(
         JSON.stringify({ error: "HTML not provided" }),
@@ -395,29 +397,35 @@ export async function POST(request) {
     chromium.setHeadlessMode = true;
     chromium.setGraphicsMode = false;
 
+    // ...existing code...
+    const executablePath =
+      (await chromium.executablePath()) ||
+      "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
+
     browser = await puppeteer.launch({
       args: [
         ...chromium.args,
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-gpu',
-        '--single-process', // Use single process to reduce memory
-        '--no-zygote'
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-gpu",
+        "--single-process",
+        "--no-zygote"
       ],
-      executablePath: await chromium.executablePath(),
-      headless: true,
+      executablePath,
+      headless: true
     });
+    // ...existing code...
 
     const page = await browser.newPage();
-    
+
     // Reduce viewport size to save memory
     await page.setViewport({ width: 794, height: 1123 }); // A4 size in pixels
-    
+
     // Set content with shorter timeout
-    await page.setContent(html, { 
+    await page.setContent(html, {
       waitUntil: "domcontentloaded", // Changed from networkidle0 for speed
-      timeout: 8000 
+      timeout: 8000
     });
 
     const pdfBuffer = await page.pdf({
