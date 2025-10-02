@@ -383,61 +383,61 @@ export async function POST(request) {
   console.log("coming here")
 
   try {
-    const body = await request.json();
-    const { html } = body;
+    // const body = await request.json();
+    // const { html } = body;
 
-    if (!html) {
-      return new Response(
-        JSON.stringify({ error: "HTML not provided" }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
-      );
-    }
+    // if (!html) {
+    //   return new Response(
+    //     JSON.stringify({ error: "HTML not provided" }),
+    //     { status: 400, headers: { "Content-Type": "application/json" } }
+    //   );
+    // }
 
-    // Optimize for smaller memory footprint
-    chromium.setHeadlessMode = true;
-    chromium.setGraphicsMode = false;
+    // // Optimize for smaller memory footprint
+    // chromium.setHeadlessMode = true;
+    // chromium.setGraphicsMode = false;
 
-    // ...existing code...
-    const executablePath =
-      (await chromium.executablePath()) ||
-      "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
+    // // ...existing code...
+    // const executablePath =
+    //   (await chromium.executablePath()) ||
+    //   "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
 
-    browser = await puppeteer.launch({
-      args: [
-        ...chromium.args,
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage",
-        "--disable-gpu",
-        "--single-process",
-        "--no-zygote"
-      ],
-      executablePath,
-      headless: true
-    });
-    // ...existing code...
+    // browser = await puppeteer.launch({
+    //   args: [
+    //     ...chromium.args,
+    //     "--no-sandbox",
+    //     "--disable-setuid-sandbox",
+    //     "--disable-dev-shm-usage",
+    //     "--disable-gpu",
+    //     "--single-process",
+    //     "--no-zygote"
+    //   ],
+    //   executablePath,
+    //   headless: true
+    // });
+    // // ...existing code...
 
-    const page = await browser.newPage();
+    // const page = await browser.newPage();
 
-    // Reduce viewport size to save memory
-    await page.setViewport({ width: 794, height: 1123 }); // A4 size in pixels
+    // // Reduce viewport size to save memory
+    // await page.setViewport({ width: 794, height: 1123 }); // A4 size in pixels
 
-    // Set content with shorter timeout
-    await page.setContent(html, {
-      waitUntil: "domcontentloaded", // Changed from networkidle0 for speed
-      timeout: 8000
-    });
+    // // Set content with shorter timeout
+    // await page.setContent(html, {
+    //   waitUntil: "domcontentloaded", // Changed from networkidle0 for speed
+    //   timeout: 8000
+    // });
 
-    const pdfBuffer = await page.pdf({
-      format: "A4",
-      printBackground: true,
-      margin: { top: "15mm", right: "15mm", bottom: "15mm", left: "15mm" },
-    });
+    // const pdfBuffer = await page.pdf({
+    //   format: "A4",
+    //   printBackground: true,
+    //   margin: { top: "15mm", right: "15mm", bottom: "15mm", left: "15mm" },
+    // });
 
-    await browser.close();
-    browser = null;
+    // await browser.close();
+    // browser = null;
 
-    return new Response(pdfBuffer, {
+    return new Response("abc", {
       status: 200,
       headers: {
         "Content-Type": "application/pdf",
