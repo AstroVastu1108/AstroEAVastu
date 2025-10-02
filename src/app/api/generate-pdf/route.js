@@ -372,48 +372,85 @@
 // End 
 
 
-
-import chromium from "@sparticuz/chromium";
 import puppeteer from "puppeteer-core";
+import chromium from "@sparticuz/chromium";
+import { generateBankReconciliationHTML } from "@/views/transactions/pages/Transactions";
 
-export async function POST(req) {
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+export async function POST(request) {
+  let browser= null;
+
   try {
-    const body = await req.json();
-    const { html } = body;
+    const body = await request.json();
+    const { transactions, options } = body;
 
-    if (!html) {
-      return new Response(JSON.stringify({ error: "HTML not provided" }), { status: 400 });
+    if (!transactions || !Array.isArray(transactions)) {
+      return new Response(
+        JSON.stringify({ error: "Invalid transactions data" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
     }
 
-    // 🧠 Dynamically select executable path
-    const executablePath = await chromium.executablePath();
+    // Generate HTML from transactions
+    const htmlContent = generateBankReconciliationHTML({ transactions, options });
 
-    const browser = await puppeteer.launch({
+    // Launch headless Chrome for Vercel
+    browser = await puppeteer.launch({
       args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath: executablePath,
+      executablePath: await chromium.executablePath(),
       headless: chromium.headless,
     });
 
     const page = await browser.newPage();
-    await page.setContent(html, { waitUntil: "networkidle0" });
+    await page.setContent(htmlContent, { waitUntil: "networkidle0" });
 
-    const pdf = await page.pdf({
+    // Generate PDF
+    const pdfUint8Array = await page.pdf({
       format: "A4",
       printBackground: true,
-      margin: { top: "10mm", right: "10mm", bottom: "10mm", left: "10mm" },
+      margin: { top: "15mm", right: "15mm", bottom: "15mm", left: "15mm" },
     });
 
+    // Close browser
     await browser.close();
+    browser = null;
 
-    return new Response(pdf, {
+    // Convert to Buffer
+    const pdfBuffer = Buffer.from(pdfUint8Array);
+
+    // Return PDF response
+    return new Response(pdfBuffer, {
+      status: 200,
       headers: {
         "Content-Type": "application/pdf",
-        "Content-Disposition": "attachment; filename=report.pdf",
+        "Content-Disposition": 'attachment; filename="bank_reconciliation.pdf"',
+        "Content-Length": pdfBuffer.length.toString(),
+        "Cache-Control": "no-store",
       },
     });
-  } catch (err) {
-    console.error("PDF generation error:", err);
-    return new Response(JSON.stringify({ error: "PDF generation failed", details: err.message }), { status: 500 });
+  } catch (error) {
+    console.error("PDF Generation Error:", error);
+
+    if (browser) {
+      try {
+        await browser.close();
+      } catch (e) {
+        console.error("Failed to close browser:", e);
+      }
+    }
+
+    return new Response(
+      JSON.stringify({
+        error: true,
+        message: error.message,
+        stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
+      }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   }
 }
