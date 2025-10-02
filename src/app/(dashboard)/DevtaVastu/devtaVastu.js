@@ -8,7 +8,8 @@ import { Card, MenuItem, Select, Tabs, Tab, IconButton, Menu, Button } from '@mu
 import React, { useEffect, useRef, useState } from 'react'
 // import html2canvas from 'html2canvas';
 // import jsPDF from "jspdf";
-
+import dynamic from "next/dynamic";
+// const DevtaVastuComponent = dynamic(() => import("@/views/apps/devtaVastu/DevtaVastu"), { ssr: false });
 import html2pdf from 'html2pdf.js'
 import './devtaVastu.css'
 // GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.js';
@@ -900,177 +901,261 @@ function DevtaVastuPage({ id }) {
   }, [activeTab, savedGroups]);
   
 
-  const printHandler = (data) => {
-    // Check if we have any refs to print
-    if (!printRefs.current || printRefs.current.length === 0) {
-      console.error('Print container refs are empty or null')
-      return
+  // const printHandler = (data) => {
+  //   // Check if we have any refs to print
+  //   if (!printRefs.current || printRefs.current.length === 0) {
+  //     console.error('Print container refs are empty or null')
+  //     return
+  //   }
+
+  //   try {
+  //     // Create a container for all content
+  //     const printContainer = document.createElement('div')
+
+  //     // If data array is provided, use it to find divs with matching IDs
+  //     if (Array.isArray(data) && data.length > 0) {
+  //       // Loop through the data array
+  //       data.forEach((item, i) => {
+  //         // Find the ref with ID matching the data item
+  //         const ref = printRefs.current.find(element => {
+  //           if (typeof element === 'object' && element !== null && element.id) {
+  //             return element.id === item
+  //           }
+  //           return false
+  //         })
+          
+  //         const groupIndex = tabGroup.findIndex(e => e.title == data[i]);
+  //         if (groupIndex === -1) {
+  //           return
+  //         }
+
+  //         if (ref) {
+  //           const pageWrapper = document.createElement('div')
+  //           // pageWrapper.className = i < data.length - 1 ? 'new-page page-break' : 'new-page'
+  //           pageWrapper.className = 'new-page page-break'
+
+  //           // Clone the content to avoid modifying the original
+  //           const content = ref.cloneNode(true);
+  //           const rightDivRef = leftprintRefs.current[groupIndex]
+  //           const rightClone = rightDivRef.cloneNode(true);
+
+  //           pageWrapper.appendChild(content)
+  //           // pageWrapper.appendChild(rightClone);
+  //           printContainer.appendChild(pageWrapper)
+  //         } else {
+  //         }
+  //       })
+  //     } else {
+  //       return toast.error('No matching data found for PDF generation.')
+  //     }
+
+  //     // Create a hidden iframe to handle the PDF generation
+  //     const iframe = document.createElement('iframe')
+  //     iframe.style.display = 'none'
+  //     document.body.appendChild(iframe)
+
+  //     // Get current date and time from the provided details
+  //     const fullDateTime = '2025-05-11 05:30:45' // From your input
+  //     const formattedDate = fullDateTime.split(' ')[0]
+
+  //     // User information from the provided details
+  //     const username = 'DhruviRana4' // From your input
+
+  //     // Add necessary styles for printing with landscape orientation
+  //     iframe.contentDocument.write(`
+  //   <!DOCTYPE html>
+  //   <html>
+  //   <head>
+  //     <title>Print Document</title>
+  //     <style>
+  //       @page {
+  //         size: landscape;
+  //         margin: 0;
+  //       }
+        
+  //       @media print {
+  //         body {
+  //           margin: 0;
+  //           // padding: 20px;
+  //           background-color: white;
+  //           color: black;
+  //         }
+          
+  //         /* Force color printing */
+  //         * {
+  //           -webkit-print-color-adjust: exact !important;
+  //           print-color-adjust: exact !important;
+  //           color-adjust: exact !important;
+  //         }
+          
+  //         /* Page break styling */
+  //         .page-break {
+  //           page-break-after: always;
+  //           break-after: page;
+  //         }
+          
+  //         .new-page:last-of-type {
+  //           page-break-after: avoid;
+  //           break-after: avoid;
+  //         }
+  //         .main-print-div{
+  //           display: flex;
+  //           justify-content: space-between;
+  //           gap: 10px;
+  //         }
+  //         .hidden-print {
+  //           position: static; /* Restore to default position during print */
+  //           left: auto;
+  //           width: 25%;
+  //         }
+  //       }
+        
+  //       /* Non-print styles */
+  //       body {
+  //         margin: 0;
+  //         background-color: white;
+  //         color: black;
+  //         font-family: Arial, sans-serif;
+  //       }
+        
+  //       /* Page break styling for preview */
+  //       .page-break {
+  //         padding: 20px 10px;
+  //       }
+  //     </style>
+  //   </head>
+  //   <body>
+  //     <div>
+  //       ${printContainer.innerHTML}
+  //     </div>
+  //   </body>
+  //   </html>
+  //   `)
+
+  //     iframe.contentDocument.close()
+
+  //     // Trigger print dialog and wait for it to complete
+  //     iframe.contentWindow.focus()
+
+  //     // Use a timeout to ensure the content is fully loaded
+  //     setTimeout(() => {
+  //       // Generate a dynamic filename with user and date
+  //       const simpleDate = formattedDate.replace(/-/g, '')
+  //       const dynamicFileName = `report_${username}_${simpleDate}.pdf`
+
+  //       // Store the original title
+  //       const originalTitle = document.title
+
+  //       // Set the new title (filename)
+  //       document.title = dynamicFileName
+
+  //       // Print the document
+  //       iframe.contentWindow.print();
+  //       document.title = originalTitle; // Restore the original title immediately after setting the new one
+
+
+  //       // Listen for the afterprint event to clean up
+  //       iframe.contentWindow.addEventListener(
+  //         'afterprint',
+  //         () => {
+  //           // Restore the original document title
+  //           document.title = originalTitle
+
+  //           // Remove the iframe after printing is done
+  //           document.body.removeChild(iframe)
+  //         },
+  //         { once: true }
+  //       )
+  //     }, 500)
+  //   } catch (err) {
+  //     console.error('Print error:', err);
+  //     return toast.error('An error occurred while printing. Please try again.');
+  //   }
+  // }
+
+const printHandler = async (data) => {
+  if (!printRefs.current || printRefs.current.length === 0) {
+    console.error('Print container refs are empty or null')
+    return
+  }
+
+  try {
+    // Merge all selected refs into one container
+    const printContainer = document.createElement('div')
+
+    if (Array.isArray(data) && data.length > 0) {
+      data.forEach((item, i) => {
+        const ref = printRefs.current.find(el => el?.id === item)
+        const groupIndex = tabGroup.findIndex(e => e.title === data[i])
+        if (groupIndex === -1 || !ref) return
+
+        const pageWrapper = document.createElement('div')
+        pageWrapper.className = 'new-page page-break'
+        const content = ref.cloneNode(true)
+        pageWrapper.appendChild(content)
+        printContainer.appendChild(pageWrapper)
+      })
+    } else {
+      return toast.error('No matching data found for PDF generation.')
     }
 
-    try {
-      // Create a container for all content
-      const printContainer = document.createElement('div')
-
-      // If data array is provided, use it to find divs with matching IDs
-      if (Array.isArray(data) && data.length > 0) {
-        // Loop through the data array
-        data.forEach((item, i) => {
-          // Find the ref with ID matching the data item
-          const ref = printRefs.current.find(element => {
-            if (typeof element === 'object' && element !== null && element.id) {
-              return element.id === item
-            }
-            return false
-          })
-          
-          const groupIndex = tabGroup.findIndex(e => e.title == data[i]);
-          if (groupIndex === -1) {
-            return
-          }
-
-          if (ref) {
-            const pageWrapper = document.createElement('div')
-            // pageWrapper.className = i < data.length - 1 ? 'new-page page-break' : 'new-page'
-            pageWrapper.className = 'new-page page-break'
-
-            // Clone the content to avoid modifying the original
-            const content = ref.cloneNode(true);
-            const rightDivRef = leftprintRefs.current[groupIndex]
-            const rightClone = rightDivRef.cloneNode(true);
-
-            pageWrapper.appendChild(content)
-            // pageWrapper.appendChild(rightClone);
-            printContainer.appendChild(pageWrapper)
-          } else {
-          }
-        })
-      } else {
-        return toast.error('No matching data found for PDF generation.')
-      }
-
-      // Create a hidden iframe to handle the PDF generation
-      const iframe = document.createElement('iframe')
-      iframe.style.display = 'none'
-      document.body.appendChild(iframe)
-
-      // Get current date and time from the provided details
-      const fullDateTime = '2025-05-11 05:30:45' // From your input
-      const formattedDate = fullDateTime.split(' ')[0]
-
-      // User information from the provided details
-      const username = 'DhruviRana4' // From your input
-
-      // Add necessary styles for printing with landscape orientation
-      iframe.contentDocument.write(`
+    // Prepare styled HTML for Puppeteer
+    const fullHtml = `
     <!DOCTYPE html>
     <html>
-    <head>
-      <title>Print Document</title>
-      <style>
-        @page {
-          size: landscape;
-          margin: 0;
-        }
-        
-        @media print {
-          body {
-            margin: 0;
-            // padding: 20px;
-            background-color: white;
-            color: black;
-          }
-          
-          /* Force color printing */
-          * {
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-            color-adjust: exact !important;
-          }
-          
-          /* Page break styling */
-          .page-break {
-            page-break-after: always;
-            break-after: page;
-          }
-          
-          .new-page:last-of-type {
-            page-break-after: avoid;
-            break-after: avoid;
-          }
-          .main-print-div{
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-          }
-          .hidden-print {
-            position: static; /* Restore to default position during print */
-            left: auto;
-            width: 25%;
-          }
-        }
-        
-        /* Non-print styles */
-        body {
-          margin: 0;
-          background-color: white;
-          color: black;
-          font-family: Arial, sans-serif;
-        }
-        
-        /* Page break styling for preview */
-        .page-break {
-          padding: 20px 10px;
-        }
-      </style>
-    </head>
-    <body>
-      <div>
+      <head>
+        <meta charset="utf-8">
+        <title>Report PDF</title>
+        <style>
+          @page { size: landscape; margin: 20px; }
+          body { font-family: Arial, sans-serif; background: white; margin: 0; padding: 10px; }
+          * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+          .page-break { page-break-after: always; }
+        </style>
+      </head>
+      <body>
         ${printContainer.innerHTML}
-      </div>
-    </body>
-    </html>
-    `)
+      </body>
+    </html>`
 
-      iframe.contentDocument.close()
+    // Send HTML to Next.js API route
+    const response = await fetch('http://localhost:3000/api/generate-pdf', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ html: fullHtml })
+    })
 
-      // Trigger print dialog and wait for it to complete
-      iframe.contentWindow.focus()
-
-      // Use a timeout to ensure the content is fully loaded
-      setTimeout(() => {
-        // Generate a dynamic filename with user and date
-        const simpleDate = formattedDate.replace(/-/g, '')
-        const dynamicFileName = `report_${username}_${simpleDate}.pdf`
-
-        // Store the original title
-        const originalTitle = document.title
-
-        // Set the new title (filename)
-        document.title = dynamicFileName
-
-        // Print the document
-        iframe.contentWindow.print();
-        document.title = originalTitle; // Restore the original title immediately after setting the new one
-
-
-        // Listen for the afterprint event to clean up
-        iframe.contentWindow.addEventListener(
-          'afterprint',
-          () => {
-            // Restore the original document title
-            document.title = originalTitle
-
-            // Remove the iframe after printing is done
-            document.body.removeChild(iframe)
-          },
-          { once: true }
-        )
-      }, 500)
-    } catch (err) {
-      console.error('Print error:', err);
-      return toast.error('An error occurred while printing. Please try again.');
+    if (!response.ok) {
+      throw new Error(`Server responded with ${response.status}`)
     }
+
+    // Receive binary PDF
+    const blob = await response.blob()
+    const url = URL.createObjectURL(blob)
+
+    // Dynamic filename
+    const fullDateTime = '2025-05-11 05:30:45'
+    const formattedDate = fullDateTime.split(' ')[0].replace(/-/g, '')
+    const username = 'DhruviRana4'
+    const filename = `report_${username}_${formattedDate}.pdf`
+
+    // Trigger download
+    const link = document.createElement('a')
+    link.href = url
+    link.download = filename
+    link.click()
+    URL.revokeObjectURL(url)
+
+    toast.success('PDF downloaded successfully!')
+  } catch (err) {
+    console.error('Print error:', err)
+    toast.error('An error occurred while generating the PDF.')
   }
+}
+
+
+
+  
 
   const updatePdfPages = async (selectedGroup, pageNumber) => {
     try {
