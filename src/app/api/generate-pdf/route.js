@@ -380,22 +380,12 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function POST(request) {
-  let browser= null;
+  let browser = null;
 
   try {
-    const body = await request.json();
-    const { transactions, options } = body;
-
-    if (!transactions || !Array.isArray(transactions)) {
-      return new Response(
-        JSON.stringify({ error: "Invalid transactions data" }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
-      );
-    }
-
-    // Generate HTML from transactions
-    const htmlContent = generateBankReconciliationHTML({ transactions, options });
-
+    const body = await req.json(); 
+    const { html } = body; 
+    if (!html) { return new Response(JSON.stringify({ error: "HTML not provided" }), { status: 400 }); }
     // Launch headless Chrome for Vercel
     browser = await puppeteer.launch({
       args: chromium.args,
@@ -404,7 +394,7 @@ export async function POST(request) {
     });
 
     const page = await browser.newPage();
-    await page.setContent(htmlContent, { waitUntil: "networkidle0" });
+    await page.setContent(html, { waitUntil: "networkidle0" });
 
     // Generate PDF
     const pdfUint8Array = await page.pdf({
