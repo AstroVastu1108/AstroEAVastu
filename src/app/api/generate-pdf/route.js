@@ -371,7 +371,6 @@
 // }
 // End 
 
-
 import puppeteer from "puppeteer-core";
 import chromium from "@sparticuz/chromium";
 
@@ -382,21 +381,32 @@ export async function POST(request) {
   let browser = null;
 
   try {
-    const body = await req.json(); 
-    const { html } = body; 
-    if (!html) { return new Response(JSON.stringify({ error: "HTML not provided" }), { status: 400 }); }
+    const body = await request.json(); // Fixed: was 'req', should be 'request'
+    const { html } = body;
+    
+    if (!html) {
+      return new Response(
+        JSON.stringify({ error: "HTML not provided" }),
+        { 
+          status: 400,
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+    }
+
     // Launch headless Chrome for Vercel
     browser = await puppeteer.launch({
-      args: chromium.args,
+      args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox'],
       executablePath: await chromium.executablePath(),
       headless: chromium.headless,
+      defaultViewport: chromium.defaultViewport,
     });
 
     const page = await browser.newPage();
     await page.setContent(html, { waitUntil: "networkidle0" });
 
     // Generate PDF
-    const pdfUint8Array = await page.pdf({
+    const pdfBuffer = await page.pdf({
       format: "A4",
       printBackground: true,
       margin: { top: "15mm", right: "15mm", bottom: "15mm", left: "15mm" },
@@ -406,9 +416,6 @@ export async function POST(request) {
     await browser.close();
     browser = null;
 
-    // Convert to Buffer
-    const pdfBuffer = Buffer.from(pdfUint8Array);
-
     // Return PDF response
     return new Response(pdfBuffer, {
       status: 200,
@@ -416,7 +423,6 @@ export async function POST(request) {
         "Content-Type": "application/pdf",
         "Content-Disposition": 'attachment; filename="bank_reconciliation.pdf"',
         "Content-Length": pdfBuffer.length.toString(),
-        "Cache-Control": "no-store",
       },
     });
   } catch (error) {
