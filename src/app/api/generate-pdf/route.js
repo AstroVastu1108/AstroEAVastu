@@ -307,63 +307,113 @@
 //     if (browser) await browser.close();
 //   }
 // }
-import puppeteer from "puppeteer-core";
+
+// working code in local
+// import puppeteer from "puppeteer-core";
+// import chromium from "@sparticuz/chromium";
+// import { NextResponse } from "next/server";
+
+// export const runtime = "nodejs"; // required for Vercel (not edge)
+
+// export async function POST(request) {
+//   let browser = null;
+
+//   try {
+//     const body = await request.json();
+//     const { html, filename = "report.pdf" } = body || {};
+
+//     if (!html || typeof html !== "string") {
+//       return NextResponse.json({ error: "Missing HTML content" }, { status: 400 });
+//     }
+
+//     // Determine if we are in a production (Vercel) environment
+//     const isProd = process.env.VERCEL === "1" || process.env.NODE_ENV === "production";
+
+//     // Choose executable path based on environment
+//     const executablePath = isProd
+//       ? await chromium.executablePath()
+//       : "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
+
+//     browser = await puppeteer.launch({
+//       args: chromium.args,
+//       executablePath,
+//       headless: chromium.headless,
+//       defaultViewport: chromium.defaultViewport,
+//     });
+
+//     const page = await browser.newPage();
+
+//     await page.setContent(html, { waitUntil: "domcontentloaded", timeout: 0 });
+
+//     const pdfBuffer = await page.pdf({
+//       format: "A4",
+//       printBackground: true,
+//       margin: { top: "10mm", right: "5mm", bottom: "10mm", left: "5mm" },
+//       scale: 0.7,
+//     });
+
+//     return new NextResponse(pdfBuffer, {
+//       status: 200,
+//       headers: {
+//         "Content-Type": "application/pdf",
+//         "Content-Disposition": `attachment; filename="${filename}"`,
+//       },
+//     });
+//   } catch (error) {
+//     console.error("POST /api/generate-pdf failure", error);
+//     return NextResponse.json(
+//       { error: "Failed to generate PDF", details: error.message || error.toString() },
+//       { status: 500 }
+//     );
+//   } finally {
+//     if (browser) await browser.close();
+//   }
+// }
+// End 
+
+
+
 import chromium from "@sparticuz/chromium";
-import { NextResponse } from "next/server";
+import puppeteer from "puppeteer-core";
 
-export const runtime = "nodejs"; // required for Vercel (not edge)
-
-export async function POST(request) {
-  let browser = null;
-
+export async function POST(req) {
   try {
-    const body = await request.json();
-    const { html, filename = "report.pdf" } = body || {};
+    const body = await req.json();
+    const { html } = body;
 
-    if (!html || typeof html !== "string") {
-      return NextResponse.json({ error: "Missing HTML content" }, { status: 400 });
+    if (!html) {
+      return new Response(JSON.stringify({ error: "HTML not provided" }), { status: 400 });
     }
 
-    // Determine if we are in a production (Vercel) environment
-    const isProd = process.env.VERCEL === "1" || process.env.NODE_ENV === "production";
+    // 🧠 Dynamically select executable path
+    const executablePath = await chromium.executablePath();
 
-    // Choose executable path based on environment
-    const executablePath = isProd
-      ? await chromium.executablePath()
-      : "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
-
-    browser = await puppeteer.launch({
+    const browser = await puppeteer.launch({
       args: chromium.args,
-      executablePath,
-      headless: chromium.headless,
       defaultViewport: chromium.defaultViewport,
+      executablePath: executablePath,
+      headless: chromium.headless,
     });
 
     const page = await browser.newPage();
+    await page.setContent(html, { waitUntil: "networkidle0" });
 
-    await page.setContent(html, { waitUntil: "domcontentloaded", timeout: 0 });
-
-    const pdfBuffer = await page.pdf({
+    const pdf = await page.pdf({
       format: "A4",
       printBackground: true,
-      margin: { top: "10mm", right: "5mm", bottom: "10mm", left: "5mm" },
-      scale: 0.7,
+      margin: { top: "10mm", right: "10mm", bottom: "10mm", left: "10mm" },
     });
 
-    return new NextResponse(pdfBuffer, {
-      status: 200,
+    await browser.close();
+
+    return new Response(pdf, {
       headers: {
         "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename="${filename}"`,
+        "Content-Disposition": "attachment; filename=report.pdf",
       },
     });
-  } catch (error) {
-    console.error("POST /api/generate-pdf failure", error);
-    return NextResponse.json(
-      { error: "Failed to generate PDF", details: error.message || error.toString() },
-      { status: 500 }
-    );
-  } finally {
-    if (browser) await browser.close();
+  } catch (err) {
+    console.error("PDF generation error:", err);
+    return new Response(JSON.stringify({ error: "PDF generation failed", details: err.message }), { status: 500 });
   }
 }
