@@ -245,7 +245,10 @@ export async function POST(request) {
     // Launch Puppeteer
     browser = await puppeteer.launch({
       headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
+
+      args: process.env.VERCEL
+        ? chromium.args
+        : ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
       executablePath:
         process.env.PUPPETEER_EXECUTABLE_PATH ||
         "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
