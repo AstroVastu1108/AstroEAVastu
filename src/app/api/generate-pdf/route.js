@@ -1,238 +1,6 @@
 import { NextResponse } from "next/server";
 import puppeteer from "puppeteer-core";
-
-// GET handler - generates PDF from URL
-// export async function GET(request) {
-//   let browser;
-
-//   try {
-//     const url = new URL(request.url);
-//     const id = url.searchParams.get("id");
-
-//     if (!id) {
-//       return NextResponse.json({ error: "Missing ID" }, { status: 400 });
-//     }
-
-//     browser = await puppeteer.launch({
-//       headless: true,
-//       args: [
-//         "--no-sandbox",
-//         "--disable-setuid-sandbox",
-//         "--disable-dev-shm-usage",
-//         "--disable-gpu"
-//       ],
-//       executablePath:
-//         process.env.PUPPETEER_EXECUTABLE_PATH || 
-//         "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
-//     });
-
-//     const page = await browser.newPage();
-//     await page.goto(`http://localhost:3000/kundali/${id}`, { 
-//       waitUntil: "networkidle0",
-//       timeout: 30000
-//     });
-
-//     const pdfBuffer = await page.pdf({ 
-//       format: "A4", 
-//       printBackground: true,
-//       margin: { top: "20px", right: "20px", bottom: "20px", left: "20px" }
-//     });
-
-//     return new NextResponse(pdfBuffer, {
-//       status: 200,
-//       headers: {
-//         "Content-Type": "application/pdf",
-//         "Content-Disposition": `attachment; filename="kundali-${id}.pdf"`,
-//       },
-//     });
-
-//   } catch (error) {
-//     console.error("GET /api/generate-pdf failure", error);
-//     return NextResponse.json({ error: "Failed to generate PDF", details: error.message }, { status: 500 });
-//   } finally {
-//     if (browser) await browser.close();
-//   }
-// }
-
-export async function GET(request) {
-  let browser;
-
-  try {
-    const url = new URL(request.url);
-    const id = url.searchParams.get("id");
-
-    if (!id) {
-      return NextResponse.json({ error: "Missing ID" }, { status: 400 });
-    }
-
-    browser = await puppeteer.launch({
-      headless: true,
-      args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage",
-        "--disable-gpu"
-      ],
-      executablePath:
-        process.env.PUPPETEER_EXECUTABLE_PATH ||
-        "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
-    });
-
-    const page = await browser.newPage();
-
-    // Navigate to the page
-    await page.goto(`http://localhost:3000/kundali/${id}`, {
-      waitUntil: "networkidle0",
-      timeout: 60000 // Increased timeout
-    });
-
-    // Wait for the main content to be visible
-    await page.waitForSelector('body', { timeout: 10000 });
-
-    // Additional wait for any dynamic content
-    await page.evaluate(() => {
-      return new Promise((resolve) => {
-        setTimeout(resolve, 2000); // Wait 2 seconds for content to render
-      });
-    });
-
-    const pdfBuffer = await page.pdf({
-      format: "A4",
-      printBackground: true,
-      margin: { top: "20px", right: "20px", bottom: "20px", left: "20px" },
-      preferCSSPageSize: false
-    });
-
-    return new NextResponse(pdfBuffer, {
-      status: 200,
-      headers: {
-        "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename="kundali-${id}.pdf"`,
-      },
-    });
-
-  } catch (error) {
-    console.error("GET /api/generate-pdf failure", error);
-    return NextResponse.json({
-      error: "Failed to generate PDF",
-      details: error.message
-    }, { status: 500 });
-  } finally {
-    if (browser) await browser.close();
-  }
-}
-
-// POST handler - generates PDF from HTML content
-// export async function POST(request) {
-//   let browser;
-
-//   try {
-//     const body = await request.json();
-//     const { html, filename = "report.pdf", viewport, pageSize } = body || {};
-
-//     if (!html || typeof html !== "string") {
-//       return NextResponse.json({ error: "Missing HTML content" }, { status: 400 });
-//     }
-
-//     browser = await puppeteer.launch({
-//       headless: true,
-//       args: [
-//         "--no-sandbox",
-//         "--disable-setuid-sandbox",
-//         "--disable-dev-shm-usage",
-//         "--disable-gpu"
-//       ],
-//       executablePath:
-//         process.env.PUPPETEER_EXECUTABLE_PATH ||
-//         "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
-//     });
-
-//     const page = await browser.newPage();
-
-//     const parseViewportDimension = value => {
-//       const num = Number(value);
-//       return Number.isFinite(num) && num > 0 ? Math.round(num) : undefined;
-//     };
-
-//     // const defaultViewport = { width: 1440, height: 1500, deviceScaleFactor: 1 };
-//     // const requestedViewport = {
-//     //   width: 800,
-//     //   height: 1500,
-//     //   // width: parseViewportDimension(viewport?.width) ?? defaultViewport.width,
-//     //   // height: parseViewportDimension(viewport?.height) ?? defaultViewport.height,
-//     //   deviceScaleFactor: parseViewportDimension(viewport?.deviceScaleFactor) ?? defaultViewport.deviceScaleFactor
-//     // };
-
-//     // if (typeof page.setViewport === 'function') {
-//     //   await page.setViewport(requestedViewport);
-//     // }
-
-//     await page.emulateMediaType('screen');
-//     await page.setContent(html, { waitUntil: "networkidle0" });
-
-//     const parsePageDimension = value => {
-//       if (typeof value === 'string' && value.trim()) {
-//         return value.trim();
-//       }
-
-//       const num = Number(value);
-//       return Number.isFinite(num) && num > 0 ? `${Math.round(num)}px` : undefined;
-//     };
-
-//     const measuredWidth = parsePageDimension(pageSize?.width);
-//     const measuredHeight = parsePageDimension(pageSize?.height);
-//     const measuredMargin = pageSize?.margin;
-
-//     const pdfOptions = {
-//       printBackground: true,
-//       preferCSSPageSize: true
-//     };
-
-//     // if (measuredWidth && measuredHeight) {
-//     //   pdfOptions.width = measuredWidth;
-//     //   pdfOptions.height = '500mm';
-//     //   if (measuredMargin && typeof measuredMargin === 'object') {
-//     //     const sanitizeMargin = value => {
-//     //       if (typeof value === 'string' && value.trim()) return value.trim();
-//     //       const num = Number(value);
-//     //       return Number.isFinite(num) ? `${num}px` : '0';
-//     //     };
-//     //     pdfOptions.margin = {
-//     //       top: sanitizeMargin(measuredMargin.top),
-//     //       right: sanitizeMargin(measuredMargin.right),
-//     //       bottom: sanitizeMargin(measuredMargin.bottom),
-//     //       left: sanitizeMargin(measuredMargin.left)
-//     //     };
-//     //   } else {
-//     //     pdfOptions.margin = { top: "0", right: "0", bottom: "0", left: "0" };
-//     //   }
-//     // } else {
-//       pdfOptions.format = "A4";
-//       pdfOptions.landscape = false;
-//       pdfOptions.margin = { top: "20px", right: "20px", bottom: "20px", left: "20px" };
-//     // }
-
-//     const pdfBuffer = await page.pdf(pdfOptions);
-
-//     return new NextResponse(pdfBuffer, {
-//       status: 200,
-//       headers: {
-//         "Content-Type": "application/pdf",
-//         "Content-Disposition": `attachment; filename="${filename}"`,
-//       },
-//     });
-//   } catch (error) {
-//     console.error("POST /api/generate-pdf failure", error);
-//     return NextResponse.json({ error: "Failed to generate PDF", details: error.message }, { status: 500 });
-//   } finally {
-//     if (browser) await browser.close();
-//   }
-// }
-
-// src/app/api/generate-pdf/route.ts
-
-// import puppeteer from "puppeteer-core";
-import chromium from "@sparticuz/chromium";
+import chromium from "@sparticuz/chromium-min";
 
 export async function POST(request) {
   let browser = null;
@@ -245,62 +13,51 @@ export async function POST(request) {
       return NextResponse.json({ error: "Missing HTML content" }, { status: 400 });
     }
 
-    // Launch Puppeteer
-    browser = await puppeteer.launch({
-      headless: true,
+    // Determine environment
+    const isProduction = !!process.env.VERCEL;
 
-      args: process.env.VERCEL
-        ? chromium.args
+    // Launch Puppeteer with environment-specific config
+    browser = await puppeteer.launch({
+      headless: chromium.headless,
+      args: isProduction 
+        ? [...chromium.args, '--disable-dev-shm-usage']
         : ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
-      executablePath: await chromium.executablePath() 
-      // ||
-      //   process.env.PUPPETEER_EXECUTABLE_PATH ||
-      //   "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+      defaultViewport: chromium.defaultViewport,
+      executablePath: isProduction
+        ? await chromium.executablePath(
+            'https://github.com/Sparticuz/chromium/releases/download/v131.0.1/chromium-v131.0.1-pack.tar'
+          )
+        : process.env.PUPPETEER_EXECUTABLE_PATH || 
+          "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
     });
 
     const page = await browser.newPage();
 
-    await page.setContent(html, {
-      waitUntil: "networkidle0", // Wait for all resources to load
-      timeout: 60000, // 60 second timeout
-    });
-
-    // Optional: prevent slow external requests if everything is inline
+    // Set request interception BEFORE setting content
     await page.setRequestInterception(true);
     page.on("request", (req) => {
-      if (["image", "font", "stylesheet"].includes(req.resourceType())) {
-        req.continue(); // or req.abort() if all resources are inline
+      const resourceType = req.resourceType();
+      if (["stylesheet", "image", "font", "document"].includes(resourceType)) {
+        req.continue();
       } else {
         req.continue();
       }
     });
 
-    // Set content with long timeout or DOMContentLoaded only
+    // Set content and wait for resources to load
     await page.setContent(html, {
-      waitUntil: "domcontentloaded", // faster, no need for networkidle0 if HTML is fully inlined
-      timeout: 0, // unlimited
+      waitUntil: "networkidle0",
+      timeout: 60000,
     });
 
     // Generate PDF
-    // const pdfBuffer = await page.pdf({
-    //   format: "A4",
-    //   printBackground: true,
-    //   preferCSSPageSize: true,
-    //   margin: {
-    //     top: "10mm",
-    //     right: "10mm",
-    //     bottom: "10mm",
-    //     left: "10mm",
-    //   },
-    // });
     const pdfBuffer = await page.pdf({
       format: 'A4',
       printBackground: true,
       preferCSSPageSize: true,
       margin: { top: '10mm', right: '5mm', bottom: '10mm', left: '5mm' },
-      scale: 0.7, // 0.9 can shrink content if too wide
+      scale: 0.7,
     });
-
 
     return new NextResponse(pdfBuffer, {
       status: 200,
