@@ -4,11 +4,11 @@ import puppeteer from "puppeteer-core";
 // GET handler - generates PDF from URL
 // export async function GET(request) {
 //   let browser;
-  
+
 //   try {
 //     const url = new URL(request.url);
 //     const id = url.searchParams.get("id");
-    
+
 //     if (!id) {
 //       return NextResponse.json({ error: "Missing ID" }, { status: 400 });
 //     }
@@ -45,7 +45,7 @@ import puppeteer from "puppeteer-core";
 //         "Content-Disposition": `attachment; filename="kundali-${id}.pdf"`,
 //       },
 //     });
-    
+
 //   } catch (error) {
 //     console.error("GET /api/generate-pdf failure", error);
 //     return NextResponse.json({ error: "Failed to generate PDF", details: error.message }, { status: 500 });
@@ -56,11 +56,11 @@ import puppeteer from "puppeteer-core";
 
 export async function GET(request) {
   let browser;
-  
+
   try {
     const url = new URL(request.url);
     const id = url.searchParams.get("id");
-    
+
     if (!id) {
       return NextResponse.json({ error: "Missing ID" }, { status: 400 });
     }
@@ -74,21 +74,21 @@ export async function GET(request) {
         "--disable-gpu"
       ],
       executablePath:
-        process.env.PUPPETEER_EXECUTABLE_PATH || 
+        process.env.PUPPETEER_EXECUTABLE_PATH ||
         "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
     });
 
     const page = await browser.newPage();
-    
+
     // Navigate to the page
-    await page.goto(`http://localhost:3000/kundali/${id}`, { 
+    await page.goto(`http://localhost:3000/kundali/${id}`, {
       waitUntil: "networkidle0",
       timeout: 60000 // Increased timeout
     });
 
     // Wait for the main content to be visible
     await page.waitForSelector('body', { timeout: 10000 });
-    
+
     // Additional wait for any dynamic content
     await page.evaluate(() => {
       return new Promise((resolve) => {
@@ -96,8 +96,8 @@ export async function GET(request) {
       });
     });
 
-    const pdfBuffer = await page.pdf({ 
-      format: "A4", 
+    const pdfBuffer = await page.pdf({
+      format: "A4",
       printBackground: true,
       margin: { top: "20px", right: "20px", bottom: "20px", left: "20px" },
       preferCSSPageSize: false
@@ -110,12 +110,12 @@ export async function GET(request) {
         "Content-Disposition": `attachment; filename="kundali-${id}.pdf"`,
       },
     });
-    
+
   } catch (error) {
     console.error("GET /api/generate-pdf failure", error);
-    return NextResponse.json({ 
-      error: "Failed to generate PDF", 
-      details: error.message 
+    return NextResponse.json({
+      error: "Failed to generate PDF",
+      details: error.message
     }, { status: 500 });
   } finally {
     if (browser) await browser.close();
@@ -253,6 +253,11 @@ export async function POST(request) {
 
     const page = await browser.newPage();
 
+    await page.setContent(html, {
+      waitUntil: "networkidle0", // Wait for all resources to load
+      timeout: 60000, // 60 second timeout
+    });
+
     // Optional: prevent slow external requests if everything is inline
     await page.setRequestInterception(true);
     page.on("request", (req) => {
@@ -282,12 +287,12 @@ export async function POST(request) {
     //   },
     // });
     const pdfBuffer = await page.pdf({
-  format: 'A4',
-  printBackground: true,
-  preferCSSPageSize: true,
-  margin: { top: '10mm', right: '5mm', bottom: '10mm', left: '5mm' },
-  scale: 0.7, // 0.9 can shrink content if too wide
-});
+      format: 'A4',
+      printBackground: true,
+      preferCSSPageSize: true,
+      margin: { top: '10mm', right: '5mm', bottom: '10mm', left: '5mm' },
+      scale: 0.7, // 0.9 can shrink content if too wide
+    });
 
 
     return new NextResponse(pdfBuffer, {
