@@ -231,6 +231,9 @@ export async function GET(request) {
 
 // src/app/api/generate-pdf/route.ts
 
+// import puppeteer from "puppeteer-core";
+import chromium from "@sparticuz/chromium";
+
 export async function POST(request) {
   let browser = null;
 
@@ -249,9 +252,10 @@ export async function POST(request) {
       args: process.env.VERCEL
         ? chromium.args
         : ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
-      executablePath:
-        process.env.PUPPETEER_EXECUTABLE_PATH ||
-        "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+      executablePath: await chromium.executablePath() 
+      // ||
+      //   process.env.PUPPETEER_EXECUTABLE_PATH ||
+      //   "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
     });
 
     const page = await browser.newPage();
