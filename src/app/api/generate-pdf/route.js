@@ -1,78 +1,71 @@
-import { NextResponse } from "next/server";
-import puppeteer from "puppeteer-core";
-import chromium from "@sparticuz/chromium-min";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(request) {
-  let browser = null;
+export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const urlParam = searchParams.get("url");
+  if (!urlParam) {
+    return new NextResponse("Please provide a URL.", { status: 400 });
+  }
 
+  // Prepend http:// if missing
+  let inputUrl = urlParam.trim();
+  if (!/^https?:\/\//i.test(inputUrl)) {
+    inputUrl = `http://${inputUrl}`;
+  }
+
+  // Validate the URL is a valid HTTP/HTTPS URL
+  let parsedUrl;
   try {
-    const body = await request.json();
-    const { html, filename = "report.pdf" } = body || {};
+    parsedUrl = new URL(inputUrl);
+    if (parsedUrl.protocol !== "http:" && parsedUrl.protocol !== "https:") {
+      return new NextResponse("URL must start with http:// or https://", {
+        status: 400,
+      });
+    }
+  } catch {
+    return new NextResponse("Invalid URL provided.", { status: 400 });
+  }
 
-    if (!html || typeof html !== "string") {
-      return NextResponse.json({ error: "Missing HTML content" }, { status: 400 });
+  let browser;
+  try {
+    const isVercel = !!process.env.VERCEL_ENV;
+    let puppeteer,
+      launchOptions = {
+        headless: true,
+      };
+
+    if (isVercel) {
+      const chromium = (await import("@sparticuz/chromium")).default;
+      puppeteer = await import("puppeteer-core");
+      launchOptions = {
+        ...launchOptions,
+        args: chromium.args,
+        executablePath: await chromium.executablePath(),
+      };
+    } else {
+      puppeteer = await import("puppeteer");
     }
 
-    // Determine environment
-    const isProduction = !!process.env.VERCEL;
-
-    // Launch Puppeteer with environment-specific config
-    browser = await puppeteer.launch({
-      headless: chromium.headless,
-      args: isProduction 
-        ? [...chromium.args, '--disable-dev-shm-usage']
-        : ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
-      defaultViewport: chromium.defaultViewport,
-      executablePath: isProduction
-        ? await chromium.executablePath(
-            'https://github.com/Sparticuz/chromium/releases/download/v131.0.1/chromium-v131.0.1-pack.tar'
-          )
-        : process.env.PUPPETEER_EXECUTABLE_PATH || 
-          "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
-    });
-
+    browser = await puppeteer.launch(launchOptions);
     const page = await browser.newPage();
-
-    // Set request interception BEFORE setting content
-    await page.setRequestInterception(true);
-    page.on("request", (req) => {
-      const resourceType = req.resourceType();
-      if (["stylesheet", "image", "font", "document"].includes(resourceType)) {
-        req.continue();
-      } else {
-        req.continue();
-      }
-    });
-
-    // Set content and wait for resources to load
-    await page.setContent(html, {
-      waitUntil: "networkidle0",
-      timeout: 60000,
-    });
-
-    // Generate PDF
-    const pdfBuffer = await page.pdf({
-      format: 'A4',
-      printBackground: true,
-      preferCSSPageSize: true,
-      margin: { top: '10mm', right: '5mm', bottom: '10mm', left: '5mm' },
-      scale: 0.7,
-    });
-
-    return new NextResponse(pdfBuffer, {
-      status: 200,
+    await page.goto(parsedUrl.toString(), { waitUntil: "networkidle2" });
+    const screenshot = await page.screenshot({ type: "png" });
+    return new NextResponse(screenshot, {
       headers: {
-        "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename="${filename}"`,
+        "Content-Type": "image/png",
+        "Content-Disposition": 'inline; filename="screenshot.png"',
       },
     });
   } catch (error) {
-    console.error("POST /api/generate-pdf failure", error);
-    return NextResponse.json(
-      { error: "Failed to generate PDF", details: error.message || error.toString() },
+    console.error(error);
+    return new NextResponse(
+      "An error occurred while generating the screenshot.",
       { status: 500 }
     );
   } finally {
-    if (browser) await browser.close();
+    if (browser) {
+      await browser.close();
+    }
   }
 }

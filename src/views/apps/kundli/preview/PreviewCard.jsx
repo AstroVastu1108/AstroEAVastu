@@ -987,6 +987,15 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       const formattedDate = fullDateTime.split(' ')[0].replace(/-/g, '');
       const filename = `AstroReport_${formattedDate}.pdf`;
 
+      const response1 = await fetch(
+        `/api/screenshot?url=${encodeURIComponent(url)}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to capture screenshot.");
+      }
+      const blob1 = await response1.blob();
+      console.log("blob1", blob1);
+
       const response = await fetch('/api/generate-pdf', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
