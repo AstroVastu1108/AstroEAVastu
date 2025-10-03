@@ -503,8 +503,8 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
 
   //     const blob = await response.blob();
   //     const url = URL.createObjectURL(blob);
-  // const fullDateTime = BirthDetails.FullDateTime || new Date().toISOString();
-  // const formattedDate = fullDateTime.split(' ')[0].replace(/-/g, '');
+      // const fullDateTime = BirthDetails.FullDateTime || new Date().toISOString();
+      // const formattedDate = fullDateTime.split(' ')[0].replace(/-/g, '');
   //     const filename = `AstroReport_${formattedDate}.pdf`;
 
   //     const link = document.createElement('a');
@@ -824,108 +824,6 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   // };
 
 
-  // const handleMenuDownload = async () => {
-  //   handleClose();
-  //   setLoading(true);
-
-  //   try {
-  //     if (!pageRef.current) {
-  //       throw new Error('Printable content is not available');
-  //     }
-
-  //     // Helper: clone element + inline all computed styles
-  //     const inlineAllStyles = (element) => {
-  //       const clone = element.cloneNode(true);
-  //       const allElements = [clone, ...clone.querySelectorAll("*")];
-  //       const originalElements = [element, ...element.querySelectorAll("*")];
-
-  //       allElements.forEach((el, idx) => {
-  //         const orig = originalElements[idx];
-  //         if (!orig) return;
-  //         const computed = window.getComputedStyle(orig);
-  //         const styleString = Array.from(computed)
-  //           .map(key => `${key}:${computed.getPropertyValue(key)};`)
-  //           .join('');
-  //         el.setAttribute("style", styleString);
-  //       });
-
-  //       return clone;
-  //     };
-
-  //     // Build printable HTML
-  //     const buildPrintableHtml = () => {
-  //       const doc = document.implementation.createHTMLDocument('PDF Report');
-
-  //       // Include base meta
-  //       const metaCharset = doc.createElement('meta');
-  //       metaCharset.setAttribute('charset', 'utf-8');
-  //       doc.head.appendChild(metaCharset);
-
-  //       const viewportMeta = doc.createElement('meta');
-  //       viewportMeta.setAttribute('name', 'viewport');
-  //       viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1');
-  //       doc.head.appendChild(viewportMeta);
-
-  //       // Include project CSS (Tailwind + any global CSS)
-  //       const styleLinks = [
-  //         "https://cdn.jsdelivr.net/npm/tailwindcss@3.3.3/dist/tailwind.min.css",
-  //         `${window.location.origin}/_next/static/css/app.css` // adjust path if needed
-  //       ];
-
-  //       styleLinks.forEach(href => {
-  //         const link = doc.createElement('link');
-  //         link.rel = 'stylesheet';
-  //         link.href = href;
-  //         doc.head.appendChild(link);
-  //       });
-
-  //       // Add @page for A4
-  //       const style = doc.createElement('style');
-  //       style.textContent = `
-  //       @page { size: A4; margin: 10mm; }
-  //       body { background: #fff; font-family: Arial, sans-serif; margin: 0; padding: 0; }
-  //       * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  //     `;
-  //       doc.head.appendChild(style);
-
-  //       // Inline all styles of printable content
-  //       const clonedContent = inlineAllStyles(pageRef.current);
-  //       doc.body.appendChild(clonedContent);
-
-  //       const serializer = new XMLSerializer();
-  //       return `<!DOCTYPE html>${serializer.serializeToString(doc)}`;
-  //     };
-
-  //     const fullHtml = buildPrintableHtml();
-  //          const fullDateTime = BirthDetails.FullDateTime || new Date().toISOString();
-  //     const formattedDate = fullDateTime.split(' ')[0].replace(/-/g, '');
-  //     const filename = `AstroReport_${formattedDate}.pdf`;
-  //     // Send HTML to backend PDF generator
-  //     const response = await fetch('/api/generate-pdf', {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify({ html: fullHtml, filename: filename  })
-  //     });
-
-  //     if (!response.ok) throw new Error(`Server responded with ${response.status}`);
-
-  //     const blob = await response.blob();
-  //     const url = URL.createObjectURL(blob);
-  //     const link = document.createElement('a');
-  //     link.href = url;
-  //     link.download = filename;
-  //     link.click();
-  //     URL.revokeObjectURL(url);
-
-  //     toast.success('PDF downloaded successfully!');
-  //   } catch (error) {
-  //     console.error('Error downloading PDF:', error);
-  //     toast.error('Failed to download PDF');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const handleMenuDownload = async () => {
     handleClose();
     setLoading(true);
@@ -935,10 +833,30 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
         throw new Error('Printable content is not available');
       }
 
-      // Get the HTML with minimal inlining
+      // Helper: clone element + inline all computed styles
+      const inlineAllStyles = (element) => {
+        const clone = element.cloneNode(true);
+        const allElements = [clone, ...clone.querySelectorAll("*")];
+        const originalElements = [element, ...element.querySelectorAll("*")];
+
+        allElements.forEach((el, idx) => {
+          const orig = originalElements[idx];
+          if (!orig) return;
+          const computed = window.getComputedStyle(orig);
+          const styleString = Array.from(computed)
+            .map(key => `${key}:${computed.getPropertyValue(key)};`)
+            .join('');
+          el.setAttribute("style", styleString);
+        });
+
+        return clone;
+      };
+
+      // Build printable HTML
       const buildPrintableHtml = () => {
         const doc = document.implementation.createHTMLDocument('PDF Report');
 
+        // Include base meta
         const metaCharset = doc.createElement('meta');
         metaCharset.setAttribute('charset', 'utf-8');
         doc.head.appendChild(metaCharset);
@@ -948,24 +866,20 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
         viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1');
         doc.head.appendChild(viewportMeta);
 
-        // Include stylesheets
-        const styleLinks = document.querySelectorAll('link[rel="stylesheet"]');
-        styleLinks.forEach(link => {
-          const newLink = doc.createElement('link');
-          newLink.rel = 'stylesheet';
-          newLink.href = link.href;
-          doc.head.appendChild(newLink);
+        // Include project CSS (Tailwind + any global CSS)
+        const styleLinks = [
+          "https://cdn.jsdelivr.net/npm/tailwindcss@3.3.3/dist/tailwind.min.css",
+          `${window.location.origin}/_next/static/css/app.css` // adjust path if needed
+        ];
+
+        styleLinks.forEach(href => {
+          const link = doc.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = href;
+          doc.head.appendChild(link);
         });
 
-        // Copy inline styles from head
-        const styleElements = document.querySelectorAll('style');
-        styleElements.forEach(style => {
-          const newStyle = doc.createElement('style');
-          newStyle.textContent = style.textContent;
-          doc.head.appendChild(newStyle);
-        });
-
-        // Add print styles
+        // Add @page for A4
         const style = doc.createElement('style');
         style.textContent = `
         @page { size: A4; margin: 10mm; }
@@ -974,8 +888,8 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       `;
         doc.head.appendChild(style);
 
-        // Clone the content WITHOUT inlining all styles
-        const clonedContent = pageRef.current.cloneNode(true);
+        // Inline all styles of printable content
+        const clonedContent = inlineAllStyles(pageRef.current);
         doc.body.appendChild(clonedContent);
 
         const serializer = new XMLSerializer();
@@ -983,14 +897,14 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       };
 
       const fullHtml = buildPrintableHtml();
-      const fullDateTime = BirthDetails.FullDateTime || new Date().toISOString();
+           const fullDateTime = BirthDetails.FullDateTime || new Date().toISOString();
       const formattedDate = fullDateTime.split(' ')[0].replace(/-/g, '');
       const filename = `AstroReport_${formattedDate}.pdf`;
-
+      // Send HTML to backend PDF generator
       const response = await fetch('/api/generate-pdf', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ html: fullHtml, filename: filename })
+        body: JSON.stringify({ html: fullHtml, filename: filename  })
       });
 
       if (!response.ok) throw new Error(`Server responded with ${response.status}`);
@@ -1011,6 +925,8 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       setLoading(false);
     }
   };
+
+
 
 
   const handleMenuTimeTool = () => {
