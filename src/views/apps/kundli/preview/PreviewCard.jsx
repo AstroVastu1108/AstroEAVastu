@@ -823,109 +823,6 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   //   }
   // };
 
-
-  // const handleMenuDownload = async () => {
-  //   handleClose();
-  //   setLoading(true);
-
-  //   try {
-  //     if (!pageRef.current) {
-  //       throw new Error('Printable content is not available');
-  //     }
-
-  //     // Helper: clone element + inline all computed styles
-  //     const inlineAllStyles = (element) => {
-  //       const clone = element.cloneNode(true);
-  //       const allElements = [clone, ...clone.querySelectorAll("*")];
-  //       const originalElements = [element, ...element.querySelectorAll("*")];
-
-  //       allElements.forEach((el, idx) => {
-  //         const orig = originalElements[idx];
-  //         if (!orig) return;
-  //         const computed = window.getComputedStyle(orig);
-  //         const styleString = Array.from(computed)
-  //           .map(key => `${key}:${computed.getPropertyValue(key)};`)
-  //           .join('');
-  //         el.setAttribute("style", styleString);
-  //       });
-
-  //       return clone;
-  //     };
-
-  //     // Build printable HTML
-  //     const buildPrintableHtml = () => {
-  //       const doc = document.implementation.createHTMLDocument('PDF Report');
-
-  //       // Include base meta
-  //       const metaCharset = doc.createElement('meta');
-  //       metaCharset.setAttribute('charset', 'utf-8');
-  //       doc.head.appendChild(metaCharset);
-
-  //       const viewportMeta = doc.createElement('meta');
-  //       viewportMeta.setAttribute('name', 'viewport');
-  //       viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1');
-  //       doc.head.appendChild(viewportMeta);
-
-  //       // Include project CSS (Tailwind + any global CSS)
-  //       const styleLinks = [
-  //         "https://cdn.jsdelivr.net/npm/tailwindcss@3.3.3/dist/tailwind.min.css",
-  //         `${window.location.origin}/_next/static/css/app.css` // adjust path if needed
-  //       ];
-
-  //       styleLinks.forEach(href => {
-  //         const link = doc.createElement('link');
-  //         link.rel = 'stylesheet';
-  //         link.href = href;
-  //         doc.head.appendChild(link);
-  //       });
-
-  //       // Add @page for A4
-  //       const style = doc.createElement('style');
-  //       style.textContent = `
-  //       @page { size: A4; margin: 10mm; }
-  //       body { background: #fff; font-family: Arial, sans-serif; margin: 0; padding: 0; }
-  //       * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  //     `;
-  //       doc.head.appendChild(style);
-
-  //       // Inline all styles of printable content
-  //       const clonedContent = inlineAllStyles(pageRef.current);
-  //       doc.body.appendChild(clonedContent);
-
-  //       const serializer = new XMLSerializer();
-  //       return `<!DOCTYPE html>${serializer.serializeToString(doc)}`;
-  //     };
-
-  //     const fullHtml = buildPrintableHtml();
-  //          const fullDateTime = BirthDetails.FullDateTime || new Date().toISOString();
-  //     const formattedDate = fullDateTime.split(' ')[0].replace(/-/g, '');
-  //     const filename = `AstroReport_${formattedDate}.pdf`;
-  //     // Send HTML to backend PDF generator
-  //     const response = await fetch('/api/generate-pdf', {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify({ html: fullHtml, filename: filename  })
-  //     });
-
-  //     if (!response.ok) throw new Error(`Server responded with ${response.status}`);
-
-  //     const blob = await response.blob();
-  //     const url = URL.createObjectURL(blob);
-  //     const link = document.createElement('a');
-  //     link.href = url;
-  //     link.download = filename;
-  //     link.click();
-  //     URL.revokeObjectURL(url);
-
-  //     toast.success('PDF downloaded successfully!');
-  //   } catch (error) {
-  //     console.error('Error downloading PDF:', error);
-  //     toast.error('Failed to download PDF');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const handleMenuDownload = async () => {
     handleClose();
     setLoading(true);
@@ -935,92 +832,146 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
         throw new Error('Printable content is not available');
       }
 
-      // Get the HTML with minimal inlining
-      const buildPrintableHtml = () => {
-        const doc = document.implementation.createHTMLDocument('PDF Report');
+      // Get all stylesheets content
+      const getStylesheetContent = async () => {
+        let allStyles = '';
+        
+        // Get inline styles
+        const inlineStyles = Array.from(document.querySelectorAll('style'))
+          .map(style => style.textContent)
+          .join('\n');
+        
+        allStyles += inlineStyles;
 
-        const metaCharset = doc.createElement('meta');
-        metaCharset.setAttribute('charset', 'utf-8');
-        doc.head.appendChild(metaCharset);
+        // Get external stylesheets
+        const links = Array.from(document.querySelectorAll('link[rel="stylesheet"]'));
+        for (const link of links) {
+          try {
+            if (link.href.startsWith(window.location.origin)) {
+              const response = await fetch(link.href);
+              const css = await response.text();
+              allStyles += css;
+            }
+          } catch (error) {
+            console.warn('Could not load stylesheet:', link.href);
+          }
+        }
 
-        const viewportMeta = doc.createElement('meta');
-        viewportMeta.setAttribute('name', 'viewport');
-        viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1');
-        doc.head.appendChild(viewportMeta);
-
-        // Include stylesheets
-        const styleLinks = document.querySelectorAll('link[rel="stylesheet"]');
-        styleLinks.forEach(link => {
-          const newLink = doc.createElement('link');
-          newLink.rel = 'stylesheet';
-          newLink.href = link.href;
-          doc.head.appendChild(newLink);
-        });
-
-        // Copy inline styles from head
-        const styleElements = document.querySelectorAll('style');
-        styleElements.forEach(style => {
-          const newStyle = doc.createElement('style');
-          newStyle.textContent = style.textContent;
-          doc.head.appendChild(newStyle);
-        });
-
-        // Add print styles
-        const style = doc.createElement('style');
-        style.textContent = `
-        @page { size: A4; margin: 10mm; }
-        body { background: #fff; font-family: Arial, sans-serif; margin: 0; padding: 0; }
-        * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-      `;
-        doc.head.appendChild(style);
-
-        // Clone the content WITHOUT inlining all styles
-        const clonedContent = pageRef.current.cloneNode(true);
-        doc.body.appendChild(clonedContent);
-
-        const serializer = new XMLSerializer();
-        return `<!DOCTYPE html>${serializer.serializeToString(doc)}`;
+        return allStyles;
       };
 
-      const fullHtml = buildPrintableHtml();
-      const fullDateTime = BirthDetails.FullDateTime || new Date().toISOString();
+      const styles = await getStylesheetContent();
+
+      // Clone the content
+      const clonedContent = pageRef.current.cloneNode(true);
+
+      // Build the complete HTML
+      const fullHtml = `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Astro Report PDF</title>
+            <style>
+              @page { 
+                size: A4; 
+                margin: 10mm; 
+              }
+              
+              body { 
+                background: #fff !important; 
+                font-family: Arial, sans-serif; 
+                margin: 0; 
+                padding: 0; 
+                font-size: 12px;
+              }
+              
+              * { 
+                -webkit-print-color-adjust: exact !important; 
+                print-color-adjust: exact !important; 
+                color-adjust: exact !important;
+              }
+
+              /* Include all page styles */
+              ${styles}
+
+              /* Additional print-specific styles */
+              .chart-name {
+                background: #f0f0f0 !important;
+                padding: 10px !important;
+                margin-bottom: 10px !important;
+              }
+
+              table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+              }
+
+              img {
+                max-width: 100% !important;
+                height: auto !important;
+              }
+
+              .previewCard {
+                width: 100% !important;
+                max-width: none !important;
+              }
+            </style>
+          </head>
+          <body>
+            ${clonedContent.outerHTML}
+          </body>
+        </html>
+      `;
+
+      // Get filename
+      const fullDateTime = BirthDetails?.FullDateTime || new Date().toISOString();
       const formattedDate = fullDateTime.split(' ')[0].replace(/-/g, '');
       const filename = `AstroReport_${formattedDate}.pdf`;
 
-      const response1 = await fetch(
-        `/api/screenshot?url=${encodeURIComponent(url)}`
-      );
-      if (!response.ok) {
-        throw new Error("Failed to capture screenshot.");
-      }
-      const blob1 = await response1.blob();
-      console.log("blob1", blob1);
-
+      // Send to PDF generation API
       const response = await fetch('/api/generate-pdf', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ html: fullHtml, filename: filename })
+        headers: { 
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          html: fullHtml, 
+          filename: filename 
+        })
       });
 
-      if (!response.ok) throw new Error(`Server responded with ${response.status}`);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`Server responded with ${response.status}: ${errorData.details || 'Unknown error'}`);
+      }
 
+      // Download the PDF
       const blob = await response.blob();
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
       link.download = filename;
+      document.body.appendChild(link);
       link.click();
+      document.body.removeChild(link);
       URL.revokeObjectURL(url);
 
       toast.success('PDF downloaded successfully!');
     } catch (error) {
       console.error('Error downloading PDF:', error);
-      toast.error('Failed to download PDF');
+      
+      // Check if it's a payload size error
+      if (error.message.includes('413') || error.message.includes('Too Large')) {
+        toast.error('PDF content is too large. Please try reducing the content or contact support.');
+      } else {
+        toast.error(`Failed to download PDF: ${error.message}`);
+      }
     } finally {
       setLoading(false);
     }
   };
-
 
   const handleMenuTimeTool = () => {
     handleClose();
