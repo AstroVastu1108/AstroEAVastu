@@ -3,6 +3,10 @@
     "app/api/**/*.js": {
       "maxDuration": 10,
       "memory": 1024
+    },
+    "api/generate-pdf/route.js": {
+      "maxDuration": 60,
+      "memory": 3008
     }
   }
 }
