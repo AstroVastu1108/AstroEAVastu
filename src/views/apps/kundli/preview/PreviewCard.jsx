@@ -839,330 +839,140 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   //   }
   // };
 
-  // const handleMenuDownload = async () => {
-  //   handleClose();
-  //   setLoading(true);
-
-  //   try {
-  //     if (!pageRef.current) {
-  //       throw new Error('Printable content is not available');
-  //     }
-
-  //     // Get all stylesheets content
-  //     const getStylesheetContent = async () => {
-  //       let allStyles = '';
-
-  //       // Get inline styles
-  //       const inlineStyles = Array.from(document.querySelectorAll('style'))
-  //         .map(style => style.textContent)
-  //         .join('\n');
-
-  //       allStyles += inlineStyles;
-
-  //       // Get external stylesheets
-  //       const links = Array.from(document.querySelectorAll('link[rel="stylesheet"]'));
-  //       for (const link of links) {
-  //         try {
-  //           if (link.href.startsWith(window.location.origin)) {
-  //             const response = await fetch(link.href);
-  //             const css = await response.text();
-  //             allStyles += css;
-  //           }
-  //         } catch (error) {
-  //           console.warn('Could not load stylesheet:', link.href);
-  //         }
-  //       }
-
-  //       return allStyles;
-  //     };
-
-  //     const styles = await getStylesheetContent();
-
-  //     // Clone the content
-  //     const clonedContent = pageRef.current.cloneNode(true);
-
-  //     // Build the complete HTML
-  //     const fullHtml = `
-  //       <!DOCTYPE html>
-  //       <html>
-  //         <head>
-  //           <meta charset="utf-8">
-  //           <meta name="viewport" content="width=device-width, initial-scale=1">
-  //           <title>Astro Report PDF</title>
-  //           <style>
-  //             @page { 
-  //               size: A4; 
-  //               margin: 10mm; 
-  //             }
-
-  //             body { 
-  //               background: #fff !important; 
-  //               font-family: Arial, sans-serif; 
-  //               margin: 0; 
-  //               padding: 0; 
-  //               font-size: 12px;
-  //             }
-
-  //             * { 
-  //               -webkit-print-color-adjust: exact !important; 
-  //               print-color-adjust: exact !important; 
-  //               color-adjust: exact !important;
-  //             }
-
-  //             /* Include all page styles */
-  //             ${styles}
-
-  //             /* Additional print-specific styles */
-              
-  //             .previewCard {
-  //               width: 100% !important;
-  //               max-width: none !important;
-  //             }
-  //           </style>
-  //         </head>
-  //         <body>
-  //           ${clonedContent.outerHTML}
-  //         </body>
-  //       </html>
-  //     `;
-
-  //     // Get filename
-  //     const fullDateTime = BirthDetails?.FullDateTime || new Date().toISOString();
-  //     const formattedDate = fullDateTime.split(' ')[0].replace(/-/g, '');
-  //     const filename = `AstroReport_${formattedDate}.pdf`;
-
-  //     // Send to PDF generation API
-  //     const response = await fetch('/api/generate-pdf', {
-  //       method: 'POST',
-  //       headers: { 
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({ 
-  //         html: fullHtml, 
-  //         filename: filename 
-  //       })
-  //     });
-
-  //     if (!response.ok) {
-  //       const errorData = await response.json();
-  //       throw new Error(`Server responded with ${response.status}: ${errorData.details || 'Unknown error'}`);
-  //     }
-
-  //     // Download the PDF
-  //     const blob = await response.blob();
-  //     const url = URL.createObjectURL(blob);
-  //     const link = document.createElement('a');
-  //     link.href = url;
-  //     link.download = filename;
-  //     document.body.appendChild(link);
-  //     link.click();
-  //     document.body.removeChild(link);
-  //     URL.revokeObjectURL(url);
-
-  //     toast.success('PDF downloaded successfully!');
-  //   } catch (error) {
-  //     console.error('Error downloading PDF:', error);
-
-  //     // Check if it's a payload size error
-  //     if (error.message.includes('413') || error.message.includes('Too Large')) {
-  //       toast.error('PDF content is too large. Please try reducing the content or contact support.');
-  //     } else {
-  //       toast.error(`Failed to download PDF: ${error.message}`);
-  //     }
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const handleMenuDownload = async () => {
-  handleClose();
-  setLoading(true);
+    handleClose();
+    setLoading(true);
 
-  try {
-    if (!pageRef.current) {
-      throw new Error('Printable content is not available');
-    }
+    try {
+      if (!pageRef.current) {
+        throw new Error('Printable content is not available');
+      }
 
-    // Get only the CSS that's actually used in the content
-    const getUsedStyles = () => {
-      const usedSelectors = new Set();
-      const elements = pageRef.current.querySelectorAll('*');
-      
-      // Collect all classes, IDs, and tags used
-      elements.forEach(el => {
-        // Add tag name
-        usedSelectors.add(el.tagName.toLowerCase());
-        
-        // Add classes
-        el.classList.forEach(cls => {
-          usedSelectors.add(`.${cls}`);
-        });
-        
-        // Add ID
-        if (el.id) {
-          usedSelectors.add(`#${el.id}`);
-        }
-      });
+      // Get all stylesheets content
+      const getStylesheetContent = async () => {
+        let allStyles = '';
 
-      return usedSelectors;
-    };
+        // Get inline styles
+        const inlineStyles = Array.from(document.querySelectorAll('style'))
+          .map(style => style.textContent)
+          .join('\n');
 
-    // Filter CSS to only include rules that match elements in the content
-    const getRelevantStyles = () => {
-      const usedSelectors = getUsedStyles();
-      let relevantStyles = '';
+        allStyles += inlineStyles;
 
-      Array.from(document.styleSheets).forEach(sheet => {
-        try {
-          const rules = Array.from(sheet.cssRules || sheet.rules || []);
-          rules.forEach(rule => {
-            if (rule.type === CSSRule.STYLE_RULE) {
-              const selector = rule.selectorText;
-              
-              // Check if this rule applies to any element in our content
-              const isRelevant = selector.split(',').some(sel => {
-                const trimmed = sel.trim();
-                // Check for class, id, or tag matches
-                if (trimmed.startsWith('.')) {
-                  return usedSelectors.has(trimmed.split(/[\s:>+~\[]/)[0]);
-                } else if (trimmed.startsWith('#')) {
-                  return usedSelectors.has(trimmed.split(/[\s:>+~\[]/)[0]);
-                } else {
-                  const tag = trimmed.split(/[\s:>+~\[.#]/)[0];
-                  return usedSelectors.has(tag);
-                }
-              });
-
-              if (isRelevant) {
-                let cssText = rule.cssText;
-                
-                // Fix relative URLs
-                if (sheet.href) {
-                  const baseUrl = new URL(sheet.href).href.split('/').slice(0, -1).join('/');
-                  cssText = cssText.replace(/url\(['"]?(?!data:)(?!http)(.*?)['"]?\)/g, (match, url) => {
-                    try {
-                      const resolvedUrl = new URL(url, baseUrl + '/').href;
-                      return `url('${resolvedUrl}')`;
-                    } catch {
-                      return match;
-                    }
-                  });
-                }
-                
-                relevantStyles += cssText + '\n';
-              }
-            } else if (rule.type === CSSRule.MEDIA_RULE || rule.type === CSSRule.KEYFRAMES_RULE) {
-              // Include media queries and keyframes as-is
-              relevantStyles += rule.cssText + '\n';
+        // Get external stylesheets
+        const links = Array.from(document.querySelectorAll('link[rel="stylesheet"]'));
+        for (const link of links) {
+          try {
+            if (link.href.startsWith(window.location.origin)) {
+              const response = await fetch(link.href);
+              const css = await response.text();
+              allStyles += css;
             }
-          });
-        } catch (e) {
-          // CORS blocked
-          console.warn('Cannot access stylesheet:', sheet.href);
+          } catch (error) {
+            console.warn('Could not load stylesheet:', link.href);
+          }
         }
+
+        return allStyles;
+      };
+
+      const styles = await getStylesheetContent();
+
+      // Clone the content
+      const clonedContent = pageRef.current.cloneNode(true);
+
+      // Build the complete HTML
+      const fullHtml = `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Astro Report PDF</title>
+            <style>
+              @page { 
+                size: A4; 
+                margin: 10mm; 
+              }
+
+              body { 
+                background: #fff !important; 
+                font-family: Arial, sans-serif; 
+                margin: 0; 
+                padding: 0; 
+                font-size: 12px;
+              }
+
+              * { 
+                -webkit-print-color-adjust: exact !important; 
+                print-color-adjust: exact !important; 
+                color-adjust: exact !important;
+              }
+
+              /* Include all page styles */
+              ${styles}
+
+              /* Additional print-specific styles */
+              
+              .previewCard {
+                width: 100% !important;
+                max-width: none !important;
+              }
+            </style>
+          </head>
+          <body>
+            ${clonedContent.outerHTML}
+          </body>
+        </html>
+      `;
+
+      // Get filename
+      const fullDateTime = BirthDetails?.FullDateTime || new Date().toISOString();
+      const formattedDate = fullDateTime.split(' ')[0].replace(/-/g, '');
+      const filename = `AstroReport_${formattedDate}.pdf`;
+
+      // Send to PDF generation API
+      const response = await fetch('/api/generate-pdf', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          html: fullHtml, 
+          filename: filename 
+        })
       });
 
-      return relevantStyles;
-    };
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`Server responded with ${response.status}: ${errorData.details || 'Unknown error'}`);
+      }
 
-    console.log('Extracting relevant styles...');
-    const styles = getRelevantStyles();
+      // Download the PDF
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
 
-    // Clone the content
-    const clonedContent = pageRef.current.cloneNode(true);
+      toast.success('PDF downloaded successfully!');
+    } catch (error) {
+      console.error('Error downloading PDF:', error);
 
-    // Get only essential CSS variables that are actually used
-    const rootStyles = window.getComputedStyle(document.documentElement);
-    const usedVars = new Set();
-    
-    // Find which CSS variables are referenced in the styles
-    const varMatches = styles.matchAll(/var\((--[^)]+)\)/g);
-    for (const match of varMatches) {
-      usedVars.add(match[1].trim());
+      // Check if it's a payload size error
+      if (error.message.includes('413') || error.message.includes('Too Large')) {
+        toast.error('PDF content is too large. Please try reducing the content or contact support.');
+      } else {
+        toast.error(`Failed to download PDF: ${error.message}`);
+      }
+    } finally {
+      setLoading(false);
     }
-
-    const cssVariables = Array.from(usedVars)
-      .map(varName => `${varName}: ${rootStyles.getPropertyValue(varName)};`)
-      .filter(v => !v.includes('undefined'))
-      .join('\n    ');
-
-    // Build the complete HTML
-    const fullHtml = `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Astro Report PDF</title>
-<style>
-:root {${cssVariables}}
-@page{size: A4;margin: 10mm;}
-body{background:#fff!important;font-family:Arial,sans-serif;margin:0;padding:0;font-size:12px;}
-*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important;box-sizing:border-box;}
-${styles}
-.previewCard{width:100%!important;max-width:none!important;}
-img{max-width:100%;height:auto;}
-table{border-collapse:collapse;}
-</style>
-</head>
-<body>${clonedContent.outerHTML}</body>
-</html>`;
-
-    // Check payload size
-    const sizeInMB = new Blob([fullHtml]).size / (1024 * 1024);
-    console.log(`HTML payload size: ${sizeInMB.toFixed(2)} MB`);
-
-    if (sizeInMB > 4.5) {
-      throw new Error('Content is too large for PDF generation. Please reduce the content size.');
-    }
-
-    // Get filename
-    const fullDateTime = BirthDetails?.FullDateTime || new Date().toISOString();
-    const formattedDate = fullDateTime.split(' ')[0].replace(/-/g, '');
-    const filename = `AstroReport_${formattedDate}.pdf`;
-
-    console.log('Sending to PDF API...');
-
-    // Send to PDF generation API
-    const response = await fetch('/api/generate-pdf', {
-      method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ 
-        html: fullHtml, 
-        filename: filename 
-      })
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(`Server responded with ${response.status}: ${errorData.details || 'Unknown error'}`);
-    }
-
-    // Download the PDF
-    const blob = await response.blob();
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-
-    toast.success('PDF downloaded successfully!');
-  } catch (error) {
-    console.error('Error downloading PDF:', error);
-
-    if (error.message.includes('too large') || error.message.includes('413')) {
-      toast.error('PDF content is too large. Try reducing content or splitting into multiple PDFs.');
-    } else {
-      toast.error(`Failed to download PDF: ${error.message}`);
-    }
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   const handleMenuTimeTool = () => {
     handleClose();
