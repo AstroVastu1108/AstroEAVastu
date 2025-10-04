@@ -1,41 +1,48 @@
 import { NextResponse } from "next/server";
-import puppeteer from "puppeteer-core";
 
 export async function GET(request) {
   let browser;
 
   try {
     const url = new URL(request.url);
-    const id = url.searchParams.get("id") || "K25MI-AIQB0-A0UK7-A6DZT"; // Default ID or extract from URL
+    const id = url.searchParams.get("id") || "K25MI-AIQB0-A0UK7-A6DZT";
 
-    browser = await puppeteer.launch({
-      headless: true,
-      args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage",
-        "--disable-gpu"
-      ],
-      executablePath:
-        process.env.PUPPETEER_EXECUTABLE_PATH ||
-        "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
-    });
+    const isVercel = !!process.env.VERCEL_ENV;
+    let puppeteer, launchOptions = { headless: true };
 
+    if (isVercel) {
+      const chromium = (await import("@sparticuz/chromium")).default;
+      puppeteer = await import("puppeteer-core");
+      launchOptions = {
+        ...launchOptions,
+        args: chromium.args,
+        executablePath: await chromium.executablePath(),
+      };
+    } else {
+      puppeteer = await import("puppeteer");
+      launchOptions = {
+        ...launchOptions,
+        args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
+        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+      };
+    }
+
+    browser = await puppeteer.launch(launchOptions);
     const page = await browser.newPage();
 
     // Navigate to the page
     await page.goto(`http://localhost:3000/kundali/${id}`, {
       waitUntil: "networkidle0",
-      timeout: 60000 // Increased timeout
+      timeout: 60000
     });
 
     // Wait for the main content to be visible
     await page.waitForSelector('body', { timeout: 10000 });
 
-    // Additional wait for any dynamic content
+    // Wait for dynamic content
     await page.evaluate(() => {
       return new Promise((resolve) => {
-        setTimeout(resolve, 2000); // Wait 2 seconds for content to render
+        setTimeout(resolve, 2000);
       });
     });
 
@@ -99,20 +106,20 @@ export async function POST(request) {
     browser = await puppeteer.launch(launchOptions);
     const page = await browser.newPage();
 
-    // Optional: prevent slow external requests if everything is inline
-    await page.setRequestInterception(true);
-    page.on("request", (req) => {
-      if (["image", "font", "stylesheet"].includes(req.resourceType())) {
-        req.continue(); // or req.abort() if all resources are inline
-      } else {
-        req.continue();
-      }
+    // DON'T intercept requests - let everything load naturally
+    // This allows CSS, fonts, and images to load properly
+    
+    // Set content with proper wait
+    await page.setContent(html, {
+      waitUntil: "domcontentloaded",
+      timeout: 30000, // 30 second timeout
     });
 
-    // Set content with long timeout or DOMContentLoaded only
-    await page.setContent(html, {
-      waitUntil: "domcontentloaded", // faster, no need for networkidle0 if HTML is fully inlined
-      timeout: 0, // unlimited
+    // Give additional time for styles to apply
+    await page.evaluate(() => {
+      return new Promise((resolve) => {
+        setTimeout(resolve, 1000);
+      });
     });
 
     const pdfBuffer = await page.pdf({
@@ -120,7 +127,7 @@ export async function POST(request) {
       printBackground: true,
       preferCSSPageSize: true,
       margin: { top: '10mm', right: '5mm', bottom: '10mm', left: '5mm' },
-      scale: 0.7, // 0.9 can shrink content if too wide
+      scale: 0.7,
     });
 
     return new NextResponse(pdfBuffer, {

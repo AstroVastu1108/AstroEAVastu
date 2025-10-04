@@ -982,47 +982,48 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
         throw new Error('Printable content is not available');
       }
 
-      // Enhanced function to capture all styles including MUI
-      const getAllStyles = async () => {
+      // Get ALL styles including MUI
+      const getStylesheetContent = async () => {
         let allStyles = '';
 
-        // 1. Get all inline styles from <style> tags
+        // 1. Get ALL inline styles (including MUI emotion styles)
         const inlineStyles = Array.from(document.querySelectorAll('style'))
-          .map(style => style.textContent || style.innerHTML)
+          .map(style => style.textContent)
           .join('\n');
+
         allStyles += inlineStyles;
 
-        // 2. Get external stylesheets
+        // 2. Get computed styles from ALL stylesheets
         const links = Array.from(document.querySelectorAll('link[rel="stylesheet"]'));
         for (const link of links) {
           try {
-            if (link.href.startsWith(window.location.origin) ||
-              link.href.includes('fonts.googleapis.com') ||
-              link.href.includes('mui')) {
-              const response = await fetch(link.href);
+            // Try to fetch regardless of origin (CORS permitting)
+            const response = await fetch(link.href, { mode: 'cors' });
+            if (response.ok) {
               const css = await response.text();
-              allStyles += css;
+              allStyles += '\n' + css;
             }
           } catch (error) {
-            console.warn('Could not load stylesheet:', link.href);
+            console.warn('Could not load stylesheet:', link.href, error);
+            // Continue anyway - we have inline styles as fallback
           }
         }
 
-        // 3. Extract CSS rules from all stylesheets (including MUI CSS-in-JS)
+        // 3. Get all CSSStyleSheet rules (catches MUI and other dynamically injected styles)
         try {
-          Array.from(document.styleSheets).forEach((sheet, index) => {
+          for (const sheet of document.styleSheets) {
             try {
-              if (sheet.cssRules || sheet.rules) {
-                const rules = Array.from(sheet.cssRules || sheet.rules);
-                const cssText = rules.map(rule => rule.cssText).join('\n');
-                if (cssText) {
-                  allStyles += `\n/* Stylesheet ${index} */\n${cssText}\n`;
-                }
+              if (sheet.cssRules) {
+                const rules = Array.from(sheet.cssRules)
+                  .map(rule => rule.cssText)
+                  .join('\n');
+                allStyles += '\n' + rules;
               }
             } catch (e) {
-              console.warn('Cannot access stylesheet rules:', e);
+              // CORS or access error - skip this sheet
+              console.warn('Could not access stylesheet rules:', e);
             }
-          });
+          }
         } catch (error) {
           console.warn('Error accessing stylesheets:', error);
         }
@@ -1030,63 +1031,12 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
         return allStyles;
       };
 
-      // Function to inline computed styles for critical elements
-      const inlineComputedStyles = (element) => {
-        const walker = document.createTreeWalker(
-          element,
-          NodeFilter.SHOW_ELEMENT,
-          null,
-          false
-        );
+      const styles = await getStylesheetContent();
 
-        const elements = [element];
-        let node;
-        while (node = walker.nextNode()) {
-          elements.push(node);
-        }
-
-        elements.forEach(el => {
-          try {
-            const computed = window.getComputedStyle(el);
-            const important = [
-              'display', 'position', 'top', 'left', 'right', 'bottom',
-              'width', 'height', 'min-width', 'min-height', 'max-width', 'max-height',
-              'margin', 'margin-top', 'margin-right', 'margin-bottom', 'margin-left',
-              'padding', 'padding-top', 'padding-right', 'padding-bottom', 'padding-left',
-              'border', 'border-width', 'border-style', 'border-color', 'border-radius',
-              'background', 'background-color', 'background-image', 'background-size',
-              'color', 'font-family', 'font-size', 'font-weight', 'font-style', 'line-height',
-              'text-align', 'text-decoration', 'text-transform', 'white-space',
-              'flex', 'flex-direction', 'flex-wrap', 'justify-content', 'align-items',
-              'grid', 'grid-template-columns', 'grid-template-rows', 'gap',
-              'opacity', 'visibility', 'overflow', 'z-index', 'box-shadow', 'transform',
-              'box-sizing', 'vertical-align'
-            ];
-
-            let styles = el.getAttribute('style') || '';
-            important.forEach(prop => {
-              const value = computed.getPropertyValue(prop);
-              if (value && value !== 'none' && value !== 'auto' && value !== 'initial') {
-                styles += `${prop}: ${value} !important; `;
-              }
-            });
-
-            if (styles) {
-              el.setAttribute('style', styles);
-            }
-          } catch (error) {
-            console.warn('Error computing styles for element:', error);
-          }
-        });
-      };
-
-      const styles = await getAllStyles();
+      // Clone the content
       const clonedContent = pageRef.current.cloneNode(true);
 
-      // Inline computed styles for the cloned content
-      inlineComputedStyles(clonedContent);
-
-      // Build the complete HTML with enhanced MUI support
+      // Build the complete HTML with comprehensive styles
       const fullHtml = `
       <!DOCTYPE html>
       <html>
@@ -1102,49 +1052,16 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
             
             body { 
               background: #fff !important; 
-              font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+              font-family: Arial, sans-serif; 
               margin: 0; 
               padding: 0; 
               font-size: 12px;
-              line-height: 1.43;
-              letter-spacing: 0.01071em;
             }
             
             * { 
               -webkit-print-color-adjust: exact !important; 
               print-color-adjust: exact !important; 
               color-adjust: exact !important;
-              box-sizing: border-box;
-            }
-
-            /* MUI Base styles */
-            .MuiButton-root {
-              font-family: "Roboto", "Helvetica", "Arial", sans-serif !important;
-              font-weight: 500 !important;
-              font-size: 0.875rem !important;
-              line-height: 1.75 !important;
-              border-radius: 4px !important;
-              text-transform: uppercase !important;
-            }
-
-            .MuiGrid-root {
-              box-sizing: border-box !important;
-              display: flex !important;
-              flex-wrap: wrap !important;
-            }
-
-            .MuiGrid-item {
-              margin: 0 !important;
-            }
-
-            .MuiPaper-root {
-              background-color: #fff !important;
-              color: rgba(0, 0, 0, 0.87) !important;
-              box-shadow: none !important;
-            }
-
-            .MuiTypography-root {
-              margin: 0 !important;
             }
 
             /* Include all captured styles */
@@ -1172,22 +1089,24 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               max-width: none !important;
             }
 
-            /* Force visibility for hidden elements */
-            [style*="display: none"] {
-              display: block !important;
+            /* Force MUI styles if not loaded */
+            .MuiPaper-root {
+              background-color: #fff;
+              color: rgba(0, 0, 0, 0.87);
+              transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+              border-radius: 4px;
             }
 
-            /* Ensure proper spacing */
-            .MuiGrid-spacing-xs-2 > .MuiGrid-item {
-              padding: 8px !important;
+            .MuiTypography-root {
+              margin: 0;
             }
 
-            /* Print-specific overrides */
-            @media print {
-              * {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-              }
+            .MuiButton-root {
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              position: relative;
+              box-sizing: border-box;
             }
           </style>
         </head>
@@ -1215,7 +1134,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData = await response.json().catch(() => ({}));
         throw new Error(`Server responded with ${response.status}: ${errorData.details || 'Unknown error'}`);
       }
 
