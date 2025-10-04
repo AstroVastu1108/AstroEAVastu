@@ -823,6 +823,156 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   //   }
   // };
 
+  // const handleMenuDownload = async () => {
+  //   handleClose();
+  //   setLoading(true);
+
+  //   try {
+  //     if (!pageRef.current) {
+  //       throw new Error('Printable content is not available');
+  //     }
+
+  //     // Get all stylesheets content
+  //     const getStylesheetContent = async () => {
+  //       let allStyles = '';
+
+  //       // Get inline styles
+  //       const inlineStyles = Array.from(document.querySelectorAll('style'))
+  //         .map(style => style.textContent)
+  //         .join('\n');
+
+  //       allStyles += inlineStyles;
+
+  //       // Get external stylesheets
+  //       const links = Array.from(document.querySelectorAll('link[rel="stylesheet"]'));
+  //       for (const link of links) {
+  //         try {
+  //           if (link.href.startsWith(window.location.origin)) {
+  //             const response = await fetch(link.href);
+  //             const css = await response.text();
+  //             allStyles += css;
+  //           }
+  //         } catch (error) {
+  //           console.warn('Could not load stylesheet:', link.href);
+  //         }
+  //       }
+
+  //       return allStyles;
+  //     };
+
+  //     const styles = await getStylesheetContent();
+
+  //     // Clone the content
+  //     const clonedContent = pageRef.current.cloneNode(true);
+
+  //     // Build the complete HTML
+  //     const fullHtml = `
+  //       <!DOCTYPE html>
+  //       <html>
+  //         <head>
+  //           <meta charset="utf-8">
+  //           <meta name="viewport" content="width=device-width, initial-scale=1">
+  //           <title>Astro Report PDF</title>
+  //           <style>
+  //             @page { 
+  //               size: A4; 
+  //               margin: 10mm; 
+  //             }
+
+  //             body { 
+  //               background: #fff !important; 
+  //               font-family: Arial, sans-serif; 
+  //               margin: 0; 
+  //               padding: 0; 
+  //               font-size: 12px;
+  //             }
+
+  //             * { 
+  //               -webkit-print-color-adjust: exact !important; 
+  //               print-color-adjust: exact !important; 
+  //               color-adjust: exact !important;
+  //             }
+
+  //             /* Include all page styles */
+  //             ${styles}
+
+  //             /* Additional print-specific styles */
+  //             .chart-name {
+  //               background: #f0f0f0 !important;
+  //               padding: 10px !important;
+  //               margin-bottom: 10px !important;
+  //             }
+
+  //             table {
+  //               width: 100% !important;
+  //               border-collapse: collapse !important;
+  //             }
+
+  //             img {
+  //               max-width: 100% !important;
+  //               height: auto !important;
+  //             }
+
+  //             .previewCard {
+  //               width: 100% !important;
+  //               max-width: none !important;
+  //             }
+  //           </style>
+  //         </head>
+  //         <body>
+  //           ${clonedContent.outerHTML}
+  //         </body>
+  //       </html>
+  //     `;
+
+  //     // Get filename
+  //     const fullDateTime = BirthDetails?.FullDateTime || new Date().toISOString();
+  //     const formattedDate = fullDateTime.split(' ')[0].replace(/-/g, '');
+  //     const filename = `AstroReport_${formattedDate}.pdf`;
+
+  //     // Send to PDF generation API
+  //     const response = await fetch('/api/generate-pdf', {
+  //       method: 'POST',
+  //       headers: { 
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({ 
+  //         html: fullHtml, 
+  //         filename: filename 
+  //       })
+  //     });
+
+  //     if (!response.ok) {
+  //       const errorData = await response.json();
+  //       throw new Error(`Server responded with ${response.status}: ${errorData.details || 'Unknown error'}`);
+  //     }
+
+  //     // Download the PDF
+  //     const blob = await response.blob();
+  //     const url = URL.createObjectURL(blob);
+  //     const link = document.createElement('a');
+  //     link.href = url;
+  //     link.download = filename;
+  //     document.body.appendChild(link);
+  //     link.click();
+  //     document.body.removeChild(link);
+  //     URL.revokeObjectURL(url);
+
+  //     toast.success('PDF downloaded successfully!');
+  //   } catch (error) {
+  //     console.error('Error downloading PDF:', error);
+
+  //     // Check if it's a payload size error
+  //     if (error.message.includes('413') || error.message.includes('Too Large')) {
+  //       toast.error('PDF content is too large. Please try reducing the content or contact support.');
+  //     } else {
+  //       toast.error(`Failed to download PDF: ${error.message}`);
+  //     }
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const handleMenuDownload = async () => {
     handleClose();
     setLoading(true);
@@ -832,22 +982,23 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
         throw new Error('Printable content is not available');
       }
 
-      // Get all stylesheets content
-      const getStylesheetContent = async () => {
+      // Enhanced function to capture all styles including MUI
+      const getAllStyles = async () => {
         let allStyles = '';
-        
-        // Get inline styles
+
+        // 1. Get all inline styles from <style> tags
         const inlineStyles = Array.from(document.querySelectorAll('style'))
-          .map(style => style.textContent)
+          .map(style => style.textContent || style.innerHTML)
           .join('\n');
-        
         allStyles += inlineStyles;
 
-        // Get external stylesheets
+        // 2. Get external stylesheets
         const links = Array.from(document.querySelectorAll('link[rel="stylesheet"]'));
         for (const link of links) {
           try {
-            if (link.href.startsWith(window.location.origin)) {
+            if (link.href.startsWith(window.location.origin) ||
+              link.href.includes('fonts.googleapis.com') ||
+              link.href.includes('mui')) {
               const response = await fetch(link.href);
               const css = await response.text();
               allStyles += css;
@@ -857,73 +1008,194 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
           }
         }
 
+        // 3. Extract CSS rules from all stylesheets (including MUI CSS-in-JS)
+        try {
+          Array.from(document.styleSheets).forEach((sheet, index) => {
+            try {
+              if (sheet.cssRules || sheet.rules) {
+                const rules = Array.from(sheet.cssRules || sheet.rules);
+                const cssText = rules.map(rule => rule.cssText).join('\n');
+                if (cssText) {
+                  allStyles += `\n/* Stylesheet ${index} */\n${cssText}\n`;
+                }
+              }
+            } catch (e) {
+              console.warn('Cannot access stylesheet rules:', e);
+            }
+          });
+        } catch (error) {
+          console.warn('Error accessing stylesheets:', error);
+        }
+
         return allStyles;
       };
 
-      const styles = await getStylesheetContent();
+      // Function to inline computed styles for critical elements
+      const inlineComputedStyles = (element) => {
+        const walker = document.createTreeWalker(
+          element,
+          NodeFilter.SHOW_ELEMENT,
+          null,
+          false
+        );
 
-      // Clone the content
+        const elements = [element];
+        let node;
+        while (node = walker.nextNode()) {
+          elements.push(node);
+        }
+
+        elements.forEach(el => {
+          try {
+            const computed = window.getComputedStyle(el);
+            const important = [
+              'display', 'position', 'top', 'left', 'right', 'bottom',
+              'width', 'height', 'min-width', 'min-height', 'max-width', 'max-height',
+              'margin', 'margin-top', 'margin-right', 'margin-bottom', 'margin-left',
+              'padding', 'padding-top', 'padding-right', 'padding-bottom', 'padding-left',
+              'border', 'border-width', 'border-style', 'border-color', 'border-radius',
+              'background', 'background-color', 'background-image', 'background-size',
+              'color', 'font-family', 'font-size', 'font-weight', 'font-style', 'line-height',
+              'text-align', 'text-decoration', 'text-transform', 'white-space',
+              'flex', 'flex-direction', 'flex-wrap', 'justify-content', 'align-items',
+              'grid', 'grid-template-columns', 'grid-template-rows', 'gap',
+              'opacity', 'visibility', 'overflow', 'z-index', 'box-shadow', 'transform',
+              'box-sizing', 'vertical-align'
+            ];
+
+            let styles = el.getAttribute('style') || '';
+            important.forEach(prop => {
+              const value = computed.getPropertyValue(prop);
+              if (value && value !== 'none' && value !== 'auto' && value !== 'initial') {
+                styles += `${prop}: ${value} !important; `;
+              }
+            });
+
+            if (styles) {
+              el.setAttribute('style', styles);
+            }
+          } catch (error) {
+            console.warn('Error computing styles for element:', error);
+          }
+        });
+      };
+
+      const styles = await getAllStyles();
       const clonedContent = pageRef.current.cloneNode(true);
 
-      // Build the complete HTML
+      // Inline computed styles for the cloned content
+      inlineComputedStyles(clonedContent);
+
+      // Build the complete HTML with enhanced MUI support
       const fullHtml = `
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <title>Astro Report PDF</title>
-            <style>
-              @page { 
-                size: A4; 
-                margin: 10mm; 
-              }
-              
-              body { 
-                background: #fff !important; 
-                font-family: Arial, sans-serif; 
-                margin: 0; 
-                padding: 0; 
-                font-size: 12px;
-              }
-              
-              * { 
-                -webkit-print-color-adjust: exact !important; 
-                print-color-adjust: exact !important; 
-                color-adjust: exact !important;
-              }
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <title>Astro Report PDF</title>
+          <style>
+            @page { 
+              size: A4; 
+              margin: 10mm; 
+            }
+            
+            body { 
+              background: #fff !important; 
+              font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+              margin: 0; 
+              padding: 0; 
+              font-size: 12px;
+              line-height: 1.43;
+              letter-spacing: 0.01071em;
+            }
+            
+            * { 
+              -webkit-print-color-adjust: exact !important; 
+              print-color-adjust: exact !important; 
+              color-adjust: exact !important;
+              box-sizing: border-box;
+            }
 
-              /* Include all page styles */
-              ${styles}
+            /* MUI Base styles */
+            .MuiButton-root {
+              font-family: "Roboto", "Helvetica", "Arial", sans-serif !important;
+              font-weight: 500 !important;
+              font-size: 0.875rem !important;
+              line-height: 1.75 !important;
+              border-radius: 4px !important;
+              text-transform: uppercase !important;
+            }
 
-              /* Additional print-specific styles */
-              .chart-name {
-                background: #f0f0f0 !important;
-                padding: 10px !important;
-                margin-bottom: 10px !important;
-              }
+            .MuiGrid-root {
+              box-sizing: border-box !important;
+              display: flex !important;
+              flex-wrap: wrap !important;
+            }
 
-              table {
-                width: 100% !important;
-                border-collapse: collapse !important;
-              }
+            .MuiGrid-item {
+              margin: 0 !important;
+            }
 
-              img {
-                max-width: 100% !important;
-                height: auto !important;
-              }
+            .MuiPaper-root {
+              background-color: #fff !important;
+              color: rgba(0, 0, 0, 0.87) !important;
+              box-shadow: none !important;
+            }
 
-              .previewCard {
-                width: 100% !important;
-                max-width: none !important;
+            .MuiTypography-root {
+              margin: 0 !important;
+            }
+
+            /* Include all captured styles */
+            ${styles}
+
+            /* Additional print-specific styles */
+            .chart-name {
+              background: #f0f0f0 !important;
+              padding: 10px !important;
+              margin-bottom: 10px !important;
+            }
+
+            table {
+              width: 100% !important;
+              border-collapse: collapse !important;
+            }
+
+            img {
+              max-width: 100% !important;
+              height: auto !important;
+            }
+
+            .previewCard {
+              width: 100% !important;
+              max-width: none !important;
+            }
+
+            /* Force visibility for hidden elements */
+            [style*="display: none"] {
+              display: block !important;
+            }
+
+            /* Ensure proper spacing */
+            .MuiGrid-spacing-xs-2 > .MuiGrid-item {
+              padding: 8px !important;
+            }
+
+            /* Print-specific overrides */
+            @media print {
+              * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
               }
-            </style>
-          </head>
-          <body>
-            ${clonedContent.outerHTML}
-          </body>
-        </html>
-      `;
+            }
+          </style>
+        </head>
+        <body>
+          ${clonedContent.outerHTML}
+        </body>
+      </html>
+    `;
 
       // Get filename
       const fullDateTime = BirthDetails?.FullDateTime || new Date().toISOString();
@@ -933,12 +1205,12 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       // Send to PDF generation API
       const response = await fetch('/api/generate-pdf', {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
-          html: fullHtml, 
-          filename: filename 
+        body: JSON.stringify({
+          html: fullHtml,
+          filename: filename
         })
       });
 
@@ -961,7 +1233,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       toast.success('PDF downloaded successfully!');
     } catch (error) {
       console.error('Error downloading PDF:', error);
-      
+
       // Check if it's a payload size error
       if (error.message.includes('413') || error.message.includes('Too Large')) {
         toast.error('PDF content is too large. Please try reducing the content or contact support.');
