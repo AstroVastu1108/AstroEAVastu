@@ -983,174 +983,137 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       throw new Error('Printable content is not available');
     }
 
-    // Get all CSS with proper URL resolution
-    const getStylesheetContent = async () => {
-      let allStyles = '';
+    // Get only the CSS that's actually used in the content
+    const getUsedStyles = () => {
+      const usedSelectors = new Set();
+      const elements = pageRef.current.querySelectorAll('*');
+      
+      // Collect all classes, IDs, and tags used
+      elements.forEach(el => {
+        // Add tag name
+        usedSelectors.add(el.tagName.toLowerCase());
+        
+        // Add classes
+        el.classList.forEach(cls => {
+          usedSelectors.add(`.${cls}`);
+        });
+        
+        // Add ID
+        if (el.id) {
+          usedSelectors.add(`#${el.id}`);
+        }
+      });
 
-      // Get all stylesheets from CSSOM first (most reliable)
-      const cssomStyles = [];
+      return usedSelectors;
+    };
+
+    // Filter CSS to only include rules that match elements in the content
+    const getRelevantStyles = () => {
+      const usedSelectors = getUsedStyles();
+      let relevantStyles = '';
+
       Array.from(document.styleSheets).forEach(sheet => {
         try {
           const rules = Array.from(sheet.cssRules || sheet.rules || []);
           rules.forEach(rule => {
-            let cssText = rule.cssText;
-            
-            // Fix relative URLs in CSS
-            if (sheet.href) {
-              const baseUrl = new URL(sheet.href).href.split('/').slice(0, -1).join('/');
-              cssText = cssText.replace(/url\(['"]?(?!data:)(?!http)(.*?)['"]?\)/g, (match, url) => {
-                const resolvedUrl = new URL(url, baseUrl).href;
-                return `url('${resolvedUrl}')`;
+            if (rule.type === CSSRule.STYLE_RULE) {
+              const selector = rule.selectorText;
+              
+              // Check if this rule applies to any element in our content
+              const isRelevant = selector.split(',').some(sel => {
+                const trimmed = sel.trim();
+                // Check for class, id, or tag matches
+                if (trimmed.startsWith('.')) {
+                  return usedSelectors.has(trimmed.split(/[\s:>+~\[]/)[0]);
+                } else if (trimmed.startsWith('#')) {
+                  return usedSelectors.has(trimmed.split(/[\s:>+~\[]/)[0]);
+                } else {
+                  const tag = trimmed.split(/[\s:>+~\[.#]/)[0];
+                  return usedSelectors.has(tag);
+                }
               });
+
+              if (isRelevant) {
+                let cssText = rule.cssText;
+                
+                // Fix relative URLs
+                if (sheet.href) {
+                  const baseUrl = new URL(sheet.href).href.split('/').slice(0, -1).join('/');
+                  cssText = cssText.replace(/url\(['"]?(?!data:)(?!http)(.*?)['"]?\)/g, (match, url) => {
+                    try {
+                      const resolvedUrl = new URL(url, baseUrl + '/').href;
+                      return `url('${resolvedUrl}')`;
+                    } catch {
+                      return match;
+                    }
+                  });
+                }
+                
+                relevantStyles += cssText + '\n';
+              }
+            } else if (rule.type === CSSRule.MEDIA_RULE || rule.type === CSSRule.KEYFRAMES_RULE) {
+              // Include media queries and keyframes as-is
+              relevantStyles += rule.cssText + '\n';
             }
-            
-            cssomStyles.push(cssText);
           });
         } catch (e) {
-          // CORS blocked stylesheet
-          console.warn('Cannot access stylesheet:', sheet.href, e);
+          // CORS blocked
+          console.warn('Cannot access stylesheet:', sheet.href);
         }
       });
 
-      allStyles += cssomStyles.join('\n') + '\n';
-
-      // Get inline styles
-      const inlineStyles = Array.from(document.querySelectorAll('style'))
-        .map(style => style.textContent)
-        .join('\n');
-
-      allStyles += inlineStyles + '\n';
-
-      // Get external stylesheets from same origin
-      const links = Array.from(document.querySelectorAll('link[rel="stylesheet"]'));
-      
-      for (const link of links) {
-        try {
-          if (link.href && link.href.startsWith(window.location.origin)) {
-            const response = await fetch(link.href);
-            if (response.ok) {
-              let css = await response.text();
-              
-              // Resolve relative URLs
-              const baseUrl = link.href.split('/').slice(0, -1).join('/');
-              css = css.replace(/url\(['"]?(?!data:)(?!http)(.*?)['"]?\)/g, (match, url) => {
-                const resolvedUrl = new URL(url, baseUrl).href;
-                return `url('${resolvedUrl}')`;
-              });
-              
-              allStyles += css + '\n';
-            }
-          }
-        } catch (error) {
-          console.warn('Could not load stylesheet:', link.href);
-        }
-      }
-
-      return allStyles;
+      return relevantStyles;
     };
 
-    // Get computed styles for each element and apply inline
-    const applyInlineStyles = (originalElement, clonedElement) => {
-      const computed = window.getComputedStyle(originalElement);
-      
-      // Get all style properties
-      const styleString = Array.from(computed).map(prop => {
-        const value = computed.getPropertyValue(prop);
-        // Skip default/initial values and specific props that break PDF rendering
-        if (value && value !== 'none' && value !== 'auto' && value !== 'normal') {
-          return `${prop}:${value}`;
-        }
-        return '';
-      }).filter(Boolean).join(';');
-      
-      if (styleString) {
-        clonedElement.setAttribute('style', styleString);
-      }
+    console.log('Extracting relevant styles...');
+    const styles = getRelevantStyles();
 
-      // Recursively apply to children
-      const originalChildren = Array.from(originalElement.children);
-      const clonedChildren = Array.from(clonedElement.children);
-      
-      originalChildren.forEach((child, index) => {
-        if (clonedChildren[index]) {
-          applyInlineStyles(child, clonedChildren[index]);
-        }
-      });
-    };
-
-    console.log('Fetching styles...');
-    const styles = await getStylesheetContent();
-
-    console.log('Cloning content...');
+    // Clone the content
     const clonedContent = pageRef.current.cloneNode(true);
-    
-    console.log('Applying inline styles...');
-    applyInlineStyles(pageRef.current, clonedContent);
 
-    // Get CSS variables from root
+    // Get only essential CSS variables that are actually used
     const rootStyles = window.getComputedStyle(document.documentElement);
-    const cssVariables = Array.from(rootStyles).filter(prop => prop.startsWith('--'))
-      .map(prop => `${prop}: ${rootStyles.getPropertyValue(prop)};`)
+    const usedVars = new Set();
+    
+    // Find which CSS variables are referenced in the styles
+    const varMatches = styles.matchAll(/var\((--[^)]+)\)/g);
+    for (const match of varMatches) {
+      usedVars.add(match[1].trim());
+    }
+
+    const cssVariables = Array.from(usedVars)
+      .map(varName => `${varName}: ${rootStyles.getPropertyValue(varName)};`)
+      .filter(v => !v.includes('undefined'))
       .join('\n    ');
 
     // Build the complete HTML
-    const fullHtml = `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <meta charset="utf-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1">
-          <title>Astro Report PDF</title>
-          <style>
-            :root {
-              ${cssVariables}
-            }
+    const fullHtml = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Astro Report PDF</title>
+<style>
+:root {${cssVariables}}
+@page{size: A4;margin: 10mm;}
+body{background:#fff!important;font-family:Arial,sans-serif;margin:0;padding:0;font-size:12px;}
+*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important;box-sizing:border-box;}
+${styles}
+.previewCard{width:100%!important;max-width:none!important;}
+img{max-width:100%;height:auto;}
+table{border-collapse:collapse;}
+</style>
+</head>
+<body>${clonedContent.outerHTML}</body>
+</html>`;
 
-            @page { 
-              size: A4; 
-              margin: 10mm; 
-            }
+    // Check payload size
+    const sizeInMB = new Blob([fullHtml]).size / (1024 * 1024);
+    console.log(`HTML payload size: ${sizeInMB.toFixed(2)} MB`);
 
-            body { 
-              background: #fff !important; 
-              font-family: Arial, sans-serif; 
-              margin: 0; 
-              padding: 0; 
-              font-size: 12px;
-            }
-
-            * { 
-              -webkit-print-color-adjust: exact !important; 
-              print-color-adjust: exact !important;
-              color-adjust: exact !important;
-              box-sizing: border-box;
-            }
-
-            /* Include all page styles */
-            ${styles}
-
-            /* Additional print-specific styles */
-            .previewCard {
-              width: 100% !important;
-              max-width: none !important;
-            }
-
-            /* Fix common PDF rendering issues */
-            img {
-              max-width: 100%;
-              height: auto;
-            }
-
-            table {
-              border-collapse: collapse;
-            }
-          </style>
-        </head>
-        <body>
-          ${clonedContent.outerHTML}
-        </body>
-      </html>
-    `;
+    if (sizeInMB > 4.5) {
+      throw new Error('Content is too large for PDF generation. Please reduce the content size.');
+    }
 
     // Get filename
     const fullDateTime = BirthDetails?.FullDateTime || new Date().toISOString();
@@ -1191,9 +1154,8 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   } catch (error) {
     console.error('Error downloading PDF:', error);
 
-    // Check if it's a payload size error
-    if (error.message.includes('413') || error.message.includes('Too Large')) {
-      toast.error('PDF content is too large. Please try reducing the content or contact support.');
+    if (error.message.includes('too large') || error.message.includes('413')) {
+      toast.error('PDF content is too large. Try reducing content or splitting into multiple PDFs.');
     } else {
       toast.error(`Failed to download PDF: ${error.message}`);
     }
