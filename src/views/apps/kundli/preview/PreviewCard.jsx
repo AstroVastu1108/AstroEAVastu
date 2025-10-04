@@ -793,8 +793,21 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
 
       const { html: fullHtml, viewport, pageSize } = await buildPrintableDocument();
 
-      const compressed = pako.gzip(fullHtml);
-      const base64 = btoa(String.fromCharCode(...compressed));
+      // const compressed = pako.gzip(fullHtml);
+      // const base64 = btoa(String.fromCharCode(...compressed));
+      function uint8ToBase64(uint8Array) {
+  let CHUNK_SIZE = 0x8000; // 32KB
+  let result = '';
+  for (let i = 0; i < uint8Array.length; i += CHUNK_SIZE) {
+    const chunk = uint8Array.subarray(i, i + CHUNK_SIZE);
+    result += String.fromCharCode.apply(null, chunk);
+  }
+  return btoa(result);
+}
+
+const compressed = pako.gzip(fullHtml);
+const base64 = uint8ToBase64(compressed);
+
       const response = await fetch('/api/generate-pdf', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
