@@ -5,6 +5,7 @@ import Grid from '@mui/material/Grid'
 import House from '@/components/preview/House/House'
 import SummaryAspect from '@/components/preview/PlanetSummary/PlanetSummary'
 import InfoTable from '@/components/preview/InfoTable/InfoTable'
+import pako from 'pako';
 
 // Style Imports
 import "./preview.css"
@@ -792,10 +793,12 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
 
       const { html: fullHtml, viewport, pageSize } = await buildPrintableDocument();
 
+      const compressed = pako.gzip(fullHtml);
+      const base64 = btoa(String.fromCharCode(...compressed));
       const response = await fetch('/api/generate-pdf', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ html: fullHtml, viewport, pageSize })
+        body: JSON.stringify({ html: base64, viewport, pageSize })
       });
 
       if (!response.ok) {
@@ -835,12 +838,12 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   //     // Get all stylesheets content
   //     const getStylesheetContent = async () => {
   //       let allStyles = '';
-        
+
   //       // Get inline styles
   //       const inlineStyles = Array.from(document.querySelectorAll('style'))
   //         .map(style => style.textContent)
   //         .join('\n');
-        
+
   //       allStyles += inlineStyles;
 
   //       // Get external stylesheets
@@ -878,7 +881,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   //               size: A4; 
   //               margin: 10mm; 
   //             }
-              
+
   //             body { 
   //               background: #fff !important; 
   //               font-family: Arial, sans-serif; 
@@ -886,7 +889,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   //               padding: 0; 
   //               font-size: 12px;
   //             }
-              
+
   //             * { 
   //               -webkit-print-color-adjust: exact !important; 
   //               print-color-adjust: exact !important; 
@@ -961,7 +964,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   //     toast.success('PDF downloaded successfully!');
   //   } catch (error) {
   //     console.error('Error downloading PDF:', error);
-      
+
   //     // Check if it's a payload size error
   //     if (error.message.includes('413') || error.message.includes('Too Large')) {
   //       toast.error('PDF content is too large. Please try reducing the content or contact support.');
