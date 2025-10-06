@@ -383,6 +383,7 @@
 
           .rahi-Div {
             /* padding: 0px 8px; */
+            height: 100%;
             display: flex;
             border-bottom: 1px solid var(--border-color);
             width: 100%;
@@ -428,6 +429,7 @@
               flex-direction: column;
               border-left: 1px solid var(--border-color);
               width: 80%;
+              height: 100% !important;
               /* border-right: 1px solid var(--border-color); */
 
               .planet-Div {
@@ -435,8 +437,10 @@
                 /* display: flex; */
                 border-bottom: 1px solid var(--border-color);
                 display: flex;
+              height: 100% !important;
 
                 .planet-Div-sub {
+                  height: 100%;
                   width: 60%;
                   border-right: 1px solid var(--border-color);
                 }
