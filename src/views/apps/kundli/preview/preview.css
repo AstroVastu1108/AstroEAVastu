@@ -103,7 +103,8 @@
 }
 
 .chart-title {
-  font-family: var(--primary-font-sb);
+  /* font-family: var(--primary-font-sb); */
+  font-weight: bold;
   color: var(--primary-color);
   padding-block-end: 10px;
   text-align: center;
@@ -241,11 +242,12 @@
 
       .house-header {
         display: flex;
+        /* border: 1px solid red; */
         width: 100%;
         background-color: var(--primary-color);
         color: #fff;
-        font-size: 14px;
-        /* font-weight: 500; */
+        font-size: 16px;
+        /* font-weight: 700; */
         justify-content: space-between;
         align-items: center;
         padding-block: 4px;
@@ -259,20 +261,23 @@
 
           .house-title-number {
             inline-size: 18mm;
+            text-wrap: nowrap;
             display: inline-block;
             /* color: #fcd53f; */
-            /* font-weight: 500; */
+            font-weight: 600;
             color: var(--secondary-color);
           }
 
           .arrow {
             inline-size: 8mm;
             display: inline-block;
+            padding-left: 5px;
           }
 
           .house-title-desc {
             inline-size: 120mm;
             display: inline-block;
+            text-wrap: nowrap;
             /* font-weight: 400; */
           }
         }
@@ -280,7 +285,7 @@
         .house-title-nakshatra {
           display: flex;
           text-align: end;
-          /* font-weight: 400; */
+          font-weight: 6  00;
           gap: 8px;
 
           .house-title-energyfield {
@@ -300,7 +305,7 @@
 
         .house-body-Div1 {
           padding: 8px;
-          width: 25%;
+          width: 15%;
           border-right: 1px solid var(--border-color);
           border-left: 1px solid var(--border-color);
           /* border-bottom: 1px solid var(--border-color); */
@@ -374,7 +379,7 @@
 
         .house-body-Div2 {
           padding: 0px 0px;
-          width: 75%;
+          width: 85%;
           border-right: 1px solid var(--border-color);
           /* border-bottom: 1px solid var(--border-color); */
           display: flex;
@@ -664,62 +669,7 @@
   }
 }
 
-@media print {
-  body * {
-    visibility: hidden;
-  }
 
-  .previewCard * {
-    visibility: visible;
-  }
-
-  .previewCard {
-    width: 210px;
-    color: #cc1616;
-    /* inline-size: 100vw;
-    block-size: 100vw;
-    position: fixed;
-    inset: 0;
-    box-sizing: border-box; */
-  }
-
-  /* .Birthdetail-div {
-
-    background-color: #cc1616;
-
-  } */
-
-  /* color: inherit;  */
-
-  /* #__next :is(.sm\:\!p-12) {
-    padding: 0rem !important;
-  } */
-  [data-mui-color-scheme='dark'] {
-    --mui-palette-text-primary: rgba(47, 43, 61, 0.9);
-    --mui-palette-action-hover: rgba(47, 43, 61, 0.06);
-    --mui-palette-text-secondary: rgba(47, 43, 61, 0.7);
-    --mui-palette-divider: rgba(47, 43, 61, 0.12);
-  }
-
-  /* Only show the .preview-card element when printing */
-  .previewCard * {
-    visibility: visible;
-  }
-
-  /* .previewCard {
-    inline-size: 100%;
-    block-size: 100%;
-    position: fixed;
-    inset: 0;
-    box-sizing: border-box;
-  } */
-
-  @media (max-width: 600px) {
-    .previewCard {
-      position: relative !important;
-    }
-  }
-}
 
 /*
 .rowheader {

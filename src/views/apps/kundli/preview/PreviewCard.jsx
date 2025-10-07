@@ -27,6 +27,7 @@ import LifeEvent from '@/components/preview/LifeEvent/LifeEvent'
 import Loader from '@/components/common/Loader/Loader'
 import ConfirmationPopup from '@/components/common/ConfirmationPopup/ConfirmationPopup'
 import { toast } from 'react-toastify'
+import PDFView from './pdfView'
 
 const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, TransitData, setTransitData, getTransitData, getDivisionalChartData, DivisionalData, setDivisionalData, birthDate, setKundliData, SetKundliConstData }) => {
   // var
@@ -90,739 +91,6 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     setAnchorEl(null);
   };
 
-  // const handleMenuDownload = async () => {
-  //   handleClose();
-  //   setLoading(true);
-  //   const kundaliId = BirthDetails.KundaliID;
-  //   const printContainer = document.createElement('div')
-  //   const content = pageRef.current.cloneNode(true)
-  //   printContainer.appendChild(content)
-  //   const fullHtml = `
-  //   <!DOCTYPE html>
-  //   <html>
-  //     <head>
-  //       <meta charset="utf-8">
-  //       <title>Report PDF</title>
-  //       <style>
-  //         @page { size: landscape; margin: 20px; }
-  //         body { font-family: Arial, sans-serif; background: white; margin: 0; padding: 10px; }
-  //         * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  //         .page-break { page-break-after: always; }
-  //       </style>
-  //     </head>
-  //     <body>
-  //       ${printContainer.innerHTML}
-  //     </body>
-  //   </html>`
-  //  // Send HTML to Next.js API route
-  //      const response = await fetch('/api/generate-pdf', {
-  //        method: 'POST',
-  //        headers: { 'Content-Type': 'application/json' },
-  //        body: JSON.stringify({ html: fullHtml })
-  //      })
-
-  //      if (!response.ok) {
-  //        throw new Error(`Server responded with ${response.status}`)
-  //      }
-
-  //      // Receive binary PDF
-  //      const blob = await response.blob()
-  //      const url = URL.createObjectURL(blob)
-
-  //      // Dynamic filename
-  //      const fullDateTime = '2025-05-11 05:30:45'
-  //      const formattedDate = fullDateTime.split(' ')[0].replace(/-/g, '')
-
-  //      const filename = `AstroReport_${formattedDate}.pdf`
-
-  //      // Trigger download
-  //      const link = document.createElement('a')
-  //      link.href = url
-  //      link.download = filename
-  //      link.click()
-  //      URL.revokeObjectURL(url)
-
-  //      toast.success('PDF downloaded successfully!')
-  //   // try {
-  //   //   const response = await fetch(`/api/generate-pdf?id=${kundaliId}`);
-
-  //   //   if (!response.ok) {
-  //   //     throw new Error('Failed to generate PDF');
-  //   //   }
-
-  //   //   // Get the PDF as a blob
-  //   //   const blob = await response.blob();
-
-  //   //   // Create a download link
-  //   //   const url = window.URL.createObjectURL(blob);
-  //   //   const a = document.createElement('a');
-  //   //   a.href = url;
-  //   //   a.download = `kundali-${kundaliId}_demo.pdf`;
-  //   //   document.body.appendChild(a);
-  //   //   a.click();
-
-  //   //   // Cleanup
-  //   //   window.URL.revokeObjectURL(url);
-  //   //   document.body.removeChild(a);
-
-  //   // } catch (error) {
-  //   //   console.error('Error downloading PDF:', error);
-  //   //   alert('Failed to download PDF');
-  //   // } finally {
-  //   //   setLoading(false);
-  //   // }
-
-  //   // handleDownload();
-  // }
-
-  //   const handleMenuDownload = async () => {
-  //   handleClose();
-  //   setLoading(true);
-
-  //   try {
-  //     const kundaliId = BirthDetails.KundaliID;
-
-  //     // Get all stylesheets from the page
-  //     const styles = Array.from(document.styleSheets)
-  //       .map(styleSheet => {
-  //         try {
-  //           return Array.from(styleSheet.cssRules)
-  //             .map(rule => rule.cssText)
-  //             .join('\n');
-  //         } catch (e) {
-  //           // Handle CORS issues with external stylesheets
-  //           console.warn('Cannot access stylesheet:', e);
-  //           return '';
-  //         }
-  //       })
-  //       .join('\n');
-
-  //     // Get inline styles
-  //     const inlineStyles = Array.from(document.querySelectorAll('style'))
-  //       .map(style => style.innerHTML)
-  //       .join('\n');
-
-  //     // Clone the content
-  //     const printContainer = document.createElement('div');
-  //     const content = pageRef.current.cloneNode(true);
-  //     printContainer.appendChild(content);
-
-  //     const fullHtml = `
-  //     <!DOCTYPE html>
-  //     <html>
-  //       <head>
-  //         <meta charset="utf-8">
-  //         <title>Report PDF</title>
-  //         <style>
-  //           @page { size: landscape; margin: 20px; }
-  //           body { 
-  //             font-family: Arial, sans-serif; 
-  //             background: white; 
-  //             margin: 0; 
-  //             padding: 10px; 
-  //           }
-  //           * { 
-  //             -webkit-print-color-adjust: exact !important; 
-  //             print-color-adjust: exact !important; 
-  //           }
-  //           .page-break { page-break-after: always; }
-
-  //           /* Captured styles from the page */
-  //           ${styles}
-  //           ${inlineStyles}
-  //         </style>
-  //       </head>
-  //       <body>
-  //         ${printContainer.innerHTML}
-  //       </body>
-  //     </html>`;
-
-  //     // Send HTML to Next.js API route
-  //     const response = await fetch('/api/generate-pdf', {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify({ html: fullHtml })
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error(`Server responded with ${response.status}`);
-  //     }
-
-  //     // Receive binary PDF
-  //     const blob = await response.blob();
-  //     const url = URL.createObjectURL(blob);
-
-  //     // Dynamic filename
-  //     const fullDateTime = '2025-05-11 05:30:45';
-  //     const formattedDate = fullDateTime.split(' ')[0].replace(/-/g, '');
-  //     const filename = `AstroReport_${formattedDate}.pdf`;
-
-  //     // Trigger download
-  //     const link = document.createElement('a');
-  //     link.href = url;
-  //     link.download = filename;
-  //     link.click();
-  //     URL.revokeObjectURL(url);
-
-  //     toast.success('PDF downloaded successfully!');
-  //   } catch (error) {
-  //     console.error('Error downloading PDF:', error);
-  //     toast.error('Failed to download PDF');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // const handleMenuDownload = async () => {
-  //   handleClose();
-  //   setLoading(true);
-
-  //   const convertCssUrlsToAbsolute = (cssText, baseHref) => {
-  //     if (!cssText) return '';
-
-  //     let baseUrl;
-  //     try {
-  //       baseUrl = new URL(baseHref || window.location.href);
-  //     } catch (error) {
-  //       baseUrl = new URL(window.location.href);
-  //     }
-
-  //     return cssText.replace(/url\(\s*(['"]?)([^'"\)\(]+)\1\s*\)/g, (match, quote, rawUrl) => {
-  //       const cleaned = rawUrl.trim();
-
-  //       if (!cleaned || cleaned.startsWith('data:') || cleaned.startsWith('#') || cleaned.startsWith('var(') || /^https?:\/\//i.test(cleaned) || cleaned.startsWith('//')) {
-  //         return match;
-  //       }
-
-  //       try {
-  //         const absoluteUrl = new URL(cleaned, baseUrl).href;
-  //         const safeQuote = quote || '"';
-  //         return `url(${safeQuote}${absoluteUrl}${safeQuote})`;
-  //       } catch (error) {
-  //         return match;
-  //       }
-  //     });
-  //   };
-
-  //   try {
-  //     const buildPrintableDocument = async () => {
-  //       if (!pageRef.current) {
-  //         throw new Error('Printable content is not available');
-  //       }
-
-  //       const clonedContent = pageRef.current.cloneNode(true);
-  //       const rect = pageRef.current.getBoundingClientRect();
-  //       const rawWidth = pageRef.current.scrollWidth || rect.width || pageRef.current.offsetWidth || 0;
-  //       const rawHeight = pageRef.current.scrollHeight || rect.height || pageRef.current.offsetHeight || 0;
-  //       const contentWidth = Math.max(Math.ceil(rawWidth), 1);
-  //       const contentHeight = Math.max(Math.ceil(rawHeight), 1);
-
-  //       const MM_PER_INCH = 25.4;
-  //       const CSS_DPI = 96;
-  //       const mmToPx = mm => Math.round((mm / MM_PER_INCH) * CSS_DPI);
-
-  //       const A4_WIDTH_MM = 297;
-  //       const A4_HEIGHT_MM = 10;
-  //       const paddingMm = 10;
-  //       const a4WidthPx = mmToPx(A4_WIDTH_MM);
-  //       const a4HeightPx = mmToPx(A4_HEIGHT_MM);
-  //       const horizontalPaddingPx = mmToPx(paddingMm);
-  //       const verticalPaddingPx = mmToPx(paddingMm);
-  //       const availableWidthPx = Math.max(a4WidthPx - horizontalPaddingPx * 2, 0);
-  //       const availableHeightPx = Math.max(a4HeightPx - verticalPaddingPx * 2, 0);
-  //       const scale = contentWidth > 0 ? Math.min(1, availableWidthPx / contentWidth) : 1;
-  //       const scaledContentHeight = Math.ceil(contentHeight * scale);
-  //       const viewportWidth = Math.max(window.innerWidth || 0, document.documentElement.clientWidth || 0, a4WidthPx || 0, 1280);
-  //       const viewportHeight = Math.max(window.innerHeight || 0, document.documentElement.clientHeight || 0, Math.min(a4HeightPx || 0, 4096), 900);
-  //       const bodyBg = window.getComputedStyle(document.body).backgroundColor || '#fff';
-
-  //       const doc = document.implementation.createHTMLDocument('Report PDF');
-  //       doc.title = document.title || 'Report PDF';
-
-  //       const copyAttributes = (source, target) => {
-  //         Array.from(source.attributes || []).forEach(attr => {
-  //           target.setAttribute(attr.name, attr.value);
-  //         });
-  //       };
-
-  //       copyAttributes(document.documentElement, doc.documentElement);
-  //       copyAttributes(document.body, doc.body);
-
-  //       const metaCharset = doc.createElement('meta');
-  //       metaCharset.setAttribute('charset', 'utf-8');
-  //       doc.head.prepend(metaCharset);
-
-  //       const viewportMeta = doc.createElement('meta');
-  //       viewportMeta.setAttribute('name', 'viewport');
-  //       viewportMeta.setAttribute('content', `width=${Math.round(viewportWidth)}, initial-scale=1`);
-  //       doc.head.prepend(viewportMeta);
-
-  //       const base = doc.createElement('base');
-  //       base.setAttribute('href', `${window.location.origin}/`);
-  //       doc.head.prepend(base);
-
-  //       const cloneHeadNode = node => {
-  //         const tagName = node.tagName?.toLowerCase();
-  //         if (!tagName || tagName === 'script' || tagName === 'noscript') {
-  //           return null;
-  //         }
-
-  //         const cloned = node.cloneNode(true);
-
-  //         if (tagName === 'link') {
-  //           const rel = cloned.getAttribute('rel');
-  //           const href = cloned.getAttribute('href');
-  //           if (rel && rel.toLowerCase() === 'stylesheet' && href) {
-  //             try {
-  //               cloned.setAttribute('href', new URL(href, window.location.href).href);
-  //             } catch (error) {
-  //               console.warn('Unable to normalise stylesheet URL', href, error);
-  //             }
-  //           }
-  //         }
-
-  //         if (tagName === 'style') {
-  //           const cssText = cloned.textContent || '';
-  //           cloned.textContent = convertCssUrlsToAbsolute(cssText, window.location.href);
-  //         }
-
-  //         return cloned;
-  //       };
-
-  //       Array.from(document.head.children).forEach(node => {
-  //         const cloned = cloneHeadNode(node);
-  //         if (cloned) {
-  //           doc.head.appendChild(cloned);
-  //         }
-  //       });
-
-  //       // Ensure root-level custom properties defined via inline styles are preserved
-  //       const inlineStyle = document.documentElement.getAttribute('style');
-  //       if (inlineStyle) {
-  //         doc.documentElement.setAttribute('style', convertCssUrlsToAbsolute(inlineStyle, window.location.href));
-  //       }
-
-  //       const style = doc.createElement('style');
-  //       style.textContent = `
-
-  //           @page {
-  //             size: 210mm 300mm;
-  //             margin: 5mm;
-  //           }
-
-  //           body {
-  //             background: #ffffff !important;
-  //             justify-content: center;
-  //             align-items: center;
-  //             margin: 0;
-  //             padding: 0;
-  //             font-family: ea-sb;
-  //           }
-
-
-  //         * {
-  //           -webkit-print-color-adjust: exact !important;
-  //           print-color-adjust: exact !important;
-  //         }
-
-  //         [data-print-content='true'][data-print-scaled='true'] {
-  //           transform-origin: top left;
-  //         }
-
-
-  //       `;
-  //       doc.head.appendChild(style);
-
-  //       const printableWrapper = doc.createElement('div');
-  //       printableWrapper.setAttribute('data-print-root', 'true');
-  //       printableWrapper.style.width = '100%';
-  //       printableWrapper.style.margin = '0 auto';
-
-  //       const scaleOuter = doc.createElement('div');
-  //       scaleOuter.setAttribute('data-print-scale-outer', 'true');
-  //       scaleOuter.style.width = '100%';
-  //       scaleOuter.style.height = '100%';
-  //       // scaleOuter.style.height = scale < 1 ? `${scaledContentHeight}px` : 'auto';
-
-  //       const contentWrapper = doc.createElement('div');
-  //       contentWrapper.setAttribute('data-print-content', 'true');
-  //       if (scale < 1) {
-  //         contentWrapper.setAttribute('data-print-scaled', 'true');
-  //         contentWrapper.style.transform = `scale(${scale})`;
-  //         contentWrapper.style.width = `${contentWidth}px`;
-  //         contentWrapper.style.height = `${contentHeight}px`;
-  //       }
-  //       contentWrapper.appendChild(clonedContent);
-  //       scaleOuter.appendChild(contentWrapper);
-  //       printableWrapper.appendChild(scaleOuter);
-
-  //       printableWrapper.querySelectorAll('[style]').forEach(element => {
-  //         const rawStyle = element.getAttribute('style');
-  //         if (rawStyle) {
-  //           element.setAttribute('style', convertCssUrlsToAbsolute(rawStyle, window.location.href));
-  //         }
-  //       });
-
-  //       doc.body.innerHTML = '';
-  //       doc.body.appendChild(printableWrapper);
-
-  //       const serializer = new XMLSerializer();
-  //       return {
-  //         html: `<!DOCTYPE html>${serializer.serializeToString(doc)}`,
-  //         viewport: {
-  //           width: Math.round(viewportWidth),
-  //           // height: '500mm',
-  //           height: Math.round(viewportHeight),
-  //           deviceScaleFactor: window.devicePixelRatio || 1
-  //         },
-  //         pageSize: {
-  //           width: `${A4_WIDTH_MM}mm`,
-  //           height: `210mm`,
-  //           // height: `${A4_HEIGHT_MM}mm`,
-  //           margin: {
-  //             top: '0mm',
-  //             right: '0mm',
-  //             bottom: '0mm',
-  //             left: '0mm'
-  //           }
-  //         }
-  //       };
-  //     };
-
-  //     const { html: fullHtml, viewport, pageSize } = await buildPrintableDocument();
-  //     // console.log("fullHtml", fullHtml)
-  //     const response = await fetch('/api/generate-pdf', {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify({ html: fullHtml, viewport, pageSize })
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error(`Server responded with ${response.status}`);
-  //     }
-
-  //     const blob = await response.blob();
-  //     const url = URL.createObjectURL(blob);
-  // const fullDateTime = BirthDetails.FullDateTime || new Date().toISOString();
-  // const formattedDate = fullDateTime.split(' ')[0].replace(/-/g, '');
-  //     const filename = `AstroReport_${formattedDate}.pdf`;
-
-  //     const link = document.createElement('a');
-  //     link.href = url;
-  //     link.download = filename;
-  //     link.click();
-  //     URL.revokeObjectURL(url);
-
-  //     toast.success('PDF downloaded successfully!');
-  //   } catch (error) {
-  //     console.error('Error downloading PDF:', error);
-  //     toast.error('Failed to download PDF');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // working but some right side are cutting
-  // const handleMenuDownload = async () => {
-  //   handleClose();
-  //   setLoading(true);
-
-  //   const convertCssUrlsToAbsolute = (cssText, baseHref) => {
-  //     if (!cssText) return '';
-
-  //     let baseUrl;
-  //     try {
-  //       baseUrl = new URL(baseHref || window.location.href);
-  //     } catch (error) {
-  //       baseUrl = new URL(window.location.href);
-  //     }
-
-  //     return cssText.replace(/url\(\s*(['"]?)([^'"\)\(]+)\1\s*\)/g, (match, quote, rawUrl) => {
-  //       const cleaned = rawUrl.trim();
-
-  //       if (!cleaned || cleaned.startsWith('data:') || cleaned.startsWith('#') || cleaned.startsWith('var(') || /^https?:\/\//i.test(cleaned) || cleaned.startsWith('//')) {
-  //         return match;
-  //       }
-
-  //       try {
-  //         const absoluteUrl = new URL(cleaned, baseUrl).href;
-  //         const safeQuote = quote || '"';
-  //         return `url(${safeQuote}${absoluteUrl}${safeQuote})`;
-  //       } catch (error) {
-  //         return match;
-  //       }
-  //     });
-  //   };
-
-  //   // New function to inline computed styles
-  //   const inlineComputedStyles = (original, cloned) => {
-  //     const originalElements = original.querySelectorAll('*');
-  //     const clonedElements = cloned.querySelectorAll('*');
-
-  //     // Process each element pair
-  //     Array.from(originalElements).forEach((origEl, index) => {
-  //       const clonedEl = clonedElements[index];
-  //       if (!clonedEl) return;
-
-  //       try {
-  //         const computedStyle = window.getComputedStyle(origEl);
-
-  //         // Important style properties to preserve
-  //         const criticalProps = [
-  //           'display', 'position', 'top', 'left', 'right', 'bottom',
-  //           'width', 'height', 'min-width', 'min-height', 'max-width', 'max-height',
-  //           'margin', 'margin-top', 'margin-right', 'margin-bottom', 'margin-left',
-  //           'padding', 'padding-top', 'padding-right', 'padding-bottom', 'padding-left',
-  //           'border', 'border-width', 'border-style', 'border-color', 'border-radius',
-  //           'background', 'background-color', 'background-image', 'background-size', 'background-position',
-  //           'color', 'font-family', 'font-size', 'font-weight', 'font-style', 'line-height',
-  //           'text-align', 'text-decoration', 'text-transform',
-  //           'flex', 'flex-direction', 'flex-wrap', 'justify-content', 'align-items', 'gap',
-  //           'grid', 'grid-template-columns', 'grid-template-rows', 'grid-gap',
-  //           'opacity', 'visibility', 'overflow', 'z-index', 'box-shadow', 'transform'
-  //         ];
-
-  //         let styleString = clonedEl.getAttribute('style') || '';
-
-  //         criticalProps.forEach(prop => {
-  //           const value = computedStyle.getPropertyValue(prop);
-  //           if (value && value !== 'none' && value !== 'auto' && value !== 'initial') {
-  //             // Convert to absolute URLs if it's a background-image or similar
-  //             const finalValue = (prop.includes('background') || prop.includes('border-image'))
-  //               ? convertCssUrlsToAbsolute(value, window.location.href)
-  //               : value;
-
-  //             styleString += `${prop}: ${finalValue} !important; `;
-  //           }
-  //         });
-
-  //         if (styleString) {
-  //           clonedEl.setAttribute('style', styleString);
-  //         }
-  //       } catch (error) {
-  //         console.warn('Error inlining styles for element:', error);
-  //       }
-  //     });
-  //   };
-
-  //   try {
-  //     const buildPrintableDocument = async () => {
-  //       if (!pageRef.current) {
-  //         throw new Error('Printable content is not available');
-  //       }
-
-  //       const clonedContent = pageRef.current.cloneNode(true);
-
-  //       // Inline computed styles from original to cloned content
-  //       inlineComputedStyles(pageRef.current, clonedContent);
-
-  //       const MM_PER_INCH = 25.4;
-  //       const CSS_DPI = 96;
-  //       const mmToPx = mm => Math.round((mm / MM_PER_INCH) * CSS_DPI);
-
-  //       // A4 Portrait dimensions
-  //       const A4_WIDTH_MM = 210;
-  //       const A4_HEIGHT_MM = 297;
-  //       const paddingMm = 10;
-
-  //       const a4WidthPx = mmToPx(A4_WIDTH_MM);
-  //       const a4HeightPx = mmToPx(A4_HEIGHT_MM);
-
-  //       // Set viewport to A4 size, not window size
-  //       const viewportWidth = a4WidthPx;  // ~794px
-  //       const viewportHeight = a4HeightPx; // ~1123px
-
-  //       const bodyBg = window.getComputedStyle(document.body).backgroundColor || '#fff';
-
-  //       const doc = document.implementation.createHTMLDocument('Report PDF');
-  //       doc.title = document.title || 'Report PDF';
-
-  //       const copyAttributes = (source, target) => {
-  //         Array.from(source.attributes || []).forEach(attr => {
-  //           target.setAttribute(attr.name, attr.value);
-  //         });
-  //       };
-
-  //       copyAttributes(document.documentElement, doc.documentElement);
-  //       copyAttributes(document.body, doc.body);
-
-  //       const metaCharset = doc.createElement('meta');
-  //       metaCharset.setAttribute('charset', 'utf-8');
-  //       doc.head.prepend(metaCharset);
-
-  //       const viewportMeta = doc.createElement('meta');
-  //       viewportMeta.setAttribute('name', 'viewport');
-  //       viewportMeta.setAttribute('content', `width=${Math.round(viewportWidth)}, initial-scale=1`);
-  //       doc.head.prepend(viewportMeta);
-
-  //       const base = doc.createElement('base');
-  //       base.setAttribute('href', `${window.location.origin}/`);
-  //       doc.head.prepend(base);
-
-  //       const cloneHeadNode = node => {
-  //         const tagName = node.tagName?.toLowerCase();
-  //         if (!tagName || tagName === 'script' || tagName === 'noscript') {
-  //           return null;
-  //         }
-
-  //         const cloned = node.cloneNode(true);
-
-  //         if (tagName === 'link') {
-  //           const rel = cloned.getAttribute('rel');
-  //           const href = cloned.getAttribute('href');
-  //           if (rel && rel.toLowerCase() === 'stylesheet' && href) {
-  //             try {
-  //               cloned.setAttribute('href', new URL(href, window.location.href).href);
-  //             } catch (error) {
-  //               console.warn('Unable to normalise stylesheet URL', href, error);
-  //             }
-  //           }
-  //         }
-
-  //         if (tagName === 'style') {
-  //           const cssText = cloned.textContent || '';
-  //           cloned.textContent = convertCssUrlsToAbsolute(cssText, window.location.href);
-  //         }
-
-  //         return cloned;
-  //       };
-
-  //       Array.from(document.head.children).forEach(node => {
-  //         const cloned = cloneHeadNode(node);
-  //         if (cloned) {
-  //           doc.head.appendChild(cloned);
-  //         }
-  //       });
-
-  //       // Copy all stylesheets as inline styles to ensure they're captured
-  //       Array.from(document.styleSheets).forEach((sheet, index) => {
-  //         try {
-  //           if (sheet.cssRules) {
-  //             const cssText = Array.from(sheet.cssRules)
-  //               .map(rule => rule.cssText)
-  //               .join('\n');
-
-  //             if (cssText) {
-  //               const style = doc.createElement('style');
-  //               style.setAttribute('data-source', `stylesheet-${index}`);
-  //               style.textContent = convertCssUrlsToAbsolute(cssText, window.location.href);
-  //               doc.head.appendChild(style);
-  //             }
-  //           }
-  //         } catch (error) {
-  //           // CORS or other access issues - stylesheet already linked
-  //           console.warn('Could not access stylesheet rules:', error);
-  //         }
-  //       });
-
-  //       const inlineStyle = document.documentElement.getAttribute('style');
-  //       if (inlineStyle) {
-  //         doc.documentElement.setAttribute('style', convertCssUrlsToAbsolute(inlineStyle, window.location.href));
-  //       }
-
-  //       const style = doc.createElement('style');
-  //       style.textContent = `
-  //       @page {
-  //         size: ${A4_WIDTH_MM}mm ${A4_HEIGHT_MM}mm;
-  //         margin: ${paddingMm}mm;
-  //       }
-
-  //       html, body {
-  //         width: 100%;
-  //         height: 100%;
-  //         background: #ffffff !important;
-  //         margin: 0;
-  //         padding: 0;
-  //       }
-
-  //       body {
-  //         font-family: ea-sb, Arial, sans-serif;
-  //       }
-
-  //       * {
-  //         -webkit-print-color-adjust: exact !important;
-  //         print-color-adjust: exact !important;
-  //         color-adjust: exact !important;
-  //       }
-
-  //       [data-print-root='true'] {
-  //         width: 100%;
-  //         max-width: 100%;
-  //         margin: 0;
-  //         padding: 0;
-  //         box-sizing: border-box;
-  //       }
-  //     `;
-  //       doc.head.appendChild(style);
-
-  //       const printableWrapper = doc.createElement('div');
-  //       printableWrapper.setAttribute('data-print-root', 'true');
-  //       printableWrapper.appendChild(clonedContent);
-
-  //       printableWrapper.querySelectorAll('[style]').forEach(element => {
-  //         const rawStyle = element.getAttribute('style');
-  //         if (rawStyle) {
-  //           element.setAttribute('style', convertCssUrlsToAbsolute(rawStyle, window.location.href));
-  //         }
-  //       });
-
-  //       doc.body.innerHTML = '';
-  //       doc.body.appendChild(printableWrapper);
-
-  //       const serializer = new XMLSerializer();
-  //       return {
-  //         html: `<!DOCTYPE html>${serializer.serializeToString(doc)}`,
-  //         viewport: {
-  //           width: Math.round(viewportWidth),
-  //           height: Math.round(viewportHeight),
-  //           deviceScaleFactor: 1
-  //         },
-  //         pageSize: {
-  //           width: `${A4_WIDTH_MM}mm`,
-  //           height: `${A4_HEIGHT_MM}mm`,
-  //           margin: {
-  //             top: `${paddingMm}mm`,
-  //             right: `${paddingMm}mm`,
-  //             bottom: `${paddingMm}mm`,
-  //             left: `${paddingMm}mm`
-  //           }
-  //         }
-  //       };
-  //     };
-
-  //     const { html: fullHtml, viewport, pageSize } = await buildPrintableDocument();
-
-  //     const response = await fetch('/api/generate-pdf', {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify({ html: fullHtml, viewport, pageSize })
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error(`Server responded with ${response.status}`);
-  //     }
-
-  //     const blob = await response.blob();
-  //     const url = URL.createObjectURL(blob);
-  //     const fullDateTime = BirthDetails.FullDateTime || new Date().toISOString();
-  //     const formattedDate = fullDateTime.split(' ')[0].replace(/-/g, '');
-  //     const filename = `AstroReport_${formattedDate}.pdf`;
-
-  //     const link = document.createElement('a');
-  //     link.href = url;
-  //     link.download = filename;
-  //     link.click();
-  //     URL.revokeObjectURL(url);
-
-  //     toast.success('PDF downloaded successfully!');
-  //   } catch (error) {
-  //     console.error('Error downloading PDF:', error);
-  //     toast.error('Failed to download PDF');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const handleMenuDownload = async () => {
     handleClose();
     setLoading(true);
@@ -832,25 +100,82 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
         throw new Error('Printable content is not available');
       }
 
+      // Get all computed styles for the element and its children
+      const getComputedStylesRecursive = (element) => {
+        let styles = '';
+
+        const computedStyle = window.getComputedStyle(element);
+        const elementId = element.id || `elem-${Math.random().toString(36).substr(2, 9)}`;
+
+        if (!element.id) {
+          element.setAttribute('data-pdf-id', elementId);
+        }
+
+        const selector = element.id ? `#${element.id}` : `[data-pdf-id="${elementId}"]`;
+
+        // Get all relevant CSS properties
+        const importantProps = [
+          'display', 'position', 'width', 'height', 'margin', 'padding',
+          'border', 'background', 'background-color', 'color', 'font-family',
+          'font-size', 'font-weight', 'text-align', 'line-height',
+          'flex', 'flex-direction', 'justify-content', 'align-items',
+          'grid', 'grid-template-columns', 'grid-gap', 'gap',
+          'border-radius', 'box-shadow', 'transform', 'opacity', 'border-bottom', 'border-top', 'border-left', 'border-right'
+        ];
+        // const importantProps = [
+        //   'display', 'position', 'width', 'height', 'margin', 'padding',
+        //   'border', 'background', 'background-color', 'color', 'font-family',
+        //   'font-size', 'font-weight', 'text-align', 'line-height',
+        //   'flex', 'flex-direction', 'justify-content', 'align-items',
+        //   'grid', 'grid-template-columns', 'grid-gap', 'gap',
+        //   'border-radius', 'box-shadow', 'transform', 'opacity'
+        // ];
+
+        let cssText = '';
+        importantProps.forEach(prop => {
+          const value = computedStyle.getPropertyValue(prop);
+          if (value && value !== 'none' && value !== 'normal') {
+            cssText += `${prop}: ${value} !important; `;
+          }
+        });
+
+        if (cssText) {
+          styles += `${selector} { ${cssText} }\n`;
+        }
+
+        // Recursively process children
+        Array.from(element.children).forEach(child => {
+          styles += getComputedStylesRecursive(child);
+        });
+
+        return styles;
+      };
+
       // Get all stylesheets content
       const getStylesheetContent = async () => {
         let allStyles = '';
-        
+
         // Get inline styles
         const inlineStyles = Array.from(document.querySelectorAll('style'))
           .map(style => style.textContent)
           .join('\n');
-        
+
         allStyles += inlineStyles;
 
         // Get external stylesheets
         const links = Array.from(document.querySelectorAll('link[rel="stylesheet"]'));
+        console.log("links", links);
         for (const link of links) {
           try {
             if (link.href.startsWith(window.location.origin)) {
               const response = await fetch(link.href);
               const css = await response.text();
-              allStyles += css;
+              const filteredCss = css
+                .split('}')
+                .filter(rule => rule.includes('.pdfView'))
+                .map(rule => rule + '}')
+                .join('\n');
+              allStyles += filteredCss;
             }
           } catch (error) {
             console.warn('Could not load stylesheet:', link.href);
@@ -860,70 +185,90 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
         return allStyles;
       };
 
-      const styles = await getStylesheetContent();
+      const [stylesheetStyles, computedStyles] = await Promise.all([
+        getStylesheetContent(),
+        Promise.resolve(getComputedStylesRecursive(pageRef.current))
+      ]);
 
       // Clone the content
       const clonedContent = pageRef.current.cloneNode(true);
 
-      // Build the complete HTML
+      // Build the complete HTML with proper page layout
       const fullHtml = `
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <title>Astro Report PDF</title>
-            <style>
-              @page { 
-                size: A4; 
-                margin: 10mm; 
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=975px, initial-scale=1">
+          <title>Astro Report PDF</title>
+          <style>
+            @page { 
+              size: A4; 
+              margin: 5mm ; 
+
+            }
+            
+                    
+            body { 
+              background: #fff !important; 
+              margin: 0; 
+              padding: 0;
+              width: 210mm;
+              min-height: 297mm;
+              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+              -webkit-print-color-adjust: exact !important; 
+              print-color-adjust: exact !important;
+            }
+            
+            * { 
+              -webkit-print-color-adjust: exact !important; 
+              print-color-adjust: exact !important; 
+              color-adjust: exact !important;
+              box-sizing: border-box;
+            }
+
+            /* Fixed width container - 975px scaled to fit A4 */
+            .previewCard,
+            .print-optimized {
+              width: 975px !important;
+              max-width: 975px !important;
+              min-width: 975px !important;
+              min-height: 100vh;
+              padding: 15px;
+              margin: 0 auto;
+
+              /* Replace transform with zoom */
+              zoom: 1.115;
+              transform: none !important;
+              transform-origin: top center;
+
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+            }
+
+            /* Include computed styles */
+            ${computedStyles}
+
+            /* Additional print-specific overrides */
+            @media print {
+              body {
+                background: white !important;
               }
               
-              body { 
-                background: #fff !important; 
-                font-family: Arial, sans-serif; 
-                margin: 0; 
-                padding: 0; 
-                font-size: 12px;
+              .no-print {
+                display: none !important;
               }
+            }
               
-              * { 
-                -webkit-print-color-adjust: exact !important; 
-                print-color-adjust: exact !important; 
-                color-adjust: exact !important;
-              }
-
-              /* Include all page styles */
-              ${styles}
-
-              /* Additional print-specific styles */
-              .chart-name {
-                background: #f0f0f0 !important;
-                padding: 10px !important;
-                margin-bottom: 10px !important;
-              }
-
-              table {
-                width: 100% !important;
-                border-collapse: collapse !important;
-              }
-
-              img {
-                max-width: 100% !important;
-                height: auto !important;
-              }
-
-              .previewCard {
-                width: 100% !important;
-                max-width: none !important;
-              }
-            </style>
-          </head>
-          <body>
-            ${clonedContent.outerHTML}
-          </body>
-        </html>
-      `;
+          </style>
+        </head>
+        <body>
+          ${clonedContent.outerHTML}
+        </body>
+      </html>
+    `;
 
       // Get filename
       const fullDateTime = BirthDetails?.FullDateTime || new Date().toISOString();
@@ -933,12 +278,24 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       // Send to PDF generation API
       const response = await fetch('/api/generate-pdf', {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
-          html: fullHtml, 
-          filename: filename 
+        body: JSON.stringify({
+          html: fullHtml,
+          filename: filename,
+          options: {
+            format: 'A4',
+            printBackground: true,
+            preferCSSPageSize: false,
+            margin: {
+              top: '0',
+              right: '0',
+              bottom: '0',
+              left: '0'
+            },
+            scale: 1
+          }
         })
       });
 
@@ -961,8 +318,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       toast.success('PDF downloaded successfully!');
     } catch (error) {
       console.error('Error downloading PDF:', error);
-      
-      // Check if it's a payload size error
+
       if (error.message.includes('413') || error.message.includes('Too Large')) {
         toast.error('PDF content is too large. Please try reducing the content or contact support.');
       } else {
@@ -972,6 +328,143 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       setLoading(false);
     }
   };
+
+  // const handleMenuDownload = async () => {
+  //   handleClose();
+  //   setLoading(true);
+
+  //   try {
+  //     if (!pageRef.current) {
+  //       throw new Error('Printable content is not available');
+  //     }
+
+  //     // Get all stylesheets content
+  //     const getStylesheetContent = async () => {
+  //       let allStyles = '';
+
+  //       // Get inline styles
+  //       const inlineStyles = Array.from(document.querySelectorAll('style'))
+  //         .map(style => style.textContent)
+  //         .join('\n');
+
+  //       allStyles += inlineStyles;
+
+  //       // Get external stylesheets
+  //       const links = Array.from(document.querySelectorAll('link[rel="stylesheet"]'));
+  //       for (const link of links) {
+  //         try {
+  //           if (link.href.startsWith(window.location.origin)) {
+  //             const response = await fetch(link.href);
+  //             const css = await response.text();
+  //             allStyles += css;
+  //           }
+  //         } catch (error) {
+  //           console.warn('Could not load stylesheet:', link.href);
+  //         }
+  //       }
+
+  //       return allStyles;
+  //     };
+
+  //     const styles = await getStylesheetContent();
+
+  //     // Clone the content
+  //     const clonedContent = pageRef.current.cloneNode(true);
+
+  //     // Build the complete HTML
+  //     const fullHtml = `
+  //       <!DOCTYPE html>
+  //       <html>
+  //         <head>
+  //           <meta charset="utf-8">
+  //           <meta name="viewport" content="width=device-width, initial-scale=1">
+  //           <title>Astro Report PDF</title>
+  //           <style>
+  //             @page { 
+  //               size: A4; 
+  //               margin: 1mm; 
+  //             }
+
+  //             body { 
+  //               background: #fff !important; 
+  //               margin: 0; 
+  //               padding: 0; 
+  //               border:1px solid red;
+  //               width: 100%;
+  //               font-family: Segoe UI;
+  //             }
+
+  //             * { 
+  //               -webkit-print-color-adjust: exact !important; 
+  //               print-color-adjust: exact !important; 
+  //               color-adjust: exact !important;
+  //             }
+
+  //             /* Include all page styles */
+  //             ${styles}
+
+  //             /* Additional print-specific styles */
+  //             .chart-name {
+  //               background: #f0f0f0 !important;
+  //               padding: 10px !important;
+  //               margin-bottom: 10px !important;
+  //             }
+
+  //           </style>
+  //         </head>
+  //         <body>
+  //           ${clonedContent.outerHTML}
+  //         </body>
+  //       </html>
+  //     `;
+
+  //     // Get filename
+  //     const fullDateTime = BirthDetails?.FullDateTime || new Date().toISOString();
+  //     const formattedDate = fullDateTime.split(' ')[0].replace(/-/g, '');
+  //     const filename = `AstroReport_${formattedDate}.pdf`;
+
+  //     // Send to PDF generation API
+  //     const response = await fetch('/api/generate-pdf', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         html: fullHtml,
+  //         filename: filename
+  //       })
+  //     });
+
+  //     if (!response.ok) {
+  //       const errorData = await response.json();
+  //       throw new Error(`Server responded with ${response.status}: ${errorData.details || 'Unknown error'}`);
+  //     }
+
+  //     // Download the PDF
+  //     const blob = await response.blob();
+  //     const url = URL.createObjectURL(blob);
+  //     const link = document.createElement('a');
+  //     link.href = url;
+  //     link.download = filename;
+  //     document.body.appendChild(link);
+  //     link.click();
+  //     document.body.removeChild(link);
+  //     URL.revokeObjectURL(url);
+
+  //     toast.success('PDF downloaded successfully!');
+  //   } catch (error) {
+  //     console.error('Error downloading PDF:', error);
+
+  //     // Check if it's a payload size error
+  //     if (error.message.includes('413') || error.message.includes('Too Large')) {
+  //       toast.error('PDF content is too large. Please try reducing the content or contact support.');
+  //     } else {
+  //       toast.error(`Failed to download PDF: ${error.message}`);
+  //     }
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const handleMenuTimeTool = () => {
     handleClose();
@@ -1263,7 +756,8 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   return (
     <>
       {/* {Loading && <Loader />} */}
-      <Grid className='previewCard' item xs={12} md={12} ref={pageRef}>
+      <Grid className='previewCard' item xs={12} md={12}>
+        <PDFView AstroVastuHouseScript={AstroVastuHouseScript} BirthDetails={BirthDetails} Symbols={Symbols} pageRef={pageRef} AstroDetails={AstroDetails} />
         <Grid item xs={12} className='pdf-Div'>
           <div className={`chart-name sticky top-0 z-50 font-ea-sb rounded-t flex justify-between md:items-center gap-y-2 lg:flex-row ${!isPrintDiv ? 'sm:flex-row flex-col' : "items-center"}`}>
             {BirthDetails?.FirstName ? `${BirthDetails.FirstName} ${BirthDetails.MiddleName} ${BirthDetails.LastName}` : 'Prashna Kundali'}
