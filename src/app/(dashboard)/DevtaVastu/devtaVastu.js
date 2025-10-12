@@ -101,110 +101,61 @@ function DevtaVastuPage({ id }) {
         })
         setVastuLayoutData(res.responseData?.Result?.VastuLayout)
         const incomingData = res.responseData?.Result?.VastuLayout?.TabGroups
-        // const updatedTabGroup = tabGroup.map((tab) => {
-        //   const matchingData = incomingData?.find((data) => data.Label === tab.label && data.Title ===( tab.title || tab.label));
-        //   if (matchingData) {
-        //     return {
-        //       ...tab,
-        //       title: matchingData.Title ? matchingData.Title : tab.title,
-        //       points: matchingData.Points.map((point) => ({
-        //         x: point.x, // Convert X to x
-        //         y: point.y  // Convert Y to y
-        //       })),
-        //       centroid: { x: matchingData.Centroid.x, y: matchingData.Centroid.y },
-        //       snapToCentroid: matchingData.SnapToCentroid,
-        //       inputDegree: matchingData.InputDegree,
-        //       translate: { x: matchingData.Translate?.x, y: matchingData.Translate?.y },
-        //       zoom: matchingData.Zoom,
-        //       polygons: matchingData.Polygons,
-        //       lockChakra: matchingData.lockChakra,
-        //       lockCentroid: matchingData.lockCentroid,
-        //       lineSets: matchingData.LineSets,
-        //       hideCircle: matchingData.hideCircle,
-        //       hide32Circle: matchingData.hide32Circle,
-        //       hide4Circle: matchingData.hide4Circle,
-        //       hide16Circle: matchingData.hide16Circle,
-        //       hide8Circle: matchingData.hide8Circle,
-        //       NecessaryFiles: matchingData.NecessaryFiles.map((file) => ({
-        //         OriginalFileName: file.OriginalFileName,
-        //         Base64File: file.Base64File,
-        //         isPdf: file.isPdf,
-        //         pdfImages: file.pdfImages,
-        //         pdfPages: file.pdfPages,
-        //         selectedPage: file.selectedPage
-        //       })),
-        //       cropImage: matchingData.CropImage,
-        //       rotation: matchingData.Rotation,
-        //       showDevta: matchingData.ShowDevta,
-        //       showDevtaIntersaction: matchingData.ShowDevtaIntersaction,
-        //       hideMarmaLines: matchingData.HideMarmaLines,
-        //       hideMarmapoints: matchingData.HideMarmapoints,
-        //       imageDragDone: matchingData.ImageDragDone,
-        //       hideCircleIntersaction: matchingData.HideCircleIntersaction,
-        //       disableDraw: matchingData.DisableDraw,
-        //       hideDevta: matchingData.HideDevta,
-        //       hideDevtaIntersaction: matchingData.HideDevtaIntersaction,
-        //     };
-        //   }
-        //   return tab;
-        // });
         const updatedTabGroup = [];
         // incomingData.forEach((tab) => {
-          // Find ALL matching data items instead of just the first one
-          const matchingDataItems = incomingData;
-          if (matchingDataItems && matchingDataItems.length > 0) {
-            
-              for (let i = 0; i < matchingDataItems.length; i++) {
-                updatedTabGroup.push({
-                  // ...tab, // Base properties from the original tab
-                  // label: tab.label, // Keep the same label
-                  title: matchingDataItems[i].Title ? matchingDataItems[i].Title : "",
-                  label: matchingDataItems[i].Label ? matchingDataItems[i].Label : "",
-                  points: matchingDataItems[i].Points.map((point) => ({
-                    x: point.x,
-                    y: point.y
-                  })),
-                  centroid: { x: matchingDataItems[i].Centroid.x, y: matchingDataItems[i].Centroid.y },
-                  snapToCentroid: matchingDataItems[i].SnapToCentroid,
-                  inputDegree: matchingDataItems[i].InputDegree,
-                  translate: { x: matchingDataItems[i].Translate?.x, y: matchingDataItems[i].Translate?.y },
-                  zoom: matchingDataItems[i].Zoom,
-                  polygons: matchingDataItems[i].Polygons,
-                  lockChakra: matchingDataItems[i].lockChakra,
-                  lockCentroid: matchingDataItems[i].lockCentroid,
-                  lineSets: matchingDataItems[i].LineSets,
-                  hideCircle: matchingDataItems[i].hideCircle,
-                  hide32Circle: matchingDataItems[i].hide32Circle,
-                  hide4Circle: matchingDataItems[i].hide4Circle,
-                  hide16Circle: matchingDataItems[i].hide16Circle,
-                  hide8Circle: matchingDataItems[i].hide8Circle,
-                  NecessaryFiles: matchingDataItems[i].NecessaryFiles.map((file) => ({
-                    OriginalFileName: file.OriginalFileName,
-                    Base64File: file.Base64File,
-                    isPdf: file.isPdf,
-                    pdfPages: file.pdfPages,
-                    selectedPage: file.selectedPage,
-                    currentPageBase64: file.currentPageBase64,
-                    originalPdfBase64: file.originalPdfBase64 // Add this line to include the original PDF Base64
-                  })),
-                  cropImage: matchingDataItems[i].cropImage,
-                  rotation: matchingDataItems[i].rotation,
-                  showDevta: matchingDataItems[i].showDevta,
-                  showDevtaIntersaction: matchingDataItems[i].showDevtaIntersaction,
-                  hideMarmaLines: matchingDataItems[i].showMarma,
-                  hideMarmapoints: matchingDataItems[i].showMarmaPoints,
-                  imageDragDone: matchingDataItems[i].lockDragImage,
-                  hideCircleIntersaction: matchingDataItems[i].showChakraIntersactionPoints,
-                  disableDraw: matchingDataItems[i].doneDrowing,
-                  showDevta: matchingDataItems[i].showDevta,
-                  showDevtaPoints: matchingDataItems[i].showDevtaPoints,
-                  // id: `${tab.id || tab.label}_additional_${i}`, // Create a unique ID for each additional tab
-                });
-              }
-          } else {
-            // If no match is found, keep the original tab
-            // updatedTabGroup.push(tab);
+        // Find ALL matching data items instead of just the first one
+        const matchingDataItems = incomingData;
+        if (matchingDataItems && matchingDataItems.length > 0) {
+
+          for (let i = 0; i < matchingDataItems.length; i++) {
+            updatedTabGroup.push({
+              // ...tab, // Base properties from the original tab
+              // label: tab.label, // Keep the same label
+              title: matchingDataItems[i].Title ? matchingDataItems[i].Title : "",
+              label: matchingDataItems[i].Label ? matchingDataItems[i].Label : "",
+              points: matchingDataItems[i].Points.map((point) => ({
+                x: point.x,
+                y: point.y
+              })),
+              centroid: { x: matchingDataItems[i].Centroid.x, y: matchingDataItems[i].Centroid.y },
+              snapToCentroid: matchingDataItems[i].SnapToCentroid,
+              inputDegree: matchingDataItems[i].InputDegree,
+              translate: { x: matchingDataItems[i].Translate?.x, y: matchingDataItems[i].Translate?.y },
+              zoom: matchingDataItems[i].Zoom,
+              polygons: matchingDataItems[i].Polygons,
+              lockChakra: matchingDataItems[i].LockChakra,
+              lockCentroid: matchingDataItems[i].lockCentroid,
+              lineSets: matchingDataItems[i].LineSets,
+              hideCircle: matchingDataItems[i].HideCircle,
+              hide32Circle: matchingDataItems[i].Hide32Circle,
+              hide4Circle: matchingDataItems[i].Hide4Circle,
+              hide16Circle: matchingDataItems[i].Hide16Circle,
+              hide8Circle: matchingDataItems[i].Hide8Circle,
+              NecessaryFiles: matchingDataItems[i].NecessaryFiles.map((file) => ({
+                OriginalFileName: file.OriginalFileName,
+                Base64File: file.Base64File,
+                isPdf: file.isPdf,
+                pdfPages: file.pdfPages,
+                selectedPage: file.selectedPage,
+                currentPageBase64: file.currentPageBase64,
+                originalPdfBase64: file.originalPdfBase64 // Add this line to include the original PDF Base64
+              })),
+              cropImage: matchingDataItems[i].cropImage,
+              rotation: matchingDataItems[i].rotation,
+              hideMarmaLines: matchingDataItems[i].showMarma,
+              hideMarmapoints: matchingDataItems[i].showMarmaPoints,
+              imageDragDone: matchingDataItems[i].lockDragImage,
+              hideCircleIntersaction: matchingDataItems[i].showChakraIntersactionPoints,
+              disableDraw: matchingDataItems[i].doneDrowing,
+              showDevta: matchingDataItems[i].showDevta,
+              showDevtaPoints: matchingDataItems[i].showDevtaPoints,
+              showDevtaIntersaction: matchingDataItems[i].showDevtaPoints,
+            });
           }
+        } else {
+          // If no match is found, keep the original tab
+          // updatedTabGroup.push(tab);
+        }
         // });
 
 
@@ -515,7 +466,7 @@ function DevtaVastuPage({ id }) {
 
             updatedTabGroup[tabIndex].NecessaryFiles[0] = {
               OriginalFileName: name,
-              Base64File: "", 
+              Base64File: "",
               isPdf: true,
               pdfPages: 0,
               selectedPage: 0
@@ -642,13 +593,13 @@ function DevtaVastuPage({ id }) {
       return toast.error('Base group not found!');
     }
 
-    
+
     setTabGroup(prevTabGroup => {
       // if (isTitleUnique) {
-        return [
-          ...prevTabGroup,
-          { ...baseGroupData, label: selectedGroup, title: tabTitle }
-        ];
+      return [
+        ...prevTabGroup,
+        { ...baseGroupData, label: selectedGroup, title: tabTitle }
+      ];
       // }
     });
 
@@ -899,7 +850,7 @@ function DevtaVastuPage({ id }) {
   useEffect(() => {
     setActiveHouse(tabGroup.filter((e) => e.title == savedGroups[activeTab])[0]);
   }, [activeTab, savedGroups]);
-  
+
 
   // const printHandler = (data) => {
   //   // Check if we have any refs to print
@@ -923,7 +874,7 @@ function DevtaVastuPage({ id }) {
   //           }
   //           return false
   //         })
-          
+
   //         const groupIndex = tabGroup.findIndex(e => e.title == data[i]);
   //         if (groupIndex === -1) {
   //           return
@@ -972,7 +923,7 @@ function DevtaVastuPage({ id }) {
   //         size: landscape;
   //         margin: 0;
   //       }
-        
+
   //       @media print {
   //         body {
   //           margin: 0;
@@ -980,20 +931,20 @@ function DevtaVastuPage({ id }) {
   //           background-color: white;
   //           color: black;
   //         }
-          
+
   //         /* Force color printing */
   //         * {
   //           -webkit-print-color-adjust: exact !important;
   //           print-color-adjust: exact !important;
   //           color-adjust: exact !important;
   //         }
-          
+
   //         /* Page break styling */
   //         .page-break {
   //           page-break-after: always;
   //           break-after: page;
   //         }
-          
+
   //         .new-page:last-of-type {
   //           page-break-after: avoid;
   //           break-after: avoid;
@@ -1009,7 +960,7 @@ function DevtaVastuPage({ id }) {
   //           width: 25%;
   //         }
   //       }
-        
+
   //       /* Non-print styles */
   //       body {
   //         margin: 0;
@@ -1017,7 +968,7 @@ function DevtaVastuPage({ id }) {
   //         color: black;
   //         font-family: Arial, sans-serif;
   //       }
-        
+
   //       /* Page break styling for preview */
   //       .page-break {
   //         padding: 20px 10px;
@@ -1073,34 +1024,34 @@ function DevtaVastuPage({ id }) {
   //   }
   // }
 
-const printHandler = async (data) => {
-  if (!printRefs.current || printRefs.current.length === 0) {
-    console.error('Print container refs are empty or null')
-    return
-  }
-
-  try {
-    // Merge all selected refs into one container
-    const printContainer = document.createElement('div')
-
-    if (Array.isArray(data) && data.length > 0) {
-      data.forEach((item, i) => {
-        const ref = printRefs.current.find(el => el?.id === item)
-        const groupIndex = tabGroup.findIndex(e => e.title === data[i])
-        if (groupIndex === -1 || !ref) return
-
-        const pageWrapper = document.createElement('div')
-        pageWrapper.className = 'new-page page-break'
-        const content = ref.cloneNode(true)
-        pageWrapper.appendChild(content)
-        printContainer.appendChild(pageWrapper)
-      })
-    } else {
-      return toast.error('No matching data found for PDF generation.')
+  const printHandler = async (data) => {
+    if (!printRefs.current || printRefs.current.length === 0) {
+      console.error('Print container refs are empty or null')
+      return
     }
 
-    // Prepare styled HTML for Puppeteer
-    const fullHtml = `
+    try {
+      // Merge all selected refs into one container
+      const printContainer = document.createElement('div')
+
+      if (Array.isArray(data) && data.length > 0) {
+        data.forEach((item, i) => {
+          const ref = printRefs.current.find(el => el?.id === item)
+          const groupIndex = tabGroup.findIndex(e => e.title === data[i])
+          if (groupIndex === -1 || !ref) return
+
+          const pageWrapper = document.createElement('div')
+          pageWrapper.className = 'new-page page-break'
+          const content = ref.cloneNode(true)
+          pageWrapper.appendChild(content)
+          printContainer.appendChild(pageWrapper)
+        })
+      } else {
+        return toast.error('No matching data found for PDF generation.')
+      }
+
+      // Prepare styled HTML for Puppeteer
+      const fullHtml = `
     <!DOCTYPE html>
     <html>
       <head>
@@ -1118,44 +1069,44 @@ const printHandler = async (data) => {
       </body>
     </html>`
 
-    // Send HTML to Next.js API route
-    const response = await fetch('http://localhost:3000/api/generate-pdf', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ html: fullHtml })
-    })
+      // Send HTML to Next.js API route
+      const response = await fetch('http://localhost:3000/api/generate-pdf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ html: fullHtml })
+      })
 
-    if (!response.ok) {
-      throw new Error(`Server responded with ${response.status}`)
+      if (!response.ok) {
+        throw new Error(`Server responded with ${response.status}`)
+      }
+
+      // Receive binary PDF
+      const blob = await response.blob()
+      const url = URL.createObjectURL(blob)
+
+      // Dynamic filename
+      const fullDateTime = '2025-05-11 05:30:45'
+      const formattedDate = fullDateTime.split(' ')[0].replace(/-/g, '')
+      const username = 'DhruviRana4'
+      const filename = `report_${username}_${formattedDate}.pdf`
+
+      // Trigger download
+      const link = document.createElement('a')
+      link.href = url
+      link.download = filename
+      link.click()
+      URL.revokeObjectURL(url)
+
+      toast.success('PDF downloaded successfully!')
+    } catch (err) {
+      console.error('Print error:', err)
+      toast.error('An error occurred while generating the PDF.')
     }
-
-    // Receive binary PDF
-    const blob = await response.blob()
-    const url = URL.createObjectURL(blob)
-
-    // Dynamic filename
-    const fullDateTime = '2025-05-11 05:30:45'
-    const formattedDate = fullDateTime.split(' ')[0].replace(/-/g, '')
-    const username = 'DhruviRana4'
-    const filename = `report_${username}_${formattedDate}.pdf`
-
-    // Trigger download
-    const link = document.createElement('a')
-    link.href = url
-    link.download = filename
-    link.click()
-    URL.revokeObjectURL(url)
-
-    toast.success('PDF downloaded successfully!')
-  } catch (err) {
-    console.error('Print error:', err)
-    toast.error('An error occurred while generating the PDF.')
   }
-}
 
 
 
-  
+
 
   const updatePdfPages = async (selectedGroup, pageNumber) => {
     try {
@@ -1216,26 +1167,26 @@ const printHandler = async (data) => {
       await page.render(renderContext).promise;
       const pageBase64 = canvas.toDataURL('image/png');
       setPreviewUrl(pageBase64);
-      
-       setTabGroup(prevTabGroup => {
-      // Create a deep copy of the previous state
-      const updatedTabGroup = JSON.parse(JSON.stringify(prevTabGroup));
-      
-      // Update only the necessary fields for the selected page
-      if (updatedTabGroup[index]?.NecessaryFiles?.[0]) {
-        // Keep all existing properties and only update these specific ones
-        updatedTabGroup[index].NecessaryFiles[0].selectedPage = pageNumber;
-        updatedTabGroup[index].NecessaryFiles[0].currentPageBase64 = pageBase64;
-        
-        // Update the Base64File to show the current page
-        updatedTabGroup[index].NecessaryFiles[0].Base64File = pageBase64;
-        
-        // Ensure we have the total pages count
-        updatedTabGroup[index].NecessaryFiles[0].pdfPages = totalPages;
-      }
-      
-      return updatedTabGroup;
-    });
+
+      setTabGroup(prevTabGroup => {
+        // Create a deep copy of the previous state
+        const updatedTabGroup = JSON.parse(JSON.stringify(prevTabGroup));
+
+        // Update only the necessary fields for the selected page
+        if (updatedTabGroup[index]?.NecessaryFiles?.[0]) {
+          // Keep all existing properties and only update these specific ones
+          updatedTabGroup[index].NecessaryFiles[0].selectedPage = pageNumber;
+          updatedTabGroup[index].NecessaryFiles[0].currentPageBase64 = pageBase64;
+
+          // Update the Base64File to show the current page
+          updatedTabGroup[index].NecessaryFiles[0].Base64File = pageBase64;
+
+          // Ensure we have the total pages count
+          updatedTabGroup[index].NecessaryFiles[0].pdfPages = totalPages;
+        }
+
+        return updatedTabGroup;
+      });
       setLoading(false);
 
       return pageBase64;
@@ -1309,8 +1260,8 @@ const printHandler = async (data) => {
                 (group, index) => (
                   ((savedGroups.includes(group.title) ? forceRenderAllTabs : false) || activeHouse?.title === group.title) &&
                   (
-                    <>
                       <DevtaVastu
+                        key={`devta-${group.title || index}`}
                         tabTitle={group.title}
                         setPrintRef={el => (printRefs.current[index] = el)}
                         setleftPrintRef={el => (leftprintRefs.current[index] = el)}
@@ -1327,13 +1278,13 @@ const printHandler = async (data) => {
                               updatedGroups[groupIndex] = newName;
                             }
                             return updatedGroups;
-                          });   
+                          });
                           setTabGroup((prev) => {
                             const updatedGroup = [...prev];
                             updatedGroup[index].title = newName;
                             return updatedGroup;
                           });
-                         
+
                         }}
                         fileUploaded={fileUploaded}
                         setFileUploaded={setFileUploaded}
@@ -1397,7 +1348,6 @@ const printHandler = async (data) => {
                         setDisableDraw={newDisableDraw => handleTabGroupChange(index, 'disableDraw', newDisableDraw)}
                         savedGroups={savedGroups}
                       />
-                    </>
                     // <div key={index} style={{ display: activeHouse?.label === group.label ? 'block' : 'none' }}>
                     // </div>
                   ))

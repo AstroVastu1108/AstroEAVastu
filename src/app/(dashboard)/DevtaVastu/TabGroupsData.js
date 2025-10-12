@@ -9,14 +9,14 @@ const DEFAULT_POINTS = [
 const DEFAULT_LINE_SETS = [
   {
     stroke: '#000',
-    strokeWidth: 0.5,
-    strokeDasharray: '5,5',
+    strokeWidth: 1,
+    strokeDasharray: '',
     name: 'Line 1'
   },
   {
     stroke: '#0066cc',
     strokeWidth: 0.5,
-    strokeDasharray: '',
+    strokeDasharray: '5,5',
     name: 'Line 2'
   }
 ]

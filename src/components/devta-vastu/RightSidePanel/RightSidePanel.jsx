@@ -73,6 +73,10 @@ function RightSidePanel({
   show8Charts,
   show4Charts,
   updatePdfPages,
+  handleUndo,
+  handleRedo,
+  history,
+  redoStack
 }) {
   const printRef1 = useRef(null)
   const [tabNewName, setTabNewName] = useState(tabName)
@@ -181,10 +185,8 @@ function RightSidePanel({
             zIndex: 10
           }}
         >
-          <Typography variant='h6' className='font-bold text-purple-800'>
-            {selectedGroup}
-          </Typography>
-          <div className='flex items-center space-x-2'>
+
+          {/* <div className='flex items-center space-x-2'>
             {isEditing ? (
               <>
                 <TextField
@@ -212,7 +214,118 @@ function RightSidePanel({
             <IconButton onClick={isEditing ? handleSave : () => setIsEditing(true)} size='small'>
               <i className={isEditing ? 'tabler-check' : 'tabler-pencil'} width='16' height='16' />
             </IconButton>
+
+             <Box sx={{ display: 'flex', gap: 2 }}>
+                    <Button
+                      variant='contained'
+                      color='primary'
+                      startIcon={<i className='tabler-zoom-in' width='20' height='20' />}
+                      onClick={handleUndo} disabled={history.length === 0}
+                      fullWidth
+                    >
+                      Undo
+                    </Button>
+                    <Button
+                      variant='outlined'
+                      color='primary'
+                      startIcon={<i className='tabler-zoom-out' width='20' height='20' />}
+                      onClick={handleRedo} disabled={redoStack.length === 0}
+                      fullWidth
+                    >
+                      Redo
+                    </Button>
+                  </Box>
+          </div> */}
+          <div className="flex items-start justify-between w-full">
+            {/* LEFT — Editable Tab Title */}
+            <div className="flex flex-col gap-3">
+              {/* Top Group Name */}
+              <Typography variant="h6" className="flex flex-start font-bold text-purple-700 tracking-wide">
+                {selectedGroup}
+              </Typography>
+
+              {/* Editable Tab Name Row */}
+              <div className="flex items-center justify-center gap-3">
+                {isEditing ? (
+                  <>
+                    <TextField
+                      variant="standard"
+                      value={tempValue}
+                      onChange={e => setTempValue(e.target.value)}
+                      autoFocus
+                      sx={{
+                        width: 200,
+                        '& .MuiInputBase-input': { textAlign: 'center', fontWeight: 600, color: '#4B0082' }
+                      }}
+                    />
+                    <IconButton
+                      onClick={() => {
+                        setIsEditing(false)
+                        setTempValue(tabNewName)
+                      }}
+                      size="small"
+                      color="error"
+                    >
+                      <i className="tabler-x text-red-600" width="16" height="16" />
+                    </IconButton>
+                  </>
+                ) : (
+                  <Typography variant="h6" className="font-semibold text-purple-800 text-center">
+                    {tabNewName}
+                  </Typography>
+                )}
+
+                <IconButton
+                  onClick={isEditing ? handleSave : () => setIsEditing(true)}
+                  size="small"
+                  color={isEditing ? 'success' : 'default'}
+                >
+                  <i
+                    className={isEditing ? 'tabler-check text-green-600' : 'tabler-pencil text-gray-600'}
+                    width="16"
+                    height="16"
+                  />
+                </IconButton>
+              </div>
+            </div>
+
+
+            {/* RIGHT — Undo / Redo in column */}
+            <div className="flex flex-col items-end gap-2">
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<i className="tabler-rotate-ccw" width="18" height="18" />}
+                onClick={handleUndo}
+                disabled={history.length === 0}
+                sx={{
+                  minWidth: 100,
+                  textTransform: 'none',
+                  boxShadow: 'none',
+                  fontWeight: 500,
+                }}
+              >
+                Undo
+              </Button>
+
+              <Button
+                variant="outlined"
+                color="primary"
+                startIcon={<i className="tabler-rotate-cw" width="18" height="18" />}
+                onClick={handleRedo}
+                disabled={redoStack.length === 0}
+                sx={{
+                  minWidth: 100,
+                  textTransform: 'none',
+                  fontWeight: 500,
+                  borderWidth: 1.5,
+                }}
+              >
+                Redo
+              </Button>
+            </div>
           </div>
+
 
           {/* <Tooltip title='Save your changes'>
             <Button
@@ -249,7 +362,7 @@ function RightSidePanel({
             {selectedGroup && selectedGroup != '16 Zone Bar Chart' && (
               <>
                 <Box>
-                  
+
 
                   {previewUrl?.OriginalFileName && (
                     <div className='flex flex-col items-center gap-2 w-full mb-2'>
@@ -284,7 +397,7 @@ function RightSidePanel({
                                 size='small'
                                 value={previewUrl?.selectedPage + 1 || selectedPage}
                                 onChange={(e) => {
-                                  const pageIndex = e.target.value-1;
+                                  const pageIndex = e.target.value - 1;
                                   setSelectedPage(e.target.value + 1);
                                   updatePdfPages(tempValue, pageIndex);
                                 }}
@@ -402,6 +515,22 @@ function RightSidePanel({
                     sx={{ flexGrow: 1 }}
                     size='small'
                   />
+                  <TextField
+                    type='number'
+                    value={rotation}
+                    onChange={e => {
+                      let value = parseFloat(e.target.value) || 0
+                      if (value < 0) value = 0
+                      if (value > 360) value = 360
+                      setRotation(value)
+                    }}
+                    size='small'
+                    sx={{ width: '150px' }}
+                    inputProps={{ min: 0, max: 360 }}
+                    InputProps={{
+                      endAdornment: <Typography variant='caption'>°</Typography>
+                    }}
+                  />
                   <Tooltip title='Reset rotation'>
                     <IconButton onClick={() => setRotation(0)} size='small' color='primary' sx={{ p: 0.5 }}>
                       <i className='tabler-refresh' width='16' height='16' />
@@ -436,12 +565,12 @@ function RightSidePanel({
                   <AccordionDetails>
                     <Stack spacing={1}>
                       {[
-                        {
-                          id: 'show45Charts',
-                          label: '44 Area Chart',
-                          checked: show45Charts,
-                          onChange: e => handleShowCharts(45, !show45Charts)
-                        },
+                        // {
+                        //   id: 'show45Charts',
+                        //   label: '44 Area Chart',
+                        //   checked: show45Charts,
+                        //   onChange: e => handleShowCharts(45, !show45Charts)
+                        // },
                         {
                           id: 'show32Charts',
                           label: '32 Area Chart',
@@ -609,7 +738,7 @@ function RightSidePanel({
                     >
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <i className='tabler-line-dashed' width='20' height='20' />
-                        <Typography fontWeight='medium'>Line Controls</Typography>
+                        <Typography fontWeight='medium'>Zone Lines</Typography>
                       </Box>
                     </AccordionSummary>
                     <AccordionDetails>

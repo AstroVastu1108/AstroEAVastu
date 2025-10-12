@@ -37,7 +37,7 @@ const Logo = (props) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      xmlnsSpace="preserve"
+      xmlSpace="preserve"
       // width="76.4848mm"
       // height="49.6308mm"
       width='65mm'

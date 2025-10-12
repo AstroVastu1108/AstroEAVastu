@@ -86,7 +86,7 @@ const CustomBarChart = ({ data, vertical = false, barSize = 20, showLines = fals
                         <CartesianGrid horizontal={true} vertical={false} />
                         <XAxis
                             label={{
-                                value:"MAHAVASTU ZONES",
+                                // value:"MAHAVASTU ZONES",
                                 position: "top",          // Position the label at the top
                                 offset: -40,         
                             }}
@@ -116,11 +116,11 @@ const CustomBarChart = ({ data, vertical = false, barSize = 20, showLines = fals
                                 offset: -5,
                                 style: { textAnchor: 'middle' } // Adjust label style
                             }}
-                            tickFormatter={(value) => value.toFixed(2)} // Format tick values to 2 decimal places
+                            tickFormatter={(value) => (value/1000).toFixed(2)} // Format tick values to 2 decimal places
                             domain={['auto', 'auto']} // Automatically adjust min and max
                             padding={{ top: 20,right:20 }} // Add padding at the top for labels
                             allowDecimals={true}
-                            tickCount={6} // Approximate number of ticks to show
+                            tickCount={5} // Approximate number of ticks to show
                             stroke="#666666" // Axis line color
                             tick={{
                                 fill: '#666666', // Tick text color
@@ -139,7 +139,7 @@ const CustomBarChart = ({ data, vertical = false, barSize = 20, showLines = fals
                                 angle={-90}  // This makes the label vertical
                                 offset={22}  // Adds some space between bar and label
                                 fill="#000000"  // Text color
-                                formatter={(value) => Number(value).toFixed(2)}
+                                formatter={(value) => (Number(value)/1000).toFixed(2)}
                                 style={{ fontSize: '12px' }}  // Optional: customize text size
                             />
                             {data.map((entry, index) => (

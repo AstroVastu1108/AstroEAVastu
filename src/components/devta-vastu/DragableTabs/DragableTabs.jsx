@@ -8,7 +8,6 @@ import './DragableTabs.css'
 
 const DraggableTab1 = ({ group, index, handleRemoveOpen, handleTabChange, activeTab }) => {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: index })
-  console.log("group", group)
   const style = {
     transform: transform ? `translateX(${transform.x}px)` : undefined,
     transition

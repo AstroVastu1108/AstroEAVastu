@@ -15,17 +15,17 @@ export const LINE_STYLES = {
 export const DEFAULT_LINE_SETS = [
   {
     stroke: '#000',
-    strokeWidth: 0.5,
-    strokeDasharray: '5,5',
+    strokeWidth: 1,
+    strokeDasharray: '',
     name: 'Line 1'
   },
   {
-    stroke: '#0066cc',
+    stroke: '#cc0000ff',
     strokeWidth: 0.5,
-    strokeDasharray: '',
+    strokeDasharray: '10,5',
     name: 'Line 2'
   }
-];
+]
 
 export const colors = {
   Yellow: '#FBEEBD',
@@ -473,6 +473,12 @@ export const devta = [
 ]
 
 export const data = [
+  // water element
+  ['N2', 'N4', 'NNW', 'blue'],
+  ['N4', 'N6', 'N', 'blue'],
+  ['N6', 'N8', 'NNE', 'blue'],
+  ['N8', 'E2', 'NE', 'blue'],
+  ['E2', 'E4', 'ENE', '#DDEEBB'],
   // fire element
   ['E4', 'E6', 'E', '#DDEEBB'],
   ['E6', 'E8', 'ESE', '#DDEEBB'],
@@ -485,11 +491,5 @@ export const data = [
   ['W2', 'W4', 'WSW', 'gray'],
   ['W4', 'W6', 'W', 'gray'],
   ['W6', 'W8', 'WNW', 'gray'],
-  ['W8', 'N2', 'NW', 'gray'],
-  // water element
-  ['N2', 'N4', 'NNW', 'blue'],
-  ['N4', 'N6', 'N', 'blue'],
-  ['N6', 'N8', 'NNE', 'blue'],
-  ['N8', 'E2', 'NE', 'blue'],
-  ['E2', 'E4', 'ENE', '#DDEEBB']
+  ['W8', 'N2', 'NW', 'gray']
 ]

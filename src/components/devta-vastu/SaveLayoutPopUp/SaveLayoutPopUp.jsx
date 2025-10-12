@@ -168,10 +168,18 @@ function SaveLayoutPopUp({
       )
 
 
-    const matchingItems = savedGroups
-      .map(label => tabGroup.find(item => item.title === label))
-      .filter(item => item !== undefined)
-
+    const matchingItems = savedGroups.reduce((acc, label) => {
+      const item = tabGroup.find(i => i.title === label)
+      if (item) {
+        acc.push({
+          ...item,
+          showMarma: item.hideMarmaLines,
+          showMarmaPoints: item.hideMarmapoints,
+          showDevtaPoints: item.showDevtaIntersaction
+        })
+      }
+      return acc
+    }, [])
 
     const payload = {
       // "CompanyID": "string",
