@@ -28,6 +28,7 @@ import Loader from '@/components/common/Loader/Loader'
 import ConfirmationPopup from '@/components/common/ConfirmationPopup/ConfirmationPopup'
 import { toast } from 'react-toastify'
 import NSubLordPopUp from '@/components/preview/Nakshatra-SubLord/NSubLord'
+import PDFView from './pdfView'
 
 const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, TransitData, setTransitData, getTransitData, getDivisionalChartData, DivisionalData, setDivisionalData, birthDate, setKundliData, SetKundliConstData }) => {
   // var
@@ -70,6 +71,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
 
 
   const open = Boolean(anchorEl);
+  const pageRef = useRef(null);
   const divRef = useRef(null);
 
   useEffect(() => {
@@ -102,10 +104,253 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     setAnchorEl(null);
   };
 
-  const handleMenuDownload = () => {
+  // const handleMenuDownload = () => {
+  //   handleClose();
+  //   handleDownload();
+  // }
+
+    const handleMenuDownload = async () => {
     handleClose();
-    handleDownload();
-  }
+    setLoading(true);
+
+    try {
+      if (!pageRef.current) {
+        throw new Error('Printable content is not available');
+      }
+
+      // Get all computed styles for the element and its children
+      const getComputedStylesRecursive = (element) => {
+        let styles = '';
+
+        const computedStyle = window.getComputedStyle(element);
+        const elementId = element.id || `elem-${Math.random().toString(36).substr(2, 9)}`;
+
+        if (!element.id) {
+          element.setAttribute('data-pdf-id', elementId);
+        }
+
+        const selector = element.id ? `#${element.id}` : `[data-pdf-id="${elementId}"]`;
+
+        // Get all relevant CSS properties
+        const importantProps = [
+          'display', 'position', 'width', 'height', 'margin', 'padding',
+          'border', 'background', 'background-color', 'color', 'font-family',
+          'font-size', 'font-weight', 'text-align', 'line-height',
+          'flex', 'flex-direction', 'justify-content', 'align-items',
+          'grid', 'grid-template-columns', 'grid-gap', 'gap',
+          'border-radius', 'box-shadow', 'transform', 'opacity', 'border-bottom', 'border-top', 'border-left', 'border-right'
+        ];
+        // const importantProps = [
+        //   'display', 'position', 'width', 'height', 'margin', 'padding',
+        //   'border', 'background', 'background-color', 'color', 'font-family',
+        //   'font-size', 'font-weight', 'text-align', 'line-height',
+        //   'flex', 'flex-direction', 'justify-content', 'align-items',
+        //   'grid', 'grid-template-columns', 'grid-gap', 'gap',
+        //   'border-radius', 'box-shadow', 'transform', 'opacity'
+        // ];
+
+        let cssText = '';
+        importantProps.forEach(prop => {
+          const value = computedStyle.getPropertyValue(prop);
+          if (value && value !== 'none' && value !== 'normal') {
+            cssText += `${prop}: ${value} !important; `;
+          }
+        });
+
+        if (cssText) {
+          styles += `${selector} { ${cssText} }\n`;
+        }
+
+        // Recursively process children
+        Array.from(element.children).forEach(child => {
+          styles += getComputedStylesRecursive(child);
+        });
+
+        return styles;
+      };
+
+      // Get all stylesheets content
+      const getStylesheetContent = async () => {
+        let allStyles = '';
+
+        // Get inline styles
+        const inlineStyles = Array.from(document.querySelectorAll('style'))
+          .map(style => style.textContent)
+          .join('\n');
+
+        allStyles += inlineStyles;
+
+        // Get external stylesheets
+        const links = Array.from(document.querySelectorAll('link[rel="stylesheet"]'));
+        console.log("links", links);
+        for (const link of links) {
+          try {
+            if (link.href.startsWith(window.location.origin)) {
+              const response = await fetch(link.href);
+              const css = await response.text();
+              const filteredCss = css
+                .split('}')
+                .filter(rule => rule.includes('.pdfView'))
+                .map(rule => rule + '}')
+                .join('\n');
+              allStyles += filteredCss;
+            }
+          } catch (error) {
+            console.warn('Could not load stylesheet:', link.href);
+          }
+        }
+
+        return allStyles;
+      };
+
+      const [stylesheetStyles, computedStyles] = await Promise.all([
+        getStylesheetContent(),
+        Promise.resolve(getComputedStylesRecursive(pageRef.current))
+      ]);
+
+      // Clone the content
+      const clonedContent = pageRef.current.cloneNode(true);
+
+      // Build the complete HTML with proper page layout
+      const fullHtml = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=975px, initial-scale=1">
+          <title>Astro Report PDF</title>
+          <style>
+            @page { 
+              size: A4; 
+              margin: 5mm ; 
+
+            }
+            
+                    
+            body { 
+              background: #fff !important; 
+              margin: 0; 
+              padding: 0;
+              width: 210mm;
+              min-height: 297mm;
+              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+              -webkit-print-color-adjust: exact !important; 
+              print-color-adjust: exact !important;
+            }
+            
+            * { 
+              -webkit-print-color-adjust: exact !important; 
+              print-color-adjust: exact !important; 
+              color-adjust: exact !important;
+              box-sizing: border-box;
+            }
+
+            /* Fixed width container - 975px scaled to fit A4 */
+            .previewCard,
+            .print-optimized {
+              width: 975px !important;
+              max-width: 975px !important;
+              min-width: 975px !important;
+              min-height: 100vh;
+              padding: 15px;
+              margin: 0 auto;
+
+              /* Replace transform with zoom */
+              zoom: 1.115;
+              transform: none !important;
+              transform-origin: top center;
+
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+            }
+
+            /* Include computed styles */
+            ${computedStyles}
+
+            // .chart-name {
+            //   page-break-after: always; 
+            // }
+
+
+            /* Additional print-specific overrides */
+            @media print {
+              body {
+                background: white !important;
+              }
+              
+              .no-print {
+                display: none !important;
+              }
+            }
+              
+          </style>
+        </head>
+        <body>
+          ${clonedContent.outerHTML}
+        </body>
+      </html>
+    `;
+
+      // Get filename
+      const fullDateTime = BirthDetails?.FullDateTime || new Date().toISOString();
+      const formattedDate = fullDateTime.split(' ')[0].replace(/-/g, '');
+      const filename = `AstroReport_${formattedDate}.pdf`;
+
+      // Send to PDF generation API
+      const response = await fetch('/api/generate-pdf', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          html: fullHtml,
+          filename: filename,
+          options: {
+            format: 'A4',
+            printBackground: true,
+            preferCSSPageSize: false,
+            margin: {
+              top: '0',
+              right: '0',
+              bottom: '0',
+              left: '0'
+            },
+            scale: 1
+          }
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`Server responded with ${response.status}: ${errorData.details || 'Unknown error'}`);
+      }
+
+      // Download the PDF
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      toast.success('PDF downloaded successfully!');
+    } catch (error) {
+      console.error('Error downloading PDF:', error);
+
+      if (error.message.includes('413') || error.message.includes('Too Large')) {
+        toast.error('PDF content is too large. Please try reducing the content or contact support.');
+      } else {
+        toast.error(`Failed to download PDF: ${error.message}`);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleMenuTimeTool = () => {
     handleClose();
@@ -402,6 +647,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     <>
       {/* {Loading && <Loader />} */}
       <Grid className='previewCard' item xs={12} md={12}>
+        <PDFView AstroVastuHouseScript={AstroVastuHouseScript} BirthDetails={BirthDetails} Symbols={Symbols} pageRef={pageRef} AstroDetails={AstroDetails} ChartSVG={ChartSVG} PlaneNSummaryData={PlaneNSummaryData} HouseNSummaryData={HouseNSummaryData} RahuData={RahuData} KetuData={KetuData} PlanetSummaryData={PlanetSummaryData} HouseSummaryData={HouseSummaryData} />
         <Grid item xs={12} className='pdf-Div'>
           <div className={`chart-name sticky top-0 z-50 font-ea-sb rounded-t flex justify-between md:items-center gap-y-2 lg:flex-row ${!isPrintDiv ? 'sm:flex-row flex-col' : "items-center"}`}>
             {BirthDetails?.FirstName ? `${BirthDetails.FirstName} ${BirthDetails.MiddleName} ${BirthDetails.LastName}` : 'Prashna Kundali'}
