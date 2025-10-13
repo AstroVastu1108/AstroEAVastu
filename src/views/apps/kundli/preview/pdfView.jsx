@@ -63,10 +63,10 @@ function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroD
                 <table className='mt-4'>
                     <tr>
                         <td>
-                            <div className='chart-title print-title'>❋ Birth Chart / Lagna Kundali ❋</div>
+                            <div className='chart-title font-ea-sb print-title'>❋ Birth Chart / Lagna Kundali ❋</div>
                         </td>
                         <td>
-                            <div className='chart-title print-title'>❋ House Chart / Bhav Chalit Kundali ❋</div>
+                            <div className='chart-title font-ea-sb print-title'>❋ House Chart / Bhav Chalit Kundali ❋</div>
 
                         </td>
                     </tr>
@@ -86,7 +86,7 @@ function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroD
 
                 {/*  Nakshatra Astrology ↠ Planet Script  */}
                 <div className='main-MahaDasha-Div pt-5'>
-                    <div className='chart-title print-title'>❋ Nakshatra Astrology ↠ Planet Script ❋</div>
+                    <div className='chart-title font-ea-sb print-title'>❋ Nakshatra Astrology ↠ Planet Script ❋</div>
                     <div className='planet-table'>
                         <NakshtraSummarySimpleTB SummaryData={PlaneNSummaryData} Aspect={"P"} symbols={Symbols} SelectedEventVal={null} />
                     </div>
@@ -107,7 +107,7 @@ function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroD
 
                 {/*  Nakshatra Astrology ↠ House Script  */}
                 <div className='main-MahaDasha-Div pt-5'>
-                    <div className='chart-title print-title'>❋ Nakshatra Astrology ↠ House Script ❋</div>
+                    <div className='chart-title font-ea-sb print-title'>❋ Nakshatra Astrology ↠ House Script ❋</div>
                     <div className='planet-table'>
                         <NakshtraSummarySimpleTB SummaryData={HouseNSummaryData} Aspect={"H"} symbols={Symbols} SelectedEventVal={null} />
                     </div>
@@ -118,7 +118,7 @@ function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroD
 
                 {/* Rahu & Ketu Special Significators */}
                 <div className='main-RahuKetu-Div pt-8'>
-                    <div className='chart-title print-title'>❋ Rahu & Ketu Special Significators ❋</div>
+                    <div className='chart-title font-ea-sb print-title'>❋ Rahu & Ketu Special Significators ❋</div>
                     <div className='RahuKetu-Div flex gap-4 flex-col sm:flex-row'>
                         <RahuKetuSimpleTB RahuData={RahuData} KetuData={KetuData} Significators={"R"} SelectedEventVal={null} />
                     </div>
@@ -140,7 +140,7 @@ function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroD
 
                 {/* Astro Vastu Insights */}
                 <div className='main-AstroVastuScript-Div pt-8 print-content'>
-                    <div className='chart-title print-title'>❋ Astro Vastu Insights ❋</div>
+                    <div className='chart-title font-ea-sb print-title'>❋ Astro Vastu Insights ❋</div>
                     <div className='AstroVastuScript-Div print-house-container'>
                         <House houseArr={AstroVastuHouseScript} Symbols={Symbols}></House>
                     </div>

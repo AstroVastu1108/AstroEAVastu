@@ -92,7 +92,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     setIsPrakritiVisible(false)
   }
 
-    const handleIsNLLordClose = () => {
+  const handleIsNLLordClose = () => {
     setIsNSLoardVisible(false)
   }
 
@@ -109,7 +109,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   //   handleDownload();
   // }
 
-    const handleMenuDownload = async () => {
+  const handleMenuDownload = async () => {
     handleClose();
     setLoading(true);
 
@@ -216,7 +216,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       <!DOCTYPE html>
       <html>
         <head>
-          <meta charset="utf-8">
+          <meta charset="UTF-8">
           <meta name="viewport" content="width=975px, initial-scale=1">
           <title>Astro Report PDF</title>
           <style>
@@ -248,15 +248,15 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
             /* Fixed width container - 975px scaled to fit A4 */
             .previewCard,
             .print-optimized {
-              width: 975px !important;
-              max-width: 975px !important;
-              min-width: 975px !important;
+              width: 800px !important;
+              max-width: 800px !important;
+              min-width: 800px !important;
               min-height: 100vh;
               padding: 15px;
               margin: 0 auto;
 
               /* Replace transform with zoom */
-              zoom: 1.115;
+              zoom: 2;
               transform: none !important;
               transform-origin: top center;
 
@@ -273,6 +273,11 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
             //   page-break-after: always; 
             // }
 
+            .main-AstroVastuScript-Div
+            {
+              page-break-after: always; 
+            }
+
 
             /* Additional print-specific overrides */
             @media print {
@@ -283,6 +288,20 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               .no-print {
                 display: none !important;
               }
+            }
+
+            @font-face {
+              font-family: 'ea-n';
+              font-weight: 400;
+              font-stretch: 100%;
+              src: url('./../../../../assets/fonts/s-n.woff2') format('woff2');
+            }
+
+            @font-face {
+              font-family: 'ea-sb';
+              font-weight: 500;
+              font-stretch: 100%;
+              src: url('./../../../../assets/fonts/s-sb.woff2') format('woff2');
             }
               
           </style>
@@ -311,13 +330,14 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
             format: 'A4',
             printBackground: true,
             preferCSSPageSize: false,
+            deviceScaleFactor: 3,  
             margin: {
               top: '0',
               right: '0',
               bottom: '0',
               left: '0'
             },
-            scale: 1
+            scale: 2
           }
         })
       });
@@ -983,7 +1003,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
         </Grid>
       </Grid>
       {isPrakritiVisible && <PrakritiPopUp open={isPrakritiVisible} handlePraClose={handleIsPraClose} />}
-      {isNSLordVisible && <NSubLordPopUp open={isNSLordVisible} handleNSLordClose={handleIsNLLordClose} PlaneNSummaryData={PlaneNSummaryData}  LifeEventValue={LifeEventValue} Symbols={Symbols}/>}
+      {isNSLordVisible && <NSubLordPopUp open={isNSLordVisible} handleNSLordClose={handleIsNLLordClose} PlaneNSummaryData={PlaneNSummaryData} LifeEventValue={LifeEventValue} Symbols={Symbols} />}
       {openJCK && <JaiminiCharKarakasPopUp open={openJCK} handleClose={handleJCK} JaiminiCharKarakasData={JaiminiCharKarakas} />}
       {openNTC && <NavTaraChakra open={openNTC} handleClose={handleNTC} NavTaraChakraData={NavTaraChakraData} />}
       {openRotation && <Rotation open={openRotation} handleClose={handleRoatationClose} rotationType={rotationType} hanldeRotationChange={hanldeRotationChange} />}
