@@ -337,7 +337,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               bottom: '0',
               left: '0'
             },
-            scale: 2
+            scale: 1
           }
         })
       });
