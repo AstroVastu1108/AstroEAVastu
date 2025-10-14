@@ -103,17 +103,7 @@ function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroD
                             <span>⮌ Retro</span>
                         </div>
                     </div>
-                </div>
-
-                {/*  Nakshatra Astrology ↠ House Script  */}
-                <div className='main-MahaDasha-Div pt-5'>
-                    <div className='chart-title font-ea-sb print-title'>❋ Nakshatra Astrology ↠ House Script ❋</div>
-                    <div className='planet-table'>
-                        <NakshtraSummarySimpleTB SummaryData={HouseNSummaryData} Aspect={"H"} symbols={Symbols} SelectedEventVal={null} />
-                    </div>
-                </div>
-
-                <div class='page-break'></div>
+                </div>                
 
 
                 {/* Rahu & Ketu Special Significators */}
@@ -124,14 +114,23 @@ function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroD
                     </div>
                 </div>
 
-                <div className='pt-8'>
-                    <div className='chart-title'>❋ Planet ↠ Planet Aspects Summary ❋</div>
+                {/*  Nakshatra Astrology ↠ House Script  */}
+                <div className='main-MahaDasha-Div pt-5'>
+                    <div className='chart-title font-ea-sb print-title'>❋ Nakshatra Astrology ↠ House Script ❋</div>
+                    <div className='planet-table'>
+                        <NakshtraSummarySimpleTB SummaryData={HouseNSummaryData} Aspect={"H"} symbols={Symbols} SelectedEventVal={null} />
+                    </div>
+                </div>
+
+                <div className='pt-8 main-planet-summary-Div'>
+                    <div className='chart-title font-ea-sb '>❋ Planet ↠ Planet Aspects Summary ❋</div>
                     <div className=''>
                         <PlanetSummarySimpleTB SummaryData={PlanetSummaryData} Aspect={"P"} />
                     </div>
                 </div>
+
                 <div className='pt-8'>
-                    <div className='chart-title'>❋ Planet ↠ House Aspects Summary ❋</div>
+                    <div className='chart-title font-ea-sb '>❋ Planet ↠ House Aspects Summary ❋</div>
                     <div className=''>
                         <PlanetSummarySimpleTB SummaryData={HouseSummaryData} Aspect={"H"} />
                     </div>

@@ -61,8 +61,8 @@
 .chart-date,
 .chart-name {
   padding-inline-end: 10px;
-  padding-block-start: 5px;
-  padding-block-end: 5px;
+  padding-block-start: 2px;
+  padding-block-end: 2px;
 }
 
 .label-container {
@@ -70,7 +70,7 @@
 }
 
 .birth-info-table {
-  padding: 5px;
+  padding: 2px;
   display: flex;
   border-bottom: 1px solid var(--border-color);
   overflow: auto;
@@ -87,14 +87,14 @@
   }
 
   .text-Value {
-    padding-inline-end: 10px;
+    padding-inline-end: 5px;
     font-size: 9.5pt;
     color: #000;
     text-wrap: nowrap;
   }
 
   .text-label {
-    padding-inline-end: 10px;
+    padding-inline-end: 5px;
     font-size: 9.5pt;
     /* font-weight: 500; */
     color: var(--primary-color);
@@ -840,6 +840,8 @@
     }
   }
 }
+
+
 
 .timeTool-div {
   position: fixed;

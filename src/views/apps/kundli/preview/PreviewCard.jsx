@@ -138,16 +138,9 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
           'font-size', 'font-weight', 'text-align', 'line-height',
           'flex', 'flex-direction', 'justify-content', 'align-items',
           'grid', 'grid-template-columns', 'grid-gap', 'gap',
-          'border-radius', 'box-shadow', 'transform', 'opacity', 'border-bottom', 'border-top', 'border-left', 'border-right'
+          'border-radius', 'box-shadow', 'transform', 'opacity', 'border-bottom',
+          'border-top', 'border-left', 'border-right', 'text-wrap'
         ];
-        // const importantProps = [
-        //   'display', 'position', 'width', 'height', 'margin', 'padding',
-        //   'border', 'background', 'background-color', 'color', 'font-family',
-        //   'font-size', 'font-weight', 'text-align', 'line-height',
-        //   'flex', 'flex-direction', 'justify-content', 'align-items',
-        //   'grid', 'grid-template-columns', 'grid-gap', 'gap',
-        //   'border-radius', 'box-shadow', 'transform', 'opacity'
-        // ];
 
         let cssText = '';
         importantProps.forEach(prop => {
@@ -211,22 +204,29 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       // Clone the content
       const clonedContent = pageRef.current.cloneNode(true);
 
+      // Wrap each house-Div in a page-break-safe container
+      const houseDivs = clonedContent.querySelectorAll('.house-Div');
+      houseDivs.forEach((houseDiv) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'house-wrapper-pdf';
+        houseDiv.parentNode.insertBefore(wrapper, houseDiv);
+        wrapper.appendChild(houseDiv);
+      });
+
       // Build the complete HTML with proper page layout
       const fullHtml = `
       <!DOCTYPE html>
       <html>
         <head>
           <meta charset="UTF-8">
-          <meta name="viewport" content="width=975px, initial-scale=1">
+          <meta name="viewport" content="width=800px, initial-scale=1">
           <title>Astro Report PDF</title>
           <style>
             @page { 
               size: A4; 
-              margin: 5mm ; 
-
+              margin: 5mm; 
             }
             
-                    
             body { 
               background: #fff !important; 
               margin: 0; 
@@ -245,7 +245,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               box-sizing: border-box;
             }
 
-            /* Fixed width container - 975px scaled to fit A4 */
+            /* Fixed width container - 800px scaled to fit A4 */
             .previewCard,
             .print-optimized {
               width: 800px !important;
@@ -266,18 +266,119 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               justify-content: center;
             }
 
+            /* CRITICAL: House wrapper for page breaks */
+            .house-wrapper-pdf {
+              page-break-inside: avoid !important;
+              break-inside: avoid !important;
+              -webkit-column-break-inside: avoid !important;
+              display: block !important;
+              position: relative !important;
+              overflow: visible !important;
+            }
+
+            /* House section styles */
+            .house-Div {
+              display: block !important;
+              width: 100% !important;
+              position: relative !important;
+              margin-bottom: 15px !important;
+            }
+
+            /* Prevent breaks in header */
+            .house-header {
+              page-break-after: avoid !important;
+              break-after: avoid !important;
+              page-break-inside: avoid !important;
+              break-inside: avoid !important;
+            }
+
+            /* Prevent breaks in body */
+            .house-body {
+              page-break-inside: avoid !important;
+              break-inside: avoid !important;
+            }
+
+            /* Keep sub-sections together */
+            .house-body-Div1,
+            .house-body-Div2 {
+              page-break-inside: avoid !important;
+              break-inside: avoid !important;
+            }
+
+            /* Rashi sections */
+            .rahi-Div {
+              page-break-inside: avoid !important;
+              break-inside: avoid !important;
+            }
+
+            /* Planet sections */
+            .planet-Div {
+              page-break-inside: avoid !important;
+              break-inside: avoid !important;
+            }
+
+            /* Main containers allow breaks between houses */
+            .house-main-Div,
+            .main-AstroVastuScript-Div,
+            .AstroVastuScript-Div,
+            .print-house-container {
+              page-break-inside: auto !important;
+              break-inside: auto !important;
+            }
+
+            .neutral {
+        color: #1762ad;
+        /* font-weight: 500; */
+      }
+
+      .rake {
+        display: flex;
+        gap: 2px;
+        align-items: center;
+        justify-content: center;
+        color: gray;
+        /* font-weight: 500; */
+      }
+
+      .positive {
+        color: #057143;
+        /* font-weight: 500; */
+      }
+
+      .negative {
+        color: #cc1616;
+        /* font-weight: 500; */
+      }
+
+            /* Chart title */
+            .chart-title,
+            .print-title {
+              page-break-after: avoid !important;
+              break-after: avoid !important;
+              margin-bottom: 20px !important;
+            }
+
+            /* Orphans and widows */
+            * {
+              orphans: 4 !important;
+              widows: 4 !important;
+            }
+
             /* Include computed styles */
             ${computedStyles}
 
-            // .chart-name {
-            //   page-break-after: always; 
-            // }
+            /* Page break controls for main sections */
+            .main-RahuKetu-Div {
+              page-break-before: always; 
+            }
 
-            .main-AstroVastuScript-Div
-            {
+            .main-planet-summary-Div {
               page-break-after: always; 
             }
 
+            .main-AstroVastuScript-Div {
+              page-break-after: always; 
+            }
 
             /* Additional print-specific overrides */
             @media print {
@@ -287,6 +388,10 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               
               .no-print {
                 display: none !important;
+              }
+
+              .house-wrapper-pdf {
+                page-break-inside: avoid !important;
               }
             }
 
@@ -329,13 +434,13 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
           options: {
             format: 'A4',
             printBackground: true,
-            preferCSSPageSize: false,
-            deviceScaleFactor: 3,  
+            preferCSSPageSize: true,
+            deviceScaleFactor: 3,
             margin: {
-              top: '0',
-              right: '0',
-              bottom: '0',
-              left: '0'
+              top: '5mm',
+              right: '5mm',
+              bottom: '5mm',
+              left: '5mm'
             },
             scale: 1
           }

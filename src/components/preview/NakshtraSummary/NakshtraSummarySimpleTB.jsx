@@ -181,8 +181,8 @@ function NakshtraSummarySimpleTB({ SummaryData, Aspect, symbols, SelectedEventVa
 
     return (
         <>
-            <div className="nakshatra-table-container" style={{ width: '975px', overflowX: 'auto' }}>
-                <table className="nakshatra-table" style={{ width: '975px', borderCollapse: 'collapse' }}>
+            <div className="nakshatra-table-container" style={{ width: '800px', overflowX: 'auto' }}>
+                <table className="nakshatra-table" style={{ width: '800px', borderCollapse: 'collapse' }}>
                     <thead>
                         <tr>
                             {Aspect === 'P' ? (
@@ -192,7 +192,7 @@ function NakshtraSummarySimpleTB({ SummaryData, Aspect, symbols, SelectedEventVa
                             )}
                             <th className="rowheader bg-primary" style={{ width: '95px' }}>Sign</th>
                             <th className="rowheader bg-primary" style={{ width: '110px' }}>Nakshatra</th>
-                            <th className="rowheader bg-primary" style={{ width: '90px' }}>Devta</th>
+                            <th className="rowheader bg-primary" style={{ width: '80px' }}>Devta</th>
                             <th className="rowheader bg-primary" style={{ width: '100px' }}>
                                 PL <span className="planet-col-title-small">(Source)</span>
                             </th>
@@ -202,8 +202,8 @@ function NakshtraSummarySimpleTB({ SummaryData, Aspect, symbols, SelectedEventVa
                             <th className="rowheader bg-primary" style={{ width: '95px' }}>
                                 SL <span className="planet-col-title-small">(Verifier)</span>
                             </th>
-                            <th className="rowheader bg-primary" style={{ width: '70px' }}>PH</th>
-                            <th className="rowheader bg-primary nlsl-column-cell" style={{ width: '100px' }}>
+                            <th className="rowheader bg-primary" style={{ width: '60px' }}>PH</th>
+                            <th className="rowheader bg-primary nlsl-column-cell" style={{ width: '120px' }}>
                                 NL-SL <span className="planet-col-title-small">(InnerSelf)</span>
                             </th>
                         </tr>
@@ -262,7 +262,7 @@ function NakshtraSummarySimpleTB({ SummaryData, Aspect, symbols, SelectedEventVa
   .nakshatra-table th,
   .nakshatra-table td {
     border: 1px solid #e0e0e0;
-    padding: 2px 6px; /* reduced padding */
+    padding: 1px 3px; /* reduced padding */
     vertical-align: middle;
   }
 

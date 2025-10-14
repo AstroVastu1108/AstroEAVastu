@@ -71,7 +71,7 @@ const SummaryAspect = ({ SummaryData, Aspect }) => {
   }, [SummaryData, Aspect]);
 
   return (
-    <div style={{ width: '975px', maxWidth: '975px', overflowX: 'auto' }}>
+    <div style={{ width: '800px', maxWidth: '800px', overflowX: 'auto' }}>
       <table className="summary-aspect-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead>
           <tr>
@@ -81,8 +81,8 @@ const SummaryAspect = ({ SummaryData, Aspect }) => {
                 className="rowheader bg-primary"
                 style={{
                   textAlign: index === 0 ? 'left' : 'center',
-                  minWidth: index === 0 ? '100px' : '60px',
-                  width: index === 0 ? '100px' : 'auto'
+                  minWidth: index === 0 ? '70px' : '50px',
+                  width: index === 0 ? '70px' : 'auto'
                 }}
               >
                 {headerName}
@@ -119,14 +119,14 @@ const SummaryAspect = ({ SummaryData, Aspect }) => {
         .summary-aspect-table th,
         .summary-aspect-table td {
           border: 1px solid #e0e0e0;
-          padding: 4px 8px;
+          padding: 2px 4px;
           vertical-align: middle;
         }
         
         .summary-aspect-table th {
           background-color: #f5f5f5;
           font-weight: 600;
-          height: 36px;
+          height: 28px;
           white-space: nowrap;
         }
         
@@ -167,18 +167,18 @@ const SummaryAspect = ({ SummaryData, Aspect }) => {
         }
 
         /* Responsive adjustments */
-        @media (max-width: 975px) {
+        @media (max-width: 800px) {
           .summary-aspect-table {
             font-size: 0.8125rem;
           }
           
           .summary-aspect-table th,
           .summary-aspect-table td {
-            padding: 3px 6px;
+            padding: 1.5px 3px;
           }
           
           .summary-aspect-table th {
-            height: 32px;
+            height: 28px;
           }
           
           .summary-aspect-table td {
