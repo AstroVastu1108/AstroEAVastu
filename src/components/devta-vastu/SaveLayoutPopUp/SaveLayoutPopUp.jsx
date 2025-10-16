@@ -127,47 +127,6 @@ function SaveLayoutPopUp({
       return // Prevent submission
     }
 
-    const matchingItems1 = tabGroup
-      .filter(item => savedGroups.includes(item.label))
-      .map(
-        ({
-          label,
-          points,
-          centroid,
-          snapToCentroid,
-          inputDegree,
-          zoom,
-          translate,
-          polygons,
-          lockChakra,
-          lockCentroid,
-          lineSets,
-          hideCircle,
-          hide32Circle,
-          hide16Circle,
-          hide8Circle,
-          hide4Circle
-        }) => ({
-          label,
-          points,
-          centroid,
-          snapToCentroid,
-          inputDegree,
-          zoom,
-          translate,
-          polygons,
-          lockChakra,
-          lockCentroid,
-          lineSets,
-          hideCircle,
-          hide32Circle,
-          hide16Circle,
-          hide8Circle,
-          hide4Circle
-        })
-      )
-
-
     const matchingItems = savedGroups.reduce((acc, label) => {
       const item = tabGroup.find(i => i.title === label)
       if (item) {
@@ -196,18 +155,6 @@ function SaveLayoutPopUp({
       Remark: formData?.Remark,
       Revision: formData?.Revision,
       AuditDate: new Date(),
-      // NecessaryFiles: [
-      //   {
-      //     "OriginalFileName": "string",
-      //     "Base64File": "string",
-      //     "isPdf": true,
-      //     "pdfImages": [
-      //       "string"
-      //     ],
-      //     "pdfPages": 0,
-      //     "selectedPage": 0
-      //   }
-      // ],
       TabGroups: matchingItems
     }
     try {

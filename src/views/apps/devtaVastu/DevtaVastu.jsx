@@ -43,6 +43,7 @@ import RightSidePanel from '@/components/devta-vastu/RightSidePanel/RightSidePan
 import CropImageWithSVG from '@/components/devta-vastu/CropImage/CropImage'
 import RightPrintSection from '@/components/devta-vastu/RightPrintSection/RightPrintSection'
 import { configs } from './devtaVastuConfig/VastuLayoutConfig'
+import CustomDevtaChart from '@/components/Charts/CustomDevtaChart'
 
 GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.js'
 
@@ -194,29 +195,29 @@ const DevtaVastu = ({
 
 
   useEffect(() => {
-  const handleKeyDown = (e) => {
-    // Ctrl + Z → Undo
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
-      e.preventDefault();
-      handleUndo();
-    }
+    const handleKeyDown = (e) => {
+      // Ctrl + Z → Undo
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+        e.preventDefault();
+        handleUndo();
+      }
 
-    // Ctrl + Y → Redo
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
-      e.preventDefault();
-      handleRedo();
-    }
+      // Ctrl + Y → Redo
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
+        e.preventDefault();
+        handleRedo();
+      }
 
-    // Optional: Shift + Ctrl + Z → Redo (like Photoshop)
-    if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'z') {
-      e.preventDefault();
-      handleRedo();
-    }
-  };
+      // Optional: Shift + Ctrl + Z → Redo (like Photoshop)
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'z') {
+        e.preventDefault();
+        handleRedo();
+      }
+    };
 
-  window.addEventListener('keydown', handleKeyDown);
-  return () => window.removeEventListener('keydown', handleKeyDown);
-}, [handleUndo, handleRedo]);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleUndo, handleRedo]);
 
 
   // Helper to create a serializable snapshot of current editable state
@@ -1601,55 +1602,13 @@ const DevtaVastu = ({
     setOpenNewPolygon(true)
   }
 
-  const handleShowCharts = (chartValue, isChecked) => {
-    if (isChecked) {
-      // When checking a checkbox
-      setShowCharts(true);
-      setShowDevta(true);
-      setShow45Charts(chartValue === 45);
-      setShow32Charts(chartValue === 32);
-      setShow8Charts(chartValue === 8);
-      setShow4Charts(chartValue === 4);
-      setHideCircle(true);  // If you need to show the circle when checked
-    } else {
-      setHideCircle(false);
-      switch (chartValue) {
-        case 45:
-          setShow45Charts(false);
-          break;
-        case 32:
-          setShow32Charts(false);
-          break;
-        case 8:
-          setShow8Charts(false);
-          break;
-        case 4:
-          setShow4Charts(false);
-          break;
-        default:
-          break;
-      }
-
-      // Check if all charts are unchecked
-      const isAllUnchecked = () => {
-        return !show45Charts && !show32Charts && !show8Charts && !show4Charts
-      }
-
-      // Only hide Devta and Charts if all are unchecked
-      if (isAllUnchecked()) {
-        setShowDevta(false)
-        setShowCharts(false)
-      }
-    }
-  }
-
   const [Area_45_Data, setArea_45_Data] = useState([])
   const [Area_32_Data, setArea_32_Data] = useState([])
   const [Area_8_Data, setArea_8_Data] = useState([])
   const [Area_4_Data, setArea_4_Data] = useState([])
 
   useEffect(() => {
-    if (selectedGroup && selectedGroup == '16 Zone Bar Chart') {
+    if (selectedGroup && selectedGroup == '16 Zone Bar Chart' || selectedGroup == 'Devta bar chart') {
       if (intersectionsState.length > 0) {
         {
           intersectionsState.map((intersection, i) => {
@@ -1800,11 +1759,23 @@ const DevtaVastu = ({
                           ? Area_8_Data
                           : show4Charts
                             ? Area_4_Data
-                            : allResults // This will show all combined data
+                            : allResults
                   }
                   vertical={show32Charts || show45Charts ? true : false}
                   barSize={show32Charts || show45Charts ? 10 : 25}
                   showLines={show32Charts || show45Charts || show4Charts || show8Charts ? false : true}
+                />
+              </div>
+            ) : selectedGroup == 'Devta bar chart' ? (
+               <div style={{ width: width, height: height }}>
+                <CustomDevtaChart
+                  dataSets={{
+                    data32: Area_32_Data,
+                    data8: Area_8_Data,
+                    data4: Area_4_Data
+                  }}
+                   barSize={15}
+                  showLines={true}
                 />
               </div>
             ) : (
@@ -1822,7 +1793,7 @@ const DevtaVastu = ({
                   style={{
                     touchAction: 'none',
                     border: '0',
-                    shapeRendering: 'auto' // Enables antialiasing
+                    shapeRendering: 'auto'
                   }}
                 >
                   {!fileUploaded && (
@@ -2338,7 +2309,8 @@ const DevtaVastu = ({
                             textAnchor='middle' // Center the text horizontally
                             style={{ userSelect: 'none', pointerEvents: 'none' }} // Make text non-selectable and ignore pointer events
                           >
-                            {polygonIndex + 1}. {polygon.title || `Polygon ${polygon.id}`}{' '}
+                            {String.fromCharCode(65 + polygonIndex)}. {polygon.title || `Polygon ${polygon.id}`}
+                            {/* {polygonIndex + 1}. {polygon.title || `Polygon ${polygon.id}`}{' '} */}
                             {/* Default title if none is provided */}
                           </text>
 
@@ -2555,11 +2527,6 @@ const DevtaVastu = ({
           handleAddPolygonToggle={handleAddPolygonToggle}
           setCropImage={setCropImage}
           cropImage={cropImage}
-          handleShowCharts={handleShowCharts}
-          show45Charts={show45Charts}
-          show32Charts={show32Charts}
-          show8Charts={show8Charts}
-          show4Charts={show4Charts}
           updatePdfPages={updatePdfPages}
           handleUndo={handleUndo}
           handleRedo={handleRedo}

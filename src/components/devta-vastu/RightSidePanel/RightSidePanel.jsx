@@ -22,6 +22,7 @@ import {
 import RightPrintSection from '../RightPrintSection/RightPrintSection'
 import LineControls from '@/views/apps/devtaVastu/LineControls'
 import { toast } from 'react-toastify'
+import { Grid } from '@mui/material'
 
 function RightSidePanel({
   savedGroups,
@@ -67,11 +68,6 @@ function RightSidePanel({
   handleAddPolygonToggle,
   setCropImage,
   cropImage,
-  handleShowCharts,
-  show45Charts,
-  show32Charts,
-  show8Charts,
-  show4Charts,
   updatePdfPages,
   handleUndo,
   handleRedo,
@@ -158,7 +154,7 @@ function RightSidePanel({
   }
 
   const [selectedPage, setSelectedPage] = useState(previewUrl?.selectedPage)
-
+  
   return (
     <>
       <div
@@ -297,7 +293,7 @@ function RightSidePanel({
                 color="primary"
                 startIcon={<i className="tabler-rotate-ccw" width="18" height="18" />}
                 onClick={handleUndo}
-                disabled={history.length === 0}
+                disabled={history?.length === 0}
                 sx={{
                   minWidth: 100,
                   textTransform: 'none',
@@ -313,7 +309,7 @@ function RightSidePanel({
                 color="primary"
                 startIcon={<i className="tabler-rotate-cw" width="18" height="18" />}
                 onClick={handleRedo}
-                disabled={redoStack.length === 0}
+                disabled={redoStack?.length === 0}
                 sx={{
                   minWidth: 100,
                   textTransform: 'none',
@@ -359,7 +355,7 @@ function RightSidePanel({
             </Box>
 
             {/* Main Action Buttons */}
-            {selectedGroup && selectedGroup != '16 Zone Bar Chart' && (
+            {selectedGroup && selectedGroup != '16 Zone Bar Chart' && selectedGroup != 'Devta bar chart' && (
               <>
                 <Box>
 
@@ -541,74 +537,10 @@ function RightSidePanel({
             )}
 
             <Box>
-              {selectedGroup && selectedGroup == '16 Zone Bar Chart' && (
-                <Accordion
-                  defaultExpanded
-                  sx={{
-                    border: '1px solid transparent',
-                    '&.Mui-expanded': {
-                      borderColor: 'var(--primary-color)'
-                    },
-                    backgroundColor: 'transparent !important',
-                    boxShadow: 'none'
-                  }}
-                >
-                  <AccordionSummary
-                    className='bg-gradient-to-r from-purple-100 to-purple-2'
-                    sx={{ borderRadius: '6px' }}
-                  >
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <i className='tabler-settings' width='20' height='20' />
-                      <Typography fontWeight='medium'>Devta Bar Chart Options</Typography>
-                    </Box>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <Stack spacing={1}>
-                      {[
-                        // {
-                        //   id: 'show45Charts',
-                        //   label: '44 Area Chart',
-                        //   checked: show45Charts,
-                        //   onChange: e => handleShowCharts(45, !show45Charts)
-                        // },
-                        {
-                          id: 'show32Charts',
-                          label: '32 Area Chart',
-                          checked: show32Charts,
-                          onChange: e => handleShowCharts(32, !show32Charts)
-                        },
-                        {
-                          id: 'show8Charts',
-                          label: '8 Area Chart',
-                          checked: show8Charts,
-                          onChange: e => handleShowCharts(8, !show8Charts)
-                        },
-                        {
-                          id: 'show4Charts',
-                          label: '4 Area Chart',
-                          checked: show4Charts,
-                          onChange: e => handleShowCharts(4, !show4Charts)
-                        }
-                      ].map(({ id, label, checked, onChange }) => (
-                        <FormControlLabel
-                          key={id}
-                          control={
-                            <Checkbox
-                              checked={checked}
-                              onChange={onChange}
-                              // onChange={e => onChange(e.target.checked)}
-                              color='secondary'
-                              size='small'
-                            />
-                          }
-                          label={<Typography variant='body2'>{label}</Typography>}
-                        />
-                      ))}
-                    </Stack>
-                  </AccordionDetails>
-                </Accordion>
+              {selectedGroup && (selectedGroup == '16 Zone Bar Chart' ||  selectedGroup == 'Devta bar chart') && (
+                <></>
               )}
-              {selectedGroup && selectedGroup != '16 Zone Bar Chart' && (
+              {(selectedGroup && (selectedGroup !== '16 Zone Bar Chart' && selectedGroup !== 'Devta bar chart')) ? (
                 <>
                   <Accordion
                     defaultExpanded
@@ -742,11 +674,29 @@ function RightSidePanel({
                       </Box>
                     </AccordionSummary>
                     <AccordionDetails>
-                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                        <LineControls lineSet={lineSets[0]} setIndex={0} onUpdate={handleLineSetUpdate} />
+                      {/* <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: 1, mt:2 }}>
+                        <LineControls lineSet={lineSets[0]} setIndex={0} onUpdate={handleLineSetUpdate} sx={{ flex: 1 }}  />
                         <Divider />
-                        <LineControls lineSet={lineSets[1]} setIndex={1} onUpdate={handleLineSetUpdate} />
-                      </Box>
+                        <LineControls lineSet={lineSets[1]} setIndex={1} onUpdate={handleLineSetUpdate} sx={{ flex: 1 }} />
+                      </Box> */}
+                      <Grid container alignItems="center" spacing={1} sx={{ mt: 2 }}>
+                        <Grid item xs={6}>
+                          <LineControls
+                            lineSet={lineSets[0]}
+                            setIndex={0}
+                            onUpdate={handleLineSetUpdate}
+                          />
+                        </Grid>
+
+                        <Grid item xs={6}>
+                          <LineControls
+                            lineSet={lineSets[1]}
+                            setIndex={1}
+                            onUpdate={handleLineSetUpdate}
+                          />
+                        </Grid>
+                      </Grid>
+
                     </AccordionDetails>
                   </Accordion>
 
@@ -906,7 +856,7 @@ function RightSidePanel({
                     </AccordionDetails>
                   </Accordion>
                 </>
-              )}
+              ) : <></>}
             </Box>
           </Stack>
         </Box>

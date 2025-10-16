@@ -17,13 +17,13 @@ export const DEFAULT_LINE_SETS = [
     stroke: '#000',
     strokeWidth: 1,
     strokeDasharray: '',
-    name: 'Line 1'
+    name: 'Zone Line'
   },
   {
     stroke: '#cc0000ff',
     strokeWidth: 0.5,
     strokeDasharray: '10,5',
-    name: 'Line 2'
+    name: 'Internal Zone Line'
   }
 ]
 

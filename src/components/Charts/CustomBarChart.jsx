@@ -117,7 +117,7 @@ const CustomBarChart = ({ data, vertical = false, barSize = 20, showLines = fals
                                 style: { textAnchor: 'middle' } // Adjust label style
                             }}
                             tickFormatter={(value) => (value/1000).toFixed(2)} // Format tick values to 2 decimal places
-                            domain={['auto', 'auto']} // Automatically adjust min and max
+                            domain={[0, 'dataMax']} // Automatically adjust min and max
                             padding={{ top: 20,right:20 }} // Add padding at the top for labels
                             allowDecimals={true}
                             tickCount={5} // Approximate number of ticks to show

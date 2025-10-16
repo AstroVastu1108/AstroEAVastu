@@ -11,13 +11,13 @@ const DEFAULT_LINE_SETS = [
     stroke: '#000',
     strokeWidth: 1,
     strokeDasharray: '',
-    name: 'Line 1'
+    name: 'Zone Line'
   },
   {
     stroke: '#0066cc',
     strokeWidth: 0.5,
     strokeDasharray: '5,5',
-    name: 'Line 2'
+    name: 'Internal Zone Line'
   }
 ]
 

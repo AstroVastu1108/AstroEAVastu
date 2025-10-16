@@ -29,7 +29,7 @@ import AddPagePopUp from '@/components/devta-vastu/AddPagePopUp/AddPagePopUp'
 import { TabsData } from './TabGroupsData'
 import SaveLayoutPopUp from '@/components/devta-vastu/SaveLayoutPopUp/SaveLayoutPopUp'
 
-import { getVastuLayouts, getVastuLayoutsByID, saveVastuLayouts } from '@/app/Server/API/vastulayout'
+import { editVastuLayouts, getVastuLayouts, getVastuLayoutsByID, saveVastuLayouts } from '@/app/Server/API/vastulayout'
 import { useRouter } from "next/navigation";
 function DevtaVastuPage({ id }) {
   const router = useRouter();
@@ -1196,6 +1196,68 @@ function DevtaVastuPage({ id }) {
     }
   };
 
+  const [isSaving, setIsSaving] = useState(false)
+  const handleSortcutSave = async () => {
+    const matchingItems = savedGroups.reduce((acc, label) => {
+      const item = tabGroup.find(i => i.title === label)
+      if (item) {
+        acc.push({
+          ...item,
+          showMarma: item.hideMarmaLines,
+          showMarmaPoints: item.hideMarmapoints,
+          showDevtaPoints: item.showDevtaIntersaction
+        })
+      }
+      return acc
+    }, [])
+
+    const payload = {
+      ProjectName: formData?.ProjectName,
+      ClientName: formData?.clientId,
+      Address: formData?.Address,
+      OpenArea: formData?.OAUV || 0,
+      OpenAreaUnit: formData?.OAU || '',
+      CoveredArea: formData?.CAUV || 0,
+      CoveredAreaUnit: formData?.CAU || '',
+      TotalArea: formData?.TAUV || 0,
+      TotalAreaUnit: formData?.TAU || '',
+      Reference: formData?.Reference,
+      Remark: formData?.Remark,
+      Revision: formData?.Revision,
+      AuditDate: new Date(),
+      TabGroups: matchingItems
+    }
+    try {
+      let data
+      let msg
+      setIsSaving(true)
+      if (formData?.isUpdate) {
+        data = await editVastuLayouts(formData?.VPID, payload)
+        msg = 'Vastu Griding Update Successfully.'
+      }
+      if (data.hasError) {
+        setIsSaving(false)
+        return toast.error(data.error)
+      }
+      setIsSaving(false)
+      return toast.success(msg)
+    } catch (error) {
+      return toast.error(error)
+    }
+  }
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Ctrl + Z → Undo
+      if ((e.ctrlKey) && e.key.toLowerCase() === 's') {
+        e.preventDefault();
+        handleSortcutSave();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleSortcutSave]);
 
   return (
     <>
@@ -1208,6 +1270,32 @@ function DevtaVastuPage({ id }) {
               <div className={`chart-name sticky top-0 z-50 font-ea-sb rounded-t flex justify-between md:items-center gap-y-2 lg:flex-row sm:flex-row flex-col`}>
                 {vastuLayoutData?.ProjectName ? vastuLayoutData?.ProjectName : `New-Vastu-Layout-${layoutCount}`}
                 <div className={`flex justify-between md-items-center lg:gap-1 lg:flex-row md:flex-row gap-5 birthDateTime-Div`} >
+                  <IconButton
+                    onClick={handleSortcutSave}
+                    size="small"
+                    sx={{ ml: 1 }}
+                    title={isSaving ? "Saving..." : "Save (Ctrl+S)"}
+                    disabled={isSaving}
+                  >
+                    {isSaving ? (
+                      <>
+                        <i className="tabler-loader-2" width="16" height="16" style={{
+                          color: 'var(--secondary-color)',
+                          animation: 'spin 1s linear infinite'
+                        }} />
+                        <style jsx>{`
+                          @keyframes spin {
+                            from { transform: rotate(0deg); }
+                            to { transform: rotate(360deg); }
+                          }
+                        `}</style>
+                      </>
+                    ) : (
+                      <i className="tabler-device-floppy" width="16" height="16" style={{
+                        color: 'var(--secondary-color)'
+                      }} />
+                    )}
+                  </IconButton>
                   <div className='flex flex-row gap-1 chart-date items-center'>
                     <span className='label font-ea-n'>Client Name: </span>
                     <span className='value font-ea-sb'>{vastuLayoutData?.ClientName ? vastuLayoutData?.ClientName : "--"}</span>
@@ -1260,94 +1348,94 @@ function DevtaVastuPage({ id }) {
                 (group, index) => (
                   ((savedGroups.includes(group.title) ? forceRenderAllTabs : false) || activeHouse?.title === group.title) &&
                   (
-                      <DevtaVastu
-                        key={`devta-${group.title || index}`}
-                        tabTitle={group.title}
-                        setPrintRef={el => (printRefs.current[index] = el)}
-                        setleftPrintRef={el => (leftprintRefs.current[index] = el)}
-                        downloadPDFLoading={downloadPDFLoading}
-                        setDownloadPDFLoading={setDownloadPDFLoading}
-                        saveLoading={saveLoading}
-                        setSaveLoading={setSaveLoading}
-                        selectedGroup={group.label}
-                        setPageTitle={(newName) => {
-                          setSavedGroups(prev => {
-                            const updatedGroups = [...prev];
-                            const groupIndex = updatedGroups.indexOf(group.title);
-                            if (groupIndex !== -1) {
-                              updatedGroups[groupIndex] = newName;
-                            }
-                            return updatedGroups;
-                          });
-                          setTabGroup((prev) => {
-                            const updatedGroup = [...prev];
-                            updatedGroup[index].title = newName;
-                            return updatedGroup;
-                          });
+                    <DevtaVastu
+                      key={`devta-${group.title || index}`}
+                      tabTitle={group.title}
+                      setPrintRef={el => (printRefs.current[index] = el)}
+                      setleftPrintRef={el => (leftprintRefs.current[index] = el)}
+                      downloadPDFLoading={downloadPDFLoading}
+                      setDownloadPDFLoading={setDownloadPDFLoading}
+                      saveLoading={saveLoading}
+                      setSaveLoading={setSaveLoading}
+                      selectedGroup={group.label}
+                      setPageTitle={(newName) => {
+                        setSavedGroups(prev => {
+                          const updatedGroups = [...prev];
+                          const groupIndex = updatedGroups.indexOf(group.title);
+                          if (groupIndex !== -1) {
+                            updatedGroups[groupIndex] = newName;
+                          }
+                          return updatedGroups;
+                        });
+                        setTabGroup((prev) => {
+                          const updatedGroup = [...prev];
+                          updatedGroup[index].title = newName;
+                          return updatedGroup;
+                        });
 
-                        }}
-                        fileUploaded={fileUploaded}
-                        setFileUploaded={setFileUploaded}
-                        handleFileUpload={handleFileUpload(tabGroup[index], index)}
-                        previewUrl={tabGroup[index].NecessaryFiles[0]}
-                        setPreviewUrl={setPreviewUrl}
-                        points={tabGroup[index].points}
-                        setPoints={newPoints => handleTabGroupChange(index, 'points', newPoints)}
-                        centroid={tabGroup[index].centroid}
-                        setCentroid={newCentroid => handleTabGroupChange(index, 'centroid', newCentroid)}
-                        snapToCentroid={tabGroup[index].snapToCentroid}
-                        setSnapToCentroid={newSnapToCentroid => handleTabGroupChange(index, 'snapToCentroid', newSnapToCentroid)}
-                        lockCentroid={tabGroup[index].lockCentroid}
-                        setLockCentroid={newLockCentroid => handleTabGroupChange(index, 'lockCentroid', newLockCentroid)}
-                        lockChakra={tabGroup[index].lockChakra}
-                        setLockChakra={newLockChakra => handleTabGroupChange(index, 'lockChakra', newLockChakra)}
-                        cropImage={tabGroup[index].cropImage}
-                        setCropImage={newCropImage => handleTabGroupChange(index, 'cropImage', newCropImage)}
-                        rotation={tabGroup[index].rotation}
-                        setRotation={newRotation => handleTabGroupChange(index, 'rotation', newRotation)}
-                        inputDegree={tabGroup[index].inputDegree}
-                        setInputDegree={newInputDegree => handleTabGroupChange(index, 'inputDegree', newInputDegree)}
-                        translate={tabGroup[index].translate}
-                        setTranslate={newTranslate => handleTabGroupChange(index, 'translate', newTranslate)}
-                        zoom={tabGroup[index].zoom}
-                        setZoom={newZoom => handleTabGroupChange(index, 'zoom', newZoom)}
-                        polygons={tabGroup[index].polygons}
-                        setPolygons={newPolygons => handleTabGroupChange(index, 'polygons', newPolygons)}
-                        updatePointsForAllTabs={updatePointsForAllTabs}
-                        vastuLayoutData={vastuLayoutData}
-                        hide32Circle={tabGroup[index].hide32Circle}
-                        setHide32Circle={newHide32Circle => handleTabGroupChange(index, 'hide32Circle', newHide32Circle)}
-                        hide16Circle={tabGroup[index].hide16Circle}
-                        setHide16Circle={newHide16Circle => handleTabGroupChange(index, 'hide16Circle', newHide16Circle)}
-                        hide8Circle={tabGroup[index].hide8Circle}
-                        setHide8Circle={newHide8Circle => handleTabGroupChange(index, 'hide8Circle', newHide8Circle)}
-                        hide4Circle={tabGroup[index].hide4Circle}
-                        setHide4Circle={newHide4Circle => handleTabGroupChange(index, 'hide4Circle', newHide4Circle)}
-                        hideCircle={tabGroup[index].hideCircle}
-                        setHideCircle={newHideCircle => handleTabGroupChange(index, 'hideCircle', newHideCircle)}
-                        lineSets={tabGroup[index].lineSets}
-                        setLineSets={newLineSets => handleTabGroupChange(index, 'lineSets', newLineSets)}
-                        setLoading={setLoading}
-                        loading={loading}
-                        IsDownloading={IsDownloading}
-                        isLayoutChange={isLayoutChange}
-                        updatePdfPages={updatePdfPages}
-                        hideMarmaLines={tabGroup[index].hideMarmaLines}
-                        setHideMarmaLines={newHideMarmaLines => handleTabGroupChange(index, 'hideMarmaLines', newHideMarmaLines)}
-                        hideMarmapoints={tabGroup[index].hideMarmapoints}
-                        setHideMarmapoints={newHideMarmapoints => handleTabGroupChange(index, 'hideMarmapoints', newHideMarmapoints)}
-                        imageDragDone={tabGroup[index].imageDragDone}
-                        setImageDragDone={newImageDragDone => handleTabGroupChange(index, 'imageDragDone', newImageDragDone)}
-                        hideCircleIntersaction={tabGroup[index].hideCircleIntersaction}
-                        setHideCircleIntersaction={newHideCircleIntersaction => handleTabGroupChange(index, 'hideCircleIntersaction', newHideCircleIntersaction)}
-                        showDevta={tabGroup[index].showDevta}
-                        setShowDevta={newShowDevta => handleTabGroupChange(index, 'showDevta', newShowDevta)}
-                        showDevtaIntersaction={tabGroup[index].showDevtaIntersaction}
-                        setShowDevtaIntersaction={newShowDevtaIntersaction => handleTabGroupChange(index, 'showDevtaIntersaction', newShowDevtaIntersaction)}
-                        disableDraw={tabGroup[index].disableDraw}
-                        setDisableDraw={newDisableDraw => handleTabGroupChange(index, 'disableDraw', newDisableDraw)}
-                        savedGroups={savedGroups}
-                      />
+                      }}
+                      fileUploaded={fileUploaded}
+                      setFileUploaded={setFileUploaded}
+                      handleFileUpload={handleFileUpload(tabGroup[index], index)}
+                      previewUrl={tabGroup[index].NecessaryFiles[0]}
+                      setPreviewUrl={setPreviewUrl}
+                      points={tabGroup[index].points}
+                      setPoints={newPoints => handleTabGroupChange(index, 'points', newPoints)}
+                      centroid={tabGroup[index].centroid}
+                      setCentroid={newCentroid => handleTabGroupChange(index, 'centroid', newCentroid)}
+                      snapToCentroid={tabGroup[index].snapToCentroid}
+                      setSnapToCentroid={newSnapToCentroid => handleTabGroupChange(index, 'snapToCentroid', newSnapToCentroid)}
+                      lockCentroid={tabGroup[index].lockCentroid}
+                      setLockCentroid={newLockCentroid => handleTabGroupChange(index, 'lockCentroid', newLockCentroid)}
+                      lockChakra={tabGroup[index].lockChakra}
+                      setLockChakra={newLockChakra => handleTabGroupChange(index, 'lockChakra', newLockChakra)}
+                      cropImage={tabGroup[index].cropImage}
+                      setCropImage={newCropImage => handleTabGroupChange(index, 'cropImage', newCropImage)}
+                      rotation={tabGroup[index].rotation}
+                      setRotation={newRotation => handleTabGroupChange(index, 'rotation', newRotation)}
+                      inputDegree={tabGroup[index].inputDegree}
+                      setInputDegree={newInputDegree => handleTabGroupChange(index, 'inputDegree', newInputDegree)}
+                      translate={tabGroup[index].translate}
+                      setTranslate={newTranslate => handleTabGroupChange(index, 'translate', newTranslate)}
+                      zoom={tabGroup[index].zoom}
+                      setZoom={newZoom => handleTabGroupChange(index, 'zoom', newZoom)}
+                      polygons={tabGroup[index].polygons}
+                      setPolygons={newPolygons => handleTabGroupChange(index, 'polygons', newPolygons)}
+                      updatePointsForAllTabs={updatePointsForAllTabs}
+                      vastuLayoutData={vastuLayoutData}
+                      hide32Circle={tabGroup[index].hide32Circle}
+                      setHide32Circle={newHide32Circle => handleTabGroupChange(index, 'hide32Circle', newHide32Circle)}
+                      hide16Circle={tabGroup[index].hide16Circle}
+                      setHide16Circle={newHide16Circle => handleTabGroupChange(index, 'hide16Circle', newHide16Circle)}
+                      hide8Circle={tabGroup[index].hide8Circle}
+                      setHide8Circle={newHide8Circle => handleTabGroupChange(index, 'hide8Circle', newHide8Circle)}
+                      hide4Circle={tabGroup[index].hide4Circle}
+                      setHide4Circle={newHide4Circle => handleTabGroupChange(index, 'hide4Circle', newHide4Circle)}
+                      hideCircle={tabGroup[index].hideCircle}
+                      setHideCircle={newHideCircle => handleTabGroupChange(index, 'hideCircle', newHideCircle)}
+                      lineSets={tabGroup[index].lineSets}
+                      setLineSets={newLineSets => handleTabGroupChange(index, 'lineSets', newLineSets)}
+                      setLoading={setLoading}
+                      loading={loading}
+                      IsDownloading={IsDownloading}
+                      isLayoutChange={isLayoutChange}
+                      updatePdfPages={updatePdfPages}
+                      hideMarmaLines={tabGroup[index].hideMarmaLines}
+                      setHideMarmaLines={newHideMarmaLines => handleTabGroupChange(index, 'hideMarmaLines', newHideMarmaLines)}
+                      hideMarmapoints={tabGroup[index].hideMarmapoints}
+                      setHideMarmapoints={newHideMarmapoints => handleTabGroupChange(index, 'hideMarmapoints', newHideMarmapoints)}
+                      imageDragDone={tabGroup[index].imageDragDone}
+                      setImageDragDone={newImageDragDone => handleTabGroupChange(index, 'imageDragDone', newImageDragDone)}
+                      hideCircleIntersaction={tabGroup[index].hideCircleIntersaction}
+                      setHideCircleIntersaction={newHideCircleIntersaction => handleTabGroupChange(index, 'hideCircleIntersaction', newHideCircleIntersaction)}
+                      showDevta={tabGroup[index].showDevta}
+                      setShowDevta={newShowDevta => handleTabGroupChange(index, 'showDevta', newShowDevta)}
+                      showDevtaIntersaction={tabGroup[index].showDevtaIntersaction}
+                      setShowDevtaIntersaction={newShowDevtaIntersaction => handleTabGroupChange(index, 'showDevtaIntersaction', newShowDevtaIntersaction)}
+                      disableDraw={tabGroup[index].disableDraw}
+                      setDisableDraw={newDisableDraw => handleTabGroupChange(index, 'disableDraw', newDisableDraw)}
+                      savedGroups={savedGroups}
+                    />
                     // <div key={index} style={{ display: activeHouse?.label === group.label ? 'block' : 'none' }}>
                     // </div>
                   ))
