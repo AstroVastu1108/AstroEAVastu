@@ -63,10 +63,10 @@ function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroD
                 <table className='mt-4'>
                     <tr>
                         <td>
-                            <div className='chart-title font-ea-sb print-title'>❋ Birth Chart / Lagna Kundali ❋</div>
+                            <div className='chart-title font-ea-sb print-title'>{'❋'} Birth Chart / Lagna Kundali {'❋'}</div>
                         </td>
                         <td>
-                            <div className='chart-title font-ea-sb print-title'>❋ House Chart / Bhav Chalit Kundali ❋</div>
+                            <div className='chart-title font-ea-sb print-title'>{'❋'} House Chart / Bhav Chalit Kundali {'❋'}</div>
 
                         </td>
                     </tr>
