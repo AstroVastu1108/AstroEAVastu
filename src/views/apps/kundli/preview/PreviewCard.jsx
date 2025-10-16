@@ -288,6 +288,11 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               // font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
               -webkit-print-color-adjust: exact !important; 
               print-color-adjust: exact !important;
+
+              /* Add fallback fonts that include symbols */
+          font-family: 'Segoe UI', 'Segoe UI Symbol', 'Segoe UI Emoji', Arial, sans-serif !important;
+          -webkit-print-color-adjust: exact !important; 
+          print-color-adjust: exact !important;
             }
             
             * { 
@@ -295,6 +300,9 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               print-color-adjust: exact !important; 
               color-adjust: exact !important;
               box-sizing: border-box;
+
+              /* Ensure all elements can use symbol fonts */
+          font-family: inherit !important;
             }
 
             /* Fixed width container - 900px scaled to fit A4 */
