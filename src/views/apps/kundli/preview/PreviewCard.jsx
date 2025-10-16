@@ -237,12 +237,20 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       };
 
       // Load fonts as base64
-      const [fontNormal, fontSemiBold] = await Promise.all([
-        getFontBase64('/fonts/s-n.woff2'),
-        getFontBase64('/fonts/s-sb.woff2')
-      ]);
+      // const [fontNormal, fontSemiBold] = await Promise.all([
+      //   getFontBase64('/fonts/s-n.woff2'),
+      //   getFontBase64('/fonts/s-sb.woff2')
+      // ]);
 
-      console.warn("fontNormal: ", fontNormal)
+      // console.warn("fontNormal: ", fontNormal)
+
+      // Add to your font loading section:
+      const [fontNormal, fontSemiBold, fontSymbols] = await Promise.all([
+        getFontBase64('/fonts/s-n.woff2'),
+        getFontBase64('/fonts/s-sb.woff2'),
+        // Use a CDN font with symbols
+        getFontBase64('https://fonts.gstatic.com/s/notosans/v30/o-0IIpQlx3QUlC5A4PNr5TRA.woff2')
+      ]);
 
 
       // Build the complete HTML with proper page layout
@@ -276,6 +284,14 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               font-weight: 500;
               font-stretch: 100%;
               src: url('${fontSemiBold}') format('woff2');
+            }
+            ` : ''}
+
+            ${fontSymbols ? `
+            @font-face {
+              font-family: 'Symbols';
+              src: url('${fontSymbols}') format('woff2');
+              unicode-range: U+2700-27BF, U+2600-26FF, U+2B00-2BFF;
             }
             ` : ''}
             
