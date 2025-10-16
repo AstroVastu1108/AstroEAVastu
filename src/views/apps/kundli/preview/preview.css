@@ -1051,7 +1051,7 @@
 .prakritiLabel {
   .MuiTypography-root {
     font-family: ea-n;
-    font-weight: unset;
+    /* font-weight: unset; */
     font-size: 14px;
     line-height: unset;
   }
@@ -1064,7 +1064,7 @@
 .chkBoxLabel {
   .MuiTypography-root {
     font-family: ea-n;
-    font-weight: unset;
+    /* font-weight: unset; */
     font-size: 14px;
     line-height: unset;
   }

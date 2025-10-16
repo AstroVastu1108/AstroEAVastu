@@ -71,7 +71,7 @@ const SummaryAspect = ({ SummaryData, Aspect }) => {
   }, [SummaryData, Aspect]);
 
   return (
-    <div style={{ width: '800px', maxWidth: '800px', overflowX: 'auto' }}>
+    <div style={{ width: '875px', maxWidth: '875px', overflowX: 'auto' }}>
       <table className="summary-aspect-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead>
           <tr>
@@ -115,17 +115,21 @@ const SummaryAspect = ({ SummaryData, Aspect }) => {
           font-size: 0.875rem;
           table-layout: fixed;
         }
+
+        th{
+          height: 32px;
+        }
         
         .summary-aspect-table th,
         .summary-aspect-table td {
           border: 1px solid #e0e0e0;
-          padding: 2px 4px;
+          padding: 2px 8px;
           vertical-align: middle;
         }
         
         .summary-aspect-table th {
           background-color: #f5f5f5;
-          font-weight: 600;
+          // font-weight: 600;
           height: 28px;
           white-space: nowrap;
         }
@@ -139,35 +143,35 @@ const SummaryAspect = ({ SummaryData, Aspect }) => {
         }
         
         .summary-aspect-table td:first-child {
-          font-weight: 500;
+          // font-weight: 500;
         }
 
         /* Aspect color styles */
         .summary-aspect-table .positive {
           color: #22c55e;
-          font-weight: 600;
+          // font-weight: 600;
         }
         
         .summary-aspect-table .negative {
           color: #ef4444;
-          font-weight: 600;
+          // font-weight: 600;
         }
         
         .summary-aspect-table .neutral {
           color: #3b82f6;
-          font-weight: 600;
+          // font-weight: 600;
         }
         
         .summary-aspect-table .rake {
           color: #8b5cf6;
-          font-weight: 600;
+          // font-weight: 600;
           display: inline-flex;
           align-items: center;
           gap: 2px;
         }
 
         /* Responsive adjustments */
-        @media (max-width: 800px) {
+        @media (max-width: 875px) {
           .summary-aspect-table {
             font-size: 0.8125rem;
           }

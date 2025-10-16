@@ -115,7 +115,7 @@ function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroD
                 </div>
 
                 {/*  Nakshatra Astrology ↠ House Script  */}
-                <div className='main-MahaDasha-Div pt-5'>
+                <div className='main-MahaDasha-Div main-MahaDasha-Div-break  pt-5'>
                     <div className='chart-title font-ea-sb print-title'>❋ Nakshatra Astrology ↠ House Script ❋</div>
                     <div className='planet-table'>
                         <NakshtraSummarySimpleTB SummaryData={HouseNSummaryData} Aspect={"H"} symbols={Symbols} SelectedEventVal={null} />
@@ -141,7 +141,7 @@ function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroD
                 <div className='main-AstroVastuScript-Div pt-8 print-content'>
                     <div className='chart-title font-ea-sb print-title'>❋ Astro Vastu Insights ❋</div>
                     <div className='AstroVastuScript-Div print-house-container'>
-                        <House houseArr={AstroVastuHouseScript} Symbols={Symbols}></House>
+                        <House houseArr={AstroVastuHouseScript} Symbols={Symbols} isDownloading={false}></House>
                     </div>
                 </div>
             </div>

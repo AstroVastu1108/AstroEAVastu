@@ -181,8 +181,8 @@ function NakshtraSummarySimpleTB({ SummaryData, Aspect, symbols, SelectedEventVa
 
     return (
         <>
-            <div className="nakshatra-table-container" style={{ width: '800px', overflowX: 'auto' }}>
-                <table className="nakshatra-table" style={{ width: '800px', borderCollapse: 'collapse' }}>
+            <div className="nakshatra-table-container" style={{ width: '875px', overflowX: 'auto' }}>
+                <table className="nakshatra-table" style={{ width: '875px', borderCollapse: 'collapse' }}>
                     <thead>
                         <tr>
                             {Aspect === 'P' ? (
@@ -203,9 +203,9 @@ function NakshtraSummarySimpleTB({ SummaryData, Aspect, symbols, SelectedEventVa
                                 SL <span className="planet-col-title-small">(Verifier)</span>
                             </th>
                             <th className="rowheader bg-primary" style={{ width: '60px' }}>PH</th>
-                            <th className="rowheader bg-primary nlsl-column-cell" style={{ width: '120px' }}>
+                            {/* <th className="rowheader bg-primary nlsl-column-cell" style={{ width: '120px' }}>
                                 NL-SL <span className="planet-col-title-small">(InnerSelf)</span>
-                            </th>
+                            </th> */}
                         </tr>
                     </thead>
                     <tbody>
@@ -244,9 +244,9 @@ function NakshtraSummarySimpleTB({ SummaryData, Aspect, symbols, SelectedEventVa
                                 <td>
                                     <span className='planet-col-ph cursor-pointer'>{item.PHScriptFull}</span>
                                 </td>
-                                <td className="nlsl-column-cell" onDoubleClick={() => handleEvent("cell", "NLSL", `${item?.NLSL?.Planet || ""} ${item?.NLSL?.ScriptFull || ""}`, `${item?.NLSL?.Planet || ""} ${item?.NLSL?.ScriptFull || ""}`)}>
+                                {/* <td className="nlsl-column-cell" onDoubleClick={() => handleEvent("cell", "NLSL", `${item?.NLSL?.Planet || ""} ${item?.NLSL?.ScriptFull || ""}`, `${item?.NLSL?.Planet || ""} ${item?.NLSL?.ScriptFull || ""}`)}>
                                     {renderScriptCell(item.NLSL)}
-                                </td>
+                                </td> */}
                             </tr>
                         ))}
                     </tbody>
@@ -259,16 +259,20 @@ function NakshtraSummarySimpleTB({ SummaryData, Aspect, symbols, SelectedEventVa
     font-size: 0.8rem; /* smaller font */
   }
 
+  th{
+          height: 32px;
+        }
+
   .nakshatra-table th,
   .nakshatra-table td {
     border: 1px solid #e0e0e0;
-    padding: 1px 3px; /* reduced padding */
+    padding: 2px 8px;
     vertical-align: middle;
   }
 
   .nakshatra-table th {
     background-color: #f5f5f5;
-    font-weight: 600;
+    // font-weight: 600;
     text-align: left;
     position: sticky;
     top: 0;
@@ -289,7 +293,7 @@ function NakshtraSummarySimpleTB({ SummaryData, Aspect, symbols, SelectedEventVa
 
   .planet-col-title-small {
     font-size: 0.7rem;
-    font-weight: normal;
+    // font-weight: normal;
   }
 `}</style>
 

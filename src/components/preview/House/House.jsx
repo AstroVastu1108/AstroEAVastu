@@ -1,7 +1,7 @@
 import EventModel from '@/components/EventModel/eventModel';
 import React, { useState } from 'react'
 
-function House({ houseArr, Symbols }) {
+function House({ houseArr, Symbols, isDownloading = false }) {
   const rashiSymbols = {
     Aries: "♈︎",
     Taurus: "♉︎",
@@ -170,20 +170,22 @@ function House({ houseArr, Symbols }) {
                                     </div>
 
                                   </div>
-                                  <div className='planet-Div2'>
-                                    <div className="sub-div">
-                                      <span className='font-ea-sb'>{Planet?.PL?.Planet}</span>
-                                      <span className='font-normal'>{Planet?.PL?.ScriptFull}</span>
+                                  {!isDownloading && (
+                                    <div className='planet-Div2'>
+                                      <div className="sub-div">
+                                        <span className='font-ea-sb'>{Planet?.PL?.Planet}</span>
+                                        <span className='font-normal'>{Planet?.PL?.ScriptFull}</span>
+                                      </div>
+                                      <div className="sub-div">
+                                        <span className='font-ea-sb'>{Planet?.NL?.Planet}</span>
+                                        <span className='font-normal'>{Planet?.NL?.ScriptFull}</span>
+                                      </div>
+                                      <div className="sub-div">
+                                        <span className='font-ea-sb'>{Planet?.SL?.Planet}</span>
+                                        <span className='font-normal'>{Planet?.SL?.ScriptFull}</span>
+                                      </div>
                                     </div>
-                                    <div className="sub-div">
-                                      <span className='font-ea-sb'>{Planet?.NL?.Planet}</span>
-                                      <span className='font-normal'>{Planet?.NL?.ScriptFull}</span>
-                                    </div>
-                                    <div className="sub-div">
-                                      <span className='font-ea-sb'>{Planet?.SL?.Planet}</span>
-                                      <span className='font-normal'>{Planet?.SL?.ScriptFull}</span>
-                                    </div>
-                                  </div>
+                                  )}
                                   <div className='planet-Div3 pb-2'>
                                     <div className="sub-div1 font-ea-sb"> ✻ {Planet?.Nakshatra} / {Planet?.NakshatraPada} 🡐 {Planet?.EnergyField}</div>
                                     <div className="sub-div">✦ {Planet?.PlanetDescAstro} </div>

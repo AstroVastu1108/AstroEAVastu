@@ -30,6 +30,12 @@ import { toast } from 'react-toastify'
 import NSubLordPopUp from '@/components/preview/Nakshatra-SubLord/NSubLord'
 import PDFView from './pdfView'
 
+
+// At the top of your file
+// import fontNormalUrl from './../../../../assets/fonts/s-n.woff2';
+// import fontSemiBoldUrl from './../../../../assets/fonts/s-sb.woff2';
+
+
 const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, TransitData, setTransitData, getTransitData, getDivisionalChartData, DivisionalData, setDivisionalData, birthDate, setKundliData, SetKundliConstData }) => {
   // var
   const BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
@@ -213,19 +219,65 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
         wrapper.appendChild(houseDiv);
       });
 
+      // Function to convert font to base64
+      const getFontBase64 = async (fontPath) => {
+        try {
+          const response = await fetch(fontPath);
+          const blob = await response.blob();
+          return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+          });
+        } catch (error) {
+          console.error('Error loading font:', fontPath, error);
+          return null;
+        }
+      };
+
+      // Load fonts as base64
+      const [fontNormal, fontSemiBold] = await Promise.all([
+        getFontBase64('/fonts/s-n.woff2'),
+        getFontBase64('/fonts/s-sb.woff2')
+      ]);
+
+      console.warn("fontNormal: ", fontNormal)
+
+
       // Build the complete HTML with proper page layout
       const fullHtml = `
       <!DOCTYPE html>
       <html>
         <head>
           <meta charset="UTF-8">
-          <meta name="viewport" content="width=800px, initial-scale=1">
+          <meta name="viewport" content="width=875px, initial-scale=1">
           <title>Astro Report PDF</title>
           <style>
             @page { 
               size: A4; 
               margin: 5mm; 
             }
+
+            
+
+            ${fontNormal ? `
+            @font-face {
+              font-family: 'ea-n';
+              font-weight: 400;
+              font-stretch: 100%;
+              src: url('${fontNormal}') format('woff2');
+            }
+            ` : ''}
+
+            ${fontSemiBold ? `
+            @font-face {
+              font-family: 'ea-sb';
+              font-weight: 500;
+              font-stretch: 100%;
+              src: url('${fontSemiBold}') format('woff2');
+            }
+            ` : ''}
             
             body { 
               background: #fff !important; 
@@ -233,7 +285,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               padding: 0;
               width: 210mm;
               min-height: 297mm;
-              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+              // font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
               -webkit-print-color-adjust: exact !important; 
               print-color-adjust: exact !important;
             }
@@ -245,18 +297,18 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               box-sizing: border-box;
             }
 
-            /* Fixed width container - 800px scaled to fit A4 */
+            /* Fixed width container - 875px scaled to fit A4 */
             .previewCard,
             .print-optimized {
-              width: 800px !important;
-              max-width: 800px !important;
-              min-width: 800px !important;
+              width: 875px !important;
+              max-width: 875px !important;
+              min-width: 875px !important;
               min-height: 100vh;
               padding: 15px;
               margin: 0 auto;
 
               /* Replace transform with zoom */
-              zoom: 2;
+              zoom: 1.75;
               transform: none !important;
               transform-origin: top center;
 
@@ -368,13 +420,18 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
             ${computedStyles}
 
             /* Page break controls for main sections */
-            .main-RahuKetu-Div {
+            // .main-RahuKetu-Div {
+            //   page-break-before: always; 
+            // }
+
+            // .main-planet-summary-Div {
+            //   page-break-after: always; 
+            // }
+
+            .main-MahaDasha-Div-break{
               page-break-before: always; 
             }
-
-            .main-planet-summary-Div {
-              page-break-after: always; 
-            }
+            
 
             .main-AstroVastuScript-Div {
               page-break-after: always; 
@@ -393,20 +450,6 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               .house-wrapper-pdf {
                 page-break-inside: avoid !important;
               }
-            }
-
-            @font-face {
-              font-family: 'ea-n';
-              font-weight: 400;
-              font-stretch: 100%;
-              src: url('./../../../../assets/fonts/s-n.woff2') format('woff2');
-            }
-
-            @font-face {
-              font-family: 'ea-sb';
-              font-weight: 500;
-              font-stretch: 100%;
-              src: url('./../../../../assets/fonts/s-sb.woff2') format('woff2');
             }
               
           </style>

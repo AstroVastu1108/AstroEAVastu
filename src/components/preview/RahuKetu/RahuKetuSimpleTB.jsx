@@ -149,7 +149,7 @@ function RahuKetuSimpleTB({ RahuData, KetuData, SelectedEventVal }) {
   };
 
   return (
-    <div style={{ display: 'flex', gap: '16px', width: '800px', maxWidth: '100%' }}>
+    <div style={{ display: 'flex', gap: '16px', width: '875px', maxWidth: '100%' }}>
       {/* Rahu Table */}
       <div style={{ flex: 1, minWidth: 0 }}>
         <table className="rahu-ketu-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -213,7 +213,7 @@ function RahuKetuSimpleTB({ RahuData, KetuData, SelectedEventVal }) {
         
         .rahu-ketu-table th {
           background-color: #f5f5f5;
-          font-weight: 600;
+          // font-weight: 600;
           text-align: left;
           height: 32px;
         }
@@ -238,7 +238,7 @@ function RahuKetuSimpleTB({ RahuData, KetuData, SelectedEventVal }) {
           gap: 2px;
         }
 
-        @media (max-width: 800px) {
+        @media (max-width: 875px) {
           .rahu-ketu-table {
             font-size: 0.8125rem;
           }
