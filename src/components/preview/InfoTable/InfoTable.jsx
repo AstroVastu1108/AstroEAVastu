@@ -8,7 +8,7 @@ const InfoTable = ({ InfoTableTextArr, isPrintDiv}) => {
 
 
   return (
-    <div className='flex flex-col'>
+    <div className='flex flex-col pe-2'>
       <table>
         <tbody>
           {InfoTableTextArr.map((details, index) => (

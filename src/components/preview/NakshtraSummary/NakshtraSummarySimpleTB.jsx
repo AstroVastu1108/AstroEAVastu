@@ -181,28 +181,28 @@ function NakshtraSummarySimpleTB({ SummaryData, Aspect, symbols, SelectedEventVa
 
     return (
         <>
-            <div className="nakshatra-table-container" style={{ width: '875px', overflowX: 'auto' }}>
-                <table className="nakshatra-table" style={{ width: '875px', borderCollapse: 'collapse' }}>
+            <div className="nakshatra-table-container" style={{ width: '900px', overflowX: 'auto' }}>
+                <table className="nakshatra-table" style={{ width: '900px', borderCollapse: 'collapse' }}>
                     <thead>
                         <tr>
                             {Aspect === 'P' ? (
-                                <th className="rowheader bg-primary" style={{ width: '120px' }}>Planet</th>
+                                <th className="rowheader bg-primary px-3 text-start" style={{ width: '120px' }}>Planet</th>
                             ) : (
-                                <th className="rowheader bg-primary" style={{ width: '45px', textAlign: 'center' }}>#</th>
+                                <th className="rowheader bg-primary px-3" style={{ width: '40px', textAlign: 'center' }}>#</th>
                             )}
-                            <th className="rowheader bg-primary" style={{ width: '95px' }}>Sign</th>
-                            <th className="rowheader bg-primary" style={{ width: '110px' }}>Nakshatra</th>
-                            <th className="rowheader bg-primary" style={{ width: '80px' }}>Devta</th>
-                            <th className="rowheader bg-primary" style={{ width: '100px' }}>
+                            <th className="rowheader bg-primary px-3 text-start" style={{ width: '95px' }}>Sign</th>
+                            <th className="rowheader bg-primary px-3 text-start" style={{ width: '110px' }}>Nakshatra</th>
+                            <th className="rowheader bg-primary px-3 text-start" style={{ width: '75px' }}>Devta</th>
+                            <th className="rowheader bg-primary px-3 text-start" style={{ width: '100px' }}>
                                 PL <span className="planet-col-title-small">(Source)</span>
                             </th>
-                            <th className="rowheader bg-primary nl-column-cell" style={{ width: '100px' }}>
+                            <th className="rowheader bg-primary nl-column-cell px-3 text-start" style={{ width: '100px' }}>
                                 NL <span className="planet-col-title-small">(Result)</span>
                             </th>
-                            <th className="rowheader bg-primary" style={{ width: '95px' }}>
+                            <th className="rowheader bg-primary px-3 text-start" style={{ width: '95px' }}>
                                 SL <span className="planet-col-title-small">(Verifier)</span>
                             </th>
-                            <th className="rowheader bg-primary" style={{ width: '60px' }}>PH</th>
+                            <th className="rowheader bg-primary px-3 text-start" style={{ width: '70px' }}>PH</th>
                             {/* <th className="rowheader bg-primary nlsl-column-cell" style={{ width: '120px' }}>
                                 NL-SL <span className="planet-col-title-small">(InnerSelf)</span>
                             </th> */}
@@ -212,15 +212,13 @@ function NakshtraSummarySimpleTB({ SummaryData, Aspect, symbols, SelectedEventVa
                         {SummaryData?.map((item, index) => (
                             <tr
                                 key={index}
-                                className={selectedRowId === index ? 'Mui-selected' : ''}
-                                onClick={() => setSelectedRowId(index)}
-                                style={{ height: '20px' }} // reduced row height
+                               
                             >
                                 {Aspect === 'P' ? (
                                     <td>{renderPlanetCell(item)}</td>
                                 ) : (
                                     <td style={{ textAlign: 'center' }}>
-                                        <div className="planet-col-title cursor-pointer">
+                                        <div className="planet-col-title cursor-pointer text-center flex justify-center">
                                             <div className='planet-row font-ea-sb'>{index + 1}</div>
                                         </div>
                                     </td>
@@ -242,7 +240,7 @@ function NakshtraSummarySimpleTB({ SummaryData, Aspect, symbols, SelectedEventVa
                                     {renderScriptCell(item.SL)}
                                 </td>
                                 <td>
-                                    <span className='planet-col-ph cursor-pointer'>{item.PHScriptFull}</span>
+                                    <span className='planet-col-ph cursor-pointer text-nowrap'>{item.PHScriptFull}</span>
                                 </td>
                                 {/* <td className="nlsl-column-cell" onDoubleClick={() => handleEvent("cell", "NLSL", `${item?.NLSL?.Planet || ""} ${item?.NLSL?.ScriptFull || ""}`, `${item?.NLSL?.Planet || ""} ${item?.NLSL?.ScriptFull || ""}`)}>
                                     {renderScriptCell(item.NLSL)}
@@ -254,48 +252,36 @@ function NakshtraSummarySimpleTB({ SummaryData, Aspect, symbols, SelectedEventVa
             </div>
 
             <style jsx>{`
-  .nakshatra-table {
-    font-family: inherit;
-    font-size: 0.8rem; /* smaller font */
-  }
+                .nakshatra-table {
+                    font-family: inherit;
+                }
 
-  th{
-          height: 32px;
-        }
+                th{
+                    height: 38px;
+                }
 
-  .nakshatra-table th,
-  .nakshatra-table td {
-    border: 1px solid #e0e0e0;
-    padding: 2px 8px;
-    vertical-align: middle;
-  }
+                td{
+                    height: 29px;
+                    padding-left: 10px;
+                    padding-right: 10px;
+                }
 
-  .nakshatra-table th {
-    background-color: #f5f5f5;
-    // font-weight: 600;
-    text-align: left;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
+                .nakshatra-table th,
+                .nakshatra-table td {
+                    border: 1px solid var(--border-color);
+                    vertical-align: middle;
+                }
 
-  .nakshatra-table tbody tr {
-    cursor: pointer;
-  }
+                /* Alternate row colors */
+                .nakshatra-table tbody tr:nth-child(odd) {
+                    background-color: #ffffff; /* white */
+                }
 
-  .nakshatra-table tbody tr:hover {
-    background-color: #f5f5f5;
-  }
+                .nakshatra-table tbody tr:nth-child(even) {
+                    background-color: #f5f5f5; /* light gray */
+                }
 
-  .nakshatra-table tbody tr.Mui-selected {
-    background-color: #e3f2fd;
-  }
-
-  .planet-col-title-small {
-    font-size: 0.7rem;
-    // font-weight: normal;
-  }
-`}</style>
+            `}</style>
 
         </>
     )

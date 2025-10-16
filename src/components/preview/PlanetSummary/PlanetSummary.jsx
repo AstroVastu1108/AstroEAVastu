@@ -112,7 +112,7 @@ const SummaryAspect = ({ SummaryData, Aspect }) => {
           hideFooterPagination
           hideFooter
           rowHeight={30}
-          columnHeaderHeight={44}
+          columnHeaderHeight={38}
         />
 
     </Box>

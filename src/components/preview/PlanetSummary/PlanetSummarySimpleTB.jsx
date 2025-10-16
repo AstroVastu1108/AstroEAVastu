@@ -71,14 +71,14 @@ const SummaryAspect = ({ SummaryData, Aspect }) => {
   }, [SummaryData, Aspect]);
 
   return (
-    <div style={{ width: '875px', maxWidth: '875px', overflowX: 'auto' }}>
+    <div style={{ width: '900px', maxWidth: '900px', overflowX: 'auto' }}>
       <table className="summary-aspect-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead>
           <tr>
             {headerNames.map((headerName, index) => (
               <th 
                 key={index}
-                className="rowheader bg-primary"
+                className="rowheader bg-primary px-3 text-start"
                 style={{
                   textAlign: index === 0 ? 'left' : 'center',
                   minWidth: index === 0 ? '70px' : '50px',
@@ -110,85 +110,37 @@ const SummaryAspect = ({ SummaryData, Aspect }) => {
       </table>
 
       <style jsx>{`
-        .summary-aspect-table {
-          font-family: inherit;
-          font-size: 0.875rem;
-          table-layout: fixed;
-        }
-
-        th{
-          height: 32px;
-        }
-        
-        .summary-aspect-table th,
-        .summary-aspect-table td {
-          border: 1px solid #e0e0e0;
-          padding: 2px 8px;
-          vertical-align: middle;
-        }
-        
-        .summary-aspect-table th {
-          background-color: #f5f5f5;
-          // font-weight: 600;
-          height: 28px;
-          white-space: nowrap;
-        }
-        
-        .summary-aspect-table td {
-          height: 24px;
-        }
-        
-        .summary-aspect-table tbody tr:hover {
-          background-color: #f9f9f9;
-        }
-        
-        .summary-aspect-table td:first-child {
-          // font-weight: 500;
-        }
-
-        /* Aspect color styles */
-        .summary-aspect-table .positive {
-          color: #22c55e;
-          // font-weight: 600;
-        }
-        
-        .summary-aspect-table .negative {
-          color: #ef4444;
-          // font-weight: 600;
-        }
-        
-        .summary-aspect-table .neutral {
-          color: #3b82f6;
-          // font-weight: 600;
-        }
-        
-        .summary-aspect-table .rake {
-          color: #8b5cf6;
-          // font-weight: 600;
-          display: inline-flex;
-          align-items: center;
-          gap: 2px;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 875px) {
           .summary-aspect-table {
-            font-size: 0.8125rem;
+              font-family: inherit;
           }
-          
+
+          th{
+              height: 38px;
+          }
+
+          td{
+              height: 29px;
+              padding-left: 10px;
+              padding-right: 10px;
+          }
+
           .summary-aspect-table th,
           .summary-aspect-table td {
-            padding: 1.5px 3px;
+              border: 1px solid var(--border-color);
+              vertical-align: middle;
           }
+
           
-          .summary-aspect-table th {
-            height: 28px;
-          }
-          
-          .summary-aspect-table td {
-            height: 22px;
-          }
-        }
+
+                /* Alternate row colors */
+                .summary-aspect-table tbody tr:nth-child(odd) {
+                    background-color: #ffffff; /* white */
+                }
+
+                .summary-aspect-table tbody tr:nth-child(even) {
+                    background-color: #f5f5f5; /* light gray */
+                }
+
       `}</style>
     </div>
   );

@@ -251,7 +251,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       <html>
         <head>
           <meta charset="UTF-8">
-          <meta name="viewport" content="width=875px, initial-scale=1">
+          <meta name="viewport" content="width=900px, initial-scale=1">
           <title>Astro Report PDF</title>
           <style>
             @page { 
@@ -297,12 +297,12 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               box-sizing: border-box;
             }
 
-            /* Fixed width container - 875px scaled to fit A4 */
+            /* Fixed width container - 900px scaled to fit A4 */
             .previewCard,
             .print-optimized {
-              width: 875px !important;
-              max-width: 875px !important;
-              min-width: 875px !important;
+              width: 900px !important;
+              max-width: 900px !important;
+              min-width: 900px !important;
               min-height: 100vh;
               padding: 15px;
               margin: 0 auto;
@@ -380,7 +380,6 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
 
             .neutral {
         color: #1762ad;
-        /* font-weight: 500; */
       }
 
       .rake {
@@ -389,17 +388,14 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
         align-items: center;
         justify-content: center;
         color: gray;
-        /* font-weight: 500; */
       }
 
       .positive {
         color: #057143;
-        /* font-weight: 500; */
       }
 
       .negative {
         color: #cc1616;
-        /* font-weight: 500; */
       }
 
             /* Chart title */
@@ -407,7 +403,6 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
             .print-title {
               page-break-after: avoid !important;
               break-after: avoid !important;
-              margin-bottom: 20px !important;
             }
 
             /* Orphans and widows */
@@ -418,15 +413,6 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
 
             /* Include computed styles */
             ${computedStyles}
-
-            /* Page break controls for main sections */
-            // .main-RahuKetu-Div {
-            //   page-break-before: always; 
-            // }
-
-            // .main-planet-summary-Div {
-            //   page-break-after: always; 
-            // }
 
             .main-MahaDasha-Div-break{
               page-break-before: always; 

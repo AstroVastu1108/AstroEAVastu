@@ -141,7 +141,7 @@ function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroD
                 <div className='main-AstroVastuScript-Div pt-8 print-content'>
                     <div className='chart-title font-ea-sb print-title'>❋ Astro Vastu Insights ❋</div>
                     <div className='AstroVastuScript-Div print-house-container'>
-                        <House houseArr={AstroVastuHouseScript} Symbols={Symbols} isDownloading={false}></House>
+                        <House houseArr={AstroVastuHouseScript} Symbols={Symbols}></House>
                     </div>
                 </div>
             </div>

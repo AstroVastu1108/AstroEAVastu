@@ -149,14 +149,14 @@ function RahuKetuSimpleTB({ RahuData, KetuData, SelectedEventVal }) {
   };
 
   return (
-    <div style={{ display: 'flex', gap: '16px', width: '875px', maxWidth: '100%' }}>
+    <div style={{ display: 'flex', gap: '16px', width: '900px', maxWidth: '100%' }}>
       {/* Rahu Table */}
       <div style={{ flex: 1, minWidth: 0 }}>
         <table className="rahu-ketu-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr>
-              <th className="rowheader bg-primary" style={{ width: '120px' }}>Rahu</th>
-              <th className="rowheader bg-primary">{RahuData.ScriptFull}</th>
+              <th className="rowheader bg-primary px-3 text-start" style={{ width: '120px' }}>Rahu</th>
+              <th className="rowheader bg-primary px-3 text-start">{RahuData.ScriptFull}</th>
             </tr>
           </thead>
           <tbody>
@@ -179,8 +179,8 @@ function RahuKetuSimpleTB({ RahuData, KetuData, SelectedEventVal }) {
         <table className="rahu-ketu-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr>
-              <th className="rowheader bg-primary" style={{ width: '120px' }}>Ketu</th>
-              <th className="rowheader bg-primary">{KetuData.ScriptFull}</th>
+              <th className="rowheader bg-primary px-3 text-start" style={{ width: '120px' }}>Ketu</th>
+              <th className="rowheader bg-primary px-3 text-start">{KetuData.ScriptFull}</th>
             </tr>
           </thead>
           <tbody>
@@ -199,6 +199,40 @@ function RahuKetuSimpleTB({ RahuData, KetuData, SelectedEventVal }) {
       </div>
 
       <style jsx>{`
+          .rahu-ketu-table {
+              font-family: inherit;
+          }
+
+          th{
+              height: 38px;
+          }
+
+          td{
+              height: 29px;
+              padding-left: 10px;
+              padding-right: 10px;
+          }
+
+          .rahu-ketu-table th,
+          .rahu-ketu-table td {
+              border: 1px solid var(--border-color);
+              vertical-align: middle;
+          }
+
+          
+
+                /* Alternate row colors */
+                .rahu-ketu-table tbody tr:nth-child(odd) {
+                    background-color: #ffffff; /* white */
+                }
+
+                .rahu-ketu-table tbody tr:nth-child(even) {
+                    background-color: #f5f5f5; /* light gray */
+                }
+
+      `}</style>
+
+      {/* <style jsx>{`
         .rahu-ketu-table {
           font-family: inherit;
           font-size: 0.875rem;
@@ -238,7 +272,7 @@ function RahuKetuSimpleTB({ RahuData, KetuData, SelectedEventVal }) {
           gap: 2px;
         }
 
-        @media (max-width: 875px) {
+        @media (max-width: 900px) {
           .rahu-ketu-table {
             font-size: 0.8125rem;
           }
@@ -248,7 +282,7 @@ function RahuKetuSimpleTB({ RahuData, KetuData, SelectedEventVal }) {
             padding: 3px 6px;
           }
         }
-      `}</style>
+      `}</style> */}
     </div>
   )
 }
