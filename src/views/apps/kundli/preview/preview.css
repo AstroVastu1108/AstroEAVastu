@@ -383,6 +383,7 @@
 
           .rahi-Div {
             /* padding: 0px 8px; */
+            height: 100%;
             display: flex;
             border-bottom: 1px solid var(--border-color);
             width: 100%;
@@ -428,6 +429,7 @@
               flex-direction: column;
               border-left: 1px solid var(--border-color);
               width: 80%;
+              height: 100% !important;
               /* border-right: 1px solid var(--border-color); */
 
               .planet-Div {
@@ -435,14 +437,16 @@
                 /* display: flex; */
                 border-bottom: 1px solid var(--border-color);
                 display: flex;
+              height: 100% !important;
 
                 .planet-Div-sub {
+                  height: 100%;
                   width: 60%;
                   border-right: 1px solid var(--border-color);
                 }
 
                 .rahi-Div3 {
-                  padding: 8px;
+                  /* padding: 8px; */
                   display: flex;
                   flex-direction: column;
                   width: 40%;
@@ -584,6 +588,56 @@
                 .item-title-planet-bg-pluto {
                   background-color: #e9dbd6;
                 }
+
+                .item-title-planet-border-ketu {
+                  border-color: #dfcccc;
+                }
+
+                .item-title-planet-border-venus {
+                  border-color: #f5d1e7;
+                }
+
+                .item-title-planet-border-sun {
+                  border-color: #fce2c9;
+                }
+
+                .item-title-planet-border-moon {
+                  border-color: #e0f1ff;
+                }
+
+                .item-title-planet-border-mars {
+                  border-color: #f2cdcd;
+                }
+
+                .item-title-planet-border-rahu {
+                  border-color: #d5d5d5;
+                }
+
+                .item-title-planet-border-jupiter {
+                  border-color: #faefc3;
+                }
+
+                .item-title-planet-border-saturn {
+                  border-color: #cdd4ee;
+                }
+
+                .item-title-planet-border-mercury {
+                  border-color: #c6e1d1;
+                }
+
+                .item-title-planet-border-uranus {
+                  border-color: #d3dbe2;
+                }
+
+                .item-title-planet-border-neptune {
+                  border-color: #dfebf7;
+                }
+
+                .item-title-planet-border-pluto {
+                  border-color: #e9dbd6;
+                }
+
+
 
                 .planet-Div2 {
                   width: 100%;
@@ -752,6 +806,7 @@
   } */
 
   .MuiDataGrid-cell {
+
     /* color: #cc1616; */
     .row-title {
       color: var(--primary-color);
@@ -786,6 +841,8 @@
   }
 }
 
+
+
 .timeTool-div {
   position: fixed;
   bottom: 0px;
@@ -796,6 +853,7 @@
 }
 
 .Loard-Div {
+
   /* border: 2px solid red;
   overflow: hidden; */
   .valueHeader {
@@ -807,11 +865,13 @@
 }
 
 .nl-column-cell {
-  background-color: #daffaf45; /* Choose your preferred background color */
+  background-color: #daffaf45;
+  /* Choose your preferred background color */
 }
 
 .nlsl-column-cell {
-  background-color: #d5d5d560; /* Choose your preferred background color */
+  background-color: #d5d5d560;
+  /* Choose your preferred background color */
 }
 
 .Nakshatra-Legend {
@@ -835,36 +895,47 @@
 .pl-ketu {
   color: #7d3434 !important;
 }
+
 .pl-venus {
   color: #d646a1 !important;
 }
+
 .pl-sun {
   color: #cd0008 !important;
 }
+
 .pl-moon {
   color: #0db1c7 !important;
 }
+
 .pl-mars {
   color: #e6151d !important;
 }
+
 .pl-rahu {
   color: #555555 !important;
 }
+
 .pl-jupiter {
   color: #f48d25 !important;
 }
+
 .pl-saturn {
   color: #3652ba !important;
 }
+
 .pl-mercury {
   color: #1c8946 !important;
 }
+
 .pl-uranus {
   color: #4e6f73 !important;
 }
+
 .pl-neptune {
   color: #6b8ac6 !important;
 }
+
 .pl-pluto {
   color: #a6705c !important;
 }
@@ -909,9 +980,11 @@
   cursor: default !important;
   border: none !important;
 }
+
 .MuiDataGrid-columnHeader:focus {
   outline: none !important;
 }
+
 /* .MuiDataGrid-scrollbar--vertical {
   display: none;
 }
@@ -922,9 +995,11 @@
   background-color: var(--primary-color);
   border-bottom: none !important;
 }
+
 .MuiDataGrid-row.Mui-selected {
   background-color: #99e27b65 !important;
 }
+
 /*
 .MuiOutlinedInput-root{
   height: 2.7rem
@@ -976,7 +1051,7 @@
 .prakritiLabel {
   .MuiTypography-root {
     font-family: ea-n;
-    font-weight: unset;
+    /* font-weight: unset; */
     font-size: 14px;
     line-height: unset;
   }
@@ -985,10 +1060,11 @@
     font-size: 1rem;
   }
 }
+
 .chkBoxLabel {
   .MuiTypography-root {
     font-family: ea-n;
-    font-weight: unset;
+    /* font-weight: unset; */
     font-size: 14px;
     line-height: unset;
   }
@@ -999,35 +1075,38 @@
 }
 
 
-.MuiDivider-root{
+.MuiDivider-root {
   border: 1px solid var(--border-color) !important;
 }
 
-.RahuKetuGrid{
+.RahuKetuGrid {
   .MuiDataGrid-cell {
     line-height: 30px !important;
   }
 }
 
 
-.eventGrid{
-  .row5-style{
+.eventGrid {
+  .row5-style {
     .MuiDataGrid-cell {
       line-height: 25px !important;
     }
   }
-  .row7-style{
+
+  .row7-style {
     /* border: 1px solid red; */
     border-right: none !important;
   }
-  .MuiDataGrid-filler{
+
+  .MuiDataGrid-filler {
     height: 0px !important;
-    div{
+
+    div {
       border-top: none !important;
     }
   }
 
-  .MuiDataGrid-scrollbar{
+  .MuiDataGrid-scrollbar {
     display: none;
   }
 

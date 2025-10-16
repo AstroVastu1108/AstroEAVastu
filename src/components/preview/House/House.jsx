@@ -128,11 +128,11 @@ function House({ houseArr, Symbols }) {
                               <span>{houseaspect?.Planet}</span>
                               <span className='ps-1'>⦿</span>
                             </div>) : (
-                            <div className='sub-div3 font-ea-sb'>
-                              <div>{houseaspect?.Aspect}°</div>
-                              <span className='item-aspect-arrow'>↠</span>
-                              <span>{houseaspect?.Planet}</span>
-                            </div>)
+                              <div className='sub-div3 font-ea-sb'>
+                                <div>{houseaspect?.Aspect}°</div>
+                                <span className='item-aspect-arrow'>↠</span>
+                                <span>{houseaspect?.Planet}</span>
+                              </div>)
                         }
 
 
@@ -155,45 +155,45 @@ function House({ houseArr, Symbols }) {
                         {rashi?.Planets?.length &&
                           (<div className='rahi-Div2'>{rashi?.Planets.map((Planet, key) =>
                           (
-                            <>
-                              <div className='planet-Div ' key={key}>
-                                <div className='planet-Div-sub'>
-                                  <div className={`planet-Div1 item-title-planet-bg-${Planet?.Planet.toLowerCase()}`}>
-                                    <div className='font-ea-sb whitespace-nowrap'>{Planet?.Planet} &gt; {Planet?.Degree && formatRashiDescAstro(Planet.Degree)} </div>
-                                    <div className='planet-Div1-sub'>
-                                      <div>{Planet?.IsRetro && Symbols?.IsRetro}</div>
-                                      <div>{Planet?.IsExalted && Symbols?.IsExalted}</div>
-                                      <div>{Planet?.IsDebilitated && Symbols?.IsDebilitated}</div>
-                                      <div>{Planet?.IsCombust && Symbols?.IsCombust}</div>
-                                      <div>{Planet?.IsUntenanted && Symbols?.IsUntenanted}</div>
-                                      <div>{Planet?.IsSelfStar && Symbols?.IsSelfStar}</div>
-                                      <div>{Planet?.IsExchange && Symbols?.IsExchange}</div>
-                                    </div>
+                            <div className='planet-Div ' key={key}>
+                              <div className='planet-Div-sub'>
+                                <div className={`planet-Div1 item-title-planet-bg-${Planet?.Planet.toLowerCase()}`}>
+                                  <div className='font-ea-sb'>{Planet?.Planet} &gt; {Planet?.Degree && formatRashiDescAstro(Planet.Degree)} </div>
+                                  <div className='planet-Div1-sub whitespace-nowrap'>
+                                    <div>{Planet?.IsRetro && Symbols?.IsRetro}</div>
+                                    <div>{Planet?.IsExalted && Symbols?.IsExalted}</div>
+                                    <div>{Planet?.IsDebilitated && Symbols?.IsDebilitated}</div>
+                                    <div>{Planet?.IsCombust && Symbols?.IsCombust}</div>
+                                    <div>{Planet?.IsUntenanted && Symbols?.IsUntenanted}</div>
+                                    <div>{Planet?.IsSelfStar && Symbols?.IsSelfStar}</div>
+                                    <div>{Planet?.IsExchange && Symbols?.IsExchange}</div>
+                                  </div>
 
+                                </div>
+                                <div className='planet-Div2'>
+                                  <div className="sub-div">
+                                    <span className='font-ea-sb'>{Planet?.PL?.Planet}</span>
+                                    <span className='font-normal'>{Planet?.PL?.ScriptFull}</span>
                                   </div>
-                                  <div className='planet-Div2'>
-                                    <div className="sub-div">
-                                      <span className='font-ea-sb'>{Planet?.PL?.Planet}</span>
-                                      <span className='font-normal'>{Planet?.PL?.ScriptFull}</span>
-                                    </div>
-                                    <div className="sub-div">
-                                      <span className='font-ea-sb'>{Planet?.NL?.Planet}</span>
-                                      <span className='font-normal'>{Planet?.NL?.ScriptFull}</span>
-                                    </div>
-                                    <div className="sub-div">
-                                      <span className='font-ea-sb'>{Planet?.SL?.Planet}</span>
-                                      <span className='font-normal'>{Planet?.SL?.ScriptFull}</span>
-                                    </div>
+                                  <div className="sub-div">
+                                    <span className='font-ea-sb'>{Planet?.NL?.Planet}</span>
+                                    <span className='font-normal'>{Planet?.NL?.ScriptFull}</span>
                                   </div>
-                                  <div className='planet-Div3 pb-2'>
-                                    <div className="sub-div1 font-ea-sb"> ✻ {Planet?.Nakshatra} / {Planet?.NakshatraPada} 🡐 {Planet?.EnergyField}</div>
-                                    <div className="sub-div">✦ {Planet?.PlanetDescAstro} </div>
-                                    <div className="sub-div">❖ {Planet?.PlanetDescVastu} </div>
+                                  <div className="sub-div">
+                                    <span className='font-ea-sb'>{Planet?.SL?.Planet}</span>
+                                    <span className='font-normal'>{Planet?.SL?.ScriptFull}</span>
                                   </div>
                                 </div>
-                                <div className='rahi-Div3 '>
-                                  {Planet?.PlanetAspectsZero?.length ?
-                                    <div>{Planet?.PlanetAspectsZero?.map((Planetaspect, key) => (
+                                <div className='planet-Div3 pb-2'>
+                                  <div className="sub-div1 font-ea-sb"> ✻ {Planet?.Nakshatra} / {Planet?.NakshatraPada} 🡐 {Planet?.EnergyField}</div>
+                                  <div className="sub-div">✦ {Planet?.PlanetDescAstro} </div>
+                                  <div className="sub-div">❖ {Planet?.PlanetDescVastu} </div>
+                                </div>
+                              </div>
+                              <div className={`rahi-Div3 border-t-[5px] p-2 item-title-planet-border-${Planet?.Planet.toLowerCase()}`} >
+                                {Planet?.PlanetAspectsZero?.length ?
+                                  <div>{Planet?.PlanetAspectsZero?.map((Planetaspect, key) => (
+                                    <div>
                                       <div className='rashi-div-sub' key={key}>
                                         {
                                           Planetaspect?.IsWithRaKe ?
@@ -213,53 +213,53 @@ function House({ houseArr, Symbols }) {
                                         }
                                         <div>{Planetaspect?.PlanetRashiShort}. {Planetaspect?.ScriptFull}</div>
                                       </div>
-                                    ))} </div> : ""
-                                  }
-                                  {Planet?.PlanetAspectsPositive?.length ?
-                                    <div>{Planet?.PlanetAspectsPositive?.map((Planetaspect, key) => (
-                                      <div className='rashi-div-sub' key={key}>
-                                        {
-                                          Planetaspect?.IsWithRaKe ?
-                                            (<div className='sub-div-rake cursor-pointer font-ea-sb' onClick={() => { handleEvent('planetAspect', `House-${(index + 1)}`, "", `${Planetaspect?.Aspect}° `) }}>
-                                              <div>
+                                    </div>
+                                  ))} </div> : ""
+                                }
+                                {Planet?.PlanetAspectsPositive?.length ?
+                                  <div>{Planet?.PlanetAspectsPositive?.map((Planetaspect, key) => (
+                                    <div className='rashi-div-sub' key={key}>
+                                      {
+                                        Planetaspect?.IsWithRaKe ?
+                                          (<div className='sub-div-rake cursor-pointer font-ea-sb' onClick={() => { handleEvent('planetAspect', `House-${(index + 1)}`, "", `${Planetaspect?.Aspect}° `) }}>
+                                            <div>
                                               {Planetaspect?.Aspect}°
                                             </div>
-                                              <span className='item-aspect-arrow'>↠</span>
-                                              <span>{Planetaspect?.Planet}</span>
-                                              <span className='ps-1'>⦿</span></div>) :
-                                            <div className='sub-div2 cursor-pointer font-ea-sb' onClick={() => { handleEvent('planetAspect', `House-${(index + 1)}`, "", `${Planetaspect?.Aspect}° `) }}>
-                                              <div>{Planetaspect?.Aspect}°</div>
-                                              <span className='item-aspect-arrow'>↠</span>
-                                              <span>{Planetaspect?.Planet}</span>
-                                            </div>
-                                        }
-                                        <div>{Planetaspect?.PlanetRashiShort}. {Planetaspect?.ScriptFull}</div>
-                                      </div>
-                                    ))} </div> : ""
-                                  }
-                                  {Planet?.PlanetAspectsNegative?.length ?
-                                    <div>{Planet?.PlanetAspectsNegative?.map((Planetaspect, key) => (
-                                      <div className='rashi-div-sub' key={key}>
-                                        {
-                                          Planetaspect?.IsWithRaKe ?
-                                            (<div className='sub-div-rake cursor-pointer font-ea-sb' onClick={() => { handleEvent('planetAspect', `House-${(index + 1)}`, "", `${Planetaspect?.Aspect}° `) }}>
-                                              <div>{Planetaspect?.Aspect}°</div>
-                                              <span className='item-aspect-arrow'>↠</span>
-                                                <span>{Planetaspect?.Planet}</span>
-                                              <span className='ps-1'>⦿</span></div>) :
-                                            <div className='sub-div3 cursor-pointer font-ea-sb' onClick={() => { handleEvent('planetAspect', `House-${(index + 1)}`, "", `${Planetaspect?.Aspect}° `) }}>
-                                              <div>{Planetaspect?.Aspect}°</div>
-                                              <span className='item-aspect-arrow'>↠</span>
-                                                <span>{Planetaspect?.Planet}</span>
-                                            </div>
-                                        }
-                                        <div>{Planetaspect?.PlanetRashiShort}. {Planetaspect?.ScriptFull}</div>
-                                      </div>
-                                    ))} </div> : ""
-                                  }
-                                </div>
+                                            <span className='item-aspect-arrow'>↠</span>
+                                            <span>{Planetaspect?.Planet}</span>
+                                            <span className='ps-1'>⦿</span></div>) :
+                                          <div className='sub-div2 cursor-pointer font-ea-sb' onClick={() => { handleEvent('planetAspect', `House-${(index + 1)}`, "", `${Planetaspect?.Aspect}° `) }}>
+                                            <div>{Planetaspect?.Aspect}°</div>
+                                            <span className='item-aspect-arrow'>↠</span>
+                                            <span>{Planetaspect?.Planet}</span>
+                                          </div>
+                                      }
+                                      <div>{Planetaspect?.PlanetRashiShort}. {Planetaspect?.ScriptFull}</div>
+                                    </div>
+                                  ))} </div> : ""
+                                }
+                                {Planet?.PlanetAspectsNegative?.length ?
+                                  <div>{Planet?.PlanetAspectsNegative?.map((Planetaspect, key) => (
+                                    <div className='rashi-div-sub' key={key}>
+                                      {
+                                        Planetaspect?.IsWithRaKe ?
+                                          (<div className='sub-div-rake cursor-pointer font-ea-sb' onClick={() => { handleEvent('planetAspect', `House-${(index + 1)}`, "", `${Planetaspect?.Aspect}° `) }}>
+                                            <div>{Planetaspect?.Aspect}°</div>
+                                            <span className='item-aspect-arrow'>↠</span>
+                                            <span>{Planetaspect?.Planet}</span>
+                                            <span className='ps-1'>⦿</span></div>) :
+                                          <div className='sub-div3 cursor-pointer font-ea-sb' onClick={() => { handleEvent('planetAspect', `House-${(index + 1)}`, "", `${Planetaspect?.Aspect}° `) }}>
+                                            <div>{Planetaspect?.Aspect}°</div>
+                                            <span className='item-aspect-arrow'>↠</span>
+                                            <span>{Planetaspect?.Planet}</span>
+                                          </div>
+                                      }
+                                      <div>{Planetaspect?.PlanetRashiShort}. {Planetaspect?.ScriptFull}</div>
+                                    </div>
+                                  ))} </div> : ""
+                                }
                               </div>
-                            </>
+                            </div>
                           )
                           )}</div>)
                         }

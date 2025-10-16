@@ -13,14 +13,7 @@ function KundliOption({ setKundliValue, open, handleClose, KundliData }) {
       minWidth: 170,
       align: "end",
       headerClassName: 'rowheader',
-      // flex: 1,
       renderCell: (params) => {
-        // if (params.id != "V" && params.id != "T") {
-        //   return <div className=''>
-        //     <span>{params.id} </span>
-        //     <span> - </span>
-        //     {params.value}</div>;
-        // }
         return <div className=''>{params.value}</div>;
       },
     },

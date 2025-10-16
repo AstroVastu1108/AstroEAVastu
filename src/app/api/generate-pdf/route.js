@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import puppeteer from "puppeteer-core";
-import pako from 'pako';
 
 export async function GET(request) {
   let browser;
@@ -72,17 +71,10 @@ export async function POST(request) {
   try {
     const body = await request.json();
     const { html, filename = "report.pdf" } = body || {};
-    // const binaryString = atob(html);
-    // const charCodes = new Uint8Array(binaryString.length);
 
-    // for (let i = 0; i < binaryString.length; i++) {
-    //   charCodes[i] = binaryString.charCodeAt(i);
-    // }
-
-    // const decompressedHtml = pako.ungzip(charCodes, { to: 'string' });
-    // if (!decompressedHtml || typeof decompressedHtml !== "string") {
-    //   return NextResponse.json({ error: "Missing HTML content" }, { status: 400 });
-    // }
+    if (!html || typeof html !== "string") {
+      return NextResponse.json({ error: "Missing HTML content" }, { status: 400 });
+    }
 
     const isVercel = !!process.env.VERCEL_ENV;
     let puppeteer, launchOptions = { headless: true };

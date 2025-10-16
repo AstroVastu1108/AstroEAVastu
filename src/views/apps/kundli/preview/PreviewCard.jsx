@@ -13,7 +13,7 @@ import NakshtraSummary from '@/components/preview/NakshtraSummary/NakshtraSummar
 import RahuKetu from '@/components/preview/RahuKetu/RahuKetu';
 import DashaDetails from '@/components/preview/DashaDetails/DashaDetails';
 import LoardPlanet from '@/components/preview/LoardPlanet/LoardPlanet'
-import { Button, Chip, Divider, IconButton, Menu, MenuItem } from '@mui/material'
+import { Button, Chip, Collapse, Divider, IconButton, Menu, MenuItem } from '@mui/material'
 import { useEffect, useRef, useState } from 'react'
 import Event from '@/components/preview/Event/Event'
 import PrakritiPopUp from '@/components/preview/InfoTable/PrakritiPopUp'
@@ -28,6 +28,14 @@ import LifeEvent from '@/components/preview/LifeEvent/LifeEvent'
 import Loader from '@/components/common/Loader/Loader'
 import ConfirmationPopup from '@/components/common/ConfirmationPopup/ConfirmationPopup'
 import { toast } from 'react-toastify'
+import NSubLordPopUp from '@/components/preview/Nakshatra-SubLord/NSubLord'
+import PDFView from './pdfView'
+
+
+// At the top of your file
+// import fontNormalUrl from './../../../../assets/fonts/s-n.woff2';
+// import fontSemiBoldUrl from './../../../../assets/fonts/s-sb.woff2';
+
 
 const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, TransitData, setTransitData, getTransitData, getDivisionalChartData, DivisionalData, setDivisionalData, birthDate, setKundliData, SetKundliConstData }) => {
   // var
@@ -51,6 +59,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   const [EventValue, setEventValue] = useState(null);
   const [kundliOptValue, setKundliOptValue] = useState("V");
   const [isPrakritiVisible, setIsPrakritiVisible] = useState(false);
+  const [isNSLordVisible, setIsNSLoardVisible] = useState(false);
   const [openLifeEvent, setOpenLifeEvent] = useState(false);
   const [openKundli, setOpenKundli] = useState(false);
   const [openJCK, setJCK] = useState(false);
@@ -65,6 +74,8 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   const [DashaDate, setDashaDate] = useState(DashaDetailData?.MahaDasha.filter((e) => e.IsCurrent == true)[0]?.StartDt);
   const [rotationTital, setRotationTitle] = useState("");
   const [SaveKundali, setSaveKundali] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false)
+
 
   const open = Boolean(anchorEl);
   const pageRef = useRef(null);
@@ -79,8 +90,17 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     setIsPrakritiVisible(true)
   }
 
+  const handleIsNSLordOpen = () => {
+    handleClose();
+    setIsNSLoardVisible(true)
+  }
+
   const handleIsPraClose = () => {
     setIsPrakritiVisible(false)
+  }
+
+  const handleIsNLLordClose = () => {
+    setIsNSLoardVisible(false)
   }
 
   const handleClick = (event) => {
@@ -91,753 +111,10 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     setAnchorEl(null);
   };
 
-  // const handleMenuDownload = async () => {
+  // const handleMenuDownload = () => {
   //   handleClose();
-  //   setLoading(true);
-  //   const kundaliId = BirthDetails.KundaliID;
-  //   const printContainer = document.createElement('div')
-  //   const content = pageRef.current.cloneNode(true)
-  //   printContainer.appendChild(content)
-  //   const fullHtml = `
-  //   <!DOCTYPE html>
-  //   <html>
-  //     <head>
-  //       <meta charset="utf-8">
-  //       <title>Report PDF</title>
-  //       <style>
-  //         @page { size: landscape; margin: 20px; }
-  //         body { font-family: Arial, sans-serif; background: white; margin: 0; padding: 10px; }
-  //         * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  //         .page-break { page-break-after: always; }
-  //       </style>
-  //     </head>
-  //     <body>
-  //       ${printContainer.innerHTML}
-  //     </body>
-  //   </html>`
-  //  // Send HTML to Next.js API route
-  //      const response = await fetch('/api/generate-pdf', {
-  //        method: 'POST',
-  //        headers: { 'Content-Type': 'application/json' },
-  //        body: JSON.stringify({ html: fullHtml })
-  //      })
-
-  //      if (!response.ok) {
-  //        throw new Error(`Server responded with ${response.status}`)
-  //      }
-
-  //      // Receive binary PDF
-  //      const blob = await response.blob()
-  //      const url = URL.createObjectURL(blob)
-
-  //      // Dynamic filename
-  //      const fullDateTime = '2025-05-11 05:30:45'
-  //      const formattedDate = fullDateTime.split(' ')[0].replace(/-/g, '')
-
-  //      const filename = `AstroReport_${formattedDate}.pdf`
-
-  //      // Trigger download
-  //      const link = document.createElement('a')
-  //      link.href = url
-  //      link.download = filename
-  //      link.click()
-  //      URL.revokeObjectURL(url)
-
-  //      toast.success('PDF downloaded successfully!')
-  //   // try {
-  //   //   const response = await fetch(`/api/generate-pdf?id=${kundaliId}`);
-
-  //   //   if (!response.ok) {
-  //   //     throw new Error('Failed to generate PDF');
-  //   //   }
-
-  //   //   // Get the PDF as a blob
-  //   //   const blob = await response.blob();
-
-  //   //   // Create a download link
-  //   //   const url = window.URL.createObjectURL(blob);
-  //   //   const a = document.createElement('a');
-  //   //   a.href = url;
-  //   //   a.download = `kundali-${kundaliId}_demo.pdf`;
-  //   //   document.body.appendChild(a);
-  //   //   a.click();
-
-  //   //   // Cleanup
-  //   //   window.URL.revokeObjectURL(url);
-  //   //   document.body.removeChild(a);
-
-  //   // } catch (error) {
-  //   //   console.error('Error downloading PDF:', error);
-  //   //   alert('Failed to download PDF');
-  //   // } finally {
-  //   //   setLoading(false);
-  //   // }
-
-  //   // handleDownload();
+  //   handleDownload();
   // }
-
-  //   const handleMenuDownload = async () => {
-  //   handleClose();
-  //   setLoading(true);
-
-  //   try {
-  //     const kundaliId = BirthDetails.KundaliID;
-
-  //     // Get all stylesheets from the page
-  //     const styles = Array.from(document.styleSheets)
-  //       .map(styleSheet => {
-  //         try {
-  //           return Array.from(styleSheet.cssRules)
-  //             .map(rule => rule.cssText)
-  //             .join('\n');
-  //         } catch (e) {
-  //           // Handle CORS issues with external stylesheets
-  //           console.warn('Cannot access stylesheet:', e);
-  //           return '';
-  //         }
-  //       })
-  //       .join('\n');
-
-  //     // Get inline styles
-  //     const inlineStyles = Array.from(document.querySelectorAll('style'))
-  //       .map(style => style.innerHTML)
-  //       .join('\n');
-
-  //     // Clone the content
-  //     const printContainer = document.createElement('div');
-  //     const content = pageRef.current.cloneNode(true);
-  //     printContainer.appendChild(content);
-
-  //     const fullHtml = `
-  //     <!DOCTYPE html>
-  //     <html>
-  //       <head>
-  //         <meta charset="utf-8">
-  //         <title>Report PDF</title>
-  //         <style>
-  //           @page { size: landscape; margin: 20px; }
-  //           body { 
-  //             font-family: Arial, sans-serif; 
-  //             background: white; 
-  //             margin: 0; 
-  //             padding: 10px; 
-  //           }
-  //           * { 
-  //             -webkit-print-color-adjust: exact !important; 
-  //             print-color-adjust: exact !important; 
-  //           }
-  //           .page-break { page-break-after: always; }
-
-  //           /* Captured styles from the page */
-  //           ${styles}
-  //           ${inlineStyles}
-  //         </style>
-  //       </head>
-  //       <body>
-  //         ${printContainer.innerHTML}
-  //       </body>
-  //     </html>`;
-
-  //     // Send HTML to Next.js API route
-  //     const response = await fetch('/api/generate-pdf', {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify({ html: fullHtml })
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error(`Server responded with ${response.status}`);
-  //     }
-
-  //     // Receive binary PDF
-  //     const blob = await response.blob();
-  //     const url = URL.createObjectURL(blob);
-
-  //     // Dynamic filename
-  //     const fullDateTime = '2025-05-11 05:30:45';
-  //     const formattedDate = fullDateTime.split(' ')[0].replace(/-/g, '');
-  //     const filename = `AstroReport_${formattedDate}.pdf`;
-
-  //     // Trigger download
-  //     const link = document.createElement('a');
-  //     link.href = url;
-  //     link.download = filename;
-  //     link.click();
-  //     URL.revokeObjectURL(url);
-
-  //     toast.success('PDF downloaded successfully!');
-  //   } catch (error) {
-  //     console.error('Error downloading PDF:', error);
-  //     toast.error('Failed to download PDF');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // const handleMenuDownload = async () => {
-  //   handleClose();
-  //   setLoading(true);
-
-  //   const convertCssUrlsToAbsolute = (cssText, baseHref) => {
-  //     if (!cssText) return '';
-
-  //     let baseUrl;
-  //     try {
-  //       baseUrl = new URL(baseHref || window.location.href);
-  //     } catch (error) {
-  //       baseUrl = new URL(window.location.href);
-  //     }
-
-  //     return cssText.replace(/url\(\s*(['"]?)([^'"\)\(]+)\1\s*\)/g, (match, quote, rawUrl) => {
-  //       const cleaned = rawUrl.trim();
-
-  //       if (!cleaned || cleaned.startsWith('data:') || cleaned.startsWith('#') || cleaned.startsWith('var(') || /^https?:\/\//i.test(cleaned) || cleaned.startsWith('//')) {
-  //         return match;
-  //       }
-
-  //       try {
-  //         const absoluteUrl = new URL(cleaned, baseUrl).href;
-  //         const safeQuote = quote || '"';
-  //         return `url(${safeQuote}${absoluteUrl}${safeQuote})`;
-  //       } catch (error) {
-  //         return match;
-  //       }
-  //     });
-  //   };
-
-  //   try {
-  //     const buildPrintableDocument = async () => {
-  //       if (!pageRef.current) {
-  //         throw new Error('Printable content is not available');
-  //       }
-
-  //       const clonedContent = pageRef.current.cloneNode(true);
-  //       const rect = pageRef.current.getBoundingClientRect();
-  //       const rawWidth = pageRef.current.scrollWidth || rect.width || pageRef.current.offsetWidth || 0;
-  //       const rawHeight = pageRef.current.scrollHeight || rect.height || pageRef.current.offsetHeight || 0;
-  //       const contentWidth = Math.max(Math.ceil(rawWidth), 1);
-  //       const contentHeight = Math.max(Math.ceil(rawHeight), 1);
-
-  //       const MM_PER_INCH = 25.4;
-  //       const CSS_DPI = 96;
-  //       const mmToPx = mm => Math.round((mm / MM_PER_INCH) * CSS_DPI);
-
-  //       const A4_WIDTH_MM = 297;
-  //       const A4_HEIGHT_MM = 10;
-  //       const paddingMm = 10;
-  //       const a4WidthPx = mmToPx(A4_WIDTH_MM);
-  //       const a4HeightPx = mmToPx(A4_HEIGHT_MM);
-  //       const horizontalPaddingPx = mmToPx(paddingMm);
-  //       const verticalPaddingPx = mmToPx(paddingMm);
-  //       const availableWidthPx = Math.max(a4WidthPx - horizontalPaddingPx * 2, 0);
-  //       const availableHeightPx = Math.max(a4HeightPx - verticalPaddingPx * 2, 0);
-  //       const scale = contentWidth > 0 ? Math.min(1, availableWidthPx / contentWidth) : 1;
-  //       const scaledContentHeight = Math.ceil(contentHeight * scale);
-  //       const viewportWidth = Math.max(window.innerWidth || 0, document.documentElement.clientWidth || 0, a4WidthPx || 0, 1280);
-  //       const viewportHeight = Math.max(window.innerHeight || 0, document.documentElement.clientHeight || 0, Math.min(a4HeightPx || 0, 4096), 900);
-  //       const bodyBg = window.getComputedStyle(document.body).backgroundColor || '#fff';
-
-  //       const doc = document.implementation.createHTMLDocument('Report PDF');
-  //       doc.title = document.title || 'Report PDF';
-
-  //       const copyAttributes = (source, target) => {
-  //         Array.from(source.attributes || []).forEach(attr => {
-  //           target.setAttribute(attr.name, attr.value);
-  //         });
-  //       };
-
-  //       copyAttributes(document.documentElement, doc.documentElement);
-  //       copyAttributes(document.body, doc.body);
-
-  //       const metaCharset = doc.createElement('meta');
-  //       metaCharset.setAttribute('charset', 'utf-8');
-  //       doc.head.prepend(metaCharset);
-
-  //       const viewportMeta = doc.createElement('meta');
-  //       viewportMeta.setAttribute('name', 'viewport');
-  //       viewportMeta.setAttribute('content', `width=${Math.round(viewportWidth)}, initial-scale=1`);
-  //       doc.head.prepend(viewportMeta);
-
-  //       const base = doc.createElement('base');
-  //       base.setAttribute('href', `${window.location.origin}/`);
-  //       doc.head.prepend(base);
-
-  //       const cloneHeadNode = node => {
-  //         const tagName = node.tagName?.toLowerCase();
-  //         if (!tagName || tagName === 'script' || tagName === 'noscript') {
-  //           return null;
-  //         }
-
-  //         const cloned = node.cloneNode(true);
-
-  //         if (tagName === 'link') {
-  //           const rel = cloned.getAttribute('rel');
-  //           const href = cloned.getAttribute('href');
-  //           if (rel && rel.toLowerCase() === 'stylesheet' && href) {
-  //             try {
-  //               cloned.setAttribute('href', new URL(href, window.location.href).href);
-  //             } catch (error) {
-  //               console.warn('Unable to normalise stylesheet URL', href, error);
-  //             }
-  //           }
-  //         }
-
-  //         if (tagName === 'style') {
-  //           const cssText = cloned.textContent || '';
-  //           cloned.textContent = convertCssUrlsToAbsolute(cssText, window.location.href);
-  //         }
-
-  //         return cloned;
-  //       };
-
-  //       Array.from(document.head.children).forEach(node => {
-  //         const cloned = cloneHeadNode(node);
-  //         if (cloned) {
-  //           doc.head.appendChild(cloned);
-  //         }
-  //       });
-
-  //       // Ensure root-level custom properties defined via inline styles are preserved
-  //       const inlineStyle = document.documentElement.getAttribute('style');
-  //       if (inlineStyle) {
-  //         doc.documentElement.setAttribute('style', convertCssUrlsToAbsolute(inlineStyle, window.location.href));
-  //       }
-
-  //       const style = doc.createElement('style');
-  //       style.textContent = `
-
-  //           @page {
-  //             size: 210mm 300mm;
-  //             margin: 5mm;
-  //           }
-
-  //           body {
-  //             background: #ffffff !important;
-  //             justify-content: center;
-  //             align-items: center;
-  //             margin: 0;
-  //             padding: 0;
-  //             font-family: ea-sb;
-  //           }
-
-
-  //         * {
-  //           -webkit-print-color-adjust: exact !important;
-  //           print-color-adjust: exact !important;
-  //         }
-
-  //         [data-print-content='true'][data-print-scaled='true'] {
-  //           transform-origin: top left;
-  //         }
-
-
-  //       `;
-  //       doc.head.appendChild(style);
-
-  //       const printableWrapper = doc.createElement('div');
-  //       printableWrapper.setAttribute('data-print-root', 'true');
-  //       printableWrapper.style.width = '100%';
-  //       printableWrapper.style.margin = '0 auto';
-
-  //       const scaleOuter = doc.createElement('div');
-  //       scaleOuter.setAttribute('data-print-scale-outer', 'true');
-  //       scaleOuter.style.width = '100%';
-  //       scaleOuter.style.height = '100%';
-  //       // scaleOuter.style.height = scale < 1 ? `${scaledContentHeight}px` : 'auto';
-
-  //       const contentWrapper = doc.createElement('div');
-  //       contentWrapper.setAttribute('data-print-content', 'true');
-  //       if (scale < 1) {
-  //         contentWrapper.setAttribute('data-print-scaled', 'true');
-  //         contentWrapper.style.transform = `scale(${scale})`;
-  //         contentWrapper.style.width = `${contentWidth}px`;
-  //         contentWrapper.style.height = `${contentHeight}px`;
-  //       }
-  //       contentWrapper.appendChild(clonedContent);
-  //       scaleOuter.appendChild(contentWrapper);
-  //       printableWrapper.appendChild(scaleOuter);
-
-  //       printableWrapper.querySelectorAll('[style]').forEach(element => {
-  //         const rawStyle = element.getAttribute('style');
-  //         if (rawStyle) {
-  //           element.setAttribute('style', convertCssUrlsToAbsolute(rawStyle, window.location.href));
-  //         }
-  //       });
-
-  //       doc.body.innerHTML = '';
-  //       doc.body.appendChild(printableWrapper);
-
-  //       const serializer = new XMLSerializer();
-  //       return {
-  //         html: `<!DOCTYPE html>${serializer.serializeToString(doc)}`,
-  //         viewport: {
-  //           width: Math.round(viewportWidth),
-  //           // height: '500mm',
-  //           height: Math.round(viewportHeight),
-  //           deviceScaleFactor: window.devicePixelRatio || 1
-  //         },
-  //         pageSize: {
-  //           width: `${A4_WIDTH_MM}mm`,
-  //           height: `210mm`,
-  //           // height: `${A4_HEIGHT_MM}mm`,
-  //           margin: {
-  //             top: '0mm',
-  //             right: '0mm',
-  //             bottom: '0mm',
-  //             left: '0mm'
-  //           }
-  //         }
-  //       };
-  //     };
-
-  //     const { html: fullHtml, viewport, pageSize } = await buildPrintableDocument();
-  //     // console.log("fullHtml", fullHtml)
-  //     const response = await fetch('/api/generate-pdf', {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify({ html: fullHtml, viewport, pageSize })
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error(`Server responded with ${response.status}`);
-  //     }
-
-  //     const blob = await response.blob();
-  //     const url = URL.createObjectURL(blob);
-  // const fullDateTime = BirthDetails.FullDateTime || new Date().toISOString();
-  // const formattedDate = fullDateTime.split(' ')[0].replace(/-/g, '');
-  //     const filename = `AstroReport_${formattedDate}.pdf`;
-
-  //     const link = document.createElement('a');
-  //     link.href = url;
-  //     link.download = filename;
-  //     link.click();
-  //     URL.revokeObjectURL(url);
-
-  //     toast.success('PDF downloaded successfully!');
-  //   } catch (error) {
-  //     console.error('Error downloading PDF:', error);
-  //     toast.error('Failed to download PDF');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // working but some right side are cutting
-  // const handleMenuDownload = async () => {
-  //   handleClose();
-  //   setLoading(true);
-
-  //   const convertCssUrlsToAbsolute = (cssText, baseHref) => {
-  //     if (!cssText) return '';
-
-  //     let baseUrl;
-  //     try {
-  //       baseUrl = new URL(baseHref || window.location.href);
-  //     } catch (error) {
-  //       baseUrl = new URL(window.location.href);
-  //     }
-
-  //     return cssText.replace(/url\(\s*(['"]?)([^'"\)\(]+)\1\s*\)/g, (match, quote, rawUrl) => {
-  //       const cleaned = rawUrl.trim();
-
-  //       if (!cleaned || cleaned.startsWith('data:') || cleaned.startsWith('#') || cleaned.startsWith('var(') || /^https?:\/\//i.test(cleaned) || cleaned.startsWith('//')) {
-  //         return match;
-  //       }
-
-  //       try {
-  //         const absoluteUrl = new URL(cleaned, baseUrl).href;
-  //         const safeQuote = quote || '"';
-  //         return `url(${safeQuote}${absoluteUrl}${safeQuote})`;
-  //       } catch (error) {
-  //         return match;
-  //       }
-  //     });
-  //   };
-
-  //   // New function to inline computed styles
-  //   const inlineComputedStyles = (original, cloned) => {
-  //     const originalElements = original.querySelectorAll('*');
-  //     const clonedElements = cloned.querySelectorAll('*');
-
-  //     // Process each element pair
-  //     Array.from(originalElements).forEach((origEl, index) => {
-  //       const clonedEl = clonedElements[index];
-  //       if (!clonedEl) return;
-
-  //       try {
-  //         const computedStyle = window.getComputedStyle(origEl);
-
-  //         // Important style properties to preserve
-  //         const criticalProps = [
-  //           'display', 'position', 'top', 'left', 'right', 'bottom',
-  //           'width', 'height', 'min-width', 'min-height', 'max-width', 'max-height',
-  //           'margin', 'margin-top', 'margin-right', 'margin-bottom', 'margin-left',
-  //           'padding', 'padding-top', 'padding-right', 'padding-bottom', 'padding-left',
-  //           'border', 'border-width', 'border-style', 'border-color', 'border-radius',
-  //           'background', 'background-color', 'background-image', 'background-size', 'background-position',
-  //           'color', 'font-family', 'font-size', 'font-weight', 'font-style', 'line-height',
-  //           'text-align', 'text-decoration', 'text-transform',
-  //           'flex', 'flex-direction', 'flex-wrap', 'justify-content', 'align-items', 'gap',
-  //           'grid', 'grid-template-columns', 'grid-template-rows', 'grid-gap',
-  //           'opacity', 'visibility', 'overflow', 'z-index', 'box-shadow', 'transform'
-  //         ];
-
-  //         let styleString = clonedEl.getAttribute('style') || '';
-
-  //         criticalProps.forEach(prop => {
-  //           const value = computedStyle.getPropertyValue(prop);
-  //           if (value && value !== 'none' && value !== 'auto' && value !== 'initial') {
-  //             // Convert to absolute URLs if it's a background-image or similar
-  //             const finalValue = (prop.includes('background') || prop.includes('border-image'))
-  //               ? convertCssUrlsToAbsolute(value, window.location.href)
-  //               : value;
-
-  //             styleString += `${prop}: ${finalValue} !important; `;
-  //           }
-  //         });
-
-  //         if (styleString) {
-  //           clonedEl.setAttribute('style', styleString);
-  //         }
-  //       } catch (error) {
-  //         console.warn('Error inlining styles for element:', error);
-  //       }
-  //     });
-  //   };
-
-  //   try {
-  //     const buildPrintableDocument = async () => {
-  //       if (!pageRef.current) {
-  //         throw new Error('Printable content is not available');
-  //       }
-
-  //       const clonedContent = pageRef.current.cloneNode(true);
-
-  //       // Inline computed styles from original to cloned content
-  //       inlineComputedStyles(pageRef.current, clonedContent);
-
-  //       const MM_PER_INCH = 25.4;
-  //       const CSS_DPI = 96;
-  //       const mmToPx = mm => Math.round((mm / MM_PER_INCH) * CSS_DPI);
-
-  //       // A4 Portrait dimensions
-  //       const A4_WIDTH_MM = 210;
-  //       const A4_HEIGHT_MM = 297;
-  //       const paddingMm = 10;
-
-  //       const a4WidthPx = mmToPx(A4_WIDTH_MM);
-  //       const a4HeightPx = mmToPx(A4_HEIGHT_MM);
-
-  //       // Set viewport to A4 size, not window size
-  //       const viewportWidth = a4WidthPx;  // ~794px
-  //       const viewportHeight = a4HeightPx; // ~1123px
-
-  //       const bodyBg = window.getComputedStyle(document.body).backgroundColor || '#fff';
-
-  //       const doc = document.implementation.createHTMLDocument('Report PDF');
-  //       doc.title = document.title || 'Report PDF';
-
-  //       const copyAttributes = (source, target) => {
-  //         Array.from(source.attributes || []).forEach(attr => {
-  //           target.setAttribute(attr.name, attr.value);
-  //         });
-  //       };
-
-  //       copyAttributes(document.documentElement, doc.documentElement);
-  //       copyAttributes(document.body, doc.body);
-
-  //       const metaCharset = doc.createElement('meta');
-  //       metaCharset.setAttribute('charset', 'utf-8');
-  //       doc.head.prepend(metaCharset);
-
-  //       const viewportMeta = doc.createElement('meta');
-  //       viewportMeta.setAttribute('name', 'viewport');
-  //       viewportMeta.setAttribute('content', `width=${Math.round(viewportWidth)}, initial-scale=1`);
-  //       doc.head.prepend(viewportMeta);
-
-  //       const base = doc.createElement('base');
-  //       base.setAttribute('href', `${window.location.origin}/`);
-  //       doc.head.prepend(base);
-
-  //       const cloneHeadNode = node => {
-  //         const tagName = node.tagName?.toLowerCase();
-  //         if (!tagName || tagName === 'script' || tagName === 'noscript') {
-  //           return null;
-  //         }
-
-  //         const cloned = node.cloneNode(true);
-
-  //         if (tagName === 'link') {
-  //           const rel = cloned.getAttribute('rel');
-  //           const href = cloned.getAttribute('href');
-  //           if (rel && rel.toLowerCase() === 'stylesheet' && href) {
-  //             try {
-  //               cloned.setAttribute('href', new URL(href, window.location.href).href);
-  //             } catch (error) {
-  //               console.warn('Unable to normalise stylesheet URL', href, error);
-  //             }
-  //           }
-  //         }
-
-  //         if (tagName === 'style') {
-  //           const cssText = cloned.textContent || '';
-  //           cloned.textContent = convertCssUrlsToAbsolute(cssText, window.location.href);
-  //         }
-
-  //         return cloned;
-  //       };
-
-  //       Array.from(document.head.children).forEach(node => {
-  //         const cloned = cloneHeadNode(node);
-  //         if (cloned) {
-  //           doc.head.appendChild(cloned);
-  //         }
-  //       });
-
-  //       // Copy all stylesheets as inline styles to ensure they're captured
-  //       Array.from(document.styleSheets).forEach((sheet, index) => {
-  //         try {
-  //           if (sheet.cssRules) {
-  //             const cssText = Array.from(sheet.cssRules)
-  //               .map(rule => rule.cssText)
-  //               .join('\n');
-
-  //             if (cssText) {
-  //               const style = doc.createElement('style');
-  //               style.setAttribute('data-source', `stylesheet-${index}`);
-  //               style.textContent = convertCssUrlsToAbsolute(cssText, window.location.href);
-  //               doc.head.appendChild(style);
-  //             }
-  //           }
-  //         } catch (error) {
-  //           // CORS or other access issues - stylesheet already linked
-  //           console.warn('Could not access stylesheet rules:', error);
-  //         }
-  //       });
-
-  //       const inlineStyle = document.documentElement.getAttribute('style');
-  //       if (inlineStyle) {
-  //         doc.documentElement.setAttribute('style', convertCssUrlsToAbsolute(inlineStyle, window.location.href));
-  //       }
-
-  //       const style = doc.createElement('style');
-  //       style.textContent = `
-  //       @page {
-  //         size: ${A4_WIDTH_MM}mm ${A4_HEIGHT_MM}mm;
-  //         margin: ${paddingMm}mm;
-  //       }
-
-  //       html, body {
-  //         width: 100%;
-  //         height: 100%;
-  //         background: #ffffff !important;
-  //         margin: 0;
-  //         padding: 0;
-  //       }
-
-  //       body {
-  //         font-family: ea-sb, Arial, sans-serif;
-  //       }
-
-  //       * {
-  //         -webkit-print-color-adjust: exact !important;
-  //         print-color-adjust: exact !important;
-  //         color-adjust: exact !important;
-  //       }
-
-  //       [data-print-root='true'] {
-  //         width: 100%;
-  //         max-width: 100%;
-  //         margin: 0;
-  //         padding: 0;
-  //         box-sizing: border-box;
-  //       }
-  //     `;
-  //       doc.head.appendChild(style);
-
-  //       const printableWrapper = doc.createElement('div');
-  //       printableWrapper.setAttribute('data-print-root', 'true');
-  //       printableWrapper.appendChild(clonedContent);
-
-  //       printableWrapper.querySelectorAll('[style]').forEach(element => {
-  //         const rawStyle = element.getAttribute('style');
-  //         if (rawStyle) {
-  //           element.setAttribute('style', convertCssUrlsToAbsolute(rawStyle, window.location.href));
-  //         }
-  //       });
-
-  //       doc.body.innerHTML = '';
-  //       doc.body.appendChild(printableWrapper);
-
-  //       const serializer = new XMLSerializer();
-  //       return {
-  //         html: `<!DOCTYPE html>${serializer.serializeToString(doc)}`,
-  //         viewport: {
-  //           width: Math.round(viewportWidth),
-  //           height: Math.round(viewportHeight),
-  //           deviceScaleFactor: 1
-  //         },
-  //         pageSize: {
-  //           width: `${A4_WIDTH_MM}mm`,
-  //           height: `${A4_HEIGHT_MM}mm`,
-  //           margin: {
-  //             top: `${paddingMm}mm`,
-  //             right: `${paddingMm}mm`,
-  //             bottom: `${paddingMm}mm`,
-  //             left: `${paddingMm}mm`
-  //           }
-  //         }
-  //       };
-  //     };
-
-  //     const { html: fullHtml, viewport, pageSize } = await buildPrintableDocument();
-
-  //     // const compressed = pako.gzip(fullHtml);
-  //     // const base64 = btoa(String.fromCharCode(...compressed));
-  //     function uint8ToBase64(uint8Array) {
-  //       let CHUNK_SIZE = 0x8000; // 32KB
-  //       let result = '';
-  //       for (let i = 0; i < uint8Array.length; i += CHUNK_SIZE) {
-  //         const chunk = uint8Array.subarray(i, i + CHUNK_SIZE);
-  //         result += String.fromCharCode.apply(null, chunk);
-  //       }
-  //       return btoa(result);
-  //     }
-
-  //     const compressed = pako.gzip(fullHtml);
-  //     const base64 = uint8ToBase64(compressed);
-
-  //     const response = await fetch('/api/generate-pdf', {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify({ html: base64, viewport, pageSize })
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error(`Server responded with ${response.status}`);
-  //     }
-
-  //     const blob = await response.blob();
-  //     const url = URL.createObjectURL(blob);
-  //     const fullDateTime = BirthDetails.FullDateTime || new Date().toISOString();
-  //     const formattedDate = fullDateTime.split(' ')[0].replace(/-/g, '');
-  //     const filename = `AstroReport_${formattedDate}.pdf`;
-
-  //     const link = document.createElement('a');
-  //     link.href = url;
-  //     link.download = filename;
-  //     link.click();
-  //     URL.revokeObjectURL(url);
-
-  //     toast.success('PDF downloaded successfully!');
-  //   } catch (error) {
-  //     console.error('Error downloading PDF:', error);
-  //     toast.error('Failed to download PDF');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   const handleMenuDownload = async () => {
     handleClose();
@@ -847,6 +124,50 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       if (!pageRef.current) {
         throw new Error('Printable content is not available');
       }
+
+      // Get all computed styles for the element and its children
+      const getComputedStylesRecursive = (element) => {
+        let styles = '';
+
+        const computedStyle = window.getComputedStyle(element);
+        const elementId = element.id || `elem-${Math.random().toString(36).substr(2, 9)}`;
+
+        if (!element.id) {
+          element.setAttribute('data-pdf-id', elementId);
+        }
+
+        const selector = element.id ? `#${element.id}` : `[data-pdf-id="${elementId}"]`;
+
+        // Get all relevant CSS properties
+        const importantProps = [
+          'display', 'position', 'width', 'height', 'margin', 'padding',
+          'border', 'background', 'background-color', 'color', 'font-family',
+          'font-size', 'font-weight', 'text-align', 'line-height',
+          'flex', 'flex-direction', 'justify-content', 'align-items',
+          'grid', 'grid-template-columns', 'grid-gap', 'gap',
+          'border-radius', 'box-shadow', 'transform', 'opacity', 'border-bottom',
+          'border-top', 'border-left', 'border-right', 'text-wrap'
+        ];
+
+        let cssText = '';
+        importantProps.forEach(prop => {
+          const value = computedStyle.getPropertyValue(prop);
+          if (value && value !== 'none' && value !== 'normal') {
+            cssText += `${prop}: ${value} !important; `;
+          }
+        });
+
+        if (cssText) {
+          styles += `${selector} { ${cssText} }\n`;
+        }
+
+        // Recursively process children
+        Array.from(element.children).forEach(child => {
+          styles += getComputedStylesRecursive(child);
+        });
+
+        return styles;
+      };
 
       // Get all stylesheets content
       const getStylesheetContent = async () => {
@@ -861,12 +182,18 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
 
         // Get external stylesheets
         const links = Array.from(document.querySelectorAll('link[rel="stylesheet"]'));
+        console.log("links", links);
         for (const link of links) {
           try {
             if (link.href.startsWith(window.location.origin)) {
               const response = await fetch(link.href);
               const css = await response.text();
-              allStyles += css;
+              const filteredCss = css
+                .split('}')
+                .filter(rule => rule.includes('.pdfView'))
+                .map(rule => rule + '}')
+                .join('\n');
+              allStyles += filteredCss;
             }
           } catch (error) {
             console.warn('Could not load stylesheet:', link.href);
@@ -876,55 +203,273 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
         return allStyles;
       };
 
-      const styles = await getStylesheetContent();
+      const [stylesheetStyles, computedStyles] = await Promise.all([
+        getStylesheetContent(),
+        Promise.resolve(getComputedStylesRecursive(pageRef.current))
+      ]);
 
       // Clone the content
       const clonedContent = pageRef.current.cloneNode(true);
 
-      // Build the complete HTML
+      // Wrap each house-Div in a page-break-safe container
+      const houseDivs = clonedContent.querySelectorAll('.house-Div');
+      houseDivs.forEach((houseDiv) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'house-wrapper-pdf';
+        houseDiv.parentNode.insertBefore(wrapper, houseDiv);
+        wrapper.appendChild(houseDiv);
+      });
+
+      // Function to convert font to base64
+      const getFontBase64 = async (fontPath) => {
+        try {
+          const response = await fetch(fontPath);
+          const blob = await response.blob();
+          return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+          });
+        } catch (error) {
+          console.error('Error loading font:', fontPath, error);
+          return null;
+        }
+      };
+
+      // Load fonts as base64
+      // const [fontNormal, fontSemiBold] = await Promise.all([
+      //   getFontBase64('/fonts/s-n.woff2'),
+      //   getFontBase64('/fonts/s-sb.woff2')
+      // ]);
+
+      // console.warn("fontNormal: ", fontNormal)
+
+      // Add to your font loading section:
+      const [fontNormal, fontSemiBold, fontSymbols] = await Promise.all([
+        getFontBase64('/fonts/s-n.woff2'),
+        getFontBase64('/fonts/s-sb.woff2'),
+        // Use a CDN font with symbols
+        getFontBase64('https://fonts.gstatic.com/s/notosans/v30/o-0IIpQlx3QUlC5A4PNr5TRA.woff2')
+      ]);
+
+
+      // Build the complete HTML with proper page layout
       const fullHtml = `
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <title>Astro Report PDF</title>
-            <style>
-              @page { 
-                size: A4; 
-                margin: 10mm; 
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=900px, initial-scale=1">
+          <title>Astro Report PDF</title>
+          <style>
+            @page { 
+              size: A4; 
+              margin: 5mm; 
+            }
+
+            
+
+            ${fontNormal ? `
+            @font-face {
+              font-family: 'ea-n';
+              font-weight: 400;
+              font-stretch: 100%;
+              src: url('${fontNormal}') format('woff2');
+            }
+            ` : ''}
+
+            ${fontSemiBold ? `
+            @font-face {
+              font-family: 'ea-sb';
+              font-weight: 500;
+              font-stretch: 100%;
+              src: url('${fontSemiBold}') format('woff2');
+            }
+            ` : ''}
+
+            ${fontSymbols ? `
+            @font-face {
+              font-family: 'Symbols';
+              src: url('${fontSymbols}') format('woff2');
+              unicode-range: U+2700-27BF, U+2600-26FF, U+2B00-2BFF;
+            }
+            ` : ''}
+            
+            body { 
+              background: #fff !important; 
+              margin: 0; 
+              padding: 0;
+              width: 210mm;
+              min-height: 297mm;
+              // font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+              -webkit-print-color-adjust: exact !important; 
+              print-color-adjust: exact !important;
+
+              /* Add fallback fonts that include symbols */
+          font-family: 'Segoe UI', 'Segoe UI Symbol', 'Segoe UI Emoji', Arial, sans-serif !important;
+          -webkit-print-color-adjust: exact !important; 
+          print-color-adjust: exact !important;
+            }
+            
+            * { 
+              -webkit-print-color-adjust: exact !important; 
+              print-color-adjust: exact !important; 
+              color-adjust: exact !important;
+              box-sizing: border-box;
+
+              /* Ensure all elements can use symbol fonts */
+          font-family: inherit !important;
+            }
+
+            /* Fixed width container - 900px scaled to fit A4 */
+            .previewCard,
+            .print-optimized {
+              width: 900px !important;
+              max-width: 900px !important;
+              min-width: 900px !important;
+              min-height: 100vh;
+              padding: 15px;
+              margin: 0 auto;
+
+              /* Replace transform with zoom */
+              zoom: 1.75;
+              transform: none !important;
+              transform-origin: top center;
+
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+            }
+
+            /* CRITICAL: House wrapper for page breaks */
+            .house-wrapper-pdf {
+              page-break-inside: avoid !important;
+              break-inside: avoid !important;
+              -webkit-column-break-inside: avoid !important;
+              display: block !important;
+              position: relative !important;
+              overflow: visible !important;
+            }
+
+            /* House section styles */
+            .house-Div {
+              display: block !important;
+              width: 100% !important;
+              position: relative !important;
+              margin-bottom: 15px !important;
+            }
+
+            /* Prevent breaks in header */
+            .house-header {
+              page-break-after: avoid !important;
+              break-after: avoid !important;
+              page-break-inside: avoid !important;
+              break-inside: avoid !important;
+            }
+
+            /* Prevent breaks in body */
+            .house-body {
+              page-break-inside: avoid !important;
+              break-inside: avoid !important;
+            }
+
+            /* Keep sub-sections together */
+            .house-body-Div1,
+            .house-body-Div2 {
+              page-break-inside: avoid !important;
+              break-inside: avoid !important;
+            }
+
+            /* Rashi sections */
+            .rahi-Div {
+              page-break-inside: avoid !important;
+              break-inside: avoid !important;
+            }
+
+            /* Planet sections */
+            .planet-Div {
+              page-break-inside: avoid !important;
+              break-inside: avoid !important;
+            }
+
+            /* Main containers allow breaks between houses */
+            .house-main-Div,
+            .main-AstroVastuScript-Div,
+            .AstroVastuScript-Div,
+            .print-house-container {
+              page-break-inside: auto !important;
+              break-inside: auto !important;
+            }
+
+            .neutral {
+        color: #1762ad;
+      }
+
+      .rake {
+        display: flex;
+        gap: 2px;
+        align-items: center;
+        justify-content: center;
+        color: gray;
+      }
+
+      .positive {
+        color: #057143;
+      }
+
+      .negative {
+        color: #cc1616;
+      }
+
+            /* Chart title */
+            .chart-title,
+            .print-title {
+              page-break-after: avoid !important;
+              break-after: avoid !important;
+            }
+
+            /* Orphans and widows */
+            * {
+              orphans: 4 !important;
+              widows: 4 !important;
+            }
+
+            /* Include computed styles */
+            ${computedStyles}
+
+            .main-MahaDasha-Div-break{
+              page-break-before: always; 
+            }
+            
+
+            .main-AstroVastuScript-Div {
+              page-break-after: always; 
+            }
+
+            /* Additional print-specific overrides */
+            @media print {
+              body {
+                background: white !important;
               }
-
-              body { 
-                background: #fff !important; 
-                font-family: Arial, sans-serif; 
-                margin: 0; 
-                padding: 0; 
-                font-size: 12px;
-              }
-
-              * { 
-                -webkit-print-color-adjust: exact !important; 
-                print-color-adjust: exact !important; 
-                color-adjust: exact !important;
-              }
-
-              /* Include all page styles */
-              ${styles}
-
-              /* Additional print-specific styles */
               
-              .previewCard {
-                width: 100% !important;
-                max-width: none !important;
+              .no-print {
+                display: none !important;
               }
-            </style>
-          </head>
-          <body>
-            ${clonedContent.outerHTML}
-          </body>
-        </html>
-      `;
+
+              .house-wrapper-pdf {
+                page-break-inside: avoid !important;
+              }
+            }
+              
+          </style>
+        </head>
+        <body>
+          ${clonedContent.outerHTML}
+        </body>
+      </html>
+    `;
 
       // Get filename
       const fullDateTime = BirthDetails?.FullDateTime || new Date().toISOString();
@@ -934,12 +479,25 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       // Send to PDF generation API
       const response = await fetch('/api/generate-pdf', {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
-          html: fullHtml, 
-          filename: filename 
+        body: JSON.stringify({
+          html: fullHtml,
+          filename: filename,
+          options: {
+            format: 'A4',
+            printBackground: true,
+            preferCSSPageSize: true,
+            deviceScaleFactor: 3,
+            margin: {
+              top: '5mm',
+              right: '5mm',
+              bottom: '5mm',
+              left: '5mm'
+            },
+            scale: 1
+          }
         })
       });
 
@@ -963,7 +521,6 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     } catch (error) {
       console.error('Error downloading PDF:', error);
 
-      // Check if it's a payload size error
       if (error.message.includes('413') || error.message.includes('Too Large')) {
         toast.error('PDF content is too large. Please try reducing the content or contact support.');
       } else {
@@ -1261,10 +818,15 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     setSaveKundali(false);
   }
 
+  const toggleHeader = () => {
+    setIsExpanded(prev => !prev)
+  }
+
   return (
     <>
       {/* {Loading && <Loader />} */}
-      <Grid className='previewCard' item xs={12} md={12} ref={pageRef}>
+      <Grid className='previewCard' item xs={12} md={12}>
+        <PDFView AstroVastuHouseScript={AstroVastuHouseScript} BirthDetails={BirthDetails} Symbols={Symbols} pageRef={pageRef} AstroDetails={AstroDetails} ChartSVG={ChartSVG} PlaneNSummaryData={PlaneNSummaryData} HouseNSummaryData={HouseNSummaryData} RahuData={RahuData} KetuData={KetuData} PlanetSummaryData={PlanetSummaryData} HouseSummaryData={HouseSummaryData} />
         <Grid item xs={12} className='pdf-Div'>
           <div className={`chart-name sticky top-0 z-50 font-ea-sb rounded-t flex justify-between md:items-center gap-y-2 lg:flex-row ${!isPrintDiv ? 'sm:flex-row flex-col' : "items-center"}`}>
             {BirthDetails?.FirstName ? `${BirthDetails.FirstName} ${BirthDetails.MiddleName} ${BirthDetails.LastName}` : 'Prashna Kundali'}
@@ -1277,6 +839,27 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               <div className='flex flex-row gap-1 chart-date items-center'>
                 <span className='label font-ea-n'>Place: </span>
                 <span className='value font-ea-sb'>{BirthDetails?.City}, {BirthDetails?.Country}</span>
+              </div>
+              <div className='flex-grow flex justify-end items-center'>
+                <IconButton
+                  variant='outlined'
+                  size='small'
+                  onClick={toggleHeader}
+                  sx={{
+                    borderColor: 'var(--border-color)',
+                    color: 'white',
+                    ':hover': {
+                      backgroundColor: 'var(--primary-soft-color)',
+                      borderColor: 'var(--primary-color)'
+                    }
+                  }}
+                >
+                  {isExpanded ? (
+                    <i className='tabler-circle-arrow-up'></i>
+                  ) : (
+                    <i className='tabler-circle-arrow-down'></i>
+                  )}
+                </IconButton>
               </div>
               <div className='flex justify-end'>
                 <>
@@ -1300,6 +883,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
                     <MenuItem onClick={handleJCK} className="flex gap-1"><i className={'tabler-aspect-ratio me-2'} />Jaimini Char Karakas</MenuItem>
                     <MenuItem onClick={handleNTC} className="flex gap-1"><i className={'tabler-jewish-star me-2'} />NavTara Chakra</MenuItem>
                     <MenuItem onClick={handleIsPraOpen} className="flex gap-1"><i className={'tabler-arrow-up-right me-2'} />Prakriti</MenuItem>
+                    <MenuItem onClick={handleIsNSLordOpen} className="flex gap-1"><i className={'tabler-arrow-up-right me-2'} />Nakshatra Lord & Sub Lord</MenuItem>
                     {/* <MenuItem className="flex gap-1"><i className={'tabler-arrow-up-right me-2'} />Save</MenuItem> */}
                     <MenuItem onClick={handleMenuTimeTool} className="flex gap-1"><i className={'tabler-calendar-share me-2'} />TimeTool</MenuItem>
                     <MenuItem className="flex gap-1"><i className={'tabler-calendar-share me-2'} />Transit Analysis</MenuItem>
@@ -1311,41 +895,44 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               </div>
             </div>
           </div>
-          <div className={`${!isPrintDiv ? 'xs:flex-col sm:flex-row' : ""} birth-info-table`}>
-            <div className='flex flex-row block-detail'>
 
-              <InfoTable InfoTableTextArr={[
-                { "label": "Rashi / Alphabet ", "value": `${AstroDetails?.Rashi} / A` },
-                { "label": "Nakshatra / Pada ", "value": `${AstroDetails?.Nakshatra?.Nakshatra} / ${AstroDetails?.Nakshatra.Pada} (${AstroDetails?.Nakshatra?.PlanetName})` },
-                { "label": "Gana / TriGuna ", "value": `${AstroDetails?.Nakshatra?.Gana == 'R' ? 'Rakshasa' : 'Manushya'} / ${AstroDetails?.Nakshatra?.TriGuna}` },
-                { "label": "Yoga / Karana ", "value": `${AstroDetails?.JanmaYoga} / ${AstroDetails?.JanmaKarana}` },
-              ]} isPrintDiv={isPrintDiv} />
+          <Collapse in={isExpanded} timeout='auto' unmountOnExit>
+            <div className={`${!isPrintDiv ? 'xs:flex-col sm:flex-row' : ""} birth-info-table`}>
+              <div className='flex flex-row block-detail'>
+
+                <InfoTable InfoTableTextArr={[
+                  { "label": "Rashi / Alphabet ", "value": `${AstroDetails?.Rashi} / A` },
+                  { "label": "Nakshatra / Pada ", "value": `${AstroDetails?.Nakshatra?.Nakshatra} / ${AstroDetails?.Nakshatra.Pada} (${AstroDetails?.Nakshatra?.PlanetName})` },
+                  { "label": "Gana / TriGuna ", "value": `${AstroDetails?.Nakshatra?.Gana == 'R' ? 'Rakshasa' : 'Manushya'} / ${AstroDetails?.Nakshatra?.TriGuna}` },
+                  { "label": "Yoga / Karana ", "value": `${AstroDetails?.JanmaYoga} / ${AstroDetails?.JanmaKarana}` },
+                ]} isPrintDiv={isPrintDiv} />
+              </div>
+              <div className='flex flex-row block-detail'>
+                <InfoTable InfoTableTextArr={[
+                  { "label": "Vikram Samvant ", "value": AstroDetails?.VikramSamvat },
+                  { "label": "Birth Tithi / Sun Rise ", "value": `${AstroDetails?.JanmaTithi} / ${AstroDetails?.SunRiseTime}` },
+                  { "label": "Astro / Western Day ", "value": `${AstroDetails?.AstroWeekday} / ${AstroDetails?.WesternWeekday}` },
+                  // { "label": "Location ", "value": `${BirthDetails?.City}, ${BirthDetails?.Country}` },
+                ]} isPrintDiv={isPrintDiv} />
+              </div>
+              <div className='flex flex-row block-detail'>
+                <InfoTable InfoTableTextArr={[
+                  { "label": "Lucky / Destiny # ", "value": `${AstroDetails?.Numerology?.BirthNumber} / ${AstroDetails?.Numerology?.DestinyNumber} (${AstroDetails?.Numerology?.DestinyYearNumber})` },
+                  { "label": "Destiny Year ", "value": ` ${AstroDetails?.Numerology?.DestinyYear - 1} - ${AstroDetails?.Numerology?.DestinyYear}` },
+                  { "label": "Lat, Lng ", "value": `${BirthDetails?.Latitude}, ${BirthDetails?.Longitude}` },
+                  { "label": "Timezone ", "value": ` ${BirthDetails?.Timezone}` },
+                ]} isPrintDiv={isPrintDiv} />
+              </div>
+              <div className='flex flex-row block-detail'>
+                <InfoTable InfoTableTextArr={[
+                  { "label": "Reference", "value": `${BirthDetails?.Reference || ""}` },
+                  { "label": "Remark", "value": `${BirthDetails?.Remark || ""}` },
+                  { "label": "Group ", "value": ` ${BirthDetails?.Group || ""}` },
+                  { "label": "Prakriti", "value": `${BirthDetails?.Gender} / ${BirthDetails?.Prakriti}` },
+                ]} isPrintDiv={isPrintDiv} />
+              </div>
             </div>
-            <div className='flex flex-row block-detail'>
-              <InfoTable InfoTableTextArr={[
-                { "label": "Vikram Samvant ", "value": AstroDetails?.VikramSamvat },
-                { "label": "Birth Tithi / Sun Rise ", "value": `${AstroDetails?.JanmaTithi} / ${AstroDetails?.SunRiseTime}` },
-                { "label": "Astro / Western Day ", "value": `${AstroDetails?.AstroWeekday} / ${AstroDetails?.WesternWeekday}` },
-                // { "label": "Location ", "value": `${BirthDetails?.City}, ${BirthDetails?.Country}` },
-              ]} isPrintDiv={isPrintDiv} />
-            </div>
-            <div className='flex flex-row block-detail'>
-              <InfoTable InfoTableTextArr={[
-                { "label": "Lucky / Destiny # ", "value": `${AstroDetails?.Numerology?.BirthNumber} / ${AstroDetails?.Numerology?.DestinyNumber} (${AstroDetails?.Numerology?.DestinyYearNumber})` },
-                { "label": "Destiny Year ", "value": ` ${AstroDetails?.Numerology?.DestinyYear - 1} - ${AstroDetails?.Numerology?.DestinyYear}` },
-                { "label": "Lat, Lng ", "value": `${BirthDetails?.Latitude}, ${BirthDetails?.Longitude}` },
-                { "label": "Timezone ", "value": ` ${BirthDetails?.Timezone}` },
-              ]} isPrintDiv={isPrintDiv} />
-            </div>
-            <div className='flex flex-row block-detail'>
-              <InfoTable InfoTableTextArr={[
-                { "label": "Reference", "value": `${BirthDetails?.Reference || ""}` },
-                { "label": "Remark", "value": `${BirthDetails?.Remark || ""}` },
-                { "label": "Group ", "value": ` ${BirthDetails?.Group || ""}` },
-                { "label": "Prakriti", "value": `${BirthDetails?.Gender} / ${BirthDetails?.Prakriti}` },
-              ]} isPrintDiv={isPrintDiv} />
-            </div>
-          </div>
+          </Collapse>
 
           <div className={`flex px-1 pt-4 gap-5 overflow-auto md:flex-wrap lg:flex-nowrap`}>
             {openKundli && (
@@ -1499,62 +1086,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
             </div>
 
           </div>
-          <div className='main-MahaDasha-Div pt-4'>
-            {/* <div className='chart-title'>❋ Nakshatra Astrology ↠ House Script ❋</div> */}
-            <div className='flex px-4 w-[100%] justify-between'>
-              <div className=' w-[30%]'></div>
-              <div className='chart-title w-[40%] pt-5'>
-                <span>
-                  ❋ Nakshatra Astrology ↠ House Script ❋
-                </span>
-              </div>
-              <div className='mb-1 w-[30%] flex justify-end pt-4 whitespace-nowrap'>
-                <Button variant='text' className='' onClick={handleLifeEventOpen}>
-                  <span className='text-[var(--green-color)]'>Life Event</span>
-                  <span className='arrow text-black'>🡒</span>
-                  <span>
-                    {LifeEventValue ? `${LifeEventValue.EventName}` : "NA"}
-                  </span>
-                </Button>
-              </div>
-            </div>
-            <div className='planet-table'>
-              <NakshtraSummary SummaryData={HouseNSummaryData} Aspect={"H"} symbols={Symbols} SelectedEventVal={LifeEventValue} />
-            </div>
-          </div>
 
-          <div className='main-RahuKetu-Div pt-4'>
-            {/* <div className='chart-title'>❋ Planet Script with Nakshatra Lord & Sub Lord ❋</div> */}
-            <div className='flex px-4 w-[100%] justify-between'>
-              <div className=' w-[25%]'></div>
-              <div className='chart-title w-[50%] pt-5'>
-                <span>
-                  ❋ Planet Script with Nakshatra Lord & Sub Lord ❋
-                </span>
-              </div>
-              <div className='mb-1 w-[25%] flex justify-end pt-4 whitespace-nowrap'>
-                <Button variant='text' className='' onClick={handleLifeEventOpen}>
-                  <span className='text-[var(--green-color)]'>Life Event</span>
-                  <span className='arrow text-black'>🡒</span>
-                  <span>
-                    {LifeEventValue ? `${LifeEventValue.EventName}` : "NA"}
-                  </span>
-                </Button>
-              </div>
-            </div>
-            <div
-              className="Loard-Div sm:grid md:grid-rows-3 md:grid-cols-3 sm:grid-rows-5 sm:grid-cols-2 xs:flex xs:flex-col grid-flow-col gap-4 auto-rows-auto"
-            >
-              {PlaneNSummaryData.length
-                ? PlaneNSummaryData.slice(0, 9).map((element, index) => ( // only display first 9 elements
-                  <div key={index} className=''>
-                    <LoardPlanet LoardData={element} SelectedEventVal={LifeEventValue} symbols={Symbols} />
-                  </div>
-                ))
-                : null
-              }
-            </div>
-          </div>
 
           <div className='main-RahuKetu-Div pt-8'>
             <div className='flex px-4 w-[100%] justify-between'>
@@ -1580,6 +1112,33 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
             </div>
           </div>
 
+
+          <div className='main-MahaDasha-Div pt-4'>
+            {/* <div className='chart-title'>❋ Nakshatra Astrology ↠ House Script ❋</div> */}
+            <div className='flex px-4 w-[100%] justify-between'>
+              <div className=' w-[30%]'></div>
+              <div className='chart-title w-[40%] pt-5'>
+                <span>
+                  ❋ Nakshatra Astrology ↠ House Script ❋
+                </span>
+              </div>
+              <div className='mb-1 w-[30%] flex justify-end pt-4 whitespace-nowrap'>
+                <Button variant='text' className='' onClick={handleLifeEventOpen}>
+                  <span className='text-[var(--green-color)]'>Life Event</span>
+                  <span className='arrow text-black'>🡒</span>
+                  <span>
+                    {LifeEventValue ? `${LifeEventValue.EventName}` : "NA"}
+                  </span>
+                </Button>
+              </div>
+            </div>
+            <div className='planet-table'>
+              <NakshtraSummary SummaryData={HouseNSummaryData} Aspect={"H"} symbols={Symbols} SelectedEventVal={LifeEventValue} />
+            </div>
+          </div>
+
+
+
           <div className='main-AstroVastuScript-Div pt-8'>
             <div className='chart-title'>❋ Planet ↠ Planet Aspects Summary ❋</div>
             <div className='Summary-Div'>
@@ -1593,15 +1152,19 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
             </div>
           </div>
 
+
+
           <div className='main-AstroVastuScript-Div pt-8'>
-            <div className='chart-title'>❋ Astro Vastu Insights ❋</div>
+            <div className='chart-title'>❋ Remedial Astro Vastu Insights ❋</div>
             <div className='AstroVastuScript-Div'>
               <House houseArr={AstroVastuHouseScript} Symbols={Symbols}></House>
             </div>
           </div>
+
         </Grid>
       </Grid>
       {isPrakritiVisible && <PrakritiPopUp open={isPrakritiVisible} handlePraClose={handleIsPraClose} />}
+      {isNSLordVisible && <NSubLordPopUp open={isNSLordVisible} handleNSLordClose={handleIsNLLordClose} PlaneNSummaryData={PlaneNSummaryData} LifeEventValue={LifeEventValue} Symbols={Symbols} />}
       {openJCK && <JaiminiCharKarakasPopUp open={openJCK} handleClose={handleJCK} JaiminiCharKarakasData={JaiminiCharKarakas} />}
       {openNTC && <NavTaraChakra open={openNTC} handleClose={handleNTC} NavTaraChakraData={NavTaraChakraData} />}
       {openRotation && <Rotation open={openRotation} handleClose={handleRoatationClose} rotationType={rotationType} hanldeRotationChange={hanldeRotationChange} />}
