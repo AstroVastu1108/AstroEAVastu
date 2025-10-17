@@ -949,16 +949,16 @@ function DevtaVastuPage({ id }) {
   //           page-break-after: avoid;
   //           break-after: avoid;
   //         }
-  //         .main-print-div{
-  //           display: flex;
-  //           justify-content: space-between;
-  //           gap: 10px;
-  //         }
-  //         .hidden-print {
-  //           position: static; /* Restore to default position during print */
-  //           left: auto;
-  //           width: 25%;
-  //         }
+  // .main-print-div{
+  //   display: flex;
+  //   justify-content: space-between;
+  //   gap: 10px;
+  // }
+  // .hidden-print {
+  //   position: static; /* Restore to default position during print */
+  //   left: auto;
+  //   width: 25%;
+  // }
   //       }
 
   //       /* Non-print styles */
@@ -1024,6 +1024,86 @@ function DevtaVastuPage({ id }) {
   //   }
   // }
 
+  // const printHandler = async (data) => {
+  //   if (!printRefs.current || printRefs.current.length === 0) {
+  //     console.error('Print container refs are empty or null')
+  //     return
+  //   }
+
+  //   try {
+  //     // Merge all selected refs into one container
+  //     const printContainer = document.createElement('div')
+
+  //     if (Array.isArray(data) && data.length > 0) {
+  //       data.forEach((item, i) => {
+  //         const ref = printRefs.current.find(el => el?.id === item)
+  //         const groupIndex = tabGroup.findIndex(e => e.title === data[i])
+  //         if (groupIndex === -1 || !ref) return
+
+  //         const pageWrapper = document.createElement('div')
+  //         pageWrapper.className = 'new-page page-break'
+  //         const content = ref.cloneNode(true)
+  //         pageWrapper.appendChild(content)
+  //         printContainer.appendChild(pageWrapper)
+  //       })
+  //     } else {
+  //       return toast.error('No matching data found for PDF generation.')
+  //     }
+
+  //     // Prepare styled HTML for Puppeteer
+  //     const fullHtml = `
+  //       <!DOCTYPE html>
+  //       <html>
+  //         <head>
+  //           <meta charset="utf-8">
+  //           <title>Report PDF</title>
+  //           <style>
+  //             @page { size: landscape; margin: 20px; }
+  //             body { font-family: Arial, sans-serif; background: white; margin: 0; padding: 10px; }
+  //             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  //             .page-break { page-break-after: always; }
+  //           </style>
+  //         </head>
+  //         <body>
+  //           ${printContainer.innerHTML}
+  //         </body>
+  //       </html>`
+
+  //     // Send HTML to Next.js API route
+  //     const response = await fetch('/api/generate-pdf', {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ html: fullHtml })
+  //     })
+
+  //     if (!response.ok) {
+  //       throw new Error(`Server responded with ${response.status}`)
+  //     }
+
+  //     // Receive binary PDF
+  //     const blob = await response.blob()
+  //     const url = URL.createObjectURL(blob)
+
+  //     // Dynamic filename
+  //     const fullDateTime = '2025-05-11 05:30:45'
+  //     const formattedDate = fullDateTime.split(' ')[0].replace(/-/g, '')
+  //     const username = 'DhruviRana4'
+  //     const filename = `report_${username}_${formattedDate}.pdf`
+
+  //     // Trigger download
+  //     const link = document.createElement('a')
+  //     link.href = url
+  //     link.download = filename
+  //     link.click()
+  //     URL.revokeObjectURL(url)
+
+  //     toast.success('PDF downloaded successfully!')
+  //   } catch (err) {
+  //     console.error('Print error:', err)
+  //     toast.error('An error occurred while generating the PDF.')
+  //   }
+  // }
+
   const printHandler = async (data) => {
     if (!printRefs.current || printRefs.current.length === 0) {
       console.error('Print container refs are empty or null')
@@ -1031,43 +1111,114 @@ function DevtaVastuPage({ id }) {
     }
 
     try {
-      // Merge all selected refs into one container
+      // Create a container for all content
       const printContainer = document.createElement('div')
 
       if (Array.isArray(data) && data.length > 0) {
         data.forEach((item, i) => {
-          const ref = printRefs.current.find(el => el?.id === item)
-          const groupIndex = tabGroup.findIndex(e => e.title === data[i])
-          if (groupIndex === -1 || !ref) return
+          const ref = printRefs.current.find(element => {
+            if (typeof element === 'object' && element !== null && element.id) {
+              return element.id === item
+            }
+            return false
+          })
 
-          const pageWrapper = document.createElement('div')
-          pageWrapper.className = 'new-page page-break'
-          const content = ref.cloneNode(true)
-          pageWrapper.appendChild(content)
-          printContainer.appendChild(pageWrapper)
+          const groupIndex = tabGroup.findIndex(e => e.title === data[i])
+          if (groupIndex === -1) {
+            return
+          }
+
+          if (ref) {
+            const pageWrapper = document.createElement('div')
+            pageWrapper.className = 'new-page page-break'
+
+            // Clone the content to avoid modifying the original
+            const content = ref.cloneNode(true)
+
+            // If you need to include the right div as well, uncomment:
+            // const rightDivRef = leftprintRefs.current[groupIndex]
+            // const rightClone = rightDivRef.cloneNode(true)
+            // pageWrapper.appendChild(rightClone)
+
+            pageWrapper.appendChild(content)
+            printContainer.appendChild(pageWrapper)
+          }
         })
       } else {
         return toast.error('No matching data found for PDF generation.')
       }
 
-      // Prepare styled HTML for Puppeteer
+      // Get current date and time
+      const fullDateTime = '2025-05-11 05:30:45' // You can replace with dynamic date
+      const formattedDate = fullDateTime.split(' ')[0]
+      const username = 'DhruviRana4' // You can replace with dynamic username
+
+      // Prepare styled HTML for Puppeteer with the same styles from working code
       const fullHtml = `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="utf-8">
-        <title>Report PDF</title>
-        <style>
-          @page { size: landscape; margin: 20px; }
-          body { font-family: Arial, sans-serif; background: white; margin: 0; padding: 10px; }
-          * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-          .page-break { page-break-after: always; }
-        </style>
-      </head>
-      <body>
-        ${printContainer.innerHTML}
-      </body>
-    </html>`
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Print Document</title>
+    <style>
+    @page {
+  size: landscape;
+}
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background: white;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Force the printable container to match landscape area */
+        .new-page {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: stretch;
+            gap: 10px;
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+        }
+/* Ensure the flex container takes full page height */
+.main-print-div {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100vh; /* full viewport height for printing */
+    box-sizing: border-box;
+}
+
+/* Left column stays scaled */
+.main-print-div > .relative {
+    flex: 1 1 70%;
+    display: flex;
+    align-items: stretch;
+    transform: scale(1.3);
+    transform-origin: top left;
+}
+
+/* Right column takes full height */
+#hiddenDiv {
+    flex: 0 0 30%;   /* 30% width */
+    height: 100%;    /* stretch to parent height */
+    box-sizing: border-box;
+}
+
+    </style>
+  </head>
+  <body>
+    ${printContainer.innerHTML}
+  </body>
+</html>
+`;
+
 
       // Send HTML to Next.js API route
       const response = await fetch('/api/generate-pdf', {
@@ -1085,10 +1236,8 @@ function DevtaVastuPage({ id }) {
       const url = URL.createObjectURL(blob)
 
       // Dynamic filename
-      const fullDateTime = '2025-05-11 05:30:45'
-      const formattedDate = fullDateTime.split(' ')[0].replace(/-/g, '')
-      const username = 'DhruviRana4'
-      const filename = `report_${username}_${formattedDate}.pdf`
+      const simpleDate = formattedDate.replace(/-/g, '')
+      const filename = `report_${username}_${simpleDate}.pdf`
 
       // Trigger download
       const link = document.createElement('a')
@@ -1103,8 +1252,6 @@ function DevtaVastuPage({ id }) {
       toast.error('An error occurred while generating the PDF.')
     }
   }
-
-
 
 
 
