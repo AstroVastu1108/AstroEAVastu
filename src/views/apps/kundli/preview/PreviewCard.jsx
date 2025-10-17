@@ -237,20 +237,12 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       };
 
       // Load fonts as base64
-      // const [fontNormal, fontSemiBold] = await Promise.all([
-      //   getFontBase64('/fonts/s-n.woff2'),
-      //   getFontBase64('/fonts/s-sb.woff2')
-      // ]);
-
-      // console.warn("fontNormal: ", fontNormal)
-
-      // Add to your font loading section:
-      const [fontNormal, fontSemiBold, fontSymbols] = await Promise.all([
+      const [fontNormal, fontSemiBold] = await Promise.all([
         getFontBase64('/fonts/s-n.woff2'),
-        getFontBase64('/fonts/s-sb.woff2'),
-        // Use a CDN font with symbols
-        getFontBase64('https://fonts.gstatic.com/s/notosans/v30/o-0IIpQlx3QUlC5A4PNr5TRA.woff2')
+        getFontBase64('/fonts/s-sb.woff2')
       ]);
+
+      console.warn("fontNormal: ", fontNormal)
 
 
       // Build the complete HTML with proper page layout
@@ -287,13 +279,13 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
             }
             ` : ''}
 
-            ${fontSymbols ? `
             @font-face {
-              font-family: 'Symbols';
-              src: url('${fontSymbols}') format('woff2');
-              unicode-range: U+2700-27BF, U+2600-26FF, U+2B00-2BFF;
-            }
-            ` : ''}
+      font-family: 'NotoSymbols';
+      src: url('https://fonts.gstatic.com/s/notosanssymbols2/v19/MCoTzAXSIfKhXpk3cN02_Wy_ejFjAivb.woff2') format('woff2');
+    }
+    * {
+      font-family: 'NotoSymbols', 'Segoe UI Symbol', sans-serif !important;
+    }
             
             body { 
               background: #fff !important; 
@@ -304,11 +296,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               // font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
               -webkit-print-color-adjust: exact !important; 
               print-color-adjust: exact !important;
-
-              /* Add fallback fonts that include symbols */
-          font-family: 'Segoe UI', 'Segoe UI Symbol', 'Segoe UI Emoji', Arial, sans-serif !important;
-          -webkit-print-color-adjust: exact !important; 
-          print-color-adjust: exact !important;
+              
             }
             
             * { 
@@ -316,9 +304,6 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               print-color-adjust: exact !important; 
               color-adjust: exact !important;
               box-sizing: border-box;
-
-              /* Ensure all elements can use symbol fonts */
-          font-family: inherit !important;
             }
 
             /* Fixed width container - 900px scaled to fit A4 */
