@@ -37,7 +37,7 @@ import DownloadPopUp from '@/components/devta-vastu/DownloadPDFPopup/DownloadPop
 // import fontSemiBoldUrl from './../../../../assets/fonts/s-sb.woff2';
 
 
-const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, TransitData, setTransitData, getTransitData, getDivisionalChartData, DivisionalData, setDivisionalData, birthDate, setKundliData, SetKundliConstData, getVarshphalData }) => {
+const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, TransitData, setTransitData, getTransitData, getDivisionalChartData, DivisionalData, setDivisionalData, birthDate, setKundliData, SetKundliConstData, getVarshphalData, Loading, setLoading }) => {
   // var
   const BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
   const AstroDetails = kundliData?.AstroVastuReport?.AstroDetails;
@@ -67,7 +67,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   const [openRotation, setRotation] = useState(false);
   const [rotationType, setRotationType] = useState(null);
   const [allKundliOpt, setAllKundliOpt] = useState(false);
-  const [Loading, setLoading] = useState(false);
+  // const [Loading, setLoading] = useState(false);
   const [DashaValue, setDashaValue] = useState("Vimshottari Dasha");
   const [DashaTitle, setDashaTitle] = useState(`${DashaDetailData?.CurrentMD}`);
   const [DashaGridData, setDashaGridData] = useState(kundliData?.AstroVastuReport?.DashaDetails?.PratyantarDasha);
@@ -135,6 +135,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
 
 
   const handleDownloadPopupOpen = () => {
+    handleClose();
     setDownloadPopup(true);
   }
 
@@ -526,6 +527,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          KundaliID: BirthDetails.KundaliID,
           html: fullHtml,
           filename: filename,
           options: {
@@ -1228,6 +1230,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
           handleClose={handleClosePopup}
           TabData={items}
           handleSave={handleSelectedPageDownload}
+          defaultCheckedItems={["Nakshatra Kundali: Planet & House Script", "Astro Vastu Insights"]}
         />
       }
     </>

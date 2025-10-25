@@ -330,7 +330,7 @@ const Preview = ({ kundliData, setKundliData, kundliConstData, SetKundliConstDat
               <div className='previewPDF flex justify-center'>
                 {kundliData &&
                   <>
-                    <PreviewCard kundliData={kundliData} handleDownload={handleKundliApi} isPrintDiv={false} loading={existdownloadLoading} handleTimeTool={handleTimeTool} setTransitData={setTransitData} TransitData={TransitData} getTransitData={getTransitData} getDivisionalChartData={getDivisionalChartData} DivisionalData={DivisionalData} setDivisionalData={setDivisionalData} birthDate={datePicker} setKundliData={setKundliData} SetKundliConstData={SetKundliConstData} getVarshphalData={getVarshphalData} />
+                    <PreviewCard kundliData={kundliData} handleDownload={handleKundliApi} isPrintDiv={false} loading={existdownloadLoading} handleTimeTool={handleTimeTool} setTransitData={setTransitData} TransitData={TransitData} getTransitData={getTransitData} getDivisionalChartData={getDivisionalChartData} DivisionalData={DivisionalData} setDivisionalData={setDivisionalData} birthDate={datePicker} setKundliData={setKundliData} SetKundliConstData={SetKundliConstData} getVarshphalData={getVarshphalData} Loading={loading} setLoading={setLoading} />
                   </>
                 }
                 {timeToolPopUp &&
