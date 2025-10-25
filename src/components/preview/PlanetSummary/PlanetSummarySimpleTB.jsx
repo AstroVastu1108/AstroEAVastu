@@ -71,8 +71,8 @@ const SummaryAspect = ({ SummaryData, Aspect }) => {
   }, [SummaryData, Aspect]);
 
   return (
-    <div style={{ width: '900px', maxWidth: '900px', overflowX: 'auto' }}>
-      <table className="summary-aspect-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
+    <div className='summary-aspect-container rounded-md' style={{ width: '900px', maxWidth: '900px', overflowX: 'auto' }}>
+      <table className="summary-aspect-table" style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '0' }}>
         <thead>
           <tr>
             {headerNames.map((headerName, index) => (
@@ -109,39 +109,63 @@ const SummaryAspect = ({ SummaryData, Aspect }) => {
         </tbody>
       </table>
 
-      <style jsx>{`
-          .summary-aspect-table {
-              font-family: inherit;
-          }
+    <style jsx>{`
+      .summary-aspect-container {
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        overflow: hidden;
+        background: var(--card-bg, #fff);
+      }
 
-          th{
-              height: 38px;
-          }
+      .summary-aspect-table {
+        font-family: inherit;
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100%;
+      }
 
-          td{
-              height: 29px;
-              padding-left: 10px;
-              padding-right: 10px;
-          }
+      th{
+        height: 38px;
+      }
 
-          .summary-aspect-table th,
-          .summary-aspect-table td {
-              border: 1px solid var(--border-color);
-              vertical-align: middle;
-          }
+      td{
+        height: 29px;
+        padding-left: 10px;
+        padding-right: 10px;
+      }
 
-          
+      /* Remove outer cell borders for header only so container border is the frame */
+      .summary-aspect-table thead th {
+        border: none !important;
+        vertical-align: middle;
+      }
 
-                /* Alternate row colors */
-                .summary-aspect-table tbody tr:nth-child(odd) {
-                    background-color: #ffffff; /* white */
-                }
+      /* Horizontal separators between rows (drawn on cells) */
+      .summary-aspect-table tbody td {
+        border-bottom: 1px solid var(--border-color) !important;
+        vertical-align: middle;
+      }
 
-                .summary-aspect-table tbody tr:nth-child(even) {
-                    background-color: #f5f5f5; /* light gray */
-                }
+      /* Remove bottom border on last row so container border is visible */
+      .summary-aspect-table tbody tr:last-child td {
+        border-bottom: none !important;
+      }
 
-      `}</style>
+      /* Vertical separators between columns */
+      .summary-aspect-table tbody td + td {
+        border-left: 1px solid var(--border-color) !important;
+      }
+
+      /* Alternate row colors */
+      .summary-aspect-table tbody tr:nth-child(odd) {
+        background-color: #ffffff; /* white */
+      }
+
+      .summary-aspect-table tbody tr:nth-child(even) {
+        background-color: #f5f5f5; /* light gray */
+      }
+
+    `}</style>
     </div>
   );
 };

@@ -20,7 +20,7 @@ const NavbarContent = () => {
       {isBreakpointReached &&
 
         <LayoutNavbar>
-          <div className={classnames(verticalLayoutClasses.navbarContent, 'flex items-center justify-between gap-4 is-full')}>
+          <div className={classnames(verticalLayoutClasses.navbarContent, 'flex items-center justify-between gap-4 is-full bg-[#f5f5f5]')}>
             <div className='flex items-center gap-4'>
               <NavToggle />
               {/* <ModeDropdown /> */}

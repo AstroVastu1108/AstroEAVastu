@@ -1,9 +1,23 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { Box, createTheme, ThemeProvider } from '@mui/material';
 import "./PlanetSummary.css"
 
 const SummaryAspect = ({ SummaryData, Aspect }) => {
+  const [hoveredCol, setHoveredCol] = useState(null);
+
+  const handleGridHover = (e) => {
+    const target = e.target;
+    const cell = target.closest('.MuiDataGrid-cell');
+    const header = target.closest('.MuiDataGrid-columnHeader');
+    
+    if (cell || header) {
+      const field = (cell || header)?.getAttribute('data-field');
+      setHoveredCol(field);
+    } else {
+      setHoveredCol(null);
+    }
+  };
   const formatAspect = (data) => {
     if (data?.IsWithRaKe) {
       return `<span class='rake'><span>${data?.Aspect}</span><span>⦿</span></span>`;
@@ -99,7 +113,11 @@ const SummaryAspect = ({ SummaryData, Aspect }) => {
   }, [SummaryData, Aspect]);
 
   return (
-    <Box >
+    <Box 
+      className={hoveredCol ? `hover-col-${hoveredCol}` : ''}
+      onMouseMove={handleGridHover}
+      onMouseLeave={() => setHoveredCol(null)}
+    >
         <DataGrid
           showCellVerticalBorder
           getRowId={(row) => row.id}
@@ -113,7 +131,16 @@ const SummaryAspect = ({ SummaryData, Aspect }) => {
           hideFooter
           rowHeight={30}
           columnHeaderHeight={38}
+          // className='rounded-md'
         />
+
+        {hoveredCol && (
+          <style>{`
+            .hover-col-${hoveredCol} .MuiDataGrid-cell[data-field="${hoveredCol}"] {
+              background-color: var(--secondary-soft-color, rgba(211, 211, 211, 0.3)) !important;
+            }
+          `}</style>
+        )}
 
     </Box>
   );

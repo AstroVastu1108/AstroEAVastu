@@ -1,12 +1,19 @@
 import House from '@/components/preview/House/House'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 // import "./pdfView.css"
 import InfoTable from '@/components/preview/InfoTable/InfoTable'
 import NakshtraSummarySimpleTB from '@/components/preview/NakshtraSummary/NakshtraSummarySimpleTB'
 import RahuKetuSimpleTB from '@/components/preview/RahuKetu/RahuKetuSimpleTB'
 import PlanetSummarySimpleTB from '@/components/preview/PlanetSummary/PlanetSummarySimpleTB'
 
-function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroDetails, ChartSVG, PlaneNSummaryData, HouseNSummaryData, RahuData, KetuData, PlanetSummaryData, HouseSummaryData, visibleSections }) {
+function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroDetails, ChartSVG, PlaneNSummaryData, HouseNSummaryData, RahuData, KetuData, PlanetSummaryData, HouseSummaryData, DashaGridData, visibleSections }) {
+
+    const [currentDasha, setCurrentDasha] = useState(DashaGridData.filter(dasha => dasha.IsCurrent)[0] || null);
+
+    useEffect(() => {
+        setCurrentDasha(DashaGridData.filter(dasha => dasha.IsCurrent)[0] || null);
+    }, [DashaGridData]);
+
 
     // helper: if visibleSections not passed, default to visible
     const isVisible = (key) => (visibleSections ? !!visibleSections[key] : true);
@@ -16,7 +23,7 @@ function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroD
             <div className='previewCard print-optimized pdfView' ref={pageRef}>
 
                 {/* title */}
-                <div className={`chart-name text-lg font-bold flex justify-between gap-y-2 lg:flex-row items-center`}>
+                <div className={`chart-name rounded-t text-lg font-bold flex justify-between gap-y-2 lg:flex-row items-center`}>
                     {BirthDetails?.FirstName ? `${BirthDetails.FirstName} ${BirthDetails.MiddleName} ${BirthDetails.LastName}` : 'Prashna Kundali'}
                     <div className={`flex justify-between md-items-center lg:gap-1 lg:flex-row md:flex-row gap-5 birthDateTime-Div`} >
                         <div className='flex flex-row gap-1 chart-date items-center'>
@@ -84,6 +91,17 @@ function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroD
                         </td>
                     </tr>
                 </table>
+
+                {/* Dasha Details */}
+                <div className='main-MahaDasha-Div pt-5'>
+                    {/* <div className='chart-title font-ea-sb print-title'>❋ Dasha Details ❋</div> */}
+                    <div className='planet-table flex flex-row px-5'>
+                        <div>Vimshottari Dasha: </div>
+                        <div>{currentDasha?.DashaPlanet}</div>
+                        <div>{currentDasha?.StartDt}</div>
+                        <div>{currentDasha?.EndDt}</div>
+                    </div>
+                </div>
 
                 {/*  Nakshatra Astrology ↠ Planet Script  */}
                 { isVisible("Nakshatra Kundali: Planet & House Script") && (
@@ -153,7 +171,7 @@ function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroD
                 <div className='main-AstroVastuScript-Div pt-8 print-content'>
                     <div className='chart-title font-ea-sb print-title'>❋ Astro Vastu Insights ❋</div>
                     <div className='AstroVastuScript-Div print-house-container'>
-                        <House houseArr={AstroVastuHouseScript} Symbols={Symbols}></House>
+                        <House houseArr={AstroVastuHouseScript} Symbols={Symbols} isPrintDiv={true}></House>
                     </div>
                 </div>
                 )}

@@ -99,7 +99,7 @@ function DashaDetails({ title, DashaData, handleDashadbClick, divref }) {
 
   return (
     <>
-      <Box>
+      <Box className=" rounded-md">
           <DataGrid
             getRowHeight={rowHeight}
             rows={rowsDasha}
@@ -116,7 +116,13 @@ function DashaDetails({ title, DashaData, handleDashadbClick, divref }) {
             disableRowSelectionOnClick
             hideFooterPagination={true}
             hideFooter={true}
-            className='dasha-div'
+            className='dasha-div rounded-md'
+            sx={{
+              "& .MuiDataGrid-topContainer":{
+                borderTopLeftRadius: '4px',
+                borderTopRightRadius: '4px',
+              }
+            }}
           />
 
       </Box>

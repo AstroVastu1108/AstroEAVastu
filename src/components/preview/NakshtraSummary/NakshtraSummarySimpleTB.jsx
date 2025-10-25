@@ -181,8 +181,8 @@ function NakshtraSummarySimpleTB({ SummaryData, Aspect, symbols, SelectedEventVa
 
     return (
         <>
-            <div className="nakshatra-table-container" style={{ width: '900px', overflowX: 'auto' }}>
-                <table className="nakshatra-table" style={{ width: '900px', borderCollapse: 'collapse' }}>
+            <div className="nakshatra-table-container !rounded-md" style={{ width: '900px', overflowX: 'auto' }}>
+                <table className="nakshatra-table " style={{ width: '900px', borderCollapse: 'collapse', borderSpacing: 0 }}>
                     <thead>
                         <tr>
                             {Aspect === 'P' ? (
@@ -252,8 +252,19 @@ function NakshtraSummarySimpleTB({ SummaryData, Aspect, symbols, SelectedEventVa
             </div>
 
             <style jsx>{`
+
+                .nakshatra-table-container {
+                    border: 1px solid var(--border-color);
+                    border-radius: 8px;
+                    overflow: hidden; /* ensure rounded corners clip inner table */
+                    background: var(--card-bg, #fff);
+                }
+
                 .nakshatra-table {
                     font-family: inherit;
+                    border-collapse: separate; /* use separate to avoid table drawing outer border */
+                    border-spacing: 0;
+                    width: 100%;
                 }
 
                 th{
@@ -266,13 +277,24 @@ function NakshtraSummarySimpleTB({ SummaryData, Aspect, symbols, SelectedEventVa
                     padding-right: 10px;
                 }
 
-                .nakshatra-table th,
-                .nakshatra-table td {
-                    border: 1px solid var(--border-color);
+                .nakshatra-table tbody td {
+                    border: none !important;
                     vertical-align: middle;
                 }
 
-                /* Alternate row colors */
+                .nakshatra-table tbody tr {
+                    border-bottom: 1px solid var(--border-color);
+                }
+
+                .nakshatra-table tbody tr:last-child {
+                    border-bottom: none;
+                }
+
+                .nakshatra-table tbody td + td
+                {
+                    border-left: 1px solid var(--border-color) !important;
+                }
+
                 .nakshatra-table tbody tr:nth-child(odd) {
                     background-color: #ffffff; /* white */
                 }

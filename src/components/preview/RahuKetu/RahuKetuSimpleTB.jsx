@@ -151,8 +151,8 @@ function RahuKetuSimpleTB({ RahuData, KetuData, SelectedEventVal }) {
   return (
     <div style={{ display: 'flex', gap: '16px', width: '900px', maxWidth: '100%' }}>
       {/* Rahu Table */}
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <table className="rahu-ketu-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
+      <div className="rahu-ketu-card !rounded-md" style={{ flex: 1, minWidth: 0 }}>
+        <table className="rahu-ketu-table" style={{ width: '100%', borderCollapse: 'separate', borderSpacing: 0 }}>
           <thead>
             <tr>
               <th className="rowheader bg-primary px-3 text-start" style={{ width: '120px' }}>Rahu</th>
@@ -175,8 +175,8 @@ function RahuKetuSimpleTB({ RahuData, KetuData, SelectedEventVal }) {
       </div>
 
       {/* Ketu Table */}
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <table className="rahu-ketu-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
+      <div className="rahu-ketu-card !rounded-md" style={{ flex: 1, minWidth: 0 }}>
+        <table className="rahu-ketu-table" style={{ width: '100%', borderCollapse: 'separate', borderSpacing: 0 }}>
           <thead>
             <tr>
               <th className="rowheader bg-primary px-3 text-start" style={{ width: '120px' }}>Ketu</th>
@@ -199,38 +199,58 @@ function RahuKetuSimpleTB({ RahuData, KetuData, SelectedEventVal }) {
       </div>
 
       <style jsx>{`
-          .rahu-ketu-table {
-              font-family: inherit;
-          }
+  .rahu-ketu-card {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden; /* ensure rounded corners clip inner table */
+    background: var(--card-bg, #fff);
+  }
 
-          th{
-              height: 38px;
-          }
+  .rahu-ketu-table {
+    font-family: inherit;
+    border-collapse: separate; /* keep corners visible */
+    width: 100%;
+  }
 
-          td{
-              height: 29px;
-              padding-left: 10px;
-              padding-right: 10px;
-          }
+  th {
+    height: 38px;
+  }
 
-          .rahu-ketu-table th,
-          .rahu-ketu-table td {
-              border: 1px solid var(--border-color);
-              vertical-align: middle;
-          }
+  td {
+    height: 29px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
 
-          
+  /* Remove top border from first row cells so outer card border is visible */
+  .rahu-ketu-card table thead th {
+    border-top: none;
+  }
 
-                /* Alternate row colors */
-                .rahu-ketu-table tbody tr:nth-child(odd) {
-                    background-color: #ffffff; /* white */
-                }
+  /* Alternate row colors */
+  .rahu-ketu-table tbody tr:nth-child(odd) {
+    background-color: #ffffff; /* white */
+  }
 
-                .rahu-ketu-table tbody tr:nth-child(even) {
-                    background-color: #f5f5f5; /* light gray */
-                }
+  .rahu-ketu-table tbody tr:nth-child(even) {
+    background-color: #f5f5f5; /* light gray */
+  }
 
-      `}</style>
+  /* vertical separators between columns */
+  .rahu-ketu-table tbody td + td {
+    border-left: 1px solid var(--border-color) !important;
+  }
+
+  .rahu-ketu-table tbody td {
+    border-bottom: 1px solid var(--border-color) !important;
+  }
+
+  /* remove bottom border from last row */
+  .rahu-ketu-table tbody tr:last-child td {
+    border-bottom: none !important;
+  }
+`}</style>
+
 
       {/* <style jsx>{`
         .rahu-ketu-table {

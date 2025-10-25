@@ -15,7 +15,7 @@ import { getKundliPdf } from '@/app/Server/API/common'
 import { Box, Button, Card, CardContent, Grid } from '@mui/material'
 import PageTitle from '@/components/common/PageTitle/PageTitle'
 import TimeTool from './TimeTool'
-import { ChangeDateTimeKundli, DivisionalChartEvent, TransitClickEvent } from '@/app/Server/API/kundliAPI'
+import { ChangeDateTimeKundli, DivisionalChartEvent, GetVastuphalData, TransitClickEvent } from '@/app/Server/API/kundliAPI'
 import Loader from '@/components/common/Loader/Loader'
 import dayjs from 'dayjs'
 
@@ -130,6 +130,43 @@ const Preview = ({ kundliData, setKundliData, kundliConstData, SetKundliConstDat
         const formattedDate = dayjs(`${birthDate} ${birthTime}`, 'DD-MM-YYYY HHmmss');
       }
       setTransitData(data);
+    }
+  }
+
+  const getVarshphalData = async (fdate, ftime, option) => {
+    // var BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
+    // var date = "";
+    // var time = "";
+    // if (fdate && ftime) {
+    //   date = fdate;
+    //   time = ftime;
+    // } else {
+    //   if (TransiteTime != null) {
+    //     // Parse the custom date format
+    //     const datePicker = dayjs(TransiteTime, 'DD-MM-YYYY HH:mm:ss');
+
+    //     if (datePicker.isValid()) {
+    //       date = datePicker.format('DD-MM-YYYY');
+    //       time = datePicker.format('HHmmss');
+    //     }
+    //   }
+    // }
+
+    const response = await GetVastuphalData(2025);
+    console.warn("response: ", response)
+    if (response.hasError) {
+      // setLoading(false);
+      // return toastDisplayer("error", response.error);
+    } else {
+      // const data = response?.responseData?.Result?.Transit;
+      // setTransiteTime(data?.TransitDateTime)
+      // if (TimeToolOpt == "T" || option == "T") {
+      //   setDatePicker(dayjs(data?.TransitDateTime, 'DD-MM-YYYY HH:mm:ss'))
+      // } else {
+      //   const { Date: birthDate, Time: birthTime } = kundliData?.AstroVastuReport?.BirthDetails;
+      //   const formattedDate = dayjs(`${birthDate} ${birthTime}`, 'DD-MM-YYYY HHmmss');
+      // }
+      // setTransitData(data);
     }
   }
 
@@ -293,7 +330,7 @@ const Preview = ({ kundliData, setKundliData, kundliConstData, SetKundliConstDat
               <div className='previewPDF flex justify-center'>
                 {kundliData &&
                   <>
-                    <PreviewCard kundliData={kundliData} handleDownload={handleKundliApi} isPrintDiv={false} loading={existdownloadLoading} handleTimeTool={handleTimeTool} setTransitData={setTransitData} TransitData={TransitData} getTransitData={getTransitData} getDivisionalChartData={getDivisionalChartData} DivisionalData={DivisionalData} setDivisionalData={setDivisionalData} birthDate={datePicker} setKundliData={setKundliData} SetKundliConstData={SetKundliConstData} />
+                    <PreviewCard kundliData={kundliData} handleDownload={handleKundliApi} isPrintDiv={false} loading={existdownloadLoading} handleTimeTool={handleTimeTool} setTransitData={setTransitData} TransitData={TransitData} getTransitData={getTransitData} getDivisionalChartData={getDivisionalChartData} DivisionalData={DivisionalData} setDivisionalData={setDivisionalData} birthDate={datePicker} setKundliData={setKundliData} SetKundliConstData={SetKundliConstData} getVarshphalData={getVarshphalData} />
                   </>
                 }
                 {timeToolPopUp &&
