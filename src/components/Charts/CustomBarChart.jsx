@@ -1,20 +1,23 @@
 import React, { useMemo } from 'react';
 import {
     BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid,
-    Tooltip, Legend, ResponsiveContainer, ReferenceLine, LabelList
+    Tooltip, ReferenceLine, LabelList, ResponsiveContainer
 } from 'recharts';
 import {
     Box, Paper, Typography, Table, TableBody,
-    TableCell, TableContainer, TableHead, TableRow
+    TableCell, TableContainer, TableHead, TableRow, Divider, useMediaQuery
 } from '@mui/material';
-import margin from 'tailwindcss-logical/plugins/margin';
+import { useTheme } from '@mui/material/styles';
 
-const CustomBarChart = ({ data, vertical = false, barSize = 20, showLines = false }) => {
+const CustomBarChart = ({ data, vertical = false, barSize = 20, showLines = false, points }) => {
+    const theme = useTheme();
+    const isSmall = useMediaQuery(theme.breakpoints.down('md'));
+
     const areas = data?.map(item => item.area);
-
     const totalArea = areas.reduce((sum, val) => sum + val, 0);
     const maxArea = Math.max(...areas);
     const minArea = Math.min(...areas);
+
     const { highValue, mediumValue, lowValue } = useMemo(() => {
         const mediumValue = Math.ceil(totalArea / 16);
         return {
@@ -24,140 +27,144 @@ const CustomBarChart = ({ data, vertical = false, barSize = 20, showLines = fals
         };
     }, [areas]);
 
+    const PolygonDisplay = ({ points, width = 220, height = 220, scale = 0.2 }) => {
+        const scaledPoints = points.map(p => ({ x: p.x * scale, y: p.y * scale }));
+        const pointsString = scaledPoints.map(p => `${p.x},${p.y}`).join(' ');
+        return (
+            <svg width={width} height={height}>
+                <polygon
+                    points={pointsString}
+                    fill="rgba(0, 123, 255, 0.25)"
+                    stroke="#007bff"
+                    strokeWidth={2}
+                />
+            </svg>
+        );
+    };
+
     const ReferenceLineLegend = () => (
-        <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center', gap: 4 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Box
-                    component="span"
-                    sx={{
-                        display: 'inline-block',
-                        width: 40,
-                        height: 3,
-                        backgroundColor: 'red',
-                        mr: 1
-                    }}
-                />
-                <Typography variant="body2">Upper Balance</Typography>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Box
-                    component="span"
-                    sx={{
-                        display: 'inline-block',
-                        width: 40,
-                        height: 3,
-                        backgroundColor: 'green',
-                        mr: 1
-                    }}
-                />
-                <Typography variant="body2">Line Of Balance (A) </Typography>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Box
-                    component="span"
-                    sx={{
-                        display: 'inline-block',
-                        width: 40,
-                        height: 3,
-                        backgroundColor: 'orange',
-                        mr: 1
-                    }}
-                />
-                <Typography variant="body2">Lower Balance</Typography>
-            </Box>
+        <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center', gap: 4, flexWrap: 'wrap' }}>
+            {[
+                { color: 'red', label: 'Upper Balance' },
+                { color: 'green', label: 'Line of Balance (A)' },
+                { color: 'orange', label: 'Lower Balance' }
+            ].map((item, i) => (
+                <Box key={i} sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Box sx={{
+                        display: 'inline-block', width: 40, height: 3,
+                        backgroundColor: item.color, mr: 1
+                    }} />
+                    <Typography variant="body2">{item.label}</Typography>
+                </Box>
+            ))}
         </Box>
     );
 
     return (
-        <Paper elevation={0} sx={{ p: 3, borderRadius: 2 }}>
-            <Box sx={{ width: '100%', height: '500px', boxShadow: 'none' }}>
-                <ResponsiveContainer width="100%" height="100%">
-                    <BarChart
-                        data={data}
-                        margin={{
-                            top: 20,
-                            right: 30,
-                            left: 20,
-                            bottom: vertical ? 55 : 20,
+        <Paper
+            elevation={0}
+            sx={{
+                p: 3,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 3,
+                width: '100%',
+                maxWidth: 1200,
+                mx: 'auto',
+                overflow: 'hidden'
+            }}
+        >
+
+            {/* Top Section: Polygon + Chart */}
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: isSmall ? 'column' : 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: 4,
+                    width: '100%',
+                    height: isSmall ? 'auto' : 400,
+                }}
+            >
+                {/* Polygon */}
+                {points && points.length > 2 && (
+                    <Box
+                        sx={{
+                            flex: isSmall ? '0 0 auto' : '0 0 25%',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center'
                         }}
-                        barCategoryGap="20%"
-                        barGap={0}
                     >
-                        <CartesianGrid horizontal={true} vertical={false} />
-                        <XAxis
-                            label={{
-                                // value:"MAHAVASTU ZONES",
-                                position: "top",          // Position the label at the top
-                                offset: -40,         
-                            }}
-                            dataKey="label"
-                            axisLine={true}
-                            tickLine={true}
-                            interval={0}
-                            padding={{ left: 20, right: 20 }}
-                            tick={vertical ? {
-                                angle: -90,
-                                textAnchor: 'end',
-                                dy: -5,    // Adjust vertical position (move up)
-                                dx: -10,   // Adjust horizontal position
-                                fontSize: 12,  // Optional: adjust font size if needed
-                                width: 200,   // Ensure enough width for the text
-                                overflow: "hidden",  // Handle text overflow
-                                textOverflow: "ellipsis"  // Add ellipsis for long text
-                            } : {}}
-                        // tick={vertical ? { angle: -90, textAnchor: 'end' } : {}}
-                        />
-                        {/* <YAxis /> */}
-                        <YAxis
-                            label={{
-                                value: 'ZONAL STRENGTH', // Y-axis label
-                                angle: -90,
-                                position: 'insideLeft',
-                                offset: -5,
-                                style: { textAnchor: 'middle' } // Adjust label style
-                            }}
-                            tickFormatter={(value) => (value/1000).toFixed(2)} // Format tick values to 2 decimal places
-                            domain={[0, 'dataMax']} // Automatically adjust min and max
-                            padding={{ top: 20,right:20 }} // Add padding at the top for labels
-                            allowDecimals={true}
-                            tickCount={5} // Approximate number of ticks to show
-                            stroke="#666666" // Axis line color
-                            tick={{
-                                fill: '#666666', // Tick text color
-                                fontSize: 12
-                            }}
-                        />
-                        {/* <Tooltip formatter={(value) => [`${value}`, 'Area']} /> */}
-                        <Bar
-                            dataKey="area"
-                            name="Area"
-                            barSize={barSize}
+                        <PolygonDisplay points={points} />
+                    </Box>
+                )}
+
+                {/* Bar Chart */}
+                <Box
+                    sx={{
+                        flex: 1,
+                        minWidth: 300,
+                        height: isSmall ? 300 : '100%',
+                    }}
+                >
+                    <ResponsiveContainer width="100%" height="100%">
+                        <BarChart
+                            data={data}
+                            margin={{ top: 20, right: 30, left: 10, bottom: 30 }}
+                            barCategoryGap="25%"
                         >
-                            <LabelList
-                                dataKey="area"
-                                position="top"
-                                angle={-90}  // This makes the label vertical
-                                offset={22}  // Adds some space between bar and label
-                                fill="#000000"  // Text color
-                                formatter={(value) => (Number(value)/1000).toFixed(2)}
-                                style={{ fontSize: '12px' }}  // Optional: customize text size
+                            <CartesianGrid horizontal vertical={false} strokeDasharray="3 3" />
+                            <XAxis
+                                dataKey="label"
+                                tick={{ fontSize: 12 }}
+                                interval={0}
+                                tickLine={false}
+                                axisLine={true}
                             />
-                            {data.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={entry.color} />
-                            ))}
-                        </Bar>
-                        {showLines && (
-                            <>
-                                <ReferenceLine y={highValue} stroke="red" strokeWidth={2}/>
-                                <ReferenceLine y={mediumValue} stroke="green" strokeWidth={2} />
-                                <ReferenceLine y={lowValue} stroke="orange" strokeWidth={2} />
-                            </>
-                        )}
-                    </BarChart>
-                </ResponsiveContainer>
+                            <YAxis
+                                label={{
+                                    value: 'Zonal Strength',
+                                    angle: -90,
+                                    position: 'insideLeft',
+                                    style: { textAnchor: 'middle', fontSize: 12 }
+                                }}
+                                tickFormatter={(v) => (v / 1000).toFixed(2)}
+                                tick={{ fontSize: 12 }}
+                            />
+                            <Tooltip formatter={(v) => `${(v / 1000).toFixed(2)}`} />
+                            <Bar dataKey="area" barSize={barSize}>
+                                <LabelList
+                                    dataKey="area"
+                                    position="top"
+                                    fill="#333"
+                                    formatter={(v) => (v / 1000).toFixed(2)}
+                                    style={{ fontSize: '11px' }}
+                                />
+                                {data.map((entry, i) => (
+                                    <Cell key={i} fill={entry.color} />
+                                ))}
+                            </Bar>
+
+                            {showLines && (
+                                <>
+                                    <ReferenceLine y={highValue} stroke="#B03120" strokeWidth={2} />
+                                    <ReferenceLine y={mediumValue} stroke="#44753D" strokeWidth={2} />
+                                    <ReferenceLine y={lowValue} stroke="#E3BD12" strokeWidth={2} />
+                                </>
+                            )}
+                        </BarChart>
+                    </ResponsiveContainer>
+                </Box>
             </Box>
+
+            {/* Divider */}
+            {showLines && <Divider sx={{ my: 2 }} />}
+
+            {/* Table Section */}
             {showLines && (
-                <>     
+                <>
                     <Box sx={{ mt: 5 }}>
                         <TableContainer
                             variant="outlined"

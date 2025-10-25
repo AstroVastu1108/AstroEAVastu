@@ -3,7 +3,7 @@ import React from 'react'
 const GridBackground = ({ width, height }) => {
   const gridSize = 9 * 3.78 // 9 mm in pixels
   const strokeWidth = 0.5
-  const maxColumns = 24 // Fixed to 24 columns
+  const maxColumns = 26 // Fixed to 24 columns
   const maxRows = 22 // Fixed to 22 rows
 
   const leftX = -gridSize / 2 + 20 // Shift inside the grid
@@ -22,7 +22,7 @@ const GridBackground = ({ width, height }) => {
               y={10}
               fontSize='12'
               textAnchor='middle'
-              fill='#590a73'
+              fill='gray'
               fontFamily='Segoe UI'
               fontWeight={600}
               style={{ userSelect: 'none', cursor: 'default' }}
@@ -35,7 +35,7 @@ const GridBackground = ({ width, height }) => {
               y={height - 5}
               fontSize='12'
               textAnchor='middle'
-              fill='#590a73'
+              fill='gray'
               fontFamily='Segoe UI'
               fontWeight={600}
               style={{ userSelect: 'none', cursor: 'default' }}
@@ -59,7 +59,7 @@ const GridBackground = ({ width, height }) => {
               fontSize='12'
               textAnchor='start'
               alignmentBaseline='middle'
-              fill='#590a73'
+              fill='gray'
               fontFamily="'Segoe UI', Arial, sans-serif"
               fontWeight={600}
               style={{ userSelect: 'none', cursor: 'default' }}
@@ -73,7 +73,7 @@ const GridBackground = ({ width, height }) => {
               fontSize='12'
               textAnchor='end'
               alignmentBaseline='middle'
-              fill='#590a73'
+              fill='gray'
               fontFamily="'Segoe UI', Arial, sans-serif"
               fontWeight={600}
               style={{ userSelect: 'none', cursor: 'default' }}

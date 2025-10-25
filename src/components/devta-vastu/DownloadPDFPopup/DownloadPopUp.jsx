@@ -9,7 +9,10 @@ import {
   FormControlLabel,
   FormGroup,
   IconButton,
-  ThemeProvider
+  ThemeProvider,
+  Radio,
+  RadioGroup,
+  FormLabel
 } from '@mui/material'
 import React, { useState } from 'react'
 import { DndContext, closestCenter } from '@dnd-kit/core'
@@ -43,7 +46,13 @@ function SortableItem({ id, checked, handleCheckboxChange }) {
   )
 }
 
-function DownloadPopUp({ open, handleClose, TabData, handleSave }) {
+function DownloadPopUp({
+  open,
+  handleClose,
+  TabData,
+  handleSave,
+  showPdfTypeOptions = false // Optional prop
+}) {
   const theme = createTheme({
     shape: { borderRadius: 8 }
   })
@@ -51,6 +60,7 @@ function DownloadPopUp({ open, handleClose, TabData, handleSave }) {
   const [items, setItems] = useState(TabData)
   const [checkedItems, setCheckedItems] = useState(TabData.reduce((acc, item) => ({ ...acc, [item]: false }), {}))
   const [checkAll, setCheckAll] = useState(false)
+  const [pdfType, setPdfType] = useState('client') // Default PDF type
 
   const handleCheckAll = event => {
     const isChecked = event.target.checked
@@ -90,21 +100,35 @@ function DownloadPopUp({ open, handleClose, TabData, handleSave }) {
             e.preventDefault()
             const filteredItems = items.filter(key => checkedItems[key] === true)
 
-            handleSave(filteredItems);
-            handleClose();
+            handleSave(filteredItems, pdfType) // Pass pdfType to handleSave
+            handleClose()
           }
         }}
       >
         <DialogTitle className='text-primary text-2xl p-3 bg-[var(--secondary-color)] rounded-t-lg flex justify-between items-center'>
-          <span className='text-primary text-2xl font-ea-sb !pl-3'>Select pages to download</span>
+          <span className='text-primary text-2xl font-ea-sb !pl-3'>Download PDF</span>
           <IconButton onClick={handleClose} sx={{ color: 'white' }}>
             <i className='tabler-x text-primary'></i>
           </IconButton>
         </DialogTitle>
 
         <DialogContent className='px-4 pt-3'>
+          {showPdfTypeOptions && (
+            <div className='mb-4'>
+              <FormLabel component="legend">PDF Type</FormLabel>
+              <RadioGroup
+                row
+                value={pdfType}
+                onChange={e => setPdfType(e.target.value)}
+                name="pdfType"
+              >
+                <FormControlLabel value="client" control={<Radio />} label="Client Deliverables" />
+                <FormControlLabel value="operational" control={<Radio />} label="Operational" />
+              </RadioGroup>
+            </div>
+          )}
           <FormGroup>
-            <FormControlLabel control={<Checkbox checked={checkAll} onChange={handleCheckAll} />} label='Check All' />
+            <FormControlLabel control={<Checkbox checked={checkAll} onChange={handleCheckAll} />} label='Select All' />
             <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
               <SortableContext items={items} strategy={verticalListSortingStrategy}>
                 {items.map(item => (

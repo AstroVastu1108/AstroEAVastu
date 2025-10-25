@@ -160,7 +160,7 @@ function RightSidePanel({
       <div
         className='flex flex-wrap lg:flex-col gap-3 p-4 pt-0 lg:gap-0 bg-white'
         style={{
-          width: '550px',
+          width: '400px',
           height: '748px', // Full viewport height
           display: 'flex',
           flexDirection: 'column',
@@ -837,7 +837,6 @@ function RightSidePanel({
                             onChange: setHideCircleIntersaction
                           },
                           { id: 'disableDraw', label: 'Done Drawing', checked: disableDraw, onChange: setDisableDraw },
-                          { id: 'graphDraw', label: 'Graph Drawing', checked: graphDraw, onChange: setGraphDraw }
                         ].map(({ id, label, checked, onChange }) => (
                           <FormControlLabel
                             key={id}

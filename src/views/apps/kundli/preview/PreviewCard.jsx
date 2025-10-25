@@ -29,6 +29,7 @@ import ConfirmationPopup from '@/components/common/ConfirmationPopup/Confirmatio
 import { toast } from 'react-toastify'
 import NSubLordPopUp from '@/components/preview/Nakshatra-SubLord/NSubLord'
 import PDFView from './pdfView'
+import DownloadPopUp from '@/components/devta-vastu/DownloadPDFPopup/DownloadPopUp';
 
 
 // At the top of your file
@@ -74,6 +75,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   const [rotationTital, setRotationTitle] = useState("");
   const [SaveKundali, setSaveKundali] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false)
+  const [downloadPopup, setDownloadPopup] = useState(false);
 
 
   const open = Boolean(anchorEl);
@@ -114,6 +116,39 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   //   handleClose();
   //   handleDownload();
   // }
+
+
+  // add visibility state (initialize all true)
+
+  const items = ["Nakshatra Kundali: Planet & House Script", "Astro Vastu Insights", "Vimshottari Dasha Report", "Transit (Gochar) ","Varshphal (Yearly Planetary Influences)", "Divisional Charts (Varga Kundali)", "NavTara Chakra & Jaimini Chara Karakas", "Planet Script: Nakshatra & Sub Lord", "Prakriti: Triguna", "Prakriti: Pancha Tattva", "Prakriti: Planetary Influence"
+// , "Notes"
+];
+
+  const [visibleSections, setVisibleSections] = useState(() =>
+    items.reduce((acc, label) => ({ ...acc, [label]: true }), {})
+  );
+
+  // toggle single section
+  const toggleSection = (label) => {
+    setVisibleSections(prev => ({ ...prev, [label]: !prev[label] }));
+  };
+
+
+  const handleDownloadPopupOpen = () => {
+    setDownloadPopup(true);
+  }
+
+  const handleSelectedPageDownload = (filteredItems) => {
+    setAnchorEl(null);
+    const newVisibility = items.reduce((acc, label) => {
+      acc[label] = filteredItems.includes(label);
+      return acc;
+    }, {});
+    setVisibleSections(newVisibility);
+    setTimeout(() => {
+      handleMenuDownload();
+    }, 500);
+  }
 
   const handleMenuDownload = async () => {
     handleClose();
@@ -181,7 +216,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
 
         // Get external stylesheets
         const links = Array.from(document.querySelectorAll('link[rel="stylesheet"]'));
-        console.log("links", links);
+        // console.log("links", links);
         for (const link of links) {
           try {
             if (link.href.startsWith(window.location.origin)) {
@@ -833,11 +868,15 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     setIsExpanded(prev => !prev)
   }
 
+  const handleClosePopup = () => {
+    setDownloadPopup(false);
+  }
+
   return (
     <>
       {/* {Loading && <Loader />} */}
       <Grid className='previewCard' item xs={12} md={12}>
-        <PDFView AstroVastuHouseScript={AstroVastuHouseScript} BirthDetails={BirthDetails} Symbols={Symbols} pageRef={pageRef} AstroDetails={AstroDetails} ChartSVG={ChartSVG} PlaneNSummaryData={PlaneNSummaryData} HouseNSummaryData={HouseNSummaryData} RahuData={RahuData} KetuData={KetuData} PlanetSummaryData={PlanetSummaryData} HouseSummaryData={HouseSummaryData} DashaGridData={DashaGridData} />
+        <PDFView AstroVastuHouseScript={AstroVastuHouseScript} BirthDetails={BirthDetails} Symbols={Symbols} pageRef={pageRef} AstroDetails={AstroDetails} ChartSVG={ChartSVG} PlaneNSummaryData={PlaneNSummaryData} HouseNSummaryData={HouseNSummaryData} RahuData={RahuData} KetuData={KetuData} PlanetSummaryData={PlanetSummaryData} HouseSummaryData={HouseSummaryData} DashaGridData={DashaGridData} visibleSections={visibleSections} />
         <Grid item xs={12} className='pdf-Div'>
           <div className={`chart-name sticky top-0 z-50 font-ea-sb flex justify-between md:items-center gap-y-2 lg:flex-row ${!isPrintDiv ? 'sm:flex-row flex-col' : "items-center"}`}>
             {BirthDetails?.FirstName ? `${BirthDetails.FirstName} ${BirthDetails.MiddleName} ${BirthDetails.LastName}` : 'Prashna Kundali'}
@@ -900,7 +939,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
                     <MenuItem className="flex gap-1"><i className={'tabler-calendar-share me-2'} />Transit Analysis</MenuItem>
                     <Divider />
                     <MenuItem onClick={handleSaveKundaliBtn} className="flex gap-1"><i className={'tabler-copy-plus me-2'} />Save Kundali</MenuItem>
-                    <MenuItem onClick={handleMenuDownload} className="flex gap-1"><i className={'tabler-download me-2'} />Download</MenuItem>
+                    <MenuItem onClick={handleDownloadPopupOpen} className="flex gap-1"><i className={'tabler-download me-2'} />Download PDF</MenuItem>
                   </Menu>
                 </>
               </div>
@@ -1183,6 +1222,14 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       {SaveKundali && (
         <ConfirmationPopup open={SaveKundali} isDelete={true} handleClose={handleSaveKundaliClose} userData={kundliData?.AstroVastuReport?.BirthDetails} handleClick={saveKundaliDateTime} subTitle={"Are you sure want to update this kundali?"} title={"Update Kundali"} />
       )}
+      {downloadPopup &&
+        <DownloadPopUp
+          open={downloadPopup}
+          handleClose={handleClosePopup}
+          TabData={items}
+          handleSave={handleSelectedPageDownload}
+        />
+      }
     </>
   )
 }

@@ -52,7 +52,7 @@ const DevtaVastu = ({
   setPrintRef,
   tabTitle,
   setleftPrintRef,
-  width = 815,
+  width = 885,
   height = 748,
   gridSize = 26,
   drawingMode = 'drawing',
@@ -132,6 +132,8 @@ const DevtaVastu = ({
   const [show8Charts, setShow8Charts] = useState(false)
   const [show4Charts, setShow4Charts] = useState(false)
   const [showCharts, setShowCharts] = useState(false)
+  const [isImageDragging, setIsImageDragging] = useState(false);
+
   const [NewOverlayPoly, setNewOverlayPoly] = useState({
     title: '',
     color: '#007BFF',
@@ -1424,7 +1426,7 @@ const DevtaVastu = ({
   const handleMouseDown1 = e => {
     e.preventDefault()
     e.stopPropagation()
-
+    setIsImageDragging(true);
     setIsDragging(true)
     setDragStart({ x: e.clientX, y: e.clientY })
     setInitialPosition(translate)
@@ -1450,7 +1452,7 @@ const DevtaVastu = ({
 
   const handleMouseUp1 = e => {
     setIsDragging(false)
-
+    setIsImageDragging(false);
     // Remove global listeners
     window.removeEventListener('mousemove', handleMouseMove1)
     window.removeEventListener('mouseup', handleMouseUp1)
@@ -1744,7 +1746,7 @@ const DevtaVastu = ({
 
   return (
     <>
-      <div className='flex flex-col lg:flex-row gap-5 py-4 justify-start '>
+      <div className='flex flex-col lg:flex-row gap-5 px-4 py-2 justify-start '>
         <div className='bg-white'>
           <div id={tabTitle} ref={printRef} className='flex-grow main-print-div'>
             {selectedGroup && selectedGroup == '16 Zone Bar Chart' ? (
@@ -1764,44 +1766,79 @@ const DevtaVastu = ({
                   vertical={show32Charts || show45Charts ? true : false}
                   barSize={show32Charts || show45Charts ? 10 : 25}
                   showLines={show32Charts || show45Charts || show4Charts || show8Charts ? false : true}
+                  points={points}
                 />
               </div>
             ) : selectedGroup == 'Devta bar chart' ? (
-               <div style={{ width: width, height: height }}>
+              <div style={{ width: width, height: height }}>
                 <CustomDevtaChart
                   dataSets={{
                     data32: Area_32_Data,
                     data8: Area_8_Data,
                     data4: Area_4_Data
                   }}
-                   barSize={15}
+                  barSize={15}
                   showLines={true}
                 />
               </div>
             ) : (
               <div className='relative flex'>
+                {isImageDragging && (
+                  <rect
+                    x={0}
+                    y={0}
+                    width={width}
+                    height={height}
+                    fill="rgba(255,255,255,0.2)"
+                    style={{ pointerEvents: 'none' }}
+                  />
+                )}
                 <svg
                   ref={svgRef}
                   width={width}
                   height={height}
                   className='cursor-pointer border border-gray-200 bg-white'
-                  onMouseDown={handleMouseDown}
-                  onMouseMove={handleMouseMove}
-                  onMouseUp={handleMouseUp}
-                  onMouseLeave={handleMouseUp}
+                  onPointerDown={handleMouseDown} // Using pointer events
+                  onPointerMove={handleMouseMove}
+                  onPointerUp={handleMouseUp}
+                  onMouseLeave={handleMouseUp}  // Using pointerUp for touch and mouse leave scenarios
                   onDoubleClick={e => handleDoubleClick(e, 'svg')}
                   style={{
-                    touchAction: 'none',
+                    touchAction: 'manipulation',
                     border: '0',
                     shapeRendering: 'auto'
                   }}
                 >
+
+                  {/* <svg
+                  ref={svgRef}
+                  width={width}
+                  height={height}
+                  className='cursor-pointer border border-gray-200 bg-white'
+                  onPointerDown={handleMouseDown}
+                  // onMouseDown={handleMouseDown}
+                  onPointerMove={handleMouseMove}
+                  // onMouseMove={handleMouseMove}
+                  onPointerUp={handleMouseUp}
+                  // onMouseUp={handleMouseUp}
+                  onMouseLeave={handleMouseUp}
+                  onDoubleClick={e => handleDoubleClick(e, 'svg')}
+                  style={{
+                    touchAction: 'manipulation',
+                    border: '0',
+                    shapeRendering: 'auto'
+                  }}
+                > */}
                   {!fileUploaded && (
                     <>
-                      <GridBackground width={width} height={height} gridSize={gridSize} />
+                      <GridBackground width={width} height={height} gridSize={gridSize} style={{ opacity: isImageDragging ? 0.3 : 1 }} />
                     </>
                   )}
 
+                  {isImageDragging && (
+
+                    <GridBackground width={width} height={height} style={{ opacity: isImageDragging ? 0.3 : 1 }} />
+                  )}
                   {fileUploaded && (
                     <>
                       <defs>
@@ -1824,28 +1861,41 @@ const DevtaVastu = ({
                         ) : (
                           <g
                             className='file-layer'
+                            style={{ pointerEvents: isImageDragging ? 'all' : 'auto', zIndex: isImageDragging ? 10 : 1 }}
+
                             transform={`translate(${translate.x + (width - width * zoom) / 2}, ${translate.y + (height - height * zoom) / 2}) rotate(${rotation}, ${width / 2}, ${height / 2}) scale(${zoom})`}
                           >
                             {previewUrl ? (
                               <>
                                 <image
                                   href={previewUrl?.isPdf ? previewUrl?.currentPageBase64 : previewUrl?.Base64File}
-                                  style={{ maxWidth: '100%', maxHeight: '500px', imageRendering: 'auto' }}
+                                  style={{
+                                    maxWidth: '100%', maxHeight: '500px', imageRendering: 'auto',
+                                    cursor: isImageDragging ? 'grabbing' : 'grab',
+                                    opacity: isImageDragging ? 1 : 1,
+                                    zIndex: isImageDragging ? 20 : 1
+                                  }}
                                   width={width}
                                   height={height}
                                   onMouseDown={handleMouseDown1}
                                   onMouseMove={handleMouseMove1}
                                   onMouseUp={handleMouseUp1}
                                   onMouseLeave={handleMouseUp1}
+                                  draggable={false}
                                 />
                               </>
                             ) : null}
                           </g>
                         )}
 
-                        <GridBackground width={width} height={height} />
+                        {!isImageDragging && (
 
-                        <g className='drawing-layer' style={{ pointerEvents: 'all' }}>
+                          <GridBackground width={width} height={height} style={{ opacity: isImageDragging ? 0.3 : 1 }} />
+                        )}
+
+                        <g className='drawing-layer' style={{
+                          pointerEvents: isImageDragging ? 'none' : 'all'
+                        }}>
                           {points.length > 1 && (
                             <polygon
                               points={points.map(p => `${p.x},${p.y}`).join(' ')}
@@ -2381,67 +2431,6 @@ const DevtaVastu = ({
                           )}
                         </g>
                       ))}
-
-                      {graphDraw &&
-                        allResults.map((item, index) => {
-                          const width = 200 // Width of the SVG container
-                          const height = 150
-                          const barWidth = 20 // Width of each bar
-                          const barPadding = 20
-                          const barHeight = (item.area / maxValue) * (height - 20) // Scale the bar height
-                          const x = index * (barWidth + barPadding) + 20 // Calculate x position
-                          const y = height - barHeight // Calculate y position
-                          let additionalText = ''
-                          if (item.label === 'ESE') additionalText = 'Fire'
-                          if (item.label === 'W') additionalText = 'Air'
-                          if (item.label === 'NNE') additionalText = 'Water'
-
-                          return (
-                            <g key={index}>
-                              <rect
-                                x={x}
-                                y={y + 450}
-                                width={barWidth}
-                                height={barHeight}
-                                fill={item.color}
-                                onMouseEnter={e => handleMouseEnter(e, item.area)}
-                                onMouseLeave={handleMouseLeave}
-                              />
-                              <text
-                                x={x + barWidth / 2}
-                                y={height - 5 + 480}
-                                textAnchor='middle'
-                                fontSize='14'
-                                fontWeight='500'
-                                fill='purple'
-                                alignmentBaseline='middle'
-                                style={{
-                                  userSelect: 'none',
-                                  cursor: 'default'
-                                }}
-                              >
-                                {item.label}
-                              </text>
-                              {additionalText && (
-                                <text
-                                  x={x + barWidth / 2 + 20}
-                                  y={height + 10 + 480}
-                                  textAnchor='middle'
-                                  fontSize='15'
-                                  fontWeight='500'
-                                  fill='purple'
-                                  alignmentBaseline='middle'
-                                  style={{
-                                    userSelect: 'none', // Prevent text selection
-                                    cursor: 'default' // Optional: Make the cursor non-interactive
-                                  }}
-                                >
-                                  {additionalText}
-                                </text>
-                              )}
-                            </g>
-                          )
-                        })}
 
                       {tooltip.visible && (
                         <text
