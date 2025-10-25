@@ -474,22 +474,22 @@ export const devta = [
 
 export const data = [
   // water element
-  ['N2', 'N4', 'NNW', 'blue'],
-  ['N4', 'N6', 'N', 'blue'],
-  ['N6', 'N8', 'NNE', 'blue'],
-  ['N8', 'E2', 'NE', 'blue'],
-  ['E2', 'E4', 'ENE', '#DDEEBB'],
+  ['N2', 'N4', 'NNW', '#7DCFE3'],
+  ['N4', 'N6', 'N', '#7DCFE3'],
+  ['N6', 'N8', 'NNE', '#7DCFE3'],
+  ['N8', 'E2', 'NE', '#7DCFE3'],
+  ['E2', 'E4', 'ENE', '#C8DD86'],
   // fire element
-  ['E4', 'E6', 'E', '#DDEEBB'],
-  ['E6', 'E8', 'ESE', '#DDEEBB'],
-  ['E8', 'S2', 'SE', 'red'],
-  ['S2', 'S4', 'SSE', 'red'],
-  ['S4', 'S6', 'S', 'red'],
-  ['S6', 'S8', 'SSW', 'yellow'],
+  ['E4', 'E6', 'E', '#C8DD86'],
+  ['E6', 'E8', 'ESE', '#C8DD86'],
+  ['E8', 'S2', 'SE', '#FABBAD'],
+  ['S2', 'S4', 'SSE', '#FABBAD'],
+  ['S4', 'S6', 'S', '#FABBAD'],
+  ['S6', 'S8', 'SSW', '#F5DD73'],
   // air element
-  ['S8', 'W2', 'SW', 'yellow'],
-  ['W2', 'W4', 'WSW', 'gray'],
-  ['W4', 'W6', 'W', 'gray'],
-  ['W6', 'W8', 'WNW', 'gray'],
-  ['W8', 'N2', 'NW', 'gray']
+  ['S8', 'W2', 'SW', '#F5DD73'],
+  ['W2', 'W4', 'WSW', '#CCCCCC'],
+  ['W4', 'W6', 'W', '#CCCCCC'],
+  ['W6', 'W8', 'WNW', '#CCCCCC'],
+  ['W8', 'N2', 'NW', '#CCCCCC']
 ]

@@ -110,7 +110,7 @@ const RectangleWithRotatedLines = ({ height, width, degree = 0, cx = 300, cy = 3
   })
 
   return (
-    <svg width='1000' height='800'>
+    <svg width='1000' height='800' className="surroundings-svg">
       {/* Outer rectangle */}
       {/* <rect x={rectX1} y={rectY1} width={width - 40} height={height - 40} fill="none" stroke="black" strokeWidth="2" /> */}
 

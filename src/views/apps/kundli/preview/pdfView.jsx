@@ -3,13 +3,14 @@ import React from 'react'
 // import "./pdfView.css"
 import InfoTable from '@/components/preview/InfoTable/InfoTable'
 import NakshtraSummarySimpleTB from '@/components/preview/NakshtraSummary/NakshtraSummarySimpleTB'
-import LoardPlanet from '@/components/preview/LoardPlanet/LoardPlanet'
-import RahuKetu from '@/components/preview/RahuKetu/RahuKetu'
 import RahuKetuSimpleTB from '@/components/preview/RahuKetu/RahuKetuSimpleTB'
-import SummaryAspect from '@/components/preview/PlanetSummary/PlanetSummary'
 import PlanetSummarySimpleTB from '@/components/preview/PlanetSummary/PlanetSummarySimpleTB'
 
-function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroDetails, ChartSVG, PlaneNSummaryData, HouseNSummaryData, RahuData, KetuData, PlanetSummaryData, HouseSummaryData }) {
+function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroDetails, ChartSVG, PlaneNSummaryData, HouseNSummaryData, RahuData, KetuData, PlanetSummaryData, HouseSummaryData, visibleSections }) {
+
+    // helper: if visibleSections not passed, default to visible
+    const isVisible = (key) => (visibleSections ? !!visibleSections[key] : true);
+
     return (
         <div className='hidden'>
             <div className='previewCard print-optimized pdfView' ref={pageRef}>
@@ -85,6 +86,7 @@ function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroD
                 </table>
 
                 {/*  Nakshatra Astrology ↠ Planet Script  */}
+                { isVisible("Nakshatra Kundali: Planet & House Script") && (
                 <div className='main-MahaDasha-Div pt-5'>
                     <div className='chart-title font-ea-sb print-title'>❋ Nakshatra Astrology ↠ Planet Script ❋</div>
                     <div className='planet-table'>
@@ -103,47 +105,59 @@ function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroD
                             <span>⮌ Retro</span>
                         </div>
                     </div>
-                </div>                
-
+                </div>
+                )}
 
                 {/* Rahu & Ketu Special Significators */}
+                { isVisible("Nakshatra Kundali: Planet & House Script") && (
                 <div className='main-RahuKetu-Div pt-8'>
                     <div className='chart-title font-ea-sb print-title'>❋ Rahu & Ketu Special Significators ❋</div>
                     <div className='RahuKetu-Div flex gap-4 flex-col sm:flex-row'>
                         <RahuKetuSimpleTB RahuData={RahuData} KetuData={KetuData} Significators={"R"} SelectedEventVal={null} />
                     </div>
                 </div>
+                )}
 
                 {/*  Nakshatra Astrology ↠ House Script  */}
+                { isVisible("Nakshatra Kundali: Planet & House Script") && (
                 <div className='main-MahaDasha-Div main-MahaDasha-Div-break  pt-5'>
                     <div className='chart-title font-ea-sb print-title'>❋ Nakshatra Astrology ↠ House Script ❋</div>
                     <div className='planet-table'>
                         <NakshtraSummarySimpleTB SummaryData={HouseNSummaryData} Aspect={"H"} symbols={Symbols} SelectedEventVal={null} />
                     </div>
                 </div>
+                )}
 
+                {/* Planet -> Planet Aspects Summary */}
+                { (isVisible("Planet Script: Nakshatra & Sub Lord") || isVisible("Nakshatra Kundali: Planet & House Script")) && (
                 <div className='pt-8 main-planet-summary-Div'>
                     <div className='chart-title font-ea-sb '>❋ Planet ↠ Planet Aspects Summary ❋</div>
                     <div className=''>
                         <PlanetSummarySimpleTB SummaryData={PlanetSummaryData} Aspect={"P"} />
                     </div>
                 </div>
+                )}
 
+                {/* Planet -> House Aspects Summary */}
+                { (isVisible("Planet Script: Nakshatra & Sub Lord") || isVisible("Nakshatra Kundali: Planet & House Script")) && (
                 <div className='pt-8'>
                     <div className='chart-title font-ea-sb '>❋ Planet ↠ House Aspects Summary ❋</div>
                     <div className=''>
                         <PlanetSummarySimpleTB SummaryData={HouseSummaryData} Aspect={"H"} />
                     </div>
                 </div>
-
+                )}
 
                 {/* Astro Vastu Insights */}
+                { isVisible("Astro Vastu Insights") && (
                 <div className='main-AstroVastuScript-Div pt-8 print-content'>
                     <div className='chart-title font-ea-sb print-title'>❋ Astro Vastu Insights ❋</div>
                     <div className='AstroVastuScript-Div print-house-container'>
                         <House houseArr={AstroVastuHouseScript} Symbols={Symbols}></House>
                     </div>
                 </div>
+                )}
+
             </div>
         </div>
     )

@@ -659,9 +659,9 @@ function DevtaVastuPage({ id }) {
       }
     }
   }
-  const handleDownload = async (data) => {
+  const handleDownload = async (data, type) => {
     setIsDownloading(true);
-    await printHandler(data); // Your download function
+    await printHandler(data, type); // Your download function
     setIsDownloading(false);
   };
 
@@ -1104,7 +1104,7 @@ function DevtaVastuPage({ id }) {
   //   }
   // }
 
-  const printHandler = async (data) => {
+  const printHandler = async (data, type) => {
     if (!printRefs.current || printRefs.current.length === 0) {
       console.error('Print container refs are empty or null')
       return
@@ -1151,7 +1151,12 @@ function DevtaVastuPage({ id }) {
       // Get current date and time
       const fullDateTime = '2025-05-11 05:30:45' // You can replace with dynamic date
       const formattedDate = fullDateTime.split(' ')[0]
-      const username = 'DhruviRana4' // You can replace with dynamic username
+
+       const clientCss = type === "client" ? `
+.surroundings-svg{
+  display: none;
+}
+` : "";
 
       // Prepare styled HTML for Puppeteer with the same styles from working code
       const fullHtml = `
@@ -1206,11 +1211,11 @@ function DevtaVastuPage({ id }) {
 
 /* Right column takes full height */
 #hiddenDiv {
-    flex: 0 0 30%;   /* 30% width */
+    flex: 0 0 23%;   /* 30% width */
     height: 100%;    /* stretch to parent height */
     box-sizing: border-box;
 }
-
+${clientCss}
     </style>
   </head>
   <body>
@@ -1219,7 +1224,7 @@ function DevtaVastuPage({ id }) {
 </html>
 `;
 
-
+      setLoading(true);
       // Send HTML to Next.js API route
       const response = await fetch('/api/generate-pdf', {
         method: 'POST',
@@ -1228,16 +1233,17 @@ function DevtaVastuPage({ id }) {
       })
 
       if (!response.ok) {
+        setLoading(false);
         throw new Error(`Server responded with ${response.status}`)
       }
-
+      setLoading(false);
       // Receive binary PDF
       const blob = await response.blob()
       const url = URL.createObjectURL(blob)
 
       // Dynamic filename
       const simpleDate = formattedDate.replace(/-/g, '')
-      const filename = `report_${username}_${simpleDate}.pdf`
+      const filename = `report_${simpleDate}.pdf`
 
       // Trigger download
       const link = document.createElement('a')
@@ -1412,9 +1418,9 @@ function DevtaVastuPage({ id }) {
         <Loader />
       ) : (
         <>
-          <div className='flex flex-col gap-4'>
-            <Card className='bg-primary'>
-              <div className={`chart-name sticky top-0 z-50 font-ea-sb rounded-t flex justify-between md:items-center gap-y-2 lg:flex-row sm:flex-row flex-col`}>
+          <div className='flex flex-col'>
+            <Card className='bg-primary' sx={{ borderRadius: 0 }}>
+              <div className={`chart-name sticky top-0 z-50 font-ea-sb flex justify-between md:items-center gap-y-2 lg:flex-row sm:flex-row flex-col`}>
                 {vastuLayoutData?.ProjectName ? vastuLayoutData?.ProjectName : `New-Vastu-Layout-${layoutCount}`}
                 <div className={`flex justify-between md-items-center lg:gap-1 lg:flex-row md:flex-row gap-5 birthDateTime-Div`} >
                   <IconButton
@@ -1482,7 +1488,7 @@ function DevtaVastuPage({ id }) {
                 </div>
               </div>
             </Card>
-            <Card>
+            <Card sx={{ borderRadius: 0 }}>
               {savedGroups.length > 0 && tabGroup && (
                 <>
                   <div className='flex items-center space-x-2 overflow-auto'>
@@ -1601,6 +1607,7 @@ function DevtaVastuPage({ id }) {
                 open={downloadConfirm}
                 handleClose={downloadPDF}
                 TabData={savedGroups}
+                showPdfTypeOptions={true}
                 handleSave={handleDownload}
               />
             )}
