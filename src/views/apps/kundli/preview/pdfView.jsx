@@ -68,7 +68,7 @@ function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroD
                 </div>
 
                 {/* birth chart and houses */}
-                <table className='mt-4'>
+                <table className='mt-3'>
                     <tr>
                         <td>
                             <div className='chart-title font-ea-sb print-title'>&#10059; Birth Chart / Lagna Kundali &#10059;</div>
@@ -93,7 +93,7 @@ function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroD
                 </table>
 
                 {/* Dasha Details */}
-                <div className='main-MahaDasha-Div pt-5'>
+                <div className='main-MahaDasha-Div pt-3'>
                     {/* <div className='chart-title font-ea-sb print-title'>❋ Dasha Details ❋</div> */}
                     <div className='planet-table flex flex-row px-5'>
                         <div>Vimshottari Dasha: </div>
@@ -105,7 +105,7 @@ function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroD
 
                 {/*  Nakshatra Astrology ↠ Planet Script  */}
                 { isVisible("Nakshatra Kundali: Planet & House Script") && (
-                <div className='main-MahaDasha-Div pt-5'>
+                <div className='main-MahaDasha-Div pt-3'>
                     <div className='chart-title font-ea-sb print-title'>❋ Nakshatra Astrology ↠ Planet Script ❋</div>
                     <div className='planet-table'>
                         <NakshtraSummarySimpleTB SummaryData={PlaneNSummaryData} Aspect={"P"} symbols={Symbols} SelectedEventVal={null} />
@@ -128,7 +128,7 @@ function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroD
 
                 {/* Rahu & Ketu Special Significators */}
                 { isVisible("Nakshatra Kundali: Planet & House Script") && (
-                <div className='main-RahuKetu-Div pt-8'>
+                <div className='main-RahuKetu-Div pt-3'>
                     <div className='chart-title font-ea-sb print-title'>❋ Rahu & Ketu Special Significators ❋</div>
                     <div className='RahuKetu-Div flex gap-4 flex-col sm:flex-row'>
                         <RahuKetuSimpleTB RahuData={RahuData} KetuData={KetuData} Significators={"R"} SelectedEventVal={null} />
@@ -138,7 +138,7 @@ function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroD
 
                 {/*  Nakshatra Astrology ↠ House Script  */}
                 { isVisible("Nakshatra Kundali: Planet & House Script") && (
-                <div className='main-MahaDasha-Div main-MahaDasha-Div-break  pt-5'>
+                <div className='main-MahaDasha-Div main-MahaDasha-Div-break  pt-3'>
                     <div className='chart-title font-ea-sb print-title'>❋ Nakshatra Astrology ↠ House Script ❋</div>
                     <div className='planet-table'>
                         <NakshtraSummarySimpleTB SummaryData={HouseNSummaryData} Aspect={"H"} symbols={Symbols} SelectedEventVal={null} />
@@ -148,7 +148,7 @@ function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroD
 
                 {/* Planet -> Planet Aspects Summary */}
                 { (isVisible("Planet Script: Nakshatra & Sub Lord") || isVisible("Nakshatra Kundali: Planet & House Script")) && (
-                <div className='pt-8 main-planet-summary-Div'>
+                <div className='pt-3 main-planet-summary-Div'>
                     <div className='chart-title font-ea-sb '>❋ Planet ↠ Planet Aspects Summary ❋</div>
                     <div className=''>
                         <PlanetSummarySimpleTB SummaryData={PlanetSummaryData} Aspect={"P"} />
@@ -158,7 +158,7 @@ function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroD
 
                 {/* Planet -> House Aspects Summary */}
                 { (isVisible("Planet Script: Nakshatra & Sub Lord") || isVisible("Nakshatra Kundali: Planet & House Script")) && (
-                <div className='pt-8'>
+                <div className='pt-3'>
                     <div className='chart-title font-ea-sb '>❋ Planet ↠ House Aspects Summary ❋</div>
                     <div className=''>
                         <PlanetSummarySimpleTB SummaryData={HouseSummaryData} Aspect={"H"} />
@@ -168,7 +168,7 @@ function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroD
 
                 {/* Astro Vastu Insights */}
                 { isVisible("Astro Vastu Insights") && (
-                <div className='main-AstroVastuScript-Div pt-8 print-content'>
+                <div className='main-AstroVastuScript-Div pt-3 print-content'>
                     <div className='chart-title font-ea-sb print-title'>❋ Astro Vastu Insights ❋</div>
                     <div className='AstroVastuScript-Div print-house-container'>
                         <House houseArr={AstroVastuHouseScript} Symbols={Symbols} isPrintDiv={true}></House>

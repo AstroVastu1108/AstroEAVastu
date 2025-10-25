@@ -21,7 +21,7 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 // import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 
-function SortableItem({ id, checked, handleCheckboxChange }) {
+function SortableItem({ id, checked, handleCheckboxChange, showPdfTypeOptions }) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id })
 
   return (
@@ -34,9 +34,11 @@ function SortableItem({ id, checked, handleCheckboxChange }) {
         transition
       }}
     >
-      <IconButton {...attributes} {...listeners} size='medium' className='drag-handle cursor-grab px-1'>
-        <i className='tabler-grip-vertical text-xs'></i>
-      </IconButton>
+      {showPdfTypeOptions &&
+        <IconButton {...attributes} {...listeners} size='medium' className='drag-handle cursor-grab px-1'>
+          <i className='tabler-grip-vertical text-xs'></i>
+        </IconButton>
+      }
       <FormControlLabel
         control={<Checkbox checked={checked} onChange={handleCheckboxChange} name={id} />}
         label={id}
@@ -51,15 +53,23 @@ function DownloadPopUp({
   handleClose,
   TabData,
   handleSave,
-  showPdfTypeOptions = false // Optional prop
+  showPdfTypeOptions = false, // Optional prop
+  defaultCheckedItems = [] // New prop for default checked items
 }) {
   const theme = createTheme({
     shape: { borderRadius: 8 }
   })
 
   const [items, setItems] = useState(TabData)
-  const [checkedItems, setCheckedItems] = useState(TabData.reduce((acc, item) => ({ ...acc, [item]: false }), {}))
-  const [checkAll, setCheckAll] = useState(false)
+  const [checkedItems, setCheckedItems] = useState(
+    TabData.reduce((acc, item) => ({ 
+      ...acc, 
+      [item]: defaultCheckedItems.includes(item) 
+    }), {})
+  )
+  const [checkAll, setCheckAll] = useState(
+    defaultCheckedItems.length > 0 && defaultCheckedItems.length === TabData.length
+  )
   const [pdfType, setPdfType] = useState('client') // Default PDF type
 
   const handleCheckAll = event => {
@@ -137,6 +147,7 @@ function DownloadPopUp({
                     id={item}
                     checked={checkedItems[item]}
                     handleCheckboxChange={handleCheckboxChange}
+                    showPdfTypeOptions={showPdfTypeOptions}
                   />
                 ))}
               </SortableContext>
