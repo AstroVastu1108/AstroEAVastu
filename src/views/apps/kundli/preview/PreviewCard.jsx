@@ -5,7 +5,6 @@ import Grid from '@mui/material/Grid'
 import House from '@/components/preview/House/House'
 import SummaryAspect from '@/components/preview/PlanetSummary/PlanetSummary'
 import InfoTable from '@/components/preview/InfoTable/InfoTable'
-import pako from 'pako';
 
 // Style Imports
 import "./preview.css"
@@ -37,7 +36,7 @@ import PDFView from './pdfView'
 // import fontSemiBoldUrl from './../../../../assets/fonts/s-sb.woff2';
 
 
-const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, TransitData, setTransitData, getTransitData, getDivisionalChartData, DivisionalData, setDivisionalData, birthDate, setKundliData, SetKundliConstData }) => {
+const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, TransitData, setTransitData, getTransitData, getDivisionalChartData, DivisionalData, setDivisionalData, birthDate, setKundliData, SetKundliConstData, getVarshphalData }) => {
   // var
   const BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
   const AstroDetails = kundliData?.AstroVastuReport?.AstroDetails;
@@ -319,7 +318,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               box-sizing: border-box;
 
               /* Ensure all elements can use symbol fonts */
-          font-family: inherit !important;
+              font-family: inherit !important;
             }
 
             /* Fixed width container - 900px scaled to fit A4 */
@@ -404,24 +403,25 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
             }
 
             .neutral {
-        color: #1762ad;
-      }
+              color: #1762ad;
+            }
 
-      .rake {
-        display: flex;
-        gap: 2px;
-        align-items: center;
-        justify-content: center;
-        color: gray;
-      }
+            .rake {
+              display: flex;
+              gap: 2px;
+              align-items: center;
+              justify-content: center;
+              color: gray;
+            }
 
-      .positive {
-        color: #057143;
-      }
+            .positive {
+              color: #057143;
+            }
 
-      .negative {
-        color: #cc1616;
-      }
+            .negative {
+              color: #cc1616;
+            }
+              
 
             /* Chart title */
             .chart-title,
@@ -437,6 +437,14 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
             }
 
             /* Include computed styles */
+            /* Fallback styles for components that use scoped CSS in the app (ensures PDF rendering picks them up) */
+            .rahu-ketu-card {
+              border: 1px solid #e6e6e6 !important;
+              border-radius: 8px !important;
+              overflow: hidden !important;
+              background: #ffffff !important;
+            }
+
             ${computedStyles}
 
             .main-MahaDasha-Div-break{
@@ -588,9 +596,12 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   }, []);
 
   useEffect(() => {
-    if (kundliOptValue.Option == "T") {
+    if (kundliOptValue.Option == "T")
       getTransitData("", "");
-    }
+
+    else if (kundliOptValue.Option == "P")
+      getVarshphalData(2025);
+
     else
       getDivisionalChartData(kundliOptValue.Option)
   }, [kundliOptValue])
@@ -826,9 +837,9 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     <>
       {/* {Loading && <Loader />} */}
       <Grid className='previewCard' item xs={12} md={12}>
-        <PDFView AstroVastuHouseScript={AstroVastuHouseScript} BirthDetails={BirthDetails} Symbols={Symbols} pageRef={pageRef} AstroDetails={AstroDetails} ChartSVG={ChartSVG} PlaneNSummaryData={PlaneNSummaryData} HouseNSummaryData={HouseNSummaryData} RahuData={RahuData} KetuData={KetuData} PlanetSummaryData={PlanetSummaryData} HouseSummaryData={HouseSummaryData} />
+        <PDFView AstroVastuHouseScript={AstroVastuHouseScript} BirthDetails={BirthDetails} Symbols={Symbols} pageRef={pageRef} AstroDetails={AstroDetails} ChartSVG={ChartSVG} PlaneNSummaryData={PlaneNSummaryData} HouseNSummaryData={HouseNSummaryData} RahuData={RahuData} KetuData={KetuData} PlanetSummaryData={PlanetSummaryData} HouseSummaryData={HouseSummaryData}  />
         <Grid item xs={12} className='pdf-Div'>
-          <div className={`chart-name sticky top-0 z-50 font-ea-sb rounded-t flex justify-between md:items-center gap-y-2 lg:flex-row ${!isPrintDiv ? 'sm:flex-row flex-col' : "items-center"}`}>
+          <div className={`chart-name sticky top-0 z-50 font-ea-sb flex justify-between md:items-center gap-y-2 lg:flex-row ${!isPrintDiv ? 'sm:flex-row flex-col' : "items-center"}`}>
             {BirthDetails?.FirstName ? `${BirthDetails.FirstName} ${BirthDetails.MiddleName} ${BirthDetails.LastName}` : 'Prashna Kundali'}
             <div className={`flex justify-between md-items-center lg:gap-1 lg:flex-row md:flex-row ${!isPrintDiv ? 'sm:flex-row sm:gap-1 flex-col' : "gap-5"} birthDateTime-Div`} >
               <div className='flex flex-row gap-1 chart-date items-center'>
@@ -912,7 +923,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
                   { "label": "Vikram Samvant ", "value": AstroDetails?.VikramSamvat },
                   { "label": "Birth Tithi / Sun Rise ", "value": `${AstroDetails?.JanmaTithi} / ${AstroDetails?.SunRiseTime}` },
                   { "label": "Astro / Western Day ", "value": `${AstroDetails?.AstroWeekday} / ${AstroDetails?.WesternWeekday}` },
-                  // { "label": "Location ", "value": `${BirthDetails?.City}, ${BirthDetails?.Country}` },
+                  { "label": "Prakriti", "value": `${BirthDetails?.Gender} / ${BirthDetails?.Prakriti}` } // { "label": "Location ", "value": `${BirthDetails?.City}, ${BirthDetails?.Country}` },
                 ]} isPrintDiv={isPrintDiv} />
               </div>
               <div className='flex flex-row block-detail'>
@@ -925,10 +936,10 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               </div>
               <div className='flex flex-row block-detail'>
                 <InfoTable InfoTableTextArr={[
+                  { "label": "Group ", "value": ` ${BirthDetails?.Group || ""}` },
                   { "label": "Reference", "value": `${BirthDetails?.Reference || ""}` },
                   { "label": "Remark", "value": `${BirthDetails?.Remark || ""}` },
-                  { "label": "Group ", "value": ` ${BirthDetails?.Group || ""}` },
-                  { "label": "Prakriti", "value": `${BirthDetails?.Gender} / ${BirthDetails?.Prakriti}` },
+                  // { "label": "Prakriti", "value": `${BirthDetails?.Gender} / ${BirthDetails?.Prakriti}` },
                 ]} isPrintDiv={isPrintDiv} />
               </div>
             </div>
@@ -1001,7 +1012,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
                 <td className='w-1/3'>
                   {kundliOptValue && kundliOptValue.Option == "V" ? (
                     <div className='flex justify-center items-center px-2 flex-auto w-[calc(100vw - 80vw)] '>
-                      <div className='lg:w-[calc(100vw-71vw)] md:w-[40vw] sm:w-[40vw] w-[75vw] '>
+                      <div className='lg:w-[calc(100vw-71vw)] md:w-[40vw] sm:w-[40vw] w-[75vw]'>
                         <DashaDetails title={DashaTitle} DashaData={DashaGridData} handleDashadbClick={handleDashaDoubleClick} divref={divRef} />
                       </div>
                     </div>
@@ -1019,16 +1030,17 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
                           }
                         </div>
                       </> :
-                        <>
-                          <div className='flex justify-center items-center px-2'>
-                            {DivisionalData?.DChart ?
-                              <img src={`data:image/svg+xml;base64,${DivisionalData?.DChart}`} alt="transitChart" className='flex-auto' />
-                              :
-                              // <Skeleton variant="rectangular" width={210} height={60} />
-                              <EALoader />
-                            }
-                          </div>
-                        </>}
+                        kundliOptValue.Option == "P" ? "Varshphal Chart Coming Soon" :
+                          <>
+                            <div className='flex justify-center items-center px-2'>
+                              {DivisionalData?.DChart ?
+                                <img src={`data:image/svg+xml;base64,${DivisionalData?.DChart}`} alt="transitChart" className='flex-auto' />
+                                :
+                                // <Skeleton variant="rectangular" width={210} height={60} />
+                                <EALoader />
+                              }
+                            </div>
+                          </>}
                     </>
                   )}
 

@@ -281,3 +281,23 @@ export async function DuplicateKundli(payload) {
     return responseBody
   }
 }
+
+
+// for get vastuphal data
+export async function GetVastuphalData(year) {
+  const responseBody = {
+    responseData: null,
+    hasError: false,
+    error: null
+  }
+  try {
+    const response = await astroInstance.get(`astro/chart/varshphal/${year}`)
+    responseBody.responseData = response.data
+    return responseBody
+  } catch (error) {
+    responseBody.hasError = true
+    responseBody.errorMessage = responseBody.errorMessage =
+      error.response?.data?.statusMsg || error.response?.data?.errors
+    return responseBody
+  }
+}

@@ -79,14 +79,12 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
         const positiveValues = SelectedEventVal.Positive.split(', ').map(Number);
         const negativeValues = SelectedEventVal.Negative.split(', ').map(Number);
 
-        // Apply green color if ownership is in Positive, red if in Negative
         if (positiveValues.includes(ownershipNumber)) {
           return (
-            <div className='flex'>
+            <div className='flex' key={index}>
               <div className='bg-[var(--green-bg-color)] px-[2px]'>
-                <span key={index} className="text-[var(--green-text-color)] font-ea-sb">
+                <span className="text-[var(--green-text-color)] font-ea-sb">
                   {ownershipItem}
-                  {/* {index < OwnershipArray.length - 1 && ', '} */}
                 </span>
               </div>
               {index < OwnershipArray.length - 1 && <span>,&nbsp;</span>}
@@ -94,9 +92,9 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
           );
         } else if (negativeValues.includes(ownershipNumber)) {
           return (
-            <div className='flex'>
+            <div className='flex' key={index}>
               <div className='bg-[var(--red-bg-color)] px-[2px]'>
-                <span key={index} className="text-[var(--red-text-color)] font-ea-sb">
+                <span className="text-[var(--red-text-color)] font-ea-sb">
                   {ownershipItem}
                 </span>
               </div>
@@ -105,7 +103,7 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
           );
         }
       }
-      // Default case with no color
+
       return (
         <span key={index}>
           {ownershipItem}
@@ -113,6 +111,7 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
         </span>
       );
     });
+
     return formattedOwnership;
   }
 
@@ -320,6 +319,18 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
   }));
 
   const [selectedRowId, setSelectedRowId] = useState(null);
+  const [hoveredCol, setHoveredCol] = useState(null);
+
+  const handleGridHover = (e) => {
+    // Find closest data grid cell or header under the mouse
+    const cell = e.target.closest('.MuiDataGrid-cell');
+    if (!cell) {
+      setHoveredCol(null);
+      return;
+    }
+    const field = cell.getAttribute('data-field');
+    if (field) setHoveredCol(field);
+  }
 
   const [open, setOpen] = useState(false)
   const [selectedEvent, setSelectedEvent] = useState([])
@@ -339,7 +350,7 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
       {open && (
         <EventModel open={open} handleAddClose={handleAddClose} headerTitle={selectedTitle} displayData={selectedEvent} />
       )}
-      <Box width={"100%"}>
+  <Box width={"100%"} className={`border-radius ${hoveredCol ? `hover-col-${hoveredCol}` : ''}`} onMouseMove={handleGridHover} onMouseLeave={() => setHoveredCol(null)}>
 
         <DataGrid
           showCellVerticalBorder
@@ -359,7 +370,18 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
           onRowClick={(params) => setSelectedRowId(params.id)}
           onCellDoubleClick={(params) => handleEvent("cell", params.field, `${params?.value?.Planet ? params?.value?.Planet : ""} ${params?.value?.ScriptFull ? params?.value?.ScriptFull : params?.value}`, `${params?.value?.Planet ? params?.value?.Planet : ""} ${params?.value?.ScriptFull ? params?.value?.ScriptFull : params?.value}`)}
           getRowClassName={(params) => params.id === selectedRowId ? 'Mui-selected' : ''}
+          // className='rounded-md'
         />
+
+        {/* Dynamic CSS to highlight hovered column (targets MUI DataGrid cells by data-field)
+            Header intentionally NOT targeted so its color stays unchanged */}
+        <style jsx global>{`
+          ${hoveredCol ? `
+          .hover-col-${hoveredCol} .MuiDataGrid-cell[data-field="${hoveredCol}"] {
+            background-color: var(--secondary-soft-color) !important;
+          }
+          ` : ''}
+        `}</style>
 
       </Box>
     </>

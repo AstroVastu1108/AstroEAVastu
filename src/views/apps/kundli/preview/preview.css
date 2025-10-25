@@ -85,6 +85,10 @@
     padding: 0px 18px 0px 8px;
     border-left: none;
   }
+  .block-detail:last-child {
+    padding: 0px 18px 0px 8px;
+    border-right: none;
+  }
 
   .text-Value {
     padding-inline-end: 10px;
@@ -290,19 +294,29 @@
         }
       }
 
+      .house-body-pdf {
+        border-bottom: 1px solid var(--border-color);
+        .house-body-Div1 {
+          border-left: 1px solid var(--border-color);
+        }
+        .house-body-Div2 {
+          border-right: 1px solid var(--border-color);
+        }
+      }
+
       .house-body {
         padding: 0px 0px;
         display: flex;
         justify-content: space-between;
         width: 100%;
         color: #000;
-        border-bottom: 1px solid var(--border-color);
+        /* border-bottom: 1px solid var(--border-color); */
 
         .house-body-Div1 {
           padding: 8px;
           width: 25%;
           border-right: 1px solid var(--border-color);
-          border-left: 1px solid var(--border-color);
+          /* border-left: 1px solid var(--border-color); */
           /* border-bottom: 1px solid var(--border-color); */
 
           .house-div-sub {
@@ -375,7 +389,7 @@
         .house-body-Div2 {
           padding: 0px 0px;
           width: 75%;
-          border-right: 1px solid var(--border-color);
+          /* border-right: 1px solid var(--border-color); */
           /* border-bottom: 1px solid var(--border-color); */
           display: flex;
           flex-direction: column;

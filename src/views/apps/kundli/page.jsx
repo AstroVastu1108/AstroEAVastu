@@ -631,7 +631,7 @@ export default function KundliMain() {
                     rows={kundliData}
                     columns={columns}
                     disableColumnMenu
-                    rowHeight={45}
+                    rowHeight={40}
                     columnHeaderHeight={45}
                     disableColumnResize
                     disableRowSelectionOnClick

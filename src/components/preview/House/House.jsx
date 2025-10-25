@@ -1,7 +1,7 @@
 import EventModel from '@/components/EventModel/eventModel';
 import React, { useState } from 'react'
 
-function House({ houseArr, Symbols }) {
+function House({ houseArr, Symbols, isPrintDiv = false }) {
   const rashiSymbols = {
     Aries: "♈︎",
     Taurus: "♉︎",
@@ -62,7 +62,7 @@ function House({ houseArr, Symbols }) {
                   </div>
                 </div>
               </div>
-              <div className="house-body">
+              <div className={`house-body ${isPrintDiv ? "house-body-pdf" : ""}`}>
                 <div className='house-body-Div1' >
                   {e?.HouseAspectsZero?.length ?
 
