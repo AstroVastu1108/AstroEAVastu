@@ -995,106 +995,110 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
                 handleClose={handleOpenKundliClose}
               />
             )}
-            <table>
-              <tr>
-                <td>
-                  <div className='chart-title '>
-                    <Button onClick={() => handleRoatationOpen("B")}>
-                      <span className='font-ea-sb text-xl'>
-                        ❋ Birth Chart / Lagna Kundali ❋
-                      </span>
-                    </Button>
-                  </div>
-                </td>
-                <td>
-                  <div className='chart-title'>
-                    <Button onClick={() => handleRoatationOpen("H")}>
-                      <span className='font-ea-sb text-xl'>
-                        ❋ House Chart / Bhav Chalit Kundali ❋
-                      </span>
-                    </Button>
-                  </div>
-                </td>
-                <td>
-                  <div className='chart-title flex'>
-                    <div className='flex px-2 w-full'>
-                      <div className='flex items-center w-1/12'>
-                        {DashaValue != "MahaDasha" && kundliOptValue && kundliOptValue.Option == "V" && (
-                          <IconButton onClick={handleDashaChange} className='h-[38px] text-primary'>
-                            🠜
-                            {/* <i className='tabler-arrow-big-left text-primary'></i> */}
-                          </IconButton>
-                        )}
-                      </div>
-                      <div className='flex items-center w-10/12 justify-center'>
-                        <Button className='cursor-pointer flex items-center' onClick={handleKundliOpt}>
-                          <span className='font-ea-sb text-xl'>
-                            ❋ {kundliOptValue && kundliOptValue.Option == "V" ? DashaValue : kundliOptValue.OptionName} ❋
-                          </span>
-                        </Button>
-                      </div>
-                      <div className='flex items-center w-1/12'>
-                      </div>
+            <div className='w-full'>
+              {/* Chart Titles Row */}
+              <div className='grid grid-cols-1 md:grid-cols-3 gap-1 mb-0'>
+                {/* Birth Chart Title */}
+                <div className='chart-title'>
+                  <Button onClick={() => handleRoatationOpen("B")} >
+                    <span className='font-ea-sb text-xl'>
+                      ❋ Birth Chart / Lagna Kundali ❋
+                    </span>
+                  </Button>
+                </div>
+
+                {/* House Chart Title */}
+                <div className='chart-title'>
+                  <Button onClick={() => handleRoatationOpen("H")} >
+                    <span className='font-ea-sb text-xl'>
+                      ❋ House Chart / Bhav Chalit Kundali ❋
+                    </span>
+                  </Button>
+                </div>
+
+                {/* Dasha/Options Title */}
+                <div className='chart-title flex'>
+                  <div className='flex px-2 w-full items-center'>
+                    <div className='flex items-center'>
+                      {DashaValue != "MahaDasha" && kundliOptValue && kundliOptValue.Option == "V" && (
+                        <IconButton onClick={handleDashaChange} className='h-[38px] text-primary'>
+                          🠜
+                        </IconButton>
+                      )}
+                    </div>
+                    <div className='flex-1 flex items-center justify-center'>
+                      <Button className='cursor-pointer flex items-center' onClick={handleKundliOpt}>
+                        <span className='font-ea-sb text-xl'>
+                          ❋ {kundliOptValue && kundliOptValue.Option == "V" ? DashaValue : kundliOptValue.OptionName} ❋
+                        </span>
+                      </Button>
                     </div>
                   </div>
-                </td>
-              </tr>
-              <tr className=''>
-                <td className='w-1/3'>
-                  <div className='flex justify-center items-center px-2' ref={divRef}>
-                    <img src={`data:image/svg+xml;base64,${ChartSVG?.BirthChart}`} className='flex-auto' alt="birthChart" />
+                </div>
+              </div>
+
+              {/* Charts Row */}
+              <div className='grid grid-cols-1 md:grid-cols-3 gap-1'>
+                {/* Birth Chart */}
+                <div className='w-full h-full'>
+                  <div className='flex justify-center items-start px-2 h-full' ref={divRef}>
+                    <img src={`data:image/svg+xml;base64,${ChartSVG?.BirthChart}`} className='w-full max-w-full h-auto' alt="birthChart" />
                   </div>
-                </td>
-                <td className='w-1/3 myDiv'>
-                  <div className='flex justify-center items-center px-2'>
-                    <img src={`data:image/svg+xml;base64,${ChartSVG?.HouseChart}`} className='flex-auto' alt="birthChart" />
+                </div>
+
+                {/* House Chart */}
+                <div className='w-full h-full myDiv'>
+                  <div className='flex justify-center items-start px-2 h-full'>
+                    <img src={`data:image/svg+xml;base64,${ChartSVG?.HouseChart}`} className='w-full max-w-full h-auto' alt="houseChart" />
                   </div>
-                </td>
-                <td className='w-1/3'>
+                </div>
+
+                {/* Dasha/Transit/Divisional Chart */}
+                <div className='w-full h-full'>
                   {kundliOptValue && kundliOptValue.Option == "V" ? (
-                    <div className='flex justify-center items-center px-2 flex-auto w-[calc(100vw - 80vw)] '>
-                      <div className='lg:w-[calc(100vw-71vw)] md:w-[40vw] sm:w-[40vw] w-[75vw]'>
+                    <div className='flex justify-center items-start px-2 h-full'>
+                      <div className='w-full h-full'>
                         <DashaDetails title={DashaTitle} DashaData={DashaGridData} handleDashadbClick={handleDashaDoubleClick} divref={divRef} />
                       </div>
                     </div>
                   ) : (
                     TransitData &&
                     <>
-                      {kundliOptValue.Option == "T" ? <>
-                        <div className='flex justify-center items-center px-2'>
+                      {kundliOptValue.Option == "T" ? (
+                        <div className='flex justify-center items-start px-2 h-full'>
                           {TransitData?.TransitChart ?
-                            <img src={`data:image/svg+xml;base64,${TransitData?.TransitChart}`} alt="transitChart" className='flex-auto' />
+                            <img src={`data:image/svg+xml;base64,${TransitData?.TransitChart}`} alt="transitChart" className='w-full max-w-full h-auto' />
                             :
-                            // <Skeleton variant="rectangular" width={210} height={60} />
                             <EALoader />
-
                           }
                         </div>
-                      </> :
-                        kundliOptValue.Option == "P" ? "Varshphal Chart Coming Soon" :
-                          <>
-                            <div className='flex justify-center items-center px-2'>
+                      ) :
+                        kundliOptValue.Option == "P" ? (
+                          <div className='flex justify-center items-start px-2 h-full'>
+                            <span>Varshphal Chart Coming Soon</span>
+                          </div>
+                        ) :
+                          (
+                            <div className='flex justify-center items-start px-2 h-full'>
                               {DivisionalData?.DChart ?
-                                <img src={`data:image/svg+xml;base64,${DivisionalData?.DChart}`} alt="transitChart" className='flex-auto' />
+                                <img src={`data:image/svg+xml;base64,${DivisionalData?.DChart}`} alt="divisionalChart" className='w-full max-w-full h-auto' />
                                 :
-                                // <Skeleton variant="rectangular" width={210} height={60} />
                                 <EALoader />
                               }
                             </div>
-                          </>}
+                          )}
                     </>
                   )}
+                </div>
+              </div>
 
-                </td>
-              </tr>
-              <tr>
-                <td className='mx-2 px-2'>
-                  <div className='pt-2'>
-                    {rotationTital && <Chip label={rotationTital} className='text-sm' color='primary' variant='tonal' />}
-                  </div>
-                </td>
-              </tr>
-            </table>
+              {/* Rotation Title Chip */}
+              {rotationTital && (
+                <div className='mt-4 px-2'>
+                  <Chip label={rotationTital} className='text-sm' color='primary' variant='tonal' />
+                </div>
+              )}
+            </div>
           </div>
 
 
