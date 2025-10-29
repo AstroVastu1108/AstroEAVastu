@@ -52,7 +52,7 @@ const DevtaVastu = ({
   setPrintRef,
   tabTitle,
   setleftPrintRef,
-  width = 885,
+  width = 884,
   height = 748,
   gridSize = 26,
   drawingMode = 'drawing',
@@ -123,6 +123,7 @@ const DevtaVastu = ({
   imageDragDone,
   setImageDragDone
 }) => {
+  const dragImageWidth = width - 69;
   const [graphDraw, setGraphDraw] = useState(false)
   const [openNewPolygon, setOpenNewPolygon] = useState(false)
   const [draggingState, setDraggingState] = useState(null)
@@ -197,7 +198,13 @@ const DevtaVastu = ({
 
 
   useEffect(() => {
+    const handleKeyUp = (e) => {
+      if (!e.ctrlKey) setIsCtrlPressed(false);
+    };
     const handleKeyDown = (e) => {
+
+      if (e.ctrlKey) setIsCtrlPressed(true);
+
       // Ctrl + Z → Undo
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
         e.preventDefault();
@@ -218,7 +225,11 @@ const DevtaVastu = ({
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    }
   }, [handleUndo, handleRedo]);
 
 
@@ -534,6 +545,137 @@ const DevtaVastu = ({
     }
     selectedPointRef.current = null
   }
+
+  // const handleDoubleClick = (e, overlay = '', polygon = '', pointIndex = '', polygonIndex = '') => {
+  //   const isPointInPolygon = (x, y, polygonPoints) => {
+  //     let inside = false
+  //     for (let i = 0, j = polygonPoints.length - 1; i < polygonPoints.length; j = i++) {
+  //       const xi = polygonPoints[i].x,
+  //         yi = polygonPoints[i].y
+  //       const xj = polygonPoints[j].x,
+  //         yj = polygonPoints[j].y
+
+  //       const intersect = yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi
+  //       if (intersect) inside = !inside
+  //     }
+  //     return inside
+  //   }
+
+  //   if (overlay == 'overlay') {
+  //     setOverlayPolyClick(true)
+  //     if (polygon.points.length > 3) {
+  //       const updatedPolygons = polygons.map((poly, idx) => {
+  //         if (idx === polygonIndex) {
+  //           return {
+  //             ...poly,
+  //             points: poly.points.filter((_, idx) => idx !== pointIndex)
+  //           }
+  //         }
+  //         return poly
+  //       })
+  //       setPolygons(updatedPolygons)
+  //     }
+  //     return
+  //   }
+
+  //   if (overlay == 'polyOverlay') {
+  //     setOverlayPolyClick(true)
+  //     const svg = e.target.ownerSVGElement
+  //     const point = svg.createSVGPoint()
+  //     point.x = e.clientX
+  //     point.y = e.clientY
+  //     const svgCoords = point.matrixTransform(svg.getScreenCTM().inverse())
+
+  //     // Find the closest edge
+  //     const { x, y } = svgCoords
+  //     const points = polygon.points
+  //     let closestEdgeIndex = -1
+  //     let minDistance = Infinity
+
+  //     for (let i = 0; i < points.length; i++) {
+  //       const p1 = points[i]
+  //       const p2 = points[(i + 1) % points.length] // Wrap around to form a closed shape
+
+  //       // Calculate distance from the click to the edge
+  //       const distance = Math.abs(
+  //         ((p2.y - p1.y) * x - (p2.x - p1.x) * y + p2.x * p1.y - p2.y * p1.x) / Math.hypot(p2.y - p1.y, p2.x - p1.x)
+  //       )
+
+  //       if (distance < minDistance) {
+  //         minDistance = distance
+  //         closestEdgeIndex = i
+  //       }
+  //     }
+
+  //     // Calculate the midpoint of the closest edge
+  //     if (closestEdgeIndex !== -1) {
+  //       const p1 = points[closestEdgeIndex]
+  //       const p2 = points[(closestEdgeIndex + 1) % points.length]
+  //       const newPoint = {
+  //         x: (p1.x + p2.x) / 2,
+  //         y: (p1.y + p2.y) / 2
+  //       }
+
+  //       // Insert the new point into the points array
+  //       const updatedPolygons = polygons.map((poly, idx) => {
+  //         if (idx === polygonIndex) {
+  //           const updatedPoints = [...poly.points]
+  //           updatedPoints.splice(closestEdgeIndex + 1, 0, newPoint) // Insert after the closest edge
+  //           return { ...poly, points: updatedPoints }
+  //         }
+  //         return poly
+  //       })
+
+  //       setPolygons(updatedPolygons) // Update state
+  //     }
+  //     return null
+  //   }
+
+  //   // Check if mouse is inside any other polygon
+  //   const svg = e.target.ownerSVGElement
+  //   if (!svg) return
+  //   const point = svg.createSVGPoint()
+  //   point.x = e.clientX
+  //   point.y = e.clientY
+  //   const svgCoords = point.matrixTransform(svg.getScreenCTM().inverse())
+
+  //   const { x, y } = svgCoords
+  //   const isInsideOtherPolygon = polygons.some(
+  //     (poly, idx) => idx !== polygonIndex && isPointInPolygon(x, y, poly.points)
+  //   )
+
+  //   if (isInsideOtherPolygon) {
+  //     return // Skip the disableDraw logic
+  //   } else {
+  //     setOverlayPolyClick(false)
+  //   }
+
+  //   if (!disableDraw && !OverlayPolyClick) {
+  //     if (drawingMode !== 'drawing') return
+
+  //     const position = getMousePosition(e)
+  //     const clickedPointIndex = findNearestPoint(position.x, position.y)
+  //     if (clickedPointIndex !== -1) {
+  //       if (points.length > 3) {
+  //         const newPoints = points.filter((_, i) => i !== clickedPointIndex)
+  //         setPoints(newPoints)
+  //         if (!lockCentroid) {
+  //           setCentroid(calculateCentroid(newPoints))
+  //         }
+  //       }
+  //     } else {
+  //       const closestLineIndex = findClosestLine(position.x, position.y)
+  //       if (closestLineIndex !== -1) {
+  //         const newPoints = [...points]
+  //         newPoints.splice(closestLineIndex + 1, 0, position)
+  //         setPoints(newPoints)
+  //         if (!lockCentroid) {
+  //           setCentroid(calculateCentroid(newPoints))
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 
   const handleDoubleClick = (e, overlay = '', polygon = '', pointIndex = '', polygonIndex = '') => {
     const isPointInPolygon = (x, y, polygonPoints) => {
@@ -1422,18 +1564,16 @@ const DevtaVastu = ({
   const [isDragging, setIsDragging] = useState(false)
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
   const [initialPosition, setInitialPosition] = useState({ x: 0, y: 0 })
+  const [isCtrlPressed, setIsCtrlPressed] = useState(false);
 
   const handleMouseDown1 = e => {
-    e.preventDefault()
-    e.stopPropagation()
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isCtrlPressed) return; // Only drag if Ctrl is pressed
     setIsImageDragging(true);
     setIsDragging(true)
     setDragStart({ x: e.clientX, y: e.clientY })
     setInitialPosition(translate)
-
-    // Attach global listeners
-    window.addEventListener('mousemove', handleMouseMove1)
-    window.addEventListener('mouseup', handleMouseUp1)
   }
 
   const handleMouseMove1 = e => {
@@ -1453,10 +1593,8 @@ const DevtaVastu = ({
   const handleMouseUp1 = e => {
     setIsDragging(false)
     setIsImageDragging(false);
-    // Remove global listeners
-    window.removeEventListener('mousemove', handleMouseMove1)
-    window.removeEventListener('mouseup', handleMouseUp1)
   }
+
 
   const getPointsBetween = (point1Key, point2Key, returnParameterName, color) => {
     try {
@@ -1851,7 +1989,7 @@ const DevtaVastu = ({
                         {cropImage ? (
                           <CropImageWithSVG
                             height={height}
-                            width={width}
+                            width={dragImageWidth}
                             previewUrl={previewUrl?.isPdf ? previewUrl?.currentPageBase64 : previewUrl?.Base64File}
                             points={points}
                             zoom={zoom}
@@ -1863,19 +2001,19 @@ const DevtaVastu = ({
                             className='file-layer'
                             style={{ pointerEvents: isImageDragging ? 'all' : 'auto', zIndex: isImageDragging ? 10 : 1 }}
 
-                            transform={`translate(${translate.x + (width - width * zoom) / 2}, ${translate.y + (height - height * zoom) / 2}) rotate(${rotation}, ${width / 2}, ${height / 2}) scale(${zoom})`}
+                            transform={`translate(${translate.x + ((dragImageWidth) - (dragImageWidth) * zoom) / 2}, ${translate.y + (height - height * zoom) / 2}) rotate(${rotation}, ${(dragImageWidth) / 2}, ${height / 2}) scale(${zoom})`}
                           >
                             {previewUrl ? (
                               <>
                                 <image
                                   href={previewUrl?.isPdf ? previewUrl?.currentPageBase64 : previewUrl?.Base64File}
                                   style={{
-                                    maxWidth: '100%', maxHeight: '500px', imageRendering: 'auto',
+                                    maxWidth: '100%', maxHeight: '600px', imageRendering: 'auto',
                                     cursor: isImageDragging ? 'grabbing' : 'grab',
                                     opacity: isImageDragging ? 1 : 1,
                                     zIndex: isImageDragging ? 20 : 1
                                   }}
-                                  width={width}
+                                  width={dragImageWidth}
                                   height={height}
                                   onMouseDown={handleMouseDown1}
                                   onMouseMove={handleMouseMove1}
@@ -1933,7 +2071,8 @@ const DevtaVastu = ({
                               {hideCircle &&
                                 Array.from({ length: totalLines }).map((_, index) => {
                                   const rotationIndex = index % totalLines
-                                  const angle = rotationIndex * angleIncrement + (270 - inputDegree)
+                                  const angle = rotationIndex * angleIncrement + (hide16Circle ? 259 : hide8Circle ? 249 : hide4Circle ? 225 : 259 - inputDegree) //270 
+                                  //  4 : 225, 8: 249 , 16: 259
                                   const radian = (angle * Math.PI) / 180
 
                                   const squareSize = 783
@@ -1947,6 +2086,7 @@ const DevtaVastu = ({
                                   const topBoundary = centroid.y - halfSize + margin
                                   const bottomBoundary = centroid.y + halfSize - margin
 
+                                  // Determine line endpoint based on slope
                                   if (Math.abs(slope) <= 1) {
                                     if (Math.cos(radian) > 0) {
                                       endX = rightBoundary
@@ -1965,7 +2105,7 @@ const DevtaVastu = ({
                                     }
                                   }
 
-                                  const style = lineSets[index % lineSets.length]
+                                  const style = lineSets[0]
                                   return (
                                     <>
                                       <g key={index}>
@@ -2135,7 +2275,8 @@ const DevtaVastu = ({
                                         ` ${intermediatePoints1[0].x},${intermediatePoints1[0].y}`
                                       } // Connect back to the start point
                                       fill='none'
-                                      stroke='purple'
+                                      stroke='red'
+                                      // stroke='purple'
                                       strokeWidth='2'
                                     />
                                   )}
@@ -2147,7 +2288,8 @@ const DevtaVastu = ({
                                         ` ${intermediatePoints2[0].x},${intermediatePoints2[0].y}`
                                       }
                                       fill='none'
-                                      stroke='orange' // Different color for distinction
+                                      stroke='red' // Different color for distinction
+                                      // stroke='orange' // Different color for distinction
                                       strokeWidth='2'
                                     />
                                   )}
@@ -2270,7 +2412,8 @@ const DevtaVastu = ({
                         totalLines={32}
                         width={width}
                         height={height}
-                        degree={inputDegree}
+                        degree={0}
+                        // degree={inputDegree}
                         cx={centroid?.x}
                         cy={centroid?.y}
                       />
@@ -2283,7 +2426,7 @@ const DevtaVastu = ({
                         !hide8Circle &&
                         Array.from({ length: totalLines }).map((_, index) => {
                           const rotationIndex = index % totalLines
-                          const angle = rotationIndex * angleIncrement + (270 - inputDegree)
+                          const angle = rotationIndex * angleIncrement + (259 - inputDegree)
                           const radian = (angle * Math.PI) / 180
 
                           const squareSize = 783

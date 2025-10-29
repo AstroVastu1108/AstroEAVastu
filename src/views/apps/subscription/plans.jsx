@@ -44,7 +44,7 @@ const pricingPlans = [
   {
     title: 'Basic',
     img: '/images/front-pages/landing-page/pricing-team.png',
-    monthlyPay: 4000,
+    monthlyPay: 3000,
     annualPay: 45000,
     perYearPay: 3000,
     features: [
@@ -116,7 +116,7 @@ const PricingPlan = () => {
       setIsDisable(false)
       // return toastDisplayer("error",response.errorMessage)
     }
-    const data = await response.responseData.result;
+    const data = await response.responseData.Result;
 
     const options = {
       key: "rzp_test_0yCaQoC8hI6DCW",
