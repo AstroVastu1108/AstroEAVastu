@@ -116,7 +116,7 @@ const PricingPlan = () => {
       setIsDisable(false)
       // return toastDisplayer("error",response.errorMessage)
     }
-    const data = await response.responseData.result;
+    const data = await response.responseData.Result;
 
     const options = {
       key: "rzp_test_0yCaQoC8hI6DCW",

@@ -99,7 +99,7 @@ function DashaDetails({ title, DashaData, handleDashadbClick, divref }) {
 
   return (
     <>
-      <Box className="rounded-md h-full flex flex-col">
+      <Box className="rounded-md border-x border-t h-full flex flex-col">
           <DataGrid
             getRowHeight={rowHeight}
             rows={rowsDasha}

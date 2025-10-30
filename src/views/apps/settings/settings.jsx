@@ -153,9 +153,9 @@ function Settings() {
                 <div className="w-1/2">
                   <TextField fullWidth label="First Name" title="First Name" />
                 </div>
-                <div className="w-1/2">
+                {/* <div className="w-1/2">
                   <TextField fullWidth label="Middle Name" title="Middle Name" />
-                </div>
+                </div> */}
 
               </div>
               <div className=" flex gap-4">

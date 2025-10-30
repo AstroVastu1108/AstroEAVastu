@@ -39,7 +39,7 @@ function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroD
                 </div>
 
                 {/* Birth Details */}
-                <div className={`birth-info-table`}>
+                <div className={`birth-info-table border-x`}>
                     <div className='flex flex-row block-detail'>
 
                         <InfoTable InfoTableTextArr={[
@@ -96,7 +96,7 @@ function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroD
                 <div className='main-MahaDasha-Div pt-3'>
                     {/* <div className='chart-title font-ea-sb print-title'>❋ Dasha Details ❋</div> */}
                     <div className='planet-table flex flex-row px-5'>
-                        <div>Vimshottari Dasha: </div>
+                        <div>Current Dasha: </div>
                         <div>{currentDasha?.DashaPlanet}</div>
                         <div>{currentDasha?.StartDt}</div>
                         <div>{currentDasha?.EndDt}</div>
