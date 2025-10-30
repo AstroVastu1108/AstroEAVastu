@@ -10,6 +10,7 @@ import { FONT_EA_NORMAL_BASE64, FONT_EA_SEMIBOLD_BASE64 } from './fontBase64';
  * @returns {string} HTML template for PDF footer
  */
 export const getPdfFooterTemplate = ({
+  ClientName = '',
   kundaliId = '',
   reportType = 'Nakshatra AstroVastu Report',
   website = 'AstroVastu.net',
@@ -57,7 +58,10 @@ export const getPdfFooterTemplate = ({
         <span style="font-family: 'ea-n', sans-serif;"> | Powered by </span>
         <a href="${websiteUrl}" style="font-family: 'ea-sb', sans-serif; font-weight: 500; color: #666; text-decoration: none;">${poweredBy}</a>
       </div>
-      ${kundaliId ? `<span style="font-size: 8px; font-family: 'ea-n', sans-serif;"> # ${kundaliId} </span>` : ''}
+      <div>
+        ${ClientName ? `<span style="font-size: 9px; font-family: 'ea-n', sans-serif; margin-right: 5px;"> ${ClientName} </span>` : ''}
+        ${kundaliId ? `<span style="font-size: 9px; font-family: 'ea-n', sans-serif;"> # ${kundaliId} </span>` : ''}
+      </div>
     </div>
   `;
 };

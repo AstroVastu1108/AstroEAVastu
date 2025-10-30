@@ -86,7 +86,7 @@ export async function POST(request) {
 
   try {
     const body = await request.json();
-    const { html, filename = "report.pdf", KundaliID } = body || {};
+    const { html, filename = "report.pdf", KundaliID, ClientName } = body || {};
 
     if (!html || typeof html !== "string") {
       return NextResponse.json({ error: "Missing HTML content" }, { status: 400 });
@@ -133,7 +133,7 @@ export async function POST(request) {
 
     const pdfBuffer = await page.pdf({
       ...getDefaultPdfOptions(),
-      footerTemplate: getPdfFooterTemplate({ kundaliId: KundaliID }),
+      footerTemplate: getPdfFooterTemplate({ kundaliId: KundaliID, ClientName }),
       headerTemplate: getPdfHeaderTemplate()
     });
 

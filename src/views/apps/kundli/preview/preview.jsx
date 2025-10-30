@@ -30,6 +30,7 @@ const Preview = ({ kundliData, setKundliData, kundliConstData, SetKundliConstDat
   const [TransiteTime, setTransiteTime] = useState(null);
   const [loading, setLoading] = useState(false);
   const [TransitData, setTransitData] = useState(null);
+  const [VarshPhalData, setVarshPhalData] = useState(null);
   const [DivisionalData, setDivisionalData] = useState("D2");
   const [isTransit, setIsTransit] = useState(null);
   const [datePicker, setDatePicker] = useState(dayjs());
@@ -133,44 +134,29 @@ const Preview = ({ kundliData, setKundliData, kundliConstData, SetKundliConstDat
     }
   }
 
-  const getVarshphalData = async (fdate, ftime, option) => {
-    // var BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
-    // var date = "";
-    // var time = "";
-    // if (fdate && ftime) {
-    //   date = fdate;
-    //   time = ftime;
-    // } else {
-    //   if (TransiteTime != null) {
-    //     // Parse the custom date format
-    //     const datePicker = dayjs(TransiteTime, 'DD-MM-YYYY HH:mm:ss');
+  const getVarshphalData = async (year) => {
+    var BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
 
-    //     if (datePicker.isValid()) {
-    //       date = datePicker.format('DD-MM-YYYY');
-    //       time = datePicker.format('HHmmss');
-    //     }
-    //   }
-    // }
+    const payload = {
+      KundaliID: BirthDetails.KundaliID,
+      BirthDate: BirthDetails.BirthDate,
+      BirthTime: BirthDetails.BirthTime,
+      CityID: BirthDetails.CityID,
+    }
 
-    const response = await GetVastuphalData(2025);
-    console.warn("response: ", response)
+    // console.log("payload:", payload)
+
+    const response = await GetVastuphalData(year, payload);
+    
     if (response.hasError) {
-      // setLoading(false);
-      // return toastDisplayer("error", response.error);
-    } else {
-      // const data = response?.responseData?.Result?.Transit;
-      // setTransiteTime(data?.TransitDateTime)
-      // if (TimeToolOpt == "T" || option == "T") {
-      //   setDatePicker(dayjs(data?.TransitDateTime, 'DD-MM-YYYY HH:mm:ss'))
-      // } else {
-      //   const { Date: birthDate, Time: birthTime } = kundliData?.AstroVastuReport?.BirthDetails;
-      //   const formattedDate = dayjs(`${birthDate} ${birthTime}`, 'DD-MM-YYYY HHmmss');
-      // }
-      // setTransitData(data);
+      setLoading(false);
+      return toastDisplayer("error", response.error);
+    }else{
+      setVarshPhalData(response?.responseData?.Result);
     }
   }
 
-  const resetTransit = async()=>{
+  const resetTransit = async () => {
     var BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
     const payload = {
       "KundaliID": BirthDetails.KundaliID,
@@ -287,7 +273,7 @@ const Preview = ({ kundliData, setKundliData, kundliConstData, SetKundliConstDat
       if (TransiteTime) {
         const formatedString = dayjs(TransiteTime, 'DD-MM-YYYY HHmmss');
         if (!formatedString.isSame(datePicker1, 'second')) {
-          if(isTransit !="V")
+          if (isTransit != "V")
             getTransitData(formattedDate, formattedTime);
         }
 
@@ -310,10 +296,10 @@ const Preview = ({ kundliData, setKundliData, kundliConstData, SetKundliConstDat
     }
   }
 
-  const handleRefresh=()=>{
-    if(TimeToolOpt=="T" && isTransit=="T"){
+  const handleRefresh = () => {
+    if (TimeToolOpt == "T" && isTransit == "T") {
       resetTransit();
-    }else{
+    } else {
       setKundliData(kundliConstData);
     }
   }
@@ -330,7 +316,7 @@ const Preview = ({ kundliData, setKundliData, kundliConstData, SetKundliConstDat
               <div className='previewPDF flex justify-center'>
                 {kundliData &&
                   <>
-                    <PreviewCard kundliData={kundliData} handleDownload={handleKundliApi} isPrintDiv={false} loading={existdownloadLoading} handleTimeTool={handleTimeTool} setTransitData={setTransitData} TransitData={TransitData} getTransitData={getTransitData} getDivisionalChartData={getDivisionalChartData} DivisionalData={DivisionalData} setDivisionalData={setDivisionalData} birthDate={datePicker} setKundliData={setKundliData} SetKundliConstData={SetKundliConstData} getVarshphalData={getVarshphalData} Loading={loading} setLoading={setLoading} />
+                    <PreviewCard kundliData={kundliData} handleDownload={handleKundliApi} isPrintDiv={false} loading={existdownloadLoading} handleTimeTool={handleTimeTool} setTransitData={setTransitData} VarshPhalData={VarshPhalData} setVarshPhalData={setVarshPhalData} TransitData={TransitData} getTransitData={getTransitData} getDivisionalChartData={getDivisionalChartData} DivisionalData={DivisionalData} setDivisionalData={setDivisionalData} birthDate={datePicker} setKundliData={setKundliData} SetKundliConstData={SetKundliConstData} getVarshphalData={getVarshphalData} Loading={loading} setLoading={setLoading} />
                   </>
                 }
                 {timeToolPopUp &&

@@ -233,7 +233,7 @@ export default function MovableTabs({
       )}
 
       {/* Scrollable Tabs */}
-      <div ref={scrollRef} className='flex overflow-x-hidden whitespace-nowrap mx-8 w-full'>
+      <div ref={scrollRef} className='flex overflow-x-hidden whitespace-nowrap w-full'>
         <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
           <SortableContext
             items={savedGroups.map((_, index) => index)}

@@ -13,7 +13,7 @@ const InfoTable = ({ InfoTableTextArr, isPrintDiv}) => {
         <tbody>
           {InfoTableTextArr.map((details, index) => (
             <tr key={index}>
-              <td className="text-label text-nowrap font-ea-sb">{details.label}</td>
+              <td className="text-label text-[9.5pt] text-nowrap font-ea-sb">{details.label}</td>
               <td className="text-Value text-nowrap">{details.value}</td>
             </tr>
           ))}

@@ -350,7 +350,7 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
       {open && (
         <EventModel open={open} handleAddClose={handleAddClose} headerTitle={selectedTitle} displayData={selectedEvent} />
       )}
-  <Box width={"100%"} className={`border-radius ${hoveredCol ? `hover-col-${hoveredCol}` : ''}`} onMouseMove={handleGridHover} onMouseLeave={() => setHoveredCol(null)}>
+      <Box width={"100%"} className={`rounded-md border-radius ${hoveredCol ? `hover-col-${hoveredCol}` : ''}`} onMouseMove={handleGridHover} onMouseLeave={() => setHoveredCol(null)}>
 
         <DataGrid
           showCellVerticalBorder
@@ -378,7 +378,7 @@ function NakshtraSummary({ SummaryData, Aspect, symbols, SelectedEventVal }) {
         <style jsx global>{`
           ${hoveredCol ? `
           .hover-col-${hoveredCol} .MuiDataGrid-cell[data-field="${hoveredCol}"] {
-            background-color: var(--secondary-soft-color) !important;
+            background-color: var(--yellow-soft-color) !important;
           }
           ` : ''}
         `}</style>

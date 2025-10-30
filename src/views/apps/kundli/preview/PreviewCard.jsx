@@ -12,7 +12,7 @@ import NakshtraSummary from '@/components/preview/NakshtraSummary/NakshtraSummar
 import RahuKetu from '@/components/preview/RahuKetu/RahuKetu';
 import DashaDetails from '@/components/preview/DashaDetails/DashaDetails';
 import LoardPlanet from '@/components/preview/LoardPlanet/LoardPlanet'
-import { Button, Chip, Collapse, Divider, IconButton, Menu, MenuItem } from '@mui/material'
+import { Button, Chip, Collapse, Divider, IconButton, Menu, MenuItem, Select, FormControl } from '@mui/material'
 import { useEffect, useRef, useState } from 'react'
 import Event from '@/components/preview/Event/Event'
 import PrakritiPopUp from '@/components/preview/InfoTable/PrakritiPopUp'
@@ -30,6 +30,12 @@ import { toast } from 'react-toastify'
 import NSubLordPopUp from '@/components/preview/Nakshatra-SubLord/NSubLord'
 import PDFView from './pdfView'
 import DownloadPopUp from '@/components/devta-vastu/DownloadPDFPopup/DownloadPopUp';
+import dayjs from 'dayjs'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+import CustomChip from './CustomChip'
+
+// Extend dayjs with customParseFormat plugin
+dayjs.extend(customParseFormat)
 
 
 // At the top of your file
@@ -37,7 +43,8 @@ import DownloadPopUp from '@/components/devta-vastu/DownloadPDFPopup/DownloadPop
 // import fontSemiBoldUrl from './../../../../assets/fonts/s-sb.woff2';
 
 
-const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, TransitData, setTransitData, getTransitData, getDivisionalChartData, DivisionalData, setDivisionalData, birthDate, setKundliData, SetKundliConstData, getVarshphalData, Loading, setLoading }) => {
+const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, TransitData, setTransitData, setVarshPhalData, VarshPhalData, getTransitData, getDivisionalChartData, DivisionalData, setDivisionalData, birthDate, setKundliData, SetKundliConstData, getVarshphalData, Loading, setLoading }) => {
+
   // var
   const BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
   const AstroDetails = kundliData?.AstroVastuReport?.AstroDetails;
@@ -68,14 +75,29 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   const [rotationType, setRotationType] = useState(null);
   const [allKundliOpt, setAllKundliOpt] = useState(false);
   // const [Loading, setLoading] = useState(false);
-  const [DashaValue, setDashaValue] = useState("Vimshottari Dasha");
+  const [DashaValue, setDashaValue] = useState("Pratyantar");
   const [DashaTitle, setDashaTitle] = useState(`${DashaDetailData?.CurrentMD}`);
   const [DashaGridData, setDashaGridData] = useState(kundliData?.AstroVastuReport?.DashaDetails?.PratyantarDasha);
   const [DashaDate, setDashaDate] = useState(DashaDetailData?.MahaDasha.filter((e) => e.IsCurrent == true)[0]?.StartDt);
   const [rotationTital, setRotationTitle] = useState("");
   const [SaveKundali, setSaveKundali] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(true)
   const [downloadPopup, setDownloadPopup] = useState(false);
+  // const [currentVarshphalYear, setCurrentVarshphalYear] = useState(new Date().getFullYear());
+
+  const [currentDasha, setCurrentDasha] = useState(DashaGridData?.filter(dasha => dasha.IsCurrent)[0] || null);
+
+  useEffect(() => {
+    if (kundliData?.AstroVastuReport?.DashaDetails?.PratyantarDasha?.length > 0) {
+      setDashaTitle(`${DashaDetailData?.CurrentMD}`);
+      setDashaValue("Pratyantar");
+      setCurrentDasha(kundliData?.AstroVastuReport?.DashaDetails?.PratyantarDasha?.filter(dasha => dasha.IsCurrent)[0] || null);
+      setDashaGridData(kundliData?.AstroVastuReport?.DashaDetails?.PratyantarDasha);
+    } else {
+      setDashaValue("Maha")
+      setDashaGridData(kundliData?.AstroVastuReport?.DashaDetails?.MahaDasha);
+    }
+  }, [kundliData])
 
 
   const open = Boolean(anchorEl);
@@ -120,9 +142,9 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
 
   // add visibility state (initialize all true)
 
-  const items = ["Nakshatra Kundali: Planet & House Script", "Astro Vastu Insights", "Vimshottari Dasha Report", "Transit (Gochar) ","Varshphal (Yearly Planetary Influences)", "Divisional Charts (Varga Kundali)", "NavTara Chakra & Jaimini Chara Karakas", "Planet Script: Nakshatra & Sub Lord", "Prakriti: Triguna", "Prakriti: Pancha Tattva", "Prakriti: Planetary Influence"
-// , "Notes"
-];
+  const items = ["Nakshatra Kundali: Planet & House Script", "Astro Vastu Insights", "Vimshottari Dasha Report", "Transit (Gochar) ", "Varshphal (Yearly Planetary Influences)", "Divisional Charts (Varga Kundali)", "NavTara Chakra & Jaimini Chara Karakas", "Planet Script: Nakshatra & Sub Lord", "Prakriti: Triguna", "Prakriti: Pancha Tattva", "Prakriti: Planetary Influence"
+    // , "Notes"
+  ];
 
   const [visibleSections, setVisibleSections] = useState(() =>
     items.reduce((acc, label) => ({ ...acc, [label]: true }), {})
@@ -246,14 +268,65 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       // Clone the content
       const clonedContent = pageRef.current.cloneNode(true);
 
-      // Wrap each house-Div in a page-break-safe container
+      // Wrap each house-Div in a page-break-safe container and group by page
       const houseDivs = clonedContent.querySelectorAll('.house-Div');
-      houseDivs.forEach((houseDiv) => {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'house-wrapper-pdf';
-        houseDiv.parentNode.insertBefore(wrapper, houseDiv);
-        wrapper.appendChild(houseDiv);
-      });
+
+      if (houseDivs.length > 0) {
+        // Group houses into page wrappers based on natural breaks
+        // A4 page height in px at zoom 1.75 ≈ 1122px content area (297mm - 10mm margins)
+        // At 900px width with zoom 1.75, effective height ≈ 641px per page
+        const estimatedPageHeight = 1000; // Approximate height before page break
+
+        let currentPageWrapper = document.createElement('div');
+        currentPageWrapper.className = 'pdf-page-wrapper';
+        let currentPageHeight = 0;
+        let isFirstHouse = true;
+
+        // Find parent container for all houses
+        const parentContainer = houseDivs[0].parentNode;
+
+        // Insert first page wrapper
+        parentContainer.insertBefore(currentPageWrapper, houseDivs[0]);
+
+        houseDivs.forEach((houseDiv, index) => {
+          // Wrap each house in house-wrapper-pdf
+          const wrapper = document.createElement('div');
+          wrapper.className = 'house-wrapper-pdf';
+
+          // Estimate house height (rough approximation)
+          // Check if house has specific classes that indicate it should break
+          const shouldForceBreak = houseDiv.classList.contains('force-page-break') ||
+            wrapper.classList.contains('page-break-before');
+
+          // Every 3-4 houses, or if forced, create a new page wrapper
+          // This is a heuristic - adjust based on your content
+          const housesPerPage = 3; // Adjust this based on average house size
+          const shouldBreak = shouldForceBreak || (index > 0 && index % housesPerPage === 0);
+
+          if (shouldBreak && !isFirstHouse) {
+            // Create new page wrapper
+            currentPageWrapper = document.createElement('div');
+            currentPageWrapper.className = 'pdf-page-wrapper';
+            parentContainer.insertBefore(currentPageWrapper, houseDiv);
+            currentPageHeight = 0;
+          }
+
+          // Move house into wrapper and wrapper into current page
+          houseDiv.parentNode.insertBefore(wrapper, houseDiv);
+          wrapper.appendChild(houseDiv);
+          currentPageWrapper.appendChild(wrapper);
+
+          isFirstHouse = false;
+        });
+      } else {
+        // Fallback: just wrap each house individually if no houses found
+        houseDivs.forEach((houseDiv) => {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'house-wrapper-pdf';
+          houseDiv.parentNode.insertBefore(wrapper, houseDiv);
+          wrapper.appendChild(houseDiv);
+        });
+      }
 
       // Function to convert font to base64
       const getFontBase64 = async (fontPath) => {
@@ -378,6 +451,20 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               justify-content: center;
             }
 
+            /* PDF Page Wrapper - groups houses per page */
+            .pdf-page-wrapper {
+              display: block !important;
+              position: relative !important;
+              page-break-after: always !important;
+              page-break-inside: auto !important;
+              margin-bottom: 0 !important;
+            }
+
+            /* Remove page break after last wrapper */
+            .pdf-page-wrapper:last-of-type {
+              page-break-after: auto !important;
+            }
+
             /* CRITICAL: House wrapper for page breaks */
             .house-wrapper-pdf {
               page-break-inside: avoid !important;
@@ -393,7 +480,34 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               display: block !important;
               width: 100% !important;
               position: relative !important;
-              margin-bottom: 15px !important;
+            }
+
+            /* First house in page wrapper - rounded top */
+            .pdf-page-wrapper .house-wrapper-pdf:first-child .house-Div {
+              border-top-left-radius: 8px !important;
+              border-top-right-radius: 8px !important;
+              overflow: hidden !important;
+            }
+
+            .pdf-page-wrapper .house-wrapper-pdf:first-child .house-header {
+              border-top-left-radius: 8px !important;
+              border-top-right-radius: 8px !important;
+            }
+
+            /* Last house in page wrapper - rounded bottom */
+            .pdf-page-wrapper .house-wrapper-pdf:last-child .house-Div {
+              border-bottom-left-radius: 8px !important;
+              border-bottom-right-radius: 8px !important;
+              overflow: hidden !important;
+            }
+
+            .pdf-page-wrapper .house-wrapper-pdf:last-child .house-body {
+              border-bottom-left-radius: 8px !important;
+              border-bottom-right-radius: 8px !important;
+            }
+              border-bottom-left-radius: 8px !important;
+              border-bottom-right-radius: 8px !important;
+              overflow: hidden !important;
             }
 
             /* Prevent breaks in header */
@@ -528,6 +642,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
         },
         body: JSON.stringify({
           KundaliID: BirthDetails.KundaliID,
+          ClientName: `${BirthDetails.FirstName} ${BirthDetails.LastName}`,
           html: fullHtml,
           filename: filename,
           options: {
@@ -636,8 +751,11 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
     if (kundliOptValue.Option == "T")
       getTransitData("", "");
 
-    else if (kundliOptValue.Option == "P")
-      getVarshphalData(2025);
+    else if (kundliOptValue.Option == "P") {
+      // Use current year if VarshPhalData exists, otherwise use current calendar year
+      const yearToFetch = VarshPhalData?.Year || new Date().getFullYear();
+      getVarshphalData(yearToFetch);
+    }
 
     else
       getDivisionalChartData(kundliOptValue.Option)
@@ -645,7 +763,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
 
   const handleDashaChange = async () => {
     const titleArr = DashaTitle.split("-");
-    if (DashaValue == "PranDasha") {
+    if (DashaValue == "Pran") {
       const payload = {
         "BirthDate": BirthDetails?.BirthDate,
         "BirthTime": BirthDetails?.BirthTime,
@@ -655,11 +773,11 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       const response = await DashaClickEvent(payload);
       if (!response.hasError) {
         setDashaTitle(`${titleArr[0]}-${titleArr[1]}`);
-        setDashaValue("SookshmaDasha");
+        setDashaValue("Sookshma");
         setDashaGridData(response?.responseData)
       }
     }
-    else if (DashaValue == "SookshmaDasha") {
+    else if (DashaValue == "Sookshma") {
       const payload = {
         "BirthDate": BirthDetails?.BirthDate,
         "BirthTime": BirthDetails?.BirthTime,
@@ -669,11 +787,11 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       const response = await DashaClickEvent(payload);
       if (!response.hasError) {
         setDashaTitle(`${titleArr[0]} > ${titleArr[1]} > PratyantarDasha`);
-        setDashaValue("Vimshottari Dasha");
+        setDashaValue("Pratyantar");
         setDashaGridData(response?.responseData)
       }
     }
-    else if (DashaValue == "Vimshottari Dasha") {
+    else if (DashaValue == "Pratyantar") {
       const payload = {
         "BirthDate": BirthDetails?.BirthDate,
         "BirthTime": BirthDetails?.BirthTime,
@@ -683,19 +801,24 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       const response = await DashaClickEvent(payload);
       if (!response.hasError) {
         setDashaTitle(`${titleArr[0]}`);
-        setDashaValue("AntarDasha");
+        setDashaValue("Antar");
         setDashaGridData(response?.responseData)
       }
     }
-    else if (DashaValue == "AntarDasha") {
+    else if (DashaValue == "Antar") {
       setDashaTitle(`MahaDashas`);
-      setDashaValue("MahaDasha");
+      setDashaValue("Maha");
       setDashaGridData(DashaDetailData?.MahaDasha)
     }
   }
 
   const handleDashaDoubleClick = async (row) => {
-    if (DashaValue == "MahaDasha") {
+
+    if (DashaDetailData?.PratyantarDasha?.length == 0) {
+      return;
+    }
+
+    if (DashaValue == "Maha") {
       setDashaDate(row?.StartDt)
       const payload = {
         "BirthDate": BirthDetails?.BirthDate,
@@ -707,11 +830,11 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       if (!response.hasError) {
         const data = response?.responseData;
         setDashaTitle(`${row?.Planet} > AntarDasha`);
-        setDashaValue("AntarDasha");
+        setDashaValue("Antar");
         setDashaGridData(response?.responseData)
       }
     }
-    else if (DashaValue == "AntarDasha") {
+    else if (DashaValue == "Antar") {
       const payload = {
         "BirthDate": BirthDetails?.BirthDate,
         "BirthTime": BirthDetails?.BirthTime,
@@ -724,11 +847,11 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
         const ADDasha = data.filter((e) => e.IsCurrent == true)[0]
         // setDashaTitle(`${titleArr[0]} > ${row?.Planet} > PratyantarDasha`);
         setDashaTitle(`${row?.Planet}`);
-        setDashaValue("Vimshottari Dasha");
+        setDashaValue("Pratyantar");
         setDashaGridData(response?.responseData)
       }
     }
-    else if (DashaValue == "Vimshottari Dasha") {
+    else if (DashaValue == "Pratyantar") {
       const payload = {
         "BirthDate": BirthDetails?.BirthDate,
         "BirthTime": BirthDetails?.BirthTime,
@@ -740,10 +863,10 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
         const data = response?.responseData;
         const ADDasha = data.filter((e) => e.IsCurrent == true)[0]
         setDashaTitle(`${row?.Planet}`);
-        setDashaValue("SookshmaDasha");
+        setDashaValue("Sookshma");
         setDashaGridData(response?.responseData)
       }
-    } else if (DashaValue == "SookshmaDasha") {
+    } else if (DashaValue == "Sookshma") {
       const payload = {
         "BirthDate": BirthDetails?.BirthDate,
         "BirthTime": BirthDetails?.BirthTime,
@@ -755,7 +878,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
         const data = response?.responseData;
         const ADDasha = data.filter((e) => e.IsCurrent == true)[0]
         setDashaTitle(`${row?.Planet}`);
-        setDashaValue("PranDasha");
+        setDashaValue("Pran");
         setDashaGridData(response?.responseData)
       }
     }
@@ -847,9 +970,10 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       if (resp?.responseData?.Result) {
         setKundliData(resp?.responseData?.Result);
         if (rotationType == "B") {
-          setRotationTitle(`The chart is rotated to Birth Chart > ${payload.formattedStr}`)
+          //  The chart is rotated based on: 
+          setRotationTitle(`Birth Chart > ${payload.formattedStr}`)
         } else if (rotationType == "H") {
-          setRotationTitle(`The chart is rotated to House Chart > ${payload.formattedStr}`)
+          setRotationTitle(`House Chart > ${payload.formattedStr}`)
         }
       }
     } catch (error) {
@@ -872,6 +996,75 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
 
   const handleClosePopup = () => {
     setDownloadPopup(false);
+  }
+
+  const handleVarshPhalChange = (direction) => {
+    // Get birth year from BirthDetails
+    const birthDateParsed = dayjs(BirthDetails?.BirthDate, "DD-MM-YYYY");
+    
+    if (!birthDateParsed.isValid()) {
+      toast.error("Invalid birth date format");
+      return;
+    }
+    
+    const birthYear = birthDateParsed.year();
+    const currentYear = new Date().getFullYear();
+    const minYear = birthYear;
+    const maxYear = currentYear + 120;
+
+    let newYear = VarshPhalData ? VarshPhalData.Year : new Date().getFullYear();;
+
+    if (direction === 'prev') {
+      // Go to previous year (back button)
+      newYear = newYear - 1;
+    } else if (direction === 'next') {
+      // Go to next year (forward button)
+      newYear = newYear + 1;
+    }
+
+    // Validate year boundaries
+    if (newYear < minYear) {
+      toast.warning(`Cannot go before birth year ${minYear}`);
+      return;
+    }
+
+    if (newYear > maxYear) {
+      toast.warning(`Cannot go beyond year ${maxYear}`);
+      return;
+    }
+
+    // Update the year and fetch new data
+    // setCurrentVarshphalYear(newYear);
+    getVarshphalData(newYear);
+  }
+
+  const handleYearDropdownChange = (event) => {
+    const selectedYear = parseInt(event.target.value);
+    getVarshphalData(selectedYear);
+  }
+
+  const getYearOptions = () => {
+    if (!BirthDetails?.BirthDate) return [];
+    
+    // Parse the date in DD-MM-YYYY format
+    const birthDateParsed = dayjs(BirthDetails.BirthDate, "DD-MM-YYYY");
+    
+    // Check if date is valid
+    if (!birthDateParsed.isValid()) {
+      console.error("Invalid birth date format:", BirthDetails.BirthDate);
+      return [];
+    }
+    
+    const birthYear = birthDateParsed.year();
+    const currentYear = new Date().getFullYear();
+    const maxYear = currentYear + 120;
+    const years = [];
+    
+    for (let year = birthYear; year <= maxYear; year++) {
+      years.push(year);
+    }
+    
+    return years;
   }
 
   return (
@@ -995,110 +1188,193 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
                 handleClose={handleOpenKundliClose}
               />
             )}
-            <table>
-              <tr>
-                <td>
-                  <div className='chart-title '>
-                    <Button onClick={() => handleRoatationOpen("B")}>
-                      <span className='font-ea-sb text-xl'>
-                        ❋ Birth Chart / Lagna Kundali ❋
-                      </span>
-                    </Button>
-                  </div>
-                </td>
-                <td>
-                  <div className='chart-title'>
-                    <Button onClick={() => handleRoatationOpen("H")}>
-                      <span className='font-ea-sb text-xl'>
-                        ❋ House Chart / Bhav Chalit Kundali ❋
-                      </span>
-                    </Button>
-                  </div>
-                </td>
-                <td>
-                  <div className='chart-title flex'>
-                    <div className='flex px-2 w-full'>
-                      <div className='flex items-center w-1/12'>
-                        {DashaValue != "MahaDasha" && kundliOptValue && kundliOptValue.Option == "V" && (
-                          <IconButton onClick={handleDashaChange} className='h-[38px] text-primary'>
-                            🠜
-                            {/* <i className='tabler-arrow-big-left text-primary'></i> */}
-                          </IconButton>
-                        )}
-                      </div>
-                      <div className='flex items-center w-10/12 justify-center'>
-                        <Button className='cursor-pointer flex items-center' onClick={handleKundliOpt}>
-                          <span className='font-ea-sb text-xl'>
-                            ❋ {kundliOptValue && kundliOptValue.Option == "V" ? DashaValue : kundliOptValue.OptionName} ❋
-                          </span>
-                        </Button>
-                      </div>
-                      <div className='flex items-center w-1/12'>
-                      </div>
+            <div className='w-full'>
+              {/* Chart Titles Row */}
+              <div className='grid grid-cols-1 md:grid-cols-3 gap-1 mb-0'>
+                {/* Birth Chart Title */}
+                <div className='chart-title'>
+                  <Button onClick={() => handleRoatationOpen("B")} >
+                    <span className='font-ea-sb text-xl'>
+                      ❋ Birth Chart / Lagna Kundali ❋
+                    </span>
+                  </Button>
+                </div>
+
+                {/* House Chart Title */}
+                <div className='chart-title'>
+                  <Button onClick={() => handleRoatationOpen("H")} >
+                    <span className='font-ea-sb text-xl'>
+                      ❋ House Chart / Bhav Chalit Kundali ❋
+                    </span>
+                  </Button>
+                </div>
+
+                {/* Dasha/Options Title */}
+                <div className='chart-title flex'>
+                  <div className='flex px-2 w-full items-center'>
+                    <div className='flex items-center'>
+                      {DashaValue != "Maha" && kundliOptValue && kundliOptValue.Option == "V" && (
+                        <IconButton onClick={handleDashaChange} className='h-[38px] text-primary'>
+                          🠜
+                        </IconButton>
+                      )}
+
+                      {kundliOptValue && kundliOptValue.Option == "P" && (
+                        <IconButton onClick={() => handleVarshPhalChange('prev')} className='h-[38px] text-primary'>
+                          🠜
+                        </IconButton>
+                      )}
+                    </div>
+                    <div className='flex-1 flex items-center justify-center'>
+                      <Button className='cursor-pointer flex items-center' onClick={handleKundliOpt}>
+                        <span className='font-ea-sb text-xl'>
+                          ❋ {kundliOptValue && kundliOptValue.Option == "V" ? `Vimshottari Dasha (${DashaValue})` : kundliOptValue.OptionName} ❋
+                        </span>
+                      </Button>
+                      {kundliOptValue && kundliOptValue.Option == "P" && (
+                        <FormControl size="small" className='ml-3' sx={{ width: 100 }}>
+                          <Select
+                            value={VarshPhalData?.Year || dayjs().year()}
+                            onChange={handleYearDropdownChange}
+                            className='h-[38px]'
+                            MenuProps={{
+                              anchorOrigin: {
+                                vertical: 'bottom',
+                                horizontal: 'left',
+                              },
+                              transformOrigin: {
+                                vertical: 'top',
+                                horizontal: 'left',
+                              },
+                              PaperProps: {
+                                style: {
+                                  maxHeight: 48 * 10, // 48px per item * 10 items
+                                  width: 100,
+                                  overflowY: 'auto',
+                                },
+                              },
+                            }}
+                            sx={{
+                              '& .MuiOutlinedInput-notchedOutline': {
+                                borderColor: 'primary.main',
+                              },
+                              '&:hover .MuiOutlinedInput-notchedOutline': {
+                                borderColor: 'primary.main',
+                              },
+                              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                borderColor: 'primary.main',
+                              }
+                            }}
+                          >
+                            {getYearOptions().map((year) => (
+                              <MenuItem key={year} value={year}>
+                                {year}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      )}
+                    </div>
+                    <div className='flex items-center'>
+                      {kundliOptValue && kundliOptValue.Option == "P" && (
+                        <IconButton onClick={() => handleVarshPhalChange('next')} className='h-[38px] text-primary'>
+                          🠞
+                        </IconButton>
+                      )}
                     </div>
                   </div>
-                </td>
-              </tr>
-              <tr className=''>
-                <td className='w-1/3'>
-                  <div className='flex justify-center items-center px-2' ref={divRef}>
-                    <img src={`data:image/svg+xml;base64,${ChartSVG?.BirthChart}`} className='flex-auto' alt="birthChart" />
+                </div>
+              </div>
+
+              {/* Charts Row */}
+              <div className='grid grid-cols-1 md:grid-cols-3 gap-1'>
+                {/* Birth Chart */}
+                <div className='w-full h-full'>
+                  <div className='flex justify-center items-start px-2 h-full' ref={divRef}>
+                    <img src={`data:image/svg+xml;base64,${ChartSVG?.BirthChart}`} className='w-full max-w-full h-auto' alt="birthChart" />
                   </div>
-                </td>
-                <td className='w-1/3 myDiv'>
-                  <div className='flex justify-center items-center px-2'>
-                    <img src={`data:image/svg+xml;base64,${ChartSVG?.HouseChart}`} className='flex-auto' alt="birthChart" />
+                </div>
+
+                {/* House Chart */}
+                <div className='w-full h-full myDiv'>
+                  <div className='flex justify-center items-start px-2 h-full'>
+                    <img src={`data:image/svg+xml;base64,${ChartSVG?.HouseChart}`} className='w-full max-w-full h-auto' alt="houseChart" />
                   </div>
-                </td>
-                <td className='w-1/3'>
+                </div>
+
+                {/* Dasha/Transit/Divisional Chart */}
+                <div className='w-full h-full'>
                   {kundliOptValue && kundliOptValue.Option == "V" ? (
-                    <div className='flex justify-center items-center px-2 flex-auto w-[calc(100vw - 80vw)] '>
-                      <div className='lg:w-[calc(100vw-71vw)] md:w-[40vw] sm:w-[40vw] w-[75vw]'>
+                    <div className='flex justify-center items-start px-2 h-full'>
+                      <div className='w-full h-full'>
                         <DashaDetails title={DashaTitle} DashaData={DashaGridData} handleDashadbClick={handleDashaDoubleClick} divref={divRef} />
                       </div>
                     </div>
                   ) : (
                     TransitData &&
                     <>
-                      {kundliOptValue.Option == "T" ? <>
-                        <div className='flex justify-center items-center px-2'>
+                      {kundliOptValue.Option == "T" ? (
+                        <div className='flex justify-center items-start px-2 h-full'>
                           {TransitData?.TransitChart ?
-                            <img src={`data:image/svg+xml;base64,${TransitData?.TransitChart}`} alt="transitChart" className='flex-auto' />
+                            <img src={`data:image/svg+xml;base64,${TransitData?.TransitChart}`} alt="transitChart" className='w-full max-w-full h-auto' />
                             :
-                            // <Skeleton variant="rectangular" width={210} height={60} />
                             <EALoader />
-
                           }
                         </div>
-                      </> :
-                        kundliOptValue.Option == "P" ? "Varshphal Chart Coming Soon" :
-                          <>
-                            <div className='flex justify-center items-center px-2'>
+                      ) :
+                        kundliOptValue.Option == "P" ? (
+                          <div className='flex justify-center items-start px-2 h-full'>
+                            {VarshPhalData?.VChart ?
+                              <img src={`data:image/svg+xml;base64,${VarshPhalData?.VChart}`} alt="varshPhalChart" className='w-full max-w-full h-auto' />
+                              :
+                              <EALoader />
+                            }
+                          </div>
+                        ) :
+                          (
+                            <div className='flex justify-center items-start px-2 h-full'>
                               {DivisionalData?.DChart ?
-                                <img src={`data:image/svg+xml;base64,${DivisionalData?.DChart}`} alt="transitChart" className='flex-auto' />
+                                <img src={`data:image/svg+xml;base64,${DivisionalData?.DChart}`} alt="divisionalChart" className='w-full max-w-full h-auto' />
                                 :
-                                // <Skeleton variant="rectangular" width={210} height={60} />
                                 <EALoader />
                               }
                             </div>
-                          </>}
+                          )}
                     </>
                   )}
+                </div>
+              </div>
 
-                </td>
-              </tr>
-              <tr>
-                <td className='mx-2 px-2'>
-                  <div className='pt-2'>
-                    {rotationTital && <Chip label={rotationTital} className='text-sm' color='primary' variant='tonal' />}
-                  </div>
-                </td>
-              </tr>
-            </table>
+              {/* Rotation Title Chip */}
+              <div className='grid grid-cols-1 md:grid-cols-3 gap-1 mb-0'>
+                <div className='mt-1 px-2'>
+                  {kundliOptValue && kundliOptValue.Option != "V" && currentDasha && (
+                    <CustomChip label={'Current Dasha: '} value={currentDasha?.DashaPlanet} />
+                  )}
+                  {rotationTital && kundliOptValue && kundliOptValue.Option == "V" && (
+                    <CustomChip value={rotationTital} label={"The chart is rotated based on:"} />
+                  )}
+                </div>
+                <div className='mt-1 px-2'>
+                  {rotationTital && kundliOptValue && kundliOptValue.Option != "V" && (
+                    <CustomChip value={rotationTital} label={"The chart is rotated based on:"} />
+
+                  )}
+                </div>
+                <div className='mt-1 px-2'>
+                  {kundliOptValue.Option == "P" && VarshPhalData && (
+                    <CustomChip label={"Varshphal Date & Time: "} value={`${VarshPhalData?.Date} ${VarshPhalData?.Time}`} />
+                  )}
+                  {kundliOptValue.Option == "T" && TransitData && (
+                    <CustomChip label={`Transit Date & Time: `} value={TransitData?.TransitDateTime} />
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
 
 
-          <div className='main-MahaDasha-Div pt-5'>
+          <div className='main-MahaDasha-Div pt-4'>
             <div className='flex px-4 w-[100%] justify-between'>
               <div className=' w-[30%]'></div>
               <div className='chart-title w-[40%] pt-4'>
@@ -1141,7 +1417,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
           </div>
 
 
-          <div className='main-RahuKetu-Div pt-8'>
+          <div className='main-RahuKetu-Div pt-4'>
             <div className='flex px-4 w-[100%] justify-between'>
               <div className=' w-[30%]'></div>
               <div className='chart-title w-[40%] pt-5'>
@@ -1190,15 +1466,14 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
             </div>
           </div>
 
-
-
-          <div className='main-AstroVastuScript-Div pt-8'>
+          <div className='main-AstroVastuScript-Div pt-7'>
             <div className='chart-title'>❋ Planet ↠ Planet Aspects Summary ❋</div>
             <div className='Summary-Div'>
               <SummaryAspect SummaryData={PlanetSummaryData} Aspect={"P"} />
             </div>
           </div>
-          <div className='main-AstroVastuScript-Div pt-8'>
+
+          <div className='main-AstroVastuScript-Div pt-7'>
             <div className='chart-title'>❋ Planet ↠ House Aspects Summary ❋</div>
             <div className='Summary-Div'>
               <SummaryAspect SummaryData={HouseSummaryData} Aspect={"H"} />

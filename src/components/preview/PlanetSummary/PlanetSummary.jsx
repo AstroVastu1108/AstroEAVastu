@@ -137,7 +137,7 @@ const SummaryAspect = ({ SummaryData, Aspect }) => {
         {hoveredCol && (
           <style>{`
             .hover-col-${hoveredCol} .MuiDataGrid-cell[data-field="${hoveredCol}"] {
-              background-color: var(--secondary-soft-color, rgba(211, 211, 211, 0.3)) !important;
+              background-color: var(--yellow-soft-color, rgba(211, 211, 211, 0.3)) !important;
             }
           `}</style>
         )}
