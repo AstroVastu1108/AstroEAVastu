@@ -85,7 +85,7 @@ const GridBackground = ({ width, height }) => {
       })}
 
       {/* Vertical Grid Lines */}
-      {Array.from({ length: maxColumns + 1 }).map((_, i) => {
+      {Array.from({ length: maxColumns }).map((_, i) => {
         const x = i * gridSize
         if (x === 0 || x === width) return null // Skip borders
         return <line key={`v-${i}`} x1={x} y1={0} x2={x} y2={height} stroke='#cccccc' strokeWidth={strokeWidth} />

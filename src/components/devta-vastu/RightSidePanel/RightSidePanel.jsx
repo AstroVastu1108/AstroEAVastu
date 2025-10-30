@@ -81,25 +81,25 @@ function RightSidePanel({
   const chakras = [
     {
       id: 'hide32Circle',
-      label: 'Show Chakra - 32 Entrance',
+      label: 'Show Chakra - 32 Zones',
       checked: activeChakra === 32,
       textLabel: 32
     },
     {
       id: 'hide16Circle',
-      label: 'Show Chakra - 16 Entrance',
+      label: 'Show Chakra - 16 Zones',
       checked: activeChakra === 16,
       textLabel: 16
     },
     {
       id: 'hide8Circle',
-      label: 'Show Chakra - 8 Entrance',
+      label: 'Show Chakra - 8 Directions',
       checked: activeChakra === 8,
       textLabel: 8
     },
     {
       id: 'hide4Circle',
-      label: 'Show Chakra - 4 Entrance',
+      label: 'Show Chakra - 4 Directions',
       checked: activeChakra === 4,
       textLabel: 4
     }
