@@ -81,25 +81,25 @@ function RightSidePanel({
   const chakras = [
     {
       id: 'hide32Circle',
-      label: 'Show Chakra - 32 Entrance',
+      label: '32 Zone',
       checked: activeChakra === 32,
       textLabel: 32
     },
     {
       id: 'hide16Circle',
-      label: 'Show Chakra - 16 Entrance',
+      label: '16 Zone',
       checked: activeChakra === 16,
       textLabel: 16
     },
     {
       id: 'hide8Circle',
-      label: 'Show Chakra - 8 Entrance',
+      label: '8 Directions',
       checked: activeChakra === 8,
       textLabel: 8
     },
     {
       id: 'hide4Circle',
-      label: 'Show Chakra - 4 Entrance',
+      label: '4 Directions',
       checked: activeChakra === 4,
       textLabel: 4
     }
@@ -154,7 +154,7 @@ function RightSidePanel({
   }
 
   const [selectedPage, setSelectedPage] = useState(previewUrl?.selectedPage)
-  
+
   return (
     <>
       <div
@@ -697,7 +697,7 @@ function RightSidePanel({
                         </Grid>
                       </Grid>
 
-                    </AccordionDetails>
+                    </AccordionDetails> 
                   </Accordion>
 
                   {/* Marma Options */}
@@ -865,3 +865,675 @@ function RightSidePanel({
 }
 
 export default RightSidePanel
+
+
+// import React, { useEffect, useRef, useState } from 'react';
+// import {
+//   Box,
+//   Button,
+//   Checkbox,
+//   Divider,
+//   FormControlLabel,
+//   Paper,
+//   Slider,
+//   TextField,
+//   Typography,
+//   Tooltip,
+//   IconButton,
+//   Stack,
+//   Select,
+//   MenuItem,
+//   Drawer,
+//   Fade,
+//   Chip,
+//   Popover
+// } from '@mui/material';
+
+// import RightPrintSection from '../RightPrintSection/RightPrintSection';
+// import LineControls from '@/views/apps/devtaVastu/LineControls';
+// import { toast } from 'react-toastify';
+// import { Grid } from '@mui/material';
+
+// function RightSidePanel({
+//   savedGroups,
+//   previewUrl,
+//   tabName,
+//   vastuLayoutData,
+//   handleFileUpload,
+//   selectedGroup,
+//   setleftPrintRef,
+//   setZoom,
+//   zoom,
+//   setRotation,
+//   rotation,
+//   lockChakra,
+//   setLockChakra,
+//   lockCentroid,
+//   setLockCentroid,
+//   snapToCentroid,
+//   setSnapToCentroid,
+//   inputDegree,
+//   setInputDegree,
+//   handleShowChakra,
+//   activeChakra,
+//   lineSets,
+//   setLineSets,
+//   setHideMarmaLines,
+//   hideMarmaLines,
+//   setHideMarmapoints,
+//   hideMarmapoints,
+//   setShowDevta,
+//   showDevta,
+//   setShowDevtaIntersaction,
+//   showDevtaIntersaction,
+//   setImageDragDone,
+//   imageDragDone,
+//   hideCircleIntersaction,
+//   setHideCircleIntersaction,
+//   disableDraw,
+//   setDisableDraw,
+//   graphDraw,
+//   setGraphDraw,
+//   setPageTitle,
+//   handleAddPolygonToggle,
+//   setCropImage,
+//   cropImage,
+//   updatePdfPages,
+//   handleUndo,
+//   handleRedo,
+//   history,
+//   redoStack
+// }) {
+//   const printRef1 = useRef(null);
+//   const [tabNewName, setTabNewName] = useState(tabName);
+//   const [isEditing, setIsEditing] = useState(false);
+//   const [tempValue, setTempValue] = useState(tabNewName);
+//   const [selectedPage, setSelectedPage] = useState(previewUrl?.selectedPage);
+//   const [activePanel, setActivePanel] = useState(null);
+
+//   const chakras = [
+//     { id: 'hide32Circle', label: '32 Zone', checked: activeChakra === 32, textLabel: 32 },
+//     { id: 'hide16Circle', label: '16 Zone', checked: activeChakra === 16, textLabel: 16 },
+//     { id: 'hide8Circle', label: '8 Directions', checked: activeChakra === 8, textLabel: 8 },
+//     { id: 'hide4Circle', label: '4 Directions', checked: activeChakra === 4, textLabel: 4 }
+//   ];
+
+//   useEffect(() => {
+//     if (setleftPrintRef) {
+//       setleftPrintRef(printRef1.current);
+//     }
+//   }, [setleftPrintRef]);
+
+//   const handleZoomIn = () => setZoom(Math.min(zoom * 1.1, 5));
+//   const handleZoomOut = () => setZoom(Math.max(zoom / 1.1, -5));
+
+//   const handleRotationChange = (e) => {
+//     const angle = parseFloat(e.target.value);
+//     setRotation(angle);
+//   };
+
+//   const handleInputChange = (e) => {
+//     let value = parseFloat(e.target.value) || 0;
+//     if (value < 0) value = 0;
+//     if (value > 360) value = 360;
+//     setInputDegree(value);
+//   };
+
+//   const handleLineSetUpdate = (index, updates) => {
+//     const updatedLineSets = [...lineSets];
+//     updatedLineSets[index] = { ...updatedLineSets[index], ...updates };
+//     setLineSets(updatedLineSets);
+//   };
+
+//   const handleSave = () => {
+//     const isTitleUnique = !savedGroups.some(tab => tab === tempValue);
+//     if (!isTitleUnique) {
+//       return toast.error('Title already exists! Please choose a different title.');
+//     }
+//     setTabNewName(tempValue);
+//     setPageTitle(tempValue);
+//     setIsEditing(false);
+//   };
+
+//   const togglePanel = (panelName) => {
+//     setActivePanel(activePanel === panelName ? null : panelName);
+//   };
+//   // ...existing code...
+//   const toolbarButtons = [
+//     { id: 'file', icon: <i className="tabler-upload" />, label: 'File Upload', color: '#7C3AED' },
+//     { id: 'transform', icon: <i className="tabler-transform" />, label: 'Transform', color: '#2563EB' },
+//     { id: 'chakra', icon: <i className="tabler-circle-dot" />, label: 'Shakti Chakra', color: '#EC4899' },
+//     { id: 'lines', icon: <i className="tabler-line-dashed" />, label: 'Zone Lines', color: '#10B981' },
+//     { id: 'marma', icon: <i className="tabler-point" />, label: 'Marma', color: '#F59E0B' },
+//     { id: 'devta', icon: <i className="tabler-hexagon" />, label: 'Devta', color: '#8B5CF6' },
+//     { id: 'other', icon: <i className="tabler-adjustments" />, label: 'Other Options', color: '#6366F1' }
+//   ];
+//   // ...existing code...
+
+//   const renderFilePanel = () => (
+//     <Box sx={{ p: 3 }}>
+//       <Typography variant="h6" fontWeight={600} sx={{ mb: 3, color: 'text.primary' }}>
+//         File Management
+//       </Typography>
+
+//       {previewUrl?.OriginalFileName && (
+//         <Paper elevation={0} sx={{ mb: 3, p: 2, bgcolor: '#F5F3FF', borderRadius: 2 }}>
+//           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
+//             <i className="tabler-file-upload" style={{ color: '#7C3AED', fontSize: 28 }} />
+//             <Box sx={{ flex: 1, minWidth: 0 }}>
+//               <Typography variant="body2" fontWeight={500} noWrap>
+//                 {previewUrl.OriginalFileName}
+//               </Typography>
+//               <Typography variant="caption" color="text.secondary">
+//                 {previewUrl.OriginalFileName.toLowerCase().endsWith('.pdf') ? 'PDF Document' : 'Image File'}
+//               </Typography>
+//             </Box>
+//           </Box>
+
+//           {previewUrl.OriginalFileName.toLowerCase().endsWith('.pdf') && (
+//             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+//               <Typography variant="body2" fontWeight={500}>Page:</Typography>
+//               <Select
+//                 size="small"
+//                 value={previewUrl?.selectedPage + 1 || selectedPage}
+//                 onChange={(e) => {
+//                   const pageIndex = e.target.value - 1;
+//                   setSelectedPage(e.target.value);
+//                   updatePdfPages(tempValue, pageIndex);
+//                 }}
+//                 sx={{ minWidth: 80, bgcolor: 'white' }}
+//               >
+//                 {Array.from({ length: previewUrl?.pdfPages }, (_, i) => (
+//                   <MenuItem key={i} value={i + 1}>{i + 1}</MenuItem>
+//                 ))}
+//               </Select>
+//               <Typography variant="caption" color="text.secondary">
+//                 of {previewUrl?.pdfPages}
+//               </Typography>
+//             </Box>
+//           )}
+//         </Paper>
+//       )}
+
+//       <Paper
+//         variant="outlined"
+//         sx={{
+//           p: 4,
+//           textAlign: 'center',
+//           borderStyle: 'dashed',
+//           borderWidth: 2,
+//           borderColor: 'divider',
+//           bgcolor: '#FAFAF9',
+//           cursor: 'pointer',
+//           transition: 'all 0.2s',
+//           '&:hover': {
+//             borderColor: 'primary.main',
+//             bgcolor: '#F5F3FF'
+//           }
+//         }}
+//         onDragOver={(e) => e.preventDefault()}
+//         onDrop={handleFileUpload}
+//       >
+//         <label style={{ cursor: 'pointer', display: 'block' }}>
+//           <i className="tabler-upload" style={{ fontSize: 56, color: '#7C3AED', marginBottom: 16 }} />
+//           <Typography variant="body1" fontWeight={600} sx={{ mb: 0.5 }}>
+//             Upload File
+//           </Typography>
+//           <Typography variant="caption" color="text.secondary" display="block">
+//             Drag & drop or click to browse
+//           </Typography>
+//           <Typography variant="caption" fontWeight={600} color="primary.main" sx={{ mt: 1, display: 'block' }}>
+//             .jpg, .jpeg, .png, .pdf
+//           </Typography>
+//           <input type="file" style={{ display: 'none' }} accept=".jpg,.jpeg,.png,.pdf" onChange={handleFileUpload} />
+//         </label>
+//       </Paper>
+
+//       <Button
+//         variant="contained"
+//         fullWidth
+//         size="large"
+//         startIcon={<i className="tabler-plus" />}
+//         onClick={() => handleAddPolygonToggle(selectedGroup)}
+//         sx={{
+//           mt: 3,
+//           py: 1.5,
+//           textTransform: 'none',
+//           fontWeight: 600,
+//           boxShadow: 2,
+//           '&:hover': {
+//             boxShadow: 4
+//           }
+//         }}
+//       >
+//         Add Overlay
+//       </Button>
+//     </Box>
+//   );
+
+//   const renderTransformPanel = () => (
+//     <Box sx={{ p: 3 }}>
+//       <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
+//         Transform Controls
+//       </Typography>
+
+//       <Stack spacing={2} sx={{ mb: 3 }}>
+//         <Box sx={{ display: 'flex', gap: 2 }}>
+//           <Button
+//             variant="contained"
+//             fullWidth
+//             startIcon={<i className="tabler-zoom-in" width="20" height="20" />}
+//             onClick={handleZoomIn}
+//             sx={{ textTransform: 'none', fontWeight: 600 }}
+//           >
+//             Zoom In
+//           </Button>
+//           <Button
+//             variant="outlined"
+//             fullWidth
+//             startIcon={<i className="tabler-zoom-out" width="20" height="20" />}
+//             onClick={handleZoomOut}
+//             sx={{ textTransform: 'none', fontWeight: 600 }}
+//           >
+//             Zoom Out
+//           </Button>
+//         </Box>
+//         <Chip label={`Zoom: ${(zoom * 100).toFixed(0)}%`} color="primary" variant="outlined" />
+//       </Stack>
+
+//       <Paper elevation={0} sx={{ p: 2.5, bgcolor: '#F9FAFB', borderRadius: 2, mb: 3 }}>
+//         <Typography variant="body2" fontWeight={600} sx={{ mb: 2 }}>
+//           Rotation Control
+//         </Typography>
+//         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+//           <Chip label={`${rotation}°`} color="primary" size="small" />
+//           <Slider
+//             value={rotation}
+//             onChange={handleRotationChange}
+//             min={0}
+//             max={360}
+//             sx={{ flex: 1 }}
+//           />
+//         </Box>
+//         <Box sx={{ display: 'flex', gap: 1 }}>
+//           <TextField
+//             type="number"
+//             value={rotation}
+//             onChange={(e) => setRotation(parseFloat(e.target.value) || 0)}
+//             size="small"
+//             fullWidth
+//             inputProps={{ min: 0, max: 360 }}
+//           />
+//           <Tooltip title="Reset rotation">
+//             <IconButton onClick={() => setRotation(0)} color="primary">
+//               <i className='tabler-refresh' width='16' height='16' />
+//             </IconButton>
+//           </Tooltip>
+//         </Box>
+//       </Paper>
+
+//       <Typography variant="body2" fontWeight={600} sx={{ mb: 1.5 }}>
+//         Options
+//       </Typography>
+//       <Stack spacing={1}>
+//         {[
+//           { label: 'Lock Chakra', checked: lockChakra, onChange: setLockChakra },
+//           { label: 'Lock Center', checked: lockCentroid, onChange: setLockCentroid },
+//           { label: 'Reset Auto Center', checked: snapToCentroid, onChange: setSnapToCentroid },
+//           { label: 'Crop Image', checked: cropImage, onChange: setCropImage }
+//         ].map(({ label, checked, onChange }) => (
+//           <FormControlLabel
+//             key={label}
+//             control={<Checkbox checked={checked} onChange={(e) => onChange(e.target.checked)} />}
+//             label={<Typography variant="body2">{label}</Typography>}
+//           />
+//         ))}
+//       </Stack>
+//     </Box>
+//   );
+
+//   const renderChakraPanel = () => (
+//     <Box sx={{ p: 3 }}>
+//       <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
+//         Shakti Chakra Options
+//       </Typography>
+
+//       <Paper elevation={0} sx={{ p: 2.5, bgcolor: '#F9FAFB', borderRadius: 2, mb: 3 }}>
+//         <Typography variant="body2" fontWeight={600} sx={{ mb: 1.5 }}>
+//           Chakra Degree
+//         </Typography>
+//         <TextField
+//           type="number"
+//           disabled={lockChakra}
+//           value={inputDegree}
+//           onChange={handleInputChange}
+//           size="small"
+//           fullWidth
+//           InputProps={{
+//             endAdornment: <Typography variant="body2" color="text.secondary">°</Typography>
+//           }}
+//         />
+//       </Paper>
+
+//       <Divider sx={{ my: 2 }} />
+
+//       <Typography variant="body2" fontWeight={600} sx={{ mb: 1.5 }}>
+//         Chakra Zones
+//       </Typography>
+//       <Stack spacing={1}>
+//         {chakras.map(({ id, label, checked, textLabel }) => (
+//           <FormControlLabel
+//             key={id}
+//             control={
+//               <Checkbox
+//                 checked={checked}
+//                 onChange={(e) => handleShowChakra(textLabel, e.target.checked)}
+//               />
+//             }
+//             label={<Typography variant="body2">{label}</Typography>}
+//           />
+//         ))}
+//       </Stack>
+//     </Box>
+//   );
+
+//   const renderLinesPanel = () => (
+//     <Box sx={{ p: 3 }}>
+//       <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
+//         Zone Lines
+//       </Typography>
+//       <Grid container spacing={2}>
+//         <Grid item xs={6}>
+//           <LineControls
+//             lineSet={lineSets[0]}
+//             setIndex={0}
+//             onUpdate={handleLineSetUpdate}
+//           />
+//         </Grid>
+//         <Grid item xs={6}>
+//           <LineControls
+//             lineSet={lineSets[1]}
+//             setIndex={1}
+//             onUpdate={handleLineSetUpdate}
+//           />
+//         </Grid>
+//       </Grid>
+//     </Box>
+//   );
+
+//   const renderMarmaPanel = () => (
+//     <Box sx={{ p: 3 }}>
+//       <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
+//         Marma Options
+//       </Typography>
+//       <Stack spacing={1}>
+//         {[
+//           { label: 'Show Marma Lines', checked: hideMarmaLines, onChange: setHideMarmaLines },
+//           { label: 'Show Marma Points', checked: hideMarmapoints, onChange: setHideMarmapoints }
+//         ].map(({ label, checked, onChange }) => (
+//           <FormControlLabel
+//             key={label}
+//             control={<Checkbox checked={checked} onChange={(e) => onChange(e.target.checked)} />}
+//             label={<Typography variant="body2">{label}</Typography>}
+//           />
+//         ))}
+//       </Stack>
+//     </Box>
+//   );
+
+//   const renderDevtaPanel = () => (
+//     <Box sx={{ p: 3 }}>
+//       <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
+//         Devta Options
+//       </Typography>
+//       <Stack spacing={1}>
+//         {[
+//           { label: 'Show Devta', checked: showDevta, onChange: setShowDevta },
+//           { label: 'Show Devta Intersection Points', checked: showDevtaIntersaction, onChange: setShowDevtaIntersaction }
+//         ].map(({ label, checked, onChange }) => (
+//           <FormControlLabel
+//             key={label}
+//             control={<Checkbox checked={checked} onChange={(e) => onChange(e.target.checked)} />}
+//             label={<Typography variant="body2">{label}</Typography>}
+//           />
+//         ))}
+//       </Stack>
+//     </Box>
+//   );
+
+//   const renderOtherPanel = () => (
+//     <Box sx={{ p: 3 }}>
+//       <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
+//         Other Options
+//       </Typography>
+//       <Stack spacing={1}>
+//         {[
+//           { label: 'Lock Drag Image', checked: imageDragDone, onChange: setImageDragDone },
+//           { label: 'Show Chakra Intersection Points', checked: hideCircleIntersaction, onChange: setHideCircleIntersaction },
+//           { label: 'Done Drawing', checked: disableDraw, onChange: setDisableDraw }
+//         ].map(({ label, checked, onChange }) => (
+//           <FormControlLabel
+//             key={label}
+//             control={<Checkbox checked={checked} onChange={(e) => onChange(e.target.checked)} />}
+//             label={<Typography variant="body2">{label}</Typography>}
+//           />
+//         ))}
+//       </Stack>
+//     </Box>
+//   );
+
+//   const renderPanelContent = () => {
+//     switch (activePanel) {
+//       case 'file': return renderFilePanel();
+//       case 'transform': return renderTransformPanel();
+//       case 'chakra': return renderChakraPanel();
+//       case 'lines': return renderLinesPanel();
+//       case 'marma': return renderMarmaPanel();
+//       case 'devta': return renderDevtaPanel();
+//       case 'other': return renderOtherPanel();
+//       default: return null;
+//     }
+//   };
+//   const [editAnchorEl, setEditAnchorEl] = useState(null);
+
+//   return (
+//     <>
+//       {/* Modern Vertical Toolbar */}
+//       <Paper
+//         elevation={8}
+//         sx={{
+//           position: 'fixed',
+//           right: 16,
+//           top: '50%',
+//           transform: 'translateY(-50%)',
+//           borderRadius: 3,
+//           overflow: 'hidden',
+//           zIndex: 100,
+//           width: 72
+//         }}
+//       >
+//         <Box sx={{ py: 2, px: 1 }}>
+//           <Stack spacing={0.5}>
+//             {/* Header Section */}
+//             <Box sx={{ px: 1, mb: 2, pb: 2, borderBottom: 1, borderColor: 'divider' }}>
+//               <Typography variant="caption" fontWeight={700} color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+//                 {selectedGroup || 'Layout'}
+//               </Typography>
+//               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+//                 <IconButton
+//                   onClick={(e) => {
+//                     setIsEditing(true);
+//                     setEditAnchorEl(e.currentTarget);
+//                   }}
+//                   size="small"
+//                 >
+//                   <i className="tabler-pencil" width="16" height="16" />
+//                 </IconButton>
+//               </Box>
+//             </Box>
+//             {/* Undo/Redo */}
+//             <Tooltip title="Undo" placement="left">
+//               <IconButton
+//                 onClick={handleUndo}
+//                 disabled={history?.length === 0}
+//                 sx={{
+//                   borderRadius: 2,
+//                   '&:hover': { bgcolor: 'action.hover' }
+//                 }}
+//               >
+//                 <i className="tabler-rotate-clockwise" width="20" height="20" />
+//               </IconButton>
+//             </Tooltip>
+
+//             <Tooltip title="Redo" placement="left">
+//               <IconButton
+//                 onClick={handleRedo}
+//                 disabled={redoStack?.length === 0}
+//                 sx={{
+//                   borderRadius: 2,
+//                   '&:hover': { bgcolor: 'action.hover' }
+//                 }}
+//               >
+//                 <i className="tabler-rotate" width="20" height="20" />
+//               </IconButton>
+//             </Tooltip>
+
+//             <Divider sx={{ my: 1.5 }} />
+
+//             {/* Tool Buttons */}
+//             {toolbarButtons.map((btn) => {
+//               const isActive = activePanel === btn.id;
+//               return (
+//                 <Tooltip key={btn.id} title={btn.label} placement="left">
+//                   <IconButton
+//                     onClick={() => togglePanel(btn.id)}
+//                     sx={{
+//                       borderRadius: 2,
+//                       bgcolor: isActive ? btn.color : 'transparent',
+//                       color: isActive ? 'white' : 'text.secondary',
+//                       transition: 'all 0.2s',
+//                       '&:hover': {
+//                         bgcolor: isActive ? btn.color : 'action.hover',
+//                         transform: 'scale(1.05)'
+//                       }
+//                     }}
+//                   >
+//                     {btn.icon}
+//                   </IconButton>
+//                 </Tooltip>
+//               );
+//             })}
+//           </Stack>
+//         </Box>
+//       </Paper>
+
+//       {/* Slide-out Drawer */}
+//       <Drawer
+//         anchor="right"
+//         open={activePanel !== null}
+//         onClose={() => setActivePanel(null)}
+//         // hideBackdrop
+//         sx={{
+//           // pointerEvents: 'none', // Make Drawer root not block clicks
+//           '& .MuiDrawer-paper': {
+//             pointerEvents: 'auto', // Only Drawer content is interactive
+//             width: 420,
+//             boxShadow: 24,
+//             border: 'none',
+//             height: '100vh'
+//           }
+//         }}
+//       >
+//         <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+//           {/* Drawer Header */}
+//           <Paper
+//             elevation={0}
+//             sx={{
+//               p: 2.5,
+//               borderBottom: 1,
+//               borderColor: 'divider',
+//               bgcolor: 'background.default',
+//               display: 'flex',
+//               alignItems: 'center',
+//               justifyContent: 'space-between'
+//             }}
+//           >
+//             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+//               <Box
+//                 sx={{
+//                   width: 40,
+//                   height: 40,
+//                   borderRadius: 2,
+//                   bgcolor: activePanel ? toolbarButtons.find(b => b.id === activePanel)?.color : 'primary.main',
+//                   display: 'flex',
+//                   alignItems: 'center',
+//                   justifyContent: 'center',
+//                   color: 'white'
+//                 }}
+//               >
+//                 {activePanel && toolbarButtons.find(b => b.id === activePanel)?.icon}
+//               </Box>
+//               <Typography variant="h6" fontWeight={700}>
+//                 {activePanel && toolbarButtons.find(b => b.id === activePanel)?.label}
+//               </Typography>
+//             </Box>
+//             <IconButton onClick={() => setActivePanel(null)} size="large">
+//               <i className="tabler-x" width="24" height="24" />
+//             </IconButton>
+//           </Paper>
+
+//           {/* Drawer Content */}
+//           <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
+//             <Fade in={activePanel !== null}>
+//               <div>{renderPanelContent()}</div>
+//             </Fade>
+//           </Box>
+
+//           {/* Print Section */}
+//           <Box sx={{ p: 2, borderTop: 1, borderColor: 'divider' }}>
+//             <RightPrintSection printRef1={printRef1} vastuLayoutData={vastuLayoutData} />
+//           </Box>
+//         </Box>
+//       </Drawer>
+
+//       <Popover
+//         open={isEditing}
+//         anchorEl={editAnchorEl}
+//         onClose={() => {
+//           setIsEditing(false);
+//           setEditAnchorEl(null);
+//         }}
+//         anchorOrigin={{
+//           vertical: 'bottom',
+//           horizontal: 'left',
+//         }}
+//         transformOrigin={{
+//           vertical: 'top',
+//           horizontal: 'left',
+//         }}
+//       >
+//         <Box sx={{ p: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+//           <TextField
+//             value={tempValue}
+//             onChange={(e) => setTempValue(e.target.value)}
+//             size="small"
+//             variant="standard"
+//             autoFocus
+//           />
+//           <IconButton onClick={handleSave} size="small" color="success">
+//             <i className="tabler-check" width="16" height="16" />
+//           </IconButton>
+//           <IconButton onClick={() => {
+//             setTempValue(tabNewName);
+//             setIsEditing(false);
+//             setEditAnchorEl(null);
+//           }} size="small" color="error">
+//             <i className="tabler-x" width="16" height="16" />
+//           </IconButton>
+//         </Box>
+//       </Popover>
+//     </>
+//   );
+// }
+
+// export default RightSidePanel;

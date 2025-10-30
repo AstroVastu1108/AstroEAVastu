@@ -1,24 +1,24 @@
 const DEFAULT_POINTS = [
-  { x: 220, y: 220 },
-  { x: 560, y: 220 },
-  { x: 560, y: 560 },
-  { x: 220, y: 560 }
+  { x: 280, y: 220 },
+  { x: 620, y: 220 },
+  { x: 620, y: 560 },
+  { x: 280, y: 560 }
 ];
 
 
 const DEFAULT_LINE_SETS = [
   {
-    stroke: '#000',
-    strokeWidth: 1,
+    stroke: 'var(--mui-palette-primary-main)', // Uses the CSS variable for primary color
     strokeDasharray: '',
+    strokeWidth: 0.5,
     name: 'Zone Line'
   },
   {
-    stroke: '#0066cc',
-    strokeWidth: 0.5,
+    stroke: '#1ba364ff',
+     strokeWidth: 0.5,
     strokeDasharray: '5,5',
     name: 'Internal Zone Line'
-  }
+  },
 ]
 
 

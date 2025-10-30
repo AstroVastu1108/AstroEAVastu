@@ -14,17 +14,17 @@ export const LINE_STYLES = {
 
 export const DEFAULT_LINE_SETS = [
   {
-    stroke: '#000',
-    strokeWidth: 1,
+    stroke: '#0066cc',
     strokeDasharray: '',
+    strokeWidth: 0.5,
     name: 'Zone Line'
   },
   {
-    stroke: '#cc0000ff',
+    stroke: '#000',
     strokeWidth: 0.5,
-    strokeDasharray: '10,5',
+    strokeDasharray: '5,5',
     name: 'Internal Zone Line'
-  }
+  },
 ]
 
 export const colors = {

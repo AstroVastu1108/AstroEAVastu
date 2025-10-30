@@ -180,7 +180,7 @@
 //             className="w-4 h-4 rounded-full border-2 border-white shadow-sm flex-shrink-0 ring-1 ring-gray-200"
 //             style={{ backgroundColor: lineSet.stroke }}
 //           />
-          
+
 //           {/* Live Line Preview */}
 //           <div className="flex-1 min-w-0 flex items-center justify-center h-4">
 //             <svg width="32" height="3" className="opacity-80">
@@ -213,7 +213,7 @@
 //       {/* Expanded Controls - Dropdown Style */}
 //       {expanded && (
 //         <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-xl border border-gray-200 shadow-xl p-3 z-50 animate-in slide-in-from-top-2 duration-200">
-          
+
 //           {/* Color Picker - Swatch Style */}
 //           <div className="mb-3">
 //             <label className="block text-[9px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">
@@ -288,7 +288,7 @@
 //                 const isActive = lineSet.strokeDasharray 
 //                   ? LINE_STYLES[style] === lineSet.strokeDasharray 
 //                   : style === "solid";
-                
+
 //                 return (
 //                   <button
 //                     key={style}
@@ -330,21 +330,32 @@
 
 // export default LineControls;
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { LINE_STYLES } from "../../../utils/directions";
 
 export const LineControls = ({ lineSet, onUpdate, setIndex }) => {
   const [expanded, setExpanded] = useState(false);
+  const containerRef = useRef(null);
 
+  useEffect(() => {
+    if (!expanded) return;
+    const handleClickOutside = (event) => {
+      if (containerRef.current && !containerRef.current.contains(event.target)) {
+        setExpanded(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [expanded]);
   return (
-    <div className="relative">
+    <div className="relative" ref={containerRef}>
       {/* Expanded Controls - Dropdown Style (Positioned ABOVE) */}
       {expanded && (
-        <div 
-          className="absolute bottom-full left-0 right-0 mb-1 bg-white rounded-xl border border-gray-200 shadow-xl p-3 z-50 animate-in slide-in-from-bottom-2 duration-200"
+        <div
+          className="absolute top-full left-0 right-0 mt-1 bg-white rounded-xl border border-gray-200 shadow-xl p-3 z-50 animate-in slide-in-from-top-2 duration-200"
           onClick={(e) => e.stopPropagation()}
         >
-          
+
           {/* Color Picker - Swatch Style */}
           <div className="mb-3">
             <label className="block text-[9px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">
@@ -360,13 +371,10 @@ export const LineControls = ({ lineSet, onUpdate, setIndex }) => {
                     onUpdate(setIndex, { stroke: e.target.value });
                   }}
                   className="w-full h-9 rounded-lg cursor-pointer border-2 border-gray-200 hover:border-blue-400 transition-all"
-                  style={{ 
+                  style={{
                     padding: '2px',
                   }}
                 />
-              </div>
-              <div className="text-[10px] font-mono font-semibold text-gray-600 bg-gray-50 px-2 py-1.5 rounded border border-gray-200">
-                {lineSet.stroke.toUpperCase()}
               </div>
             </div>
           </div>
@@ -391,8 +399,8 @@ export const LineControls = ({ lineSet, onUpdate, setIndex }) => {
                   }}
                   className={`
                     flex-1 h-7 text-[9px] font-bold rounded-md transition-all duration-150
-                    ${lineSet.strokeWidth === width 
-                      ? 'bg-gradient-to-br from-blue-500 to-indigo-500 text-white shadow-md scale-105' 
+                    ${lineSet.strokeWidth === width
+                      ? 'bg-gradient-to-br from-blue-500 to-indigo-500 text-white shadow-md scale-105'
                       : 'bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200'
                     }
                   `}
@@ -410,10 +418,10 @@ export const LineControls = ({ lineSet, onUpdate, setIndex }) => {
             </label>
             <div className="grid grid-cols-2 gap-1.5">
               {Object.keys(LINE_STYLES).map((style) => {
-                const isActive = lineSet.strokeDasharray 
-                  ? LINE_STYLES[style] === lineSet.strokeDasharray 
+                const isActive = lineSet.strokeDasharray
+                  ? LINE_STYLES[style] === lineSet.strokeDasharray
                   : style === "solid";
-                
+
                 return (
                   <button
                     key={style}
@@ -426,7 +434,7 @@ export const LineControls = ({ lineSet, onUpdate, setIndex }) => {
                     className={`
                       h-9 px-2 rounded-lg transition-all duration-150 flex flex-col items-center justify-center gap-1
                       ${isActive
-                        ? 'bg-gradient-to-br from-blue-500 to-indigo-500 text-white shadow-md' 
+                        ? 'bg-gradient-to-br from-blue-500 to-indigo-500 text-white shadow-md'
                         : 'bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200'
                       }
                     `}
@@ -451,7 +459,7 @@ export const LineControls = ({ lineSet, onUpdate, setIndex }) => {
       )}
 
       {/* Collapsed State - Chip Style */}
-      <div 
+      <div
         className={`
           relative overflow-hidden rounded-full border-2 transition-all duration-300 cursor-pointer
           ${expanded ? 'border-blue-400 bg-gradient-to-r from-blue-50 to-indigo-50' : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-md'}
@@ -461,11 +469,11 @@ export const LineControls = ({ lineSet, onUpdate, setIndex }) => {
         {/* Compact Chip View */}
         <div className="flex items-center gap-2 px-2.5 py-1.5">
           {/* Color Dot */}
-          <div 
+          <div
             className="w-4 h-4 rounded-full border-2 border-white shadow-sm flex-shrink-0 ring-1 ring-gray-200"
             style={{ backgroundColor: lineSet.stroke }}
           />
-          
+
           {/* Live Line Preview */}
           <div className="flex-1 min-w-0 flex items-center justify-center h-4">
             <svg width="32" height="3" className="opacity-80">
@@ -484,10 +492,10 @@ export const LineControls = ({ lineSet, onUpdate, setIndex }) => {
           </span>
 
           {/* Expand Icon */}
-          <svg 
+          <svg
             className={`w-3 h-3 text-gray-400 transition-transform duration-300 flex-shrink-0 ${expanded ? 'rotate-180' : ''}`}
-            fill="none" 
-            stroke="currentColor" 
+            fill="none"
+            stroke="currentColor"
             viewBox="0 0 24 24"
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />

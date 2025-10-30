@@ -4,16 +4,16 @@ export const navigation = [
     href: '/kundali-list',
     icon: 'tabler-smart-home'
   },
-  {
-    label: 'Tasks',
-    href: '/task-list',
-    icon: 'tabler-checklist'
-  },
-  {
-    label: 'Client',
-    href: '/my-clients',
-    icon: 'tabler-users-group'
-  },
+  // {
+  //   label: 'Tasks',
+  //   href: '/task-list',
+  //   icon: 'tabler-checklist'
+  // },
+  // {
+  //   label: 'Client',
+  //   href: '/my-clients',
+  //   icon: 'tabler-users-group'
+  // },
   {
     label: 'Subscription',
     href: '/subscription',
