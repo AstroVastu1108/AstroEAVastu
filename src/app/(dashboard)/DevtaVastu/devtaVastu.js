@@ -1423,6 +1423,7 @@ ${clientCss}
               <div className={`chart-name sticky top-0 z-50 font-ea-sb flex justify-between md:items-center gap-y-2 lg:flex-row sm:flex-row flex-col`}>
                 {vastuLayoutData?.ProjectName ? vastuLayoutData?.ProjectName : `New-Vastu-Layout-${layoutCount}`}
                 <div className={`flex justify-between md-items-center lg:gap-1 lg:flex-row md:flex-row gap-5 birthDateTime-Div`} >
+                  {vastuLayoutData?.ProjectName && (
                   <IconButton
                     onClick={handleSortcutSave}
                     size="small"
@@ -1449,6 +1450,7 @@ ${clientCss}
                       }} />
                     )}
                   </IconButton>
+                  )}
                   <div className='flex flex-row gap-1 chart-date items-center'>
                     <span className='label font-ea-n'>Client Name: </span>
                     <span className='value font-ea-sb'>{vastuLayoutData?.ClientName ? vastuLayoutData?.ClientName : "--"}</span>
