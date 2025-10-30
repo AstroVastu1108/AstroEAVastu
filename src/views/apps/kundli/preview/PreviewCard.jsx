@@ -31,6 +31,11 @@ import NSubLordPopUp from '@/components/preview/Nakshatra-SubLord/NSubLord'
 import PDFView from './pdfView'
 import DownloadPopUp from '@/components/devta-vastu/DownloadPDFPopup/DownloadPopUp';
 import dayjs from 'dayjs'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+import CustomChip from './CustomChip'
+
+// Extend dayjs with customParseFormat plugin
+dayjs.extend(customParseFormat)
 
 
 // At the top of your file
@@ -39,10 +44,7 @@ import dayjs from 'dayjs'
 
 
 const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, TransitData, setTransitData, setVarshPhalData, VarshPhalData, getTransitData, getDivisionalChartData, DivisionalData, setDivisionalData, birthDate, setKundliData, SetKundliConstData, getVarshphalData, Loading, setLoading }) => {
- 
 
-  console.warn("kundliData", kundliData?.AstroVastuReport?.DashaDetails)
- 
   // var
   const BirthDetails = kundliData?.AstroVastuReport?.BirthDetails;
   const AstroDetails = kundliData?.AstroVastuReport?.AstroDetails;
@@ -83,16 +85,19 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   const [downloadPopup, setDownloadPopup] = useState(false);
   // const [currentVarshphalYear, setCurrentVarshphalYear] = useState(new Date().getFullYear());
 
+  const [currentDasha, setCurrentDasha] = useState(DashaGridData?.filter(dasha => dasha.IsCurrent)[0] || null);
+
   useEffect(() => {
-    if(kundliData?.AstroVastuReport?.DashaDetails?.PratyantarDasha?.length > 0){
+    if (kundliData?.AstroVastuReport?.DashaDetails?.PratyantarDasha?.length > 0) {
       setDashaTitle(`${DashaDetailData?.CurrentMD}`);
       setDashaValue("Pratyantar");
+      setCurrentDasha(kundliData?.AstroVastuReport?.DashaDetails?.PratyantarDasha?.filter(dasha => dasha.IsCurrent)[0] || null);
       setDashaGridData(kundliData?.AstroVastuReport?.DashaDetails?.PratyantarDasha);
-    }else{
+    } else {
       setDashaValue("Maha")
       setDashaGridData(kundliData?.AstroVastuReport?.DashaDetails?.MahaDasha);
     }
-  },[kundliData])
+  }, [kundliData])
 
 
   const open = Boolean(anchorEl);
@@ -265,39 +270,39 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
 
       // Wrap each house-Div in a page-break-safe container and group by page
       const houseDivs = clonedContent.querySelectorAll('.house-Div');
-      
+
       if (houseDivs.length > 0) {
         // Group houses into page wrappers based on natural breaks
         // A4 page height in px at zoom 1.75 ≈ 1122px content area (297mm - 10mm margins)
         // At 900px width with zoom 1.75, effective height ≈ 641px per page
         const estimatedPageHeight = 1000; // Approximate height before page break
-        
+
         let currentPageWrapper = document.createElement('div');
         currentPageWrapper.className = 'pdf-page-wrapper';
         let currentPageHeight = 0;
         let isFirstHouse = true;
-        
+
         // Find parent container for all houses
         const parentContainer = houseDivs[0].parentNode;
-        
+
         // Insert first page wrapper
         parentContainer.insertBefore(currentPageWrapper, houseDivs[0]);
-        
+
         houseDivs.forEach((houseDiv, index) => {
           // Wrap each house in house-wrapper-pdf
           const wrapper = document.createElement('div');
           wrapper.className = 'house-wrapper-pdf';
-          
+
           // Estimate house height (rough approximation)
           // Check if house has specific classes that indicate it should break
           const shouldForceBreak = houseDiv.classList.contains('force-page-break') ||
-                                   wrapper.classList.contains('page-break-before');
-          
+            wrapper.classList.contains('page-break-before');
+
           // Every 3-4 houses, or if forced, create a new page wrapper
           // This is a heuristic - adjust based on your content
           const housesPerPage = 3; // Adjust this based on average house size
           const shouldBreak = shouldForceBreak || (index > 0 && index % housesPerPage === 0);
-          
+
           if (shouldBreak && !isFirstHouse) {
             // Create new page wrapper
             currentPageWrapper = document.createElement('div');
@@ -305,12 +310,12 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
             parentContainer.insertBefore(currentPageWrapper, houseDiv);
             currentPageHeight = 0;
           }
-          
+
           // Move house into wrapper and wrapper into current page
           houseDiv.parentNode.insertBefore(wrapper, houseDiv);
           wrapper.appendChild(houseDiv);
           currentPageWrapper.appendChild(wrapper);
-          
+
           isFirstHouse = false;
         });
       } else {
@@ -809,7 +814,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
 
   const handleDashaDoubleClick = async (row) => {
 
-    if(DashaDetailData?.PratyantarDasha?.length == 0){
+    if (DashaDetailData?.PratyantarDasha?.length == 0) {
       return;
     }
 
@@ -966,9 +971,9 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
         setKundliData(resp?.responseData?.Result);
         if (rotationType == "B") {
           //  The chart is rotated based on: 
-          setRotationTitle(`The chart is rotated based on: Birth Chart > ${payload.formattedStr}`)
+          setRotationTitle(`Birth Chart > ${payload.formattedStr}`)
         } else if (rotationType == "H") {
-          setRotationTitle(`The chart is rotated based on: House Chart > ${payload.formattedStr}`)
+          setRotationTitle(`House Chart > ${payload.formattedStr}`)
         }
       }
     } catch (error) {
@@ -995,8 +1000,15 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
 
   const handleVarshPhalChange = (direction) => {
     // Get birth year from BirthDetails
-    const birthYear = new Date(BirthDetails?.BirthDate).getFullYear();
-    const currentYear =  new Date().getFullYear();
+    const birthDateParsed = dayjs(BirthDetails?.BirthDate, "DD-MM-YYYY");
+    
+    if (!birthDateParsed.isValid()) {
+      toast.error("Invalid birth date format");
+      return;
+    }
+    
+    const birthYear = birthDateParsed.year();
+    const currentYear = new Date().getFullYear();
     const minYear = birthYear;
     const maxYear = currentYear + 120;
 
@@ -1034,7 +1046,16 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
   const getYearOptions = () => {
     if (!BirthDetails?.BirthDate) return [];
     
-    const birthYear = new Date(BirthDetails.BirthDate).getFullYear();
+    // Parse the date in DD-MM-YYYY format
+    const birthDateParsed = dayjs(BirthDetails.BirthDate, "DD-MM-YYYY");
+    
+    // Check if date is valid
+    if (!birthDateParsed.isValid()) {
+      console.error("Invalid birth date format:", BirthDetails.BirthDate);
+      return [];
+    }
+    
+    const birthYear = birthDateParsed.year();
     const currentYear = new Date().getFullYear();
     const maxYear = currentYear + 120;
     const years = [];
@@ -1211,11 +1232,28 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
                         </span>
                       </Button>
                       {kundliOptValue && kundliOptValue.Option == "P" && (
-                        <FormControl size="small" className='ml-3' sx={{ minWidth: 100 }}>
+                        <FormControl size="small" className='ml-3' sx={{ width: 100 }}>
                           <Select
                             value={VarshPhalData?.Year || dayjs().year()}
                             onChange={handleYearDropdownChange}
                             className='h-[38px]'
+                            MenuProps={{
+                              anchorOrigin: {
+                                vertical: 'bottom',
+                                horizontal: 'left',
+                              },
+                              transformOrigin: {
+                                vertical: 'top',
+                                horizontal: 'left',
+                              },
+                              PaperProps: {
+                                style: {
+                                  maxHeight: 48 * 10, // 48px per item * 10 items
+                                  width: 100,
+                                  overflowY: 'auto',
+                                },
+                              },
+                            }}
                             sx={{
                               '& .MuiOutlinedInput-notchedOutline': {
                                 borderColor: 'primary.main',
@@ -1310,17 +1348,25 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               {/* Rotation Title Chip */}
               <div className='grid grid-cols-1 md:grid-cols-3 gap-1 mb-0'>
                 <div className='mt-1 px-2'>
-                  {rotationTital && (
-                    <Chip label={rotationTital} className='text-sm' color='primary' sx={{backgroundColor: "#f5f5f5"}} variant='tonal' />
+                  {kundliOptValue && kundliOptValue.Option != "V" && currentDasha && (
+                    <CustomChip label={'Current Dasha: '} value={currentDasha?.DashaPlanet} />
+                  )}
+                  {rotationTital && kundliOptValue && kundliOptValue.Option == "V" && (
+                    <CustomChip value={rotationTital} label={"The chart is rotated based on:"} />
                   )}
                 </div>
-                <div></div>
                 <div className='mt-1 px-2'>
-                  {kundliOptValue.Option == "P" && VarshPhalData &&(
-                    // <>
-                    // <span className='text-label text-nowrap font-ea-sb text-primary'>{`${VarshPhalData?.Date} ${VarshPhalData?.Time}`}</span>
-                    // </>
-                    <Chip label={`${VarshPhalData?.Date} ${VarshPhalData?.Time}`} className='text-sm' color='primary' sx={{backgroundColor: "#f5f5f5"}}  variant='tonal' />
+                  {rotationTital && kundliOptValue && kundliOptValue.Option != "V" && (
+                    <CustomChip value={rotationTital} label={"The chart is rotated based on:"} />
+
+                  )}
+                </div>
+                <div className='mt-1 px-2'>
+                  {kundliOptValue.Option == "P" && VarshPhalData && (
+                    <CustomChip label={"Varshphal Date & Time: "} value={`${VarshPhalData?.Date} ${VarshPhalData?.Time}`} />
+                  )}
+                  {kundliOptValue.Option == "T" && TransitData && (
+                    <CustomChip label={`Transit Date & Time: `} value={TransitData?.TransitDateTime} />
                   )}
                 </div>
               </div>
@@ -1328,7 +1374,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
           </div>
 
 
-          <div className='main-MahaDasha-Div pt-5'>
+          <div className='main-MahaDasha-Div pt-4'>
             <div className='flex px-4 w-[100%] justify-between'>
               <div className=' w-[30%]'></div>
               <div className='chart-title w-[40%] pt-4'>
@@ -1371,7 +1417,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
           </div>
 
 
-          <div className='main-RahuKetu-Div pt-8'>
+          <div className='main-RahuKetu-Div pt-4'>
             <div className='flex px-4 w-[100%] justify-between'>
               <div className=' w-[30%]'></div>
               <div className='chart-title w-[40%] pt-5'>
@@ -1420,15 +1466,14 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
             </div>
           </div>
 
-
-
-          <div className='main-AstroVastuScript-Div pt-8'>
+          <div className='main-AstroVastuScript-Div pt-7'>
             <div className='chart-title'>❋ Planet ↠ Planet Aspects Summary ❋</div>
             <div className='Summary-Div'>
               <SummaryAspect SummaryData={PlanetSummaryData} Aspect={"P"} />
             </div>
           </div>
-          <div className='main-AstroVastuScript-Div pt-8'>
+
+          <div className='main-AstroVastuScript-Div pt-7'>
             <div className='chart-title'>❋ Planet ↠ House Aspects Summary ❋</div>
             <div className='Summary-Div'>
               <SummaryAspect SummaryData={HouseSummaryData} Aspect={"H"} />

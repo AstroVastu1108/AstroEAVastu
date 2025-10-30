@@ -39,7 +39,7 @@ function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroD
                 </div>
 
                 {/* Birth Details */}
-                <div className={`birth-info-table border-x`}>
+                <div className={`birth-info-table border-x rounded-b-md`}>
                     <div className='flex flex-row block-detail'>
 
                         <InfoTable InfoTableTextArr={[
@@ -93,6 +93,7 @@ function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroD
                 </table>
 
                 {/* Dasha Details */}
+                {currentDasha &&
                 <div className='main-MahaDasha-Div pt-3'>
                     {/* <div className='chart-title font-ea-sb print-title'>❋ Dasha Details ❋</div> */}
                     <div className='planet-table flex flex-row px-5'>
@@ -102,6 +103,7 @@ function PDFView({ BirthDetails, Symbols, AstroVastuHouseScript, pageRef, AstroD
                         <div>{currentDasha?.EndDt}</div>
                     </div>
                 </div>
+                }
 
                 {/*  Nakshatra Astrology ↠ Planet Script  */}
                 { isVisible("Nakshatra Kundali: Planet & House Script") && (
