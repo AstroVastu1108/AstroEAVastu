@@ -365,11 +365,13 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
       // console.warn("fontNormal: ", fontNormal)
 
       // Add to your font loading section:
-      const [fontNormal, fontSemiBold, fontSymbols] = await Promise.all([
+      const [fontNormal, fontSemiBold, fontSymbols, fontSymbols2] = await Promise.all([
         getFontBase64('/fonts/s-n.woff2'),
         getFontBase64('/fonts/s-sb.woff2'),
         // Use a CDN font with symbols
-        getFontBase64('https://fonts.gstatic.com/s/notosans/v30/o-0IIpQlx3QUlC5A4PNr5TRA.woff2')
+        getFontBase64('https://fonts.gstatic.com/s/notosans/v30/o-0IIpQlx3QUlC5A4PNr5TRA.woff2'),
+        // Use Noto Sans Symbols 2 for better symbol coverage
+        getFontBase64('https://fonts.gstatic.com/s/notosanssymbols2/v22/I_uyMoGduATTei9eI8daxVHDyfisHr71ypPqfX71-AI.woff2')
       ]);
 
 
@@ -414,6 +416,14 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               unicode-range: U+2700-27BF, U+2600-26FF, U+2B00-2BFF;
             }
             ` : ''}
+
+            ${fontSymbols2 ? `
+            @font-face {
+              font-family: 'Symbols2';
+              src: url('${fontSymbols2}') format('woff2');
+              unicode-range: U+1F800-1F8FF, U+2B00-2BFF, U+2900-297F;
+            }
+            ` : ''}
             
             body { 
               background: #fff !important; 
@@ -426,7 +436,7 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
               print-color-adjust: exact !important;
 
               /* Add fallback fonts that include symbols */
-          font-family: 'Segoe UI', 'Segoe UI Symbol', 'Segoe UI Emoji', Arial, sans-serif !important;
+          font-family: 'Segoe UI', 'Symbols2', 'Symbols', 'Segoe UI Symbol', 'Segoe UI Emoji', Arial, sans-serif !important;
           -webkit-print-color-adjust: exact !important; 
           print-color-adjust: exact !important;
             }
