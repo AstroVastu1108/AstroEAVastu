@@ -257,6 +257,17 @@ const PreviewCard = ({ kundliData, isPrintDiv, handleDownload, handleTimeTool, T
           }
         }
 
+        // Load Iconify icons CSS
+        try {
+          const iconifyResponse = await fetch('/assets/iconify-icons/generated-icons.css');
+          if (iconifyResponse.ok) {
+            const iconifyCss = await iconifyResponse.text();
+            allStyles += '\n' + iconifyCss;
+          }
+        } catch (error) {
+          console.warn('Could not load iconify icons CSS:', error);
+        }
+
         return allStyles;
       };
 
